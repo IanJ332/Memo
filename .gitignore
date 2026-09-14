@@ -1,0 +1,23 @@
+# Python virtual environment (strictly isolated per machine)
+.venv/
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment files and credentials
+.env
+.env.*
+*.pem
+*.key
+
+# OS and Editor artifacts
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Server / runtime baseline reports (machine-specific inventory)
+runtime_reports/
