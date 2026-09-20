@@ -21,3 +21,6 @@ Thumbs.db
 
 # Server / runtime baseline reports (machine-specific inventory)
 runtime_reports/
+
+# Machine-local context and persistent agent cache
+.local/
