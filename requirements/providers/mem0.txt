@@ -1,0 +1,5 @@
+# Phase 02A approved Mem0 OSS SDK
+mem0ai==2.2.1
+
+# Required by mem0.embeddings.huggingface.HuggingFaceEmbedding
+sentence-transformers==6.1.0
