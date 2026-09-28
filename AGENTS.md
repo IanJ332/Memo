@@ -25,4 +25,9 @@ This file is intentionally local and gitignored.
 
 - **Do Not Re-Probe Unchanged Infrastructure**: Do not run broad hardware/disk audits (`lscpu`, `free -h`, `lsblk`, `du -xhd1 /`, `docker system df`) unless infrastructure changes are suspected. Use targeted checks (e.g., `findmnt /dev/sdb`).
 - **Preserve Exosphere Containers**: Never execute `docker system prune`, `docker image prune`, or stop Exosphere-managed Guacamole containers.
-- **Storage Tiering**: Place source code and scripts under `/home/exouser/Memo`. Direct datasets, model caches, logs, traces, and large experiment artifacts to the persistent volume at `/media/volume/sdb`.
+- **Storage Tiering**: Place source code and scripts under `/home/exouser/Memo`. Resolve the current `/dev/sdb` mountpoint with `findmnt -n -o TARGET /dev/sdb`, then direct datasets, model caches, logs, traces, and large experiment artifacts to `<mount>/memlife`. Never hardcode a historic mountpoint.
+- **Prompt Declaration**: Every execution prompt should declare `CONVERSATION`, `MODEL`, `EXECUTION TARGET`, and `JETSTREAM ACTION`.
+- **Lifecycle Default**: Treat Jetstream as `SHELVED` by default. Unshelve only for required remote execution and use `scripts/jetstream/jetstreamctl.py` after its validation.
+- **Opened-By-Run Cleanup**: If automation opened the VM, shelve it after work. Never automatically shelve a VM that was already `ACTIVE` before the run.
+- **Dynamic Networking**: Never cache or hardcode a numeric public IP. Resolve current networking from OpenStack for each lifecycle run.
+- **Local Secrets**: Keep OpenStack credentials, SSH private keys, generated local state, and caches under ignored `.local/` paths and outside Git.

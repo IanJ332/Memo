@@ -1,0 +1,22 @@
+{
+  "phase": "02B-0",
+  "timestamp": "2026-09-28T02:48:13.7391835Z",
+  "branch": "phase-02b0-jetstream-automation",
+  "git_commit": "669002e3f398a431094335db7deeafd9f1284d1d",
+  "workstation_platform": "Windows",
+  "openstack_client_version": "openstack 10.3.0",
+  "target_instance_name": "jisheng3",
+  "target_instance_uuid": "5baeeae7-4c29-4903-89fe-2e9df0a8eced",
+  "initial_vm_state": "SHELVED",
+  "unshelve_success": true,
+  "dynamic_address_resolved": true,
+  "ssh_success": false,
+  "remote_user": null,
+  "remote_hostname": null,
+  "volume_device": "/dev/sdb",
+  "resolved_volume_mount": null,
+  "final_vm_state": "SHELVED",
+  "opened_by_this_run": true,
+  "auto_shelve_success": true,
+  "error": "SSH readiness timed out; address selection was corrected offline after cleanup"
+}

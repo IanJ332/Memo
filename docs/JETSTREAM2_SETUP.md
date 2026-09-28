@@ -7,7 +7,9 @@ This document covers VM creation guidelines, cross-platform local environment bo
 ## Jetstream2 VM Provisioning (Manual)
 
 > [!IMPORTANT]
-> This repository **does NOT provision or manage VMs**. Cloud provisioning and ACCESS authentication must be performed manually through the Jetstream2 / Exosphere portal before cloning the repository.
+> VM provisioning and ACCESS credential creation remain manual. The narrow
+> `scripts/jetstream/jetstreamctl.py` controller may manage only the already
+> verified `jisheng3` instance lifecycle after local authentication is configured.
 
 ### Course VM Baseline Configuration
 When launching your VM in Exosphere ([https://jetstream2.exosphere.app/](https://jetstream2.exosphere.app/)):
