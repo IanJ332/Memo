@@ -1,0 +1,8 @@
+{
+  "expected_name": "jisheng3",
+  "expected_project": "CIS261698",
+  "server_uuid": "5baeeae7-4c29-4903-89fe-2e9df0a8eced",
+  "remote_user": "exouser",
+  "hostname": "jisheng3.cis261698.projects.jetstream-cloud.org",
+  "volume_device": "/dev/sdb"
+}
