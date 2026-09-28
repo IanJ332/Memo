@@ -70,3 +70,18 @@ From the repository root on Windows:
 The acceptance command records the initial state. It auto-shelves only when
 that same run performed the `SHELVED` to `ACTIVE` transition. It never
 auto-shelves an instance that was already `ACTIVE`.
+
+## Phase 02B-0 acceptance status
+
+The second and final authorized live cycle ran on 2026-09-28 UTC and is
+`BLOCKED` at the `ADDRESS` stage. OpenStack authentication and exact target
+identity validation succeeded. The controller unshelved only `jisheng3`,
+observed `ACTIVE`, rejected the reported private-only address set, and safely
+returned the instance to `SHELVED`.
+
+Post-cleanup, read-only network diagnostics showed one target port and no
+floating-IP association for that port. The tracked DNS hostname also did not
+resolve while the instance was shelved. TCP 22, SSH authentication, the remote
+probe, and live storage verification were therefore not attempted. No third
+cycle is authorized; resolve the external-address assignment/discovery path
+before Phase 02B begins.
