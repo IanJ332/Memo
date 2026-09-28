@@ -9,6 +9,7 @@ from memlife.adapters.base import (
     ProviderCapability,
     UnsupportedCapabilityError,
 )
+from memlife.adapters.reference import ReferenceMemoryAdapter
 
 __all__ = [
     "AdapterError",
@@ -17,5 +18,6 @@ __all__ = [
     "MemoryNotFoundError",
     "MemoryProviderAdapter",
     "ProviderCapability",
+    "ReferenceMemoryAdapter",
     "UnsupportedCapabilityError",
 ]
