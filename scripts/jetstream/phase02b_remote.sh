@@ -37,6 +37,7 @@ findmnt -n -o TARGET,SOURCE,FSTYPE /dev/sdb
 "$PYTHON" --version
 "$PYTHON" -m pip --version
 "$PYTHON" -m pip check
+"$PYTHON" -m pip install -r "$REPO/requirements/core.txt"
 
 DRY_RUN_REPORT="$RUN_ROOT/pip-dry-run.json"
 "$PYTHON" -m pip install --dry-run --report "$DRY_RUN_REPORT" -r "$REPO/requirements/providers/mem0.txt" > "$RUN_ROOT/pip-dry-run.log"

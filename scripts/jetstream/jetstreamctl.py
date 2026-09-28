@@ -103,7 +103,8 @@ def run_command(
     command: Sequence[str], *, env: Mapping[str, str] | None = None, timeout: int = 90
 ) -> subprocess.CompletedProcess[str]:
     result = subprocess.run(
-        list(command), capture_output=True, text=True, env=env, timeout=timeout, check=False
+        list(command), capture_output=True, text=True, encoding="utf-8",
+        errors="replace", env=env, timeout=timeout, check=False
     )
     if result.returncode:
         detail = result.stderr.strip() or result.stdout.strip() or f"exit {result.returncode}"
