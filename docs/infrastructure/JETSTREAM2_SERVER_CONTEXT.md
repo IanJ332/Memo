@@ -1,6 +1,6 @@
 # Jetstream2 Server Context
 
-Last verified: 2026-09-27 (manual mount check); Phase 02B-0 live acceptance updates the live-result fields.
+Last verified: 2026-09-28 by the Phase 02B-0 automated live acceptance cycle.
 
 ## Sanitized identity and compute
 
@@ -15,9 +15,10 @@ Last verified: 2026-09-27 (manual mount check); Phase 02B-0 live acceptance upda
 - Repository: `/home/exouser/Memo`
 - DNS hostname: `jisheng3.cis261698.projects.jetstream-cloud.org`
 
-Numeric public addresses are ephemeral and may change whenever the instance is
-unshelved, especially because the public address is released on shelving. Never
-store or hardcode a numeric address. Query OpenStack networking on every run.
+Numeric public addresses are ephemeral and are released while the instance is
+shelved. Never store or hardcode one. Query OpenStack networking on every run,
+provision a dedicated temporary floating IP when no association exists, and
+return a run-owned IP before shelving.
 
 ## Persistent storage
 
@@ -29,14 +30,13 @@ actual_mount="$(findmnt -n -o TARGET /dev/sdb)"
 runtime_root="${actual_mount}/memlife"
 ```
 
-The previous cached mount `/media/volume/sdb` is **STALE as of the 2026-09-27
-manual verification**. The current manually verified mount is
-`/media/volume/jisheng3_volume`, making the current expected MemLife runtime root
-`/media/volume/jisheng3_volume/memlife`. A newer live `findmnt` result supersedes
-both values and must be documented.
+The 2026-09-28 live probe resolved `/dev/sdb` to
+`/media/volume/jisheng3_volume`, reported `49G` capacity, and derived
+`/media/volume/jisheng3_volume/memlife` as the MemLife data root. A future live
+`findmnt` result supersedes this cached value.
 
 Do not format, detach, or migrate `/dev/sdb` as part of lifecycle automation.
-Read/write validation should only test the existing mount's permissions.
+Phase 02B-0 did not create provider data or the derived MemLife directory.
 
 ## Runtime and safety policy
 
@@ -55,9 +55,9 @@ system/image prune operations or stop/remove those containers.
 
 The tracked controller is `scripts/jetstream/jetstreamctl.py`. Its local
 OpenStack client lives in ignored `.local/jetstream/cli-venv`; it reads the
-existing ignored OpenRC through a strict assignment parser and reuses the
-existing ignored workstation SSH key. It stores host keys in an ignored,
-tool-specific known-hosts file without globally disabling verification.
+ignored OpenRC through a strict assignment parser and reuses the ignored
+workstation SSH key. It stores host keys in an ignored tool-specific
+known-hosts file without globally disabling verification.
 
 From the repository root on Windows:
 
@@ -67,21 +67,29 @@ From the repository root on Windows:
 .\.local\jetstream\cli-venv\Scripts\python.exe scripts\jetstream\jetstreamctl.py acceptance
 ```
 
-The acceptance command records the initial state. It auto-shelves only when
-that same run performed the `SHELVED` to `ACTIVE` transition. It never
-auto-shelves an instance that was already `ACTIVE`.
+The acceptance command discovers the external network before unshelving,
+records lifecycle and floating-IP ownership separately, and associates a new
+temporary IP only with jisheng3's exact port. Cleanup disassociates and deletes
+only a floating IP created by that same run. The VM is auto-shelved only when
+the same run changed it from `SHELVED` to `ACTIVE`.
 
 ## Phase 02B-0 acceptance status
 
-The second and final authorized live cycle ran on 2026-09-28 UTC and is
-`BLOCKED` at the `ADDRESS` stage. OpenStack authentication and exact target
-identity validation succeeded. The controller unshelved only `jisheng3`,
-observed `ACTIVE`, rejected the reported private-only address set, and safely
-returned the instance to `SHELVED`.
+The authorized corrective cycle is `PASS`:
 
-Post-cleanup, read-only network diagnostics showed one target port and no
-floating-IP association for that port. The tracked DNS hostname also did not
-resolve while the instance was shelved. TCP 22, SSH authentication, the remote
-probe, and live storage verification were therefore not attempted. No third
-cycle is authorized; resolve the external-address assignment/discovery path
-before Phase 02B begins.
+- OpenStack authentication and exact UUID validation: pass
+- Initial state: `SHELVED`
+- Unshelve and `ACTIVE`: pass
+- External network: unambiguous `public`
+- Temporary floating IP allocation and exact-port association: pass
+- External address visibility: pass; numeric address not persisted
+- TCP 22: pass in 0.049 seconds
+- Public-key SSH and identity (`exouser` / `jisheng3`): pass
+- Read-only repository, Python, and storage probe: pass
+- Owned floating-IP disassociation, deletion, and absence verification: pass
+- Final state: `SHELVED`
+- Post-run target floating-IP association count: zero
+- Offline tests before the cycle: `33 passed`
+
+No manual server action is required before Phase 02B. Phase 02B itself has not
+started.
