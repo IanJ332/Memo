@@ -7,7 +7,7 @@ import json
 import platform
 import subprocess
 import sys
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -104,7 +104,7 @@ def build_manifest(
         git_commit=_git_commit(repo_root),
         python_version=platform.python_version(),
         platform=platform.platform(),
-        timestamp_utc=datetime.now(UTC),
+        timestamp_utc=datetime.now(timezone.utc),
         package_versions=_package_versions(package_names),
         data_root_mode=data_root.mode.value,
         config_hash_sha256=hash_configuration(configuration),

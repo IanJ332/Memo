@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from enum import StrEnum
+from enum import Enum
 from typing import Mapping
 
 from memlife.models.memory import (
@@ -15,12 +15,12 @@ from memlife.models.memory import (
 )
 
 
-class CapabilitySupport(StrEnum):
+class CapabilitySupport(str, Enum):
     SUPPORTED = "supported"
     UNSUPPORTED = "unsupported"
 
 
-class ProviderCapability(StrEnum):
+class ProviderCapability(str, Enum):
     RESET_NAMESPACE = "reset_namespace"
     WRITE = "write"
     QUERY = "query"

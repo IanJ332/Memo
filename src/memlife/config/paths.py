@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
-from enum import StrEnum
+from enum import Enum
 from pathlib import Path
 from typing import Mapping
 
@@ -20,7 +20,7 @@ RUNTIME_DIRECTORIES = (
 )
 
 
-class DataRootMode(StrEnum):
+class DataRootMode(str, Enum):
     """How the runtime root was selected."""
 
     CONFIGURED = "configured"

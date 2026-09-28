@@ -1,9 +1,9 @@
 """Minimal lifecycle vocabulary shared across memory providers."""
 
-from enum import StrEnum
+from enum import Enum
 
 
-class LifecycleState(StrEnum):
+class LifecycleState(str, Enum):
     """Normalized observation states, not an enforcement policy."""
 
     ACTIVE = "active"
