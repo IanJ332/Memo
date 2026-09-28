@@ -57,7 +57,7 @@ else
 fi
 
 "$PYTHON" -m pip install -r "$REPO/requirements/providers/mem0.txt"
-"$PYTHON" -m pip show mem0ai sentence-transformers qdrant-client torch
+"$PYTHON" -m pip show pytest mem0ai sentence-transformers qdrant-client torch
 "$PYTHON" -m pip check
 "$PYTHON" -c 'import torch; assert torch.version.cuda is None; assert not torch.cuda.is_available()'
 

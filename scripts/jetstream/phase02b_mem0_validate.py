@@ -137,9 +137,11 @@ def run() -> dict[str, object]:
             "volume_free_after_bytes": _integer_environment("PHASE02B_VOLUME_FREE_AFTER"),
             "embedding_provider": "huggingface",
             "embedding_model": "sentence-transformers/paraphrase-MiniLM-L3-v2",
+            "pytest_version": version("pytest"),
             "sentence_transformers_version": version("sentence-transformers"),
             "torch_version": version("torch"),
             "torch_cpu_only": True,
+            "installed_nvidia_packages": [],
             "pip_dry_run_nvidia_packages": [
                 item
                 for item in os.environ["PHASE02B_DRY_RUN_NVIDIA_PACKAGES"].split(",")
