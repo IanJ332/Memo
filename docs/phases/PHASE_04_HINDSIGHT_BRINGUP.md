@@ -4,8 +4,9 @@
 
 Pin Hindsight, connect its native operations to the MemLife adapter and Phase
 03B trace, then validate the self-hosted runtime in one controlled Jetstream2
-session. **Final status: BLOCKED before service startup by an exact dependency
-incompatibility.**
+session. The first live lifecycle is **BLOCKED before service startup** by an
+exact dependency incompatibility. The isolated retry design is locally
+**READY_FOR_RETRY**, but no second live lifecycle has been authorized or run.
 
 ## Why Hindsight
 
@@ -20,11 +21,13 @@ seek a vulnerability and made no RQ3 or final RQ4 claim.
 - Upstream tag: `v0.10.1`
 - Upstream commit: `f8950b0c07d9e34c76493dba802bb309f0ce60fd`
 - API package: `hindsight-api-slim[embedded-db,local-onnx]==0.10.1`
-- Client package: `hindsight-client==0.10.1`
+- Python client: not installed; the adapter uses `urllib.request` over REST
 - Install attempt: 2026-09-28
 - Exact tested repository commit: `59222a27fcd59dc474ec282141a8b33bbc376088`
-- Configuration SHA-256:
+- Blocked live-attempt configuration SHA-256:
   `1174925b29fa288e88899f9d0fd906865d5117ecc671d16d4af93ec356436b00`
+- Isolated-retry configuration SHA-256:
+  `baca300bdce174d8cb2d00fa576df73d0cf5c4f9230aed370d2767bd35f4d73d`
 
 Current first-party release source, package metadata, REST routes, and provider
 configuration were inspected before installation. Hindsight API 0.10.1 requires
@@ -39,6 +42,48 @@ embedded database, and fixed internal LLM endpoint form the provider runtime.
 
 The live run stopped during dependency validation, so this architecture was not
 started or runtime-qualified.
+
+## Provider Runtime Isolation
+
+The first attempt co-installed Hindsight and Mem0 in the project `.venv`.
+Hindsight 0.10.1 requires `protobuf>=7.35.1`; Mem0 2.2.1 requires
+`protobuf>=5.29.6,<7.0.0`. Pip resolved protobuf 7.36.2 and correctly reported
+the single shared environment as inconsistent.
+
+The reviewed retry separates the dependency graphs:
+
+- Harness environment: `/home/exouser/Memo/.venv`, containing MemLife, Mem0,
+  tests, benchmark code, and result collection.
+- Provider environment:
+  `<live /dev/sdb mount>/memlife/venvs/hindsight-0.10.1`, containing only the
+  self-hosted Hindsight service runtime.
+- Communication boundary: loopback HTTP at `127.0.0.1:8888` through the
+  existing `UrllibHindsightTransport`.
+
+The live mount remains dynamically derived with `findmnt /dev/sdb`. Explicit
+`HARNESS_PYTHON`, `HINDSIGHT_VENV`, and `HINDSIGHT_PYTHON` names prevent command
+ownership from being blurred. Harness health (`mem0ai`, protobuf, and `pip
+check`) is captured before and after provider setup. The provider environment
+has its own Hindsight/protobuf inspection and `pip check`. Cross-environment
+protobuf versions need not match; a failed check inside either environment is
+still fatal.
+
+An absent provider venv may be created and populated from the service-only
+requirements. A present venv is reused only after validation. Incomplete or
+inconsistent state fails closed with bounded diagnostics and is never removed
+automatically. The provider fingerprint records Python, pip, Hindsight, and
+protobuf versions plus a SHA-256 of normalized `pip freeze` output.
+
+Service start uses the executable inside `HINDSIGHT_VENV/bin`. The benchmark
+and validation entry point use `HARNESS_PYTHON`. Restart replaces only the
+run-owned API process and preserves the provider venv, pg0 state, and caches.
+Exact PID ownership prevents broad Python cleanup; PID and service logs remain
+under the persistent Phase 04 run directory.
+
+This isolation is infrastructure architecture, not a defense. It cannot affect
+lifecycle semantics, retrieval semantics, provenance results, or security
+claims: the unchanged benchmark client still exercises Hindsight 0.10.1 through
+the same public service API.
 
 ## Internal LLM Configuration
 
@@ -172,12 +217,13 @@ Local preparation at the tested commit:
 .venv\Scripts\python.exe scripts\jetstream\jetstreamctl.py phase04
 ```
 
-The local results were `64 passed` (unit), `5 passed` (contract), `5 passed, 1
-skipped` (integration), and `74 passed, 1 skipped` (full). The skip is the
-opt-in real Hindsight integration test; the Mem0 regression subset remained
-green with `5 passed`. The second command is recorded only as historical
-reproduction provenance: the one authorized Phase 04 lifecycle has already been
-consumed and must not be rerun without explicit approval.
+The isolated-runtime preparation results were `71 passed` (unit), `5 passed`
+(contract), `5 passed, 1 skipped` (integration), and `81 passed, 1 skipped`
+(full). The skip is the opt-in real Hindsight integration test; the Mem0
+regression subset remained green with `5 passed`, and the focused Phase 03/03B
+lifecycle/trace regression had `15 passed`. The second command is recorded only
+as historical reproduction provenance: the one authorized Phase 04 lifecycle
+has already been consumed and must not be rerun without explicit approval.
 
 The controller recorded exact VM UUID
 `5baeeae7-4c29-4903-89fe-2e9df0a8eced`, deleted the temporary floating IP it
@@ -196,7 +242,7 @@ completion response. The approved base remains
 
 ## Next Experiment Handoff
 
-Before any new live attempt, explicitly review an isolated Hindsight provider
-virtual environment (while preserving the project `.venv` rule) or another
-documented dependency-resolution design; freeze that configuration as a new
-reviewed experiment rather than silently changing Phase 04.
+The isolated provider virtual environment is now reviewed and locally tested.
+A new conversation and separate authorization may run one managed Phase 04
+Jetstream retry from the current branch; until then the original live result
+remains BLOCKED and all live benchmark fields remain NOT RUN.

@@ -11,13 +11,17 @@ fully successful result is useful as a negative control for later RQ1/RQ2 work.
 
 The configuration was derived from the official `vectorize-io/hindsight`
 repository and Hindsight documentation. The pinned candidate is `v0.10.1`, Git
-commit `f8950b0c07d9e34c76493dba802bb309f0ce60fd`. The provider requirements are
+commit `f8950b0c07d9e34c76493dba802bb309f0ce60fd`. The service requirements are
 isolated from `requirements/core.txt`:
 
 ```text
 hindsight-api-slim[embedded-db,local-onnx]==0.10.1
-hindsight-client==0.10.1
 ```
+
+`hindsight-client` is intentionally not installed. The MemLife adapter uses
+the standard-library `urllib.request` transport against the REST API, so a
+Python client would add an unjustified package dependency without changing the
+experiment interface.
 
 The service packages require Python 3.11 or newer; the Jetstream target uses
 Python 3.12.3. The broad `local-ml` extra is intentionally not used because it
@@ -29,7 +33,41 @@ Hindsight 0.10.1 requires `protobuf>=7.35.1`, whereas the predecessor's pinned
 Mem0 2.2.1 installation requires `protobuf>=5.29.6,<7.0.0`. Pip selected
 protobuf 7.36.2 for Hindsight, making the shared virtual environment
 inconsistent. In accordance with the one-run failure policy, no alternate
-Hindsight version, Mem0 version, virtual environment, or backend was tried.
+Hindsight version, Mem0 version, virtual environment, or backend was tried in
+that live lifecycle.
+
+## Provider Runtime Isolation
+
+The reviewed retry architecture uses two intentionally independent Python
+process environments. The MemLife harness and Mem0 remain in
+`/home/exouser/Memo/.venv`. The Hindsight API runtime is derived from the live
+`/dev/sdb` mount as
+`<MEMLIFE_DATA_ROOT>/venvs/hindsight-0.10.1`. Only
+`requirements/core.txt` is applied to the harness during Phase 04 setup; only
+`requirements/providers/hindsight.txt` is applied to the provider venv.
+
+Each environment must pass its own `pip check`. The harness is inspected for
+`mem0ai` and `protobuf` before and after provider setup, and the provider venv
+is separately inspected for Hindsight and protobuf. Different protobuf
+versions across the two environments are expected and valid. An incompatibility
+inside either individual environment remains a hard failure. Existing provider
+venvs are reused only if their interpreter, pinned package, executable, and
+dependency graph validate; incomplete state fails closed and is not deleted or
+rebuilt automatically.
+
+The boundary is loopback HTTP at `127.0.0.1:8888`. Hindsight owns its API,
+embedded pg0 process, ONNX runtime, and provider dependencies; the harness owns
+the adapter, benchmark, tests, and result collection. The service is launched
+from the provider venv, while every benchmark/test command uses the harness
+Python. Restart stops and starts only the run-owned service process against the
+same database, venv, and caches. A PID file and logs live under the persistent
+Phase 04 run directory, outside Git.
+
+This is infrastructure architecture, not a defense. It does not alter
+lifecycle or retrieval semantics, provenance interpretation, or security
+claims. The same benchmark adapter calls the same Hindsight 0.10.1 service API;
+isolation only prevents unrelated package constraints from corrupting Mem0's
+validated experimental environment.
 
 ## Deployment
 
@@ -131,11 +169,12 @@ same-ID curation is not represented as a fabricated supersession chain.
 ## Reproduction
 
 The exact non-secret configuration is in `configs/hindsight-phase04.json`; the
-runtime environment is defined by `scripts/jetstream/phase04_remote.sh`. The
-managed controller performs the single lifecycle, synchronizes the exact Git
-commit, validates package resolution before installation, runs the compatibility
-probe first, captures sanitized results, deletes its temporary floating IP, and
-returns a VM that it opened to `SHELVED`.
+runtime environment is defined by `scripts/jetstream/phase04_remote.sh`, with
+service ownership and environment fingerprinting in
+`scripts/jetstream/phase04_runtime.py`. A future separately authorized managed
+controller will synchronize the exact Git commit, validate both environments,
+run the compatibility probe first, capture sanitized results, delete its
+temporary floating IP, and return a VM that it opened to `SHELVED`.
 
 For the 2026-09-28 run, dependency installation blocked before the compatibility
 probe. The controller still deleted its temporary floating IP and returned the
