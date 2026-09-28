@@ -1,120 +1,99 @@
 {
   "phase": "02B",
-  "status": "BLOCKED",
+  "status": "PASS",
   "provider": "mem0",
   "provider_version": "2.2.1",
   "branch": "phase-02b-mem0-jetstream",
-  "git_commit_tested": "3be787735a23c3a8853c7ef29251df1dec5538f9",
-  "remote_python": "3.12.3",
+  "git_commit_tested": "813a32ad1b14736b08ba13f819cb18a8c22b6a34",
+  "timestamp": "2026-09-28T04:01:32.465562+00:00",
   "remote_os": "Ubuntu 24.04.5 LTS",
   "machine_class": "Jetstream2 m3.small (2 vCPU, approximately 5.78 GiB RAM, no GPU)",
+  "remote_python": "3.12.3",
   "live_volume_device": "/dev/sdb",
+  "live_volume_source": "/dev/sdb",
   "live_volume_mount": "/media/volume/jisheng3_volume",
-  "live_volume_fstype": null,
+  "live_volume_fstype": "ext4",
   "memlife_data_root": "/media/volume/jisheng3_volume/memlife",
-  "root_free_before_bytes": null,
-  "root_free_after_bytes": null,
-  "volume_free_before_bytes": null,
-  "volume_free_after_bytes": null,
+  "root_free_before_bytes": 5885071360,
+  "root_free_after_bytes": 5880119296,
+  "volume_free_before_bytes": 52131151872,
+  "volume_free_after_bytes": 52129026048,
   "embedding_provider": "huggingface",
   "embedding_model": "sentence-transformers/paraphrase-MiniLM-L3-v2",
+  "pytest_version": "9.0.2",
   "sentence_transformers_version": "6.1.0",
-  "torch_version": null,
+  "torch_version": "2.7.1+cpu",
   "torch_cpu_only": true,
+  "installed_nvidia_packages": [],
+  "pip_dry_run_nvidia_packages": [],
   "vector_store": "qdrant",
   "vector_store_mode": "embedded/local",
   "vector_store_path": "/media/volume/jisheng3_volume/memlife/providers/mem0/phase-02b/qdrant",
-  "qdrant_client_version": null,
+  "qdrant_client_version": "1.19.1",
   "history_store": "sqlite",
   "history_path": "/media/volume/jisheng3_volume/memlife/providers/mem0/phase-02b/history/history.db",
   "infer": false,
   "telemetry": false,
   "model_cache": "/media/volume/jisheng3_volume/memlife/model_cache/huggingface",
   "config_sha256": "23c068e16db7d4bb90aad7755b997d5a4104c433a4a0083ef43b3506680ff2e8",
-  "contract_result": "BLOCKED before execution: the remote project virtual environment lacked pytest",
-  "integration_result": "NOT RUN",
-  "restart_result": "NOT RUN",
-  "comparison_to_phase02a": {
-    "python_version": {
-      "status": "DIFFERENCE",
-      "phase02a": "3.14.3",
-      "phase02b": "3.12.3"
-    },
-    "mem0ai_version": {
-      "status": "MATCH",
-      "phase02a": "2.2.1",
-      "phase02b": "2.2.1 (pinned installation completed before the blocker)"
-    },
-    "sentence_transformers_version": {
-      "status": "MATCH",
-      "phase02a": "6.1.0",
-      "phase02b": "6.1.0 (pinned installation and model load completed before the blocker)"
-    },
-    "torch_version": {
-      "status": "NOT COMPARABLE",
-      "phase02a": "2.14.0",
-      "phase02b": "exact pip-show output was not collected before failure"
-    },
-    "qdrant_client_version": {
-      "status": "NOT COMPARABLE",
-      "phase02a": "1.19.1",
-      "phase02b": "exact pip-show output was not collected before failure"
-    },
-    "embedding_model": {
-      "status": "MATCH",
-      "phase02a": "sentence-transformers/paraphrase-MiniLM-L3-v2",
-      "phase02b": "model downloaded and loaded from the persistent-volume cache"
-    },
-    "infer_mode": {
-      "status": "MATCH",
-      "phase02a": false,
-      "phase02b": "configured false; lifecycle test not reached"
-    },
-    "vector_store_mode": {
-      "status": "MATCH",
-      "phase02a": "qdrant embedded/local",
-      "phase02b": "configured qdrant embedded/local; lifecycle test not reached"
-    },
-    "history_store": {
-      "status": "MATCH",
-      "phase02a": "sqlite",
-      "phase02b": "configured sqlite; lifecycle test not reached"
-    },
-    "write_behavior": {
-      "status": "NOT COMPARABLE"
-    },
-    "update_id_behavior": {
-      "status": "NOT COMPARABLE"
-    },
-    "update_history": {
-      "status": "NOT COMPARABLE"
-    },
-    "delete_retrieval_behavior": {
-      "status": "NOT COMPARABLE"
-    },
-    "delete_history": {
-      "status": "NOT COMPARABLE"
-    },
-    "process_reconstruction_persistence": {
-      "status": "NOT COMPARABLE"
-    }
-  },
+  "contract_result": "32 passed in 0.25s",
+  "integration_result": "3 passed in 7.79s",
+  "restart_result": "PASS",
   "lifecycle": {
-    "write": "NOT RUN",
-    "query": "NOT RUN",
-    "update": "NOT RUN",
-    "delete": "NOT RUN",
-    "history": "NOT RUN",
-    "reconstruction": "NOT RUN"
+    "memory_id": "f54c1d3d-15c4-481c-a71e-05fccb6808f4",
+    "write_add_history_visible": true,
+    "query_v1_retrieved": true,
+    "write_survived_reconstruction": true,
+    "update_id_same": true,
+    "query_v2_current": true,
+    "list_v2_current": true,
+    "history_events_before_delete": [
+      "ADD",
+      "UPDATE"
+    ],
+    "query_after_delete_empty": true,
+    "list_after_delete_empty": true,
+    "history_events_after_delete": [
+      "ADD",
+      "UPDATE",
+      "DELETE"
+    ],
+    "delete_history_visible": true,
+    "delete_history_is_deleted": true,
+    "deleted_absent_after_reconstruction": true,
+    "history_visible_after_reconstruction": true
   },
-  "dependency_result": {
-    "status": "PARTIAL",
-    "provider_requirements_install_completed": true,
-    "embedding_model_cache_populated": true,
-    "no_cuda_runtime_observed": true,
-    "exact_torch_and_qdrant_versions_captured": false
+  "comparison_to_phase02a": {
+    "python_version": {"status": "DIFFERENCE", "phase02a": "3.14.3", "phase02b": "3.12.3"},
+    "mem0ai_version": {"status": "MATCH", "phase02a": "2.2.1", "phase02b": "2.2.1"},
+    "sentence_transformers_version": {"status": "MATCH", "phase02a": "6.1.0", "phase02b": "6.1.0"},
+    "torch_version": {"status": "DIFFERENCE", "phase02a": "2.14.0", "phase02b": "2.7.1+cpu"},
+    "qdrant_client_version": {"status": "MATCH", "phase02a": "1.19.1", "phase02b": "1.19.1"},
+    "embedding_model": {"status": "MATCH", "phase02a": "sentence-transformers/paraphrase-MiniLM-L3-v2", "phase02b": "sentence-transformers/paraphrase-MiniLM-L3-v2"},
+    "vector_store": {"status": "MATCH", "phase02a": "qdrant embedded/local", "phase02b": "qdrant embedded/local"},
+    "history_store": {"status": "MATCH", "phase02a": "sqlite", "phase02b": "sqlite"},
+    "write_behavior": {"status": "MATCH", "phase02a": "one UUID and ADD history", "phase02b": "one UUID and ADD history"},
+    "query_behavior": {"status": "MATCH", "phase02a": "v1 and current v2 retrieved", "phase02b": "v1 and current v2 retrieved"},
+    "update_id_behavior": {"status": "MATCH", "phase02a": "same UUID", "phase02b": "same UUID"},
+    "update_history": {"status": "MATCH", "phase02a": "ADD then UPDATE", "phase02b": "ADD then UPDATE"},
+    "delete_retrieval_behavior": {"status": "MATCH", "phase02a": "absent from query and list", "phase02b": "absent from query and list"},
+    "delete_history": {"status": "MATCH", "phase02a": "DELETE retained with is_deleted=true", "phase02b": "DELETE retained with is_deleted=true"},
+    "process_reconstruction_persistence": {"status": "MATCH", "phase02a": "write survived; deleted value absent; history visible", "phase02b": "write survived; deleted value absent; history visible"},
+    "overall": {"status": "MATCH", "explanation": "The tested lifecycle semantics matched despite Python and torch version differences."}
   },
-  "blocker": "The remote project .venv did not contain pytest, so provider-independent tests could not start. The session then stopped as required.",
+  "attempt_history": [
+    {
+      "status": "BLOCKED",
+      "git_commit_tested": "3be787735a23c3a8853c7ef29251df1dec5538f9",
+      "timestamp": "2026-09-28T03:45:45.677894+00:00",
+      "blocker": "The remote project virtual environment lacked pytest; cleanup succeeded."
+    },
+    {
+      "status": "PASS",
+      "git_commit_tested": "813a32ad1b14736b08ba13f819cb18a8c22b6a34",
+      "timestamp": "2026-09-28T04:01:32.465562+00:00"
+    }
+  ],
   "cleanup": {
     "initial_vm_state": "SHELVED",
     "temporary_floating_ip_created": true,
@@ -122,11 +101,5 @@
     "floating_ip_address_persisted": false,
     "final_vm_state": "SHELVED",
     "persistent_provider_state_retained": true
-  },
-  "git_trace": {
-    "preparation_commit": "3be787735a23c3a8853c7ef29251df1dec5538f9",
-    "retry_hardening_commit": "81a58e1c9dae9f05102454443cd0ca3b30d39729",
-    "result_documentation_commit": "be01b9d80c0d6ae4a8beff8bd12aeaa4ec634549"
-  },
-  "timestamp": "2026-09-28T03:45:45.677894+00:00"
+  }
 }
