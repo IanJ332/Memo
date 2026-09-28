@@ -89,3 +89,18 @@ during Phase 02A.
 Hindsight, RetainDB, OpenViking, and Honcho remain uninstalled and unconfigured.
 They require separately authorized provider phases after the Mem0 baseline is
 reviewed.
+
+## Git Trace
+
+- Base: `e524eb5` — approved Phase 01 HEAD
+- `46c270e` — `chore: pin Mem0 2.2.1 provider dependencies`
+- `2ca9ced` — `feat: add Mem0 provider adapter`
+- `8a659fe` — `test: validate Mem0 local provider lifecycle`
+- `da32557` — `feat: capture Mem0 phase 2A manifest details`
+- `0ff3f3f` — `docs: record Mem0 2.2.1 bring-up results`
+- Tier 1: `10 passed`
+- Tier 2: `3 passed`
+- Complete suite: `13 passed`
+
+The final trace-only documentation commit is the branch HEAD recorded in the
+generated manifest and final execution report.
