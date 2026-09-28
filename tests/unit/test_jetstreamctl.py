@@ -33,9 +33,28 @@ def test_identity_accepts_only_expected_target() -> None:
 
 def test_dynamic_address_parser_prefers_floating_ipv4() -> None:
     server = {"addresses": {"private": [{"addr": "10.0.0.2", "OS-EXT-IPS:type": "fixed"}], "public": [{"addr": "203.0.113.5", "OS-EXT-IPS:type": "floating"}]}}
-    assert jetstreamctl.select_address(server) == "203.0.113.5"
-    assert jetstreamctl.select_address({"addresses": "net=192.0.2.7, 2001:db8::7"}) == "192.0.2.7"
+    assert jetstreamctl.select_address(server) is None
+    assert jetstreamctl.select_address({"addresses": "net=10.0.0.2, 192.168.1.3"}) is None
     assert jetstreamctl.select_address({"addresses": "net=10.0.0.2, 8.8.8.8"}) == "8.8.8.8"
+
+
+def test_dynamic_address_parser_handles_openstack_structures() -> None:
+    server = {
+        "addresses": {
+            "auto_allocated_network": [
+                {"addr": "10.0.0.2", "OS-EXT-IPS:type": "fixed"},
+                {"addr": "8.8.4.4", "OS-EXT-IPS:type": "floating"},
+            ]
+        }
+    }
+    assert jetstreamctl.select_address(server) == "8.8.4.4"
+
+
+def test_ssh_error_classification() -> None:
+    assert jetstreamctl.classify_ssh_error("Permission denied (publickey)") == "AUTH_DENIED"
+    assert jetstreamctl.classify_ssh_error("Host key verification failed") == "HOST_KEY_ERROR"
+    assert jetstreamctl.classify_ssh_error("Connection timed out") == "TCP_TIMEOUT"
+    assert jetstreamctl.classify_ssh_error("kex_exchange_identification failed") == "SSH_PROTOCOL_ERROR"
 
 
 def test_command_construction_is_scoped_and_noninteractive(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

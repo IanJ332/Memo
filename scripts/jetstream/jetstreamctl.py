@@ -200,17 +200,19 @@ def iter_addresses(value: Any, network: str = "") -> list[tuple[str, str, str]]:
 
 
 def select_address(server: Mapping[str, Any]) -> str | None:
-    candidates = iter_addresses(field(server, "addresses") or {})
+    candidates = [
+        item
+        for item in iter_addresses(field(server, "addresses") or {})
+        if ipaddress.ip_address(item[0]).is_global
+    ]
     if not candidates:
         return None
-    def rank(item: tuple[str, str, str]) -> tuple[int, int, int]:
+    def rank(item: tuple[str, str, str]) -> tuple[int, int]:
         address, kind, network = item
         ip = ipaddress.ip_address(address)
         floating = "floating" in kind.lower() or "public" in network.lower()
-        externally_routable = ip.is_global
         return (
             0 if floating else 1,
-            0 if externally_routable else 1,
             0 if ip.version == 4 else 1,
         )
     return sorted(candidates, key=rank)[0][0]
@@ -242,11 +244,45 @@ def ssh_command(address: str, remote_command: str) -> list[str]:
     ]
 
 
+def wait_for_tcp_22(address: str, timeout: int = 300, interval: int = 10) -> float:
+    started = time.monotonic()
+    deadline = started + timeout
+    while True:
+        try:
+            with socket.create_connection((address, 22), timeout=5):
+                return time.monotonic() - started
+        except OSError:
+            if time.monotonic() >= deadline:
+                raise JetstreamError("TCP_TIMEOUT: port 22 did not become reachable")
+            time.sleep(interval)
+
+
+def classify_ssh_error(detail: str) -> str:
+    lowered = detail.lower()
+    if "permission denied" in lowered or "authentication failed" in lowered:
+        return "AUTH_DENIED"
+    if "host key verification failed" in lowered or "remote host identification has changed" in lowered:
+        return "HOST_KEY_ERROR"
+    if "timed out" in lowered or "connection refused" in lowered or "no route to host" in lowered:
+        return "TCP_TIMEOUT"
+    return "SSH_PROTOCOL_ERROR"
+
+
+def verify_ssh(address: str) -> None:
+    try:
+        run_command(ssh_command(address, "true"), timeout=30)
+    except subprocess.TimeoutExpired as exc:
+        raise JetstreamError("TCP_TIMEOUT: SSH client timed out") from exc
+    except JetstreamError as exc:
+        raise JetstreamError(f"{classify_ssh_error(str(exc))}: {exc}") from exc
+
+
 def wait_for_ssh(address: str, timeout: int = 300) -> None:
+    """Compatibility helper for explicit ssh-check/probe commands."""
     deadline = time.monotonic() + timeout
     while True:
         try:
-            run_command(ssh_command(address, "true"), timeout=30)
+            verify_ssh(address)
             return
         except (JetstreamError, subprocess.TimeoutExpired):
             if time.monotonic() >= deadline:
@@ -258,13 +294,15 @@ PROBE_SCRIPT = r'''set -eu
 actual_mount="$(findmnt -n -o TARGET /dev/sdb)"
 printf 'remote_user=%s\n' "$(whoami)"
 printf 'remote_hostname=%s\n' "$(hostname)"
+printf 'remote_uname_b64=%s\n' "$(uname -a | base64 -w0)"
 printf 'repo_branch=%s\n' "$(git -C /home/exouser/Memo branch --show-current)"
+printf 'repo_head=%s\n' "$(git -C /home/exouser/Memo rev-parse HEAD)"
 printf 'repo_status_b64=%s\n' "$(git -C /home/exouser/Memo status --short | base64 -w0)"
 printf 'volume_device=/dev/sdb\n'
 printf 'resolved_volume_mount=%s\n' "$actual_mount"
+printf 'volume_capacity=%s\n' "$(df -h --output=size "$actual_mount" | tail -n 1 | xargs)"
 findmnt /dev/sdb >&2
 df -h "$actual_mount" >&2
-test -r "$actual_mount" && test -w "$actual_mount"
 printf 'python=%s\n' "$(/home/exouser/Memo/.venv/bin/python --version 2>&1)"
 '''
 
@@ -312,15 +350,18 @@ def run_acceptance(credentials: Mapping[str, str]) -> dict[str, Any]:
     opened = was_opened_by_run(initial_state)
     result: dict[str, Any] = {
         "phase": "02B-0", "timestamp": datetime.now(timezone.utc).isoformat(),
+        "status": "IN_PROGRESS",
         "branch": run_command(["git", "branch", "--show-current"]).stdout.strip(),
         "git_commit": run_command(["git", "rev-parse", "HEAD"]).stdout.strip(),
         "workstation_platform": platform.platform(),
         "openstack_client_version": run_command([str(OPENSTACK), "--version"]).stdout.strip(),
-        "target_instance_name": EXPECTED_NAME, "target_instance_uuid": field(initial, "id"),
+        "target_instance_name": EXPECTED_NAME, "target_uuid": field(initial, "id"),
         "initial_vm_state": initial_state, "unshelve_success": not opened,
-        "dynamic_address_resolved": False, "ssh_success": False,
-        "remote_user": None, "remote_hostname": None, "volume_device": VOLUME_DEVICE,
-        "resolved_volume_mount": None, "final_vm_state": None,
+        "external_address_resolved": False, "tcp_22_ready": False,
+        "active_to_tcp_ready_seconds": None, "ssh_success": False,
+        "ssh_failure_category": None, "remote_user": None, "hostname": None,
+        "verified_volume_device": VOLUME_DEVICE, "verified_volume_mount": None,
+        "final_vm_state": None,
         "opened_by_this_run": opened, "auto_shelve_success": False,
     }
     failure: BaseException | None = None
@@ -331,24 +372,44 @@ def run_acceptance(credentials: Mapping[str, str]) -> dict[str, Any]:
             result["unshelve_success"] = True
         address = select_address(initial)
         if not address:
-            raise JetstreamError("no current OpenStack address was reported")
-        result["dynamic_address_resolved"] = True
-        wait_for_ssh(address)
+            result["failure_stage"] = "ADDRESS"
+            raise JetstreamError("no externally routable current OpenStack address was reported")
+        result["external_address_resolved"] = True
+        try:
+            result["active_to_tcp_ready_seconds"] = round(wait_for_tcp_22(address), 3)
+            result["tcp_22_ready"] = True
+        except JetstreamError:
+            result["failure_stage"] = "TCP_22"
+            raise
+        try:
+            verify_ssh(address)
+        except JetstreamError as exc:
+            result["ssh_failure_category"] = str(exc).split(":", 1)[0]
+            result["failure_stage"] = (
+                "SSH_AUTH" if result["ssh_failure_category"] == "AUTH_DENIED" else "SSH_PROTOCOL"
+            )
+            raise
+        result["ssh_success"] = True
         facts = probe(address)
         result.update(
-            ssh_success=True,
             remote_user=facts["remote_user"],
-            remote_hostname=facts["remote_hostname"],
-            resolved_volume_mount=facts["resolved_volume_mount"],
+            hostname=facts["remote_hostname"],
+            remote_uname_b64=facts.get("remote_uname_b64"),
+            verified_volume_mount=facts["resolved_volume_mount"],
+            volume_capacity=facts.get("volume_capacity"),
             remote_repo="/home/exouser/Memo",
             remote_repo_branch=facts.get("repo_branch"),
+            remote_repo_head=facts.get("repo_head"),
             remote_repo_clean=not bool(facts.get("repo_status_b64")),
             remote_python=facts.get("python"),
             derived_memlife_root=facts["resolved_volume_mount"].rstrip("/") + "/memlife",
         )
     except BaseException as exc:
         failure = exc
+        result["status"] = "BLOCKED"
         result["error"] = type(exc).__name__
+        result["error_message"] = str(exc)
+        result.setdefault("failure_stage", "REMOTE_PROBE")
     finally:
         if opened:
             try:
@@ -361,6 +422,8 @@ def run_acceptance(credentials: Mapping[str, str]) -> dict[str, Any]:
         else:
             current, _ = resolve_server(credentials)
             result["final_vm_state"] = normalize_state(field(current, "status"))
+    if failure is None:
+        result["status"] = "PASS"
     ACCEPTANCE_FILE.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     if failure is not None:
         raise failure
