@@ -1,0 +1,48 @@
+{
+  "phase": "03",
+  "status": "PASS",
+  "benchmark_version": "0.1",
+  "branch": "phase-03-lifecycle-harness",
+  "base_commit": "d9c7f578063d5078332a70a7c9f3ef459d10f023",
+  "git_commit_tested": "b75073ec171cc2aefeed1ee2613b01bd7f42892f",
+  "timestamp": "2026-09-28T20:18:54.2807886Z",
+  "execution_target": "LOCAL",
+  "jetstream_used": false,
+  "jetstream_state": "SHELVED",
+  "result_format": "deterministic UTF-8 JSON array",
+  "runtime_output_path_class": "runtime/runs/phase-03/<provider>.json",
+  "canonical_scenarios": [
+    "baseline",
+    "correction-update",
+    "revocation",
+    "delete-restart",
+    "supersession"
+  ],
+  "scenario_count": 5,
+  "step_result_count_per_provider": 24,
+  "providers_exercised": [
+    {
+      "provider": "reference-in-memory",
+      "provider_version": "0.1",
+      "result": "24 successful step records"
+    },
+    {
+      "provider": "mem0-oss-2.2.1",
+      "provider_version": "2.2.1",
+      "result": "23 successful step records; 1 explicit unsupported revocation; 0 errors"
+    }
+  ],
+  "mem0_configuration": {
+    "infer": false,
+    "embedding_model": "sentence-transformers/paraphrase-MiniLM-L3-v2",
+    "vector_store": "qdrant embedded/local",
+    "history_store": "sqlite",
+    "hosted_llm_calls": 0
+  },
+  "tests": {
+    "unit_and_contract": "45 passed",
+    "integration": "4 passed",
+    "full": "49 passed in 9.65s"
+  },
+  "phase_01_02_regression": "PASS"
+}
