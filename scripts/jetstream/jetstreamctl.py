@@ -828,6 +828,7 @@ def run_acceptance(credentials: Mapping[str, str]) -> dict[str, Any]:
         result.setdefault("failure_stage", "CLEANUP")
     elif failure is None:
         result["status"] = "PASS"
+        result.pop("failure_stage", None)
     write_acceptance_manifest(result, credentials, transient_address)
     if failure is not None or cleanup_errors:
         raise JetstreamError(str(failure or "; ".join(cleanup_errors)))
