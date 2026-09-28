@@ -184,7 +184,11 @@ attempt history, and cleanup result. It contains no floating IP or credential.
 - `be01b9d` — record the blocked first attempt
 - `510209c` — complete the blocked-attempt trace
 - `813a32a` — capture all required retry dependency facts; exact tested commit
-- Completion/result commits: recorded in final branch history
+- `8419ee5` — record the successful sanitized lifecycle result
+- `bbcd96d` — record the completed Phase 02A/02B comparison
+
+The final trace-only documentation commit is the branch HEAD reported in the
+completion response.
 
 ## Next Phase Handoff
 
