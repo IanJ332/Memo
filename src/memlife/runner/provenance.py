@@ -216,7 +216,38 @@ class ProvenanceTraceRunner:
             candidate_id = deterministic_trace_id(
                 "candidate", retrieval_event_id, record.memory_id, index
             )
-            source_event_id = provider_event_ids.get(record.memory_id)
+            direct_source_event_id = provider_event_ids.get(record.memory_id)
+            exposed_source_ids = self.adapter.trace_source_provider_ids_for(record)
+            exposed_source_event_ids = tuple(
+                provider_event_ids[source_id]
+                for source_id in exposed_source_ids
+                if source_id in provider_event_ids
+            )
+            source_event_ids = (
+                exposed_source_event_ids
+                if exposed_source_ids
+                else ((direct_source_event_id,) if direct_source_event_id else ())
+            )
+            provenance_status = self.adapter.trace_provenance_status_for(record)
+            if exposed_source_ids and len(exposed_source_event_ids) != len(
+                exposed_source_ids
+            ):
+                provenance_status = ProvenanceStatus.UNKNOWN
+            provider_metadata = dict(self.adapter.trace_metadata_for(record))
+            provider_metadata.update(
+                {
+                    "association_basis": (
+                        "provider_exposed_source_ids"
+                        if exposed_source_event_ids
+                        else (
+                            "experiment_provider_id_match"
+                            if direct_source_event_id
+                            else "no_observable_source_event"
+                        )
+                    ),
+                    "provider_revision": record.revision,
+                }
+            )
             candidates.append(
                 RetrievalCandidate(
                     candidate_id=candidate_id,
@@ -228,18 +259,11 @@ class ProvenanceTraceRunner:
                     ),
                     # The normalized provider contract does not guarantee a score.
                     score=None,
-                    surface=MemorySurface.RETRIEVAL,
-                    source_event_ids=(source_event_id,) if source_event_id else (),
+                    surface=self.adapter.trace_surface_for(record),
+                    source_event_ids=source_event_ids,
                     lifecycle_status=record.state,
-                    provenance_status=self.adapter.trace_provenance_status,
-                    metadata={
-                        "association_basis": (
-                            "experiment_provider_id_match"
-                            if source_event_id
-                            else "no_observable_source_event"
-                        ),
-                        "provider_revision": record.revision,
-                    },
+                    provenance_status=provenance_status,
+                    metadata=provider_metadata,
                 )
             )
             retrieval_events.append(

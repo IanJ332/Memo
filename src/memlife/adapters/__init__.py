@@ -10,6 +10,7 @@ from memlife.adapters.base import (
     UnsupportedCapabilityError,
 )
 from memlife.adapters.reference import ReferenceMemoryAdapter
+from memlife.adapters.hindsight import HindsightMemoryAdapter
 
 __all__ = [
     "AdapterError",
@@ -17,6 +18,7 @@ __all__ = [
     "InvalidLifecycleTransitionError",
     "MemoryNotFoundError",
     "MemoryProviderAdapter",
+    "HindsightMemoryAdapter",
     "ProviderCapability",
     "ReferenceMemoryAdapter",
     "UnsupportedCapabilityError",

@@ -241,6 +241,10 @@ class LifecycleRunner:
             error = f"{type(exc).__name__}: {exc}"
         latency_ms = round((self.timer() - start) * 1000, 3)
 
+        # Some providers learn operation/quiescence metadata only while the
+        # native call runs. Refresh the sanitized snapshot after the step.
+        provider_metadata.update(self.adapter.benchmark_metadata())
+
         after, after_supported, after_error = self._inspect_safely(scenario.namespace)
         provider_metadata.update(
             {

@@ -111,6 +111,30 @@ class MemoryProviderAdapter(ABC):
 
         return MemorySurface.UNKNOWN
 
+    def trace_surface_for(self, record: MemoryRecord) -> MemorySurface:
+        """Return the directly observable surface for one normalized record."""
+
+        return self.trace_source_surface
+
+    def trace_provenance_status_for(
+        self, record: MemoryRecord
+    ) -> ProvenanceStatus:
+        """Return evidence strength for one record's provider-internal lineage."""
+
+        return self.trace_provenance_status
+
+    def trace_source_provider_ids_for(
+        self, record: MemoryRecord
+    ) -> tuple[str, ...]:
+        """Return provider IDs explicitly exposed as this record's sources."""
+
+        return ()
+
+    def trace_metadata_for(self, record: MemoryRecord) -> Mapping[str, Any]:
+        """Return a small sanitized provider description for one trace candidate."""
+
+        return {}
+
     def history_for(
         self,
         memory_id: str,
