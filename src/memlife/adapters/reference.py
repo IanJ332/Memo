@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from types import MappingProxyType
-from typing import Mapping
+from typing import Any, Mapping
 
 from memlife.adapters.base import (
     CapabilitySupport,
@@ -41,6 +41,29 @@ class ReferenceMemoryAdapter(MemoryProviderAdapter):
     @property
     def provider_name(self) -> str:
         return "reference-in-memory"
+
+    @property
+    def provider_version(self) -> str:
+        return "0.1"
+
+    def native_operation_for(self, intended_event: str) -> str:
+        return {
+            "WRITE": "reference.create_record",
+            "UPDATE": "reference.create_successor_record",
+            "SUPERSEDE": "reference.create_successor_record",
+            "REVOKE": "reference.mark_revoked",
+            "DELETE": "reference.mark_deleted",
+            "RESTART": "reference.logical_restart_noop",
+            "QUERY": "reference.substring_query",
+            "INSPECT": "reference.list_records",
+        }.get(intended_event, super().native_operation_for(intended_event))
+
+    def benchmark_metadata(self) -> Mapping[str, Any]:
+        return {
+            "storage": "in-memory",
+            "update_semantics": "new successor ID; predecessor retained",
+            "restart_semantics": "logical no-op",
+        }
 
     @property
     def capabilities(self) -> Mapping[ProviderCapability, CapabilitySupport]:
@@ -164,3 +187,19 @@ class ReferenceMemoryAdapter(MemoryProviderAdapter):
     def restart(self) -> None:
         self.require_supported(ProviderCapability.RESTART)
         # Deliberately retain records: there is no external process to restart.
+
+    def history_for(self, memory_id: str) -> tuple[Mapping[str, Any], ...]:
+        """Return the related normalized records already retained in memory."""
+
+        related = []
+        for records in self._records.values():
+            for record in records.values():
+                if memory_id in {
+                    record.memory_id,
+                    record.supersedes_id,
+                    record.superseded_by_id,
+                }:
+                    related.append(record.model_dump(mode="json"))
+        if not related:
+            raise MemoryNotFoundError(f"memory {memory_id!r} does not exist")
+        return tuple(related)

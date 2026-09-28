@@ -151,6 +151,31 @@ class Mem0MemoryAdapter(MemoryProviderAdapter):
         return "mem0-oss-2.2.1"
 
     @property
+    def provider_version(self) -> str:
+        return MEM0_VERSION
+
+    def native_operation_for(self, intended_event: str) -> str:
+        return {
+            "WRITE": "Memory.add(infer=False)",
+            "UPDATE": "Memory.update(same UUID)",
+            "SUPERSEDE": "Memory.update(same UUID)",
+            "REVOKE": "unsupported (native revoke unavailable)",
+            "DELETE": "Memory.delete",
+            "RESTART": "Memory.from_config reconstruction",
+            "QUERY": "Memory.search",
+            "INSPECT": "Memory.get_all + Memory.history",
+        }.get(intended_event, super().native_operation_for(intended_event))
+
+    def benchmark_metadata(self) -> Mapping[str, Any]:
+        return {
+            "infer": False,
+            "embedding_model": EMBEDDING_MODEL,
+            "vector_store": "qdrant embedded/local",
+            "history_store": "sqlite",
+            "update_semantics": "native update of same UUID",
+        }
+
+    @property
     def capabilities(self) -> Mapping[ProviderCapability, CapabilitySupport]:
         return _ALL_SUPPORTED
 
@@ -354,6 +379,9 @@ class Mem0MemoryAdapter(MemoryProviderAdapter):
         """Expose Mem0's native SQLite history without normalizing semantics."""
 
         return tuple(self._memory.history(memory_id))
+
+    def history_for(self, memory_id: str) -> tuple[Mapping[str, Any], ...]:
+        return self.native_history(memory_id)
 
     def close(self) -> None:
         vector_store = getattr(self._memory, "vector_store", None)

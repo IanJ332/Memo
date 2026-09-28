@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Mapping
+from typing import Any, Mapping
 
 from memlife.models.memory import (
     DeleteCommand,
@@ -60,6 +60,12 @@ class MemoryProviderAdapter(ABC):
         """Return a stable, human-readable provider identifier."""
 
     @property
+    def provider_version(self) -> str | None:
+        """Return a provider version when one is known."""
+
+        return None
+
+    @property
     @abstractmethod
     def capabilities(self) -> Mapping[ProviderCapability, CapabilitySupport]:
         """Declare support for every normalized operation."""
@@ -77,6 +83,23 @@ class MemoryProviderAdapter(ABC):
             raise UnsupportedCapabilityError(
                 f"{self.provider_name} does not support {capability.value}"
             )
+
+    def native_operation_for(self, intended_event: str) -> str:
+        """Describe the provider-native action used for benchmark intent."""
+
+        return intended_event.casefold()
+
+    def benchmark_metadata(self) -> Mapping[str, Any]:
+        """Return a small sanitized provider description for result records."""
+
+        return {}
+
+    def history_for(self, memory_id: str) -> tuple[Mapping[str, Any], ...]:
+        """Expose native history when available, without emulation."""
+
+        raise UnsupportedCapabilityError(
+            f"{self.provider_name} does not expose native history"
+        )
 
     @abstractmethod
     def reset_namespace(self, namespace: str) -> None:
