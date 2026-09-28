@@ -196,7 +196,11 @@ completed validation.
 
 - `b140e20` — approved Phase 02B-0 predecessor
 - `3be7877` — `chore: prepare Mem0 Jetstream validation`
-- Result documentation commit: recorded in the branch history after this file
+- `81a58e1` — `fix: prepare retry after Jetstream dependency blocker`
+- `be01b9d` — `docs: record blocked Mem0 Jetstream validation`
+
+The final trace-only documentation commit is the branch HEAD reported in the
+completion response.
 
 ## Next Phase Handoff
 
