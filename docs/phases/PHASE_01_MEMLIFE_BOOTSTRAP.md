@@ -165,11 +165,13 @@ than being fabricated.
 - `b539c08` — `chore: scaffold MemLife-NLIP phase 1 structure`
 - `8669341` — `feat: add provider-independent memory adapter contract`
 - `8006101` — `test: add phase 1 reference provider and contract validation`
+- `f8a9f0d` — `docs: document phase 1 completion and phase 2 handoff`
+- `dcaff49` — `fix: support the documented Python 3.10 baseline`
 - Test command: `.venv\Scripts\python.exe -m pytest -q`
 - Result: `9 passed`
 
-The documentation commit and full immutable SHAs are available in the branch
-history and final execution report.
+The final trace-only documentation commit and full immutable SHAs are available
+in the branch history and final execution report.
 
 ## Phase 02 Handoff
 
