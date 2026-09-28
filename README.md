@@ -8,11 +8,12 @@ This repository hosts the development environment, tooling, and artifacts for th
 
 **Current research direction:** MemLife-NLIP
 
-**Current implementation status:** Phase 03 — lifecycle benchmark harness
+**Current implementation status:** Phase 03B — provenance and enforcement trace foundation
 
 - Phase 01: **PASS** — [MemLife Bootstrap](docs/phases/PHASE_01_MEMLIFE_BOOTSTRAP.md)
 - Phase 02: **PASS** — [Provider Bring-up](docs/phases/PHASE_02_PROVIDER_BRINGUP.md)
 - Phase 03: **PASS** — [Cross-Provider Lifecycle Benchmark Harness](docs/phases/PHASE_03_LIFECYCLE_HARNESS.md)
+- Phase 03B: **PASS** — [Provenance and Enforcement Trace Foundation](docs/phases/PHASE_03B_PROVENANCE_TRACE.md)
 - [Mem0 OSS 2.2.1 characterization](docs/providers/MEM0_2_2_1.md)
 
 ---
@@ -75,6 +76,22 @@ chmod +x scripts/*.sh
 ## Jetstream2 Characterization & Workflow
 
 For instructions on manual VM provisioning (`m3.small` flavor), Service Unit (SU) conservation (`Shelve` / `Unshelve`), and running baseline reports, refer to [docs/JETSTREAM2_SETUP.md](docs/JETSTREAM2_SETUP.md).
+
+## Research Pipeline Architecture
+
+Phase 03 lifecycle results remain independent of the companion Phase 03B trace:
+
+```text
+lifecycle events
+    -> provider
+    -> retrieval
+    -> provenance/enforcement trace
+    -> future model (NOT RUN in Phase 03B)
+    -> future tool (NOT RUN in Phase 03B)
+```
+
+The trace records explicit evidence gaps as unknown rather than manufacturing
+provider-internal causal relationships.
 
 ## Phase 01 Validation
 
