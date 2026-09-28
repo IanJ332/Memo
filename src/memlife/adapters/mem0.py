@@ -380,7 +380,12 @@ class Mem0MemoryAdapter(MemoryProviderAdapter):
 
         return tuple(self._memory.history(memory_id))
 
-    def history_for(self, memory_id: str) -> tuple[Mapping[str, Any], ...]:
+    def history_for(
+        self,
+        memory_id: str,
+        *,
+        namespace: str | None = None,
+    ) -> tuple[Mapping[str, Any], ...]:
         return self.native_history(memory_id)
 
     def close(self) -> None:

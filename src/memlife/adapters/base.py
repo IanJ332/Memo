@@ -94,7 +94,12 @@ class MemoryProviderAdapter(ABC):
 
         return {}
 
-    def history_for(self, memory_id: str) -> tuple[Mapping[str, Any], ...]:
+    def history_for(
+        self,
+        memory_id: str,
+        *,
+        namespace: str | None = None,
+    ) -> tuple[Mapping[str, Any], ...]:
         """Expose native history when available, without emulation."""
 
         raise UnsupportedCapabilityError(

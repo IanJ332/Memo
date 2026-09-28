@@ -188,11 +188,21 @@ class ReferenceMemoryAdapter(MemoryProviderAdapter):
         self.require_supported(ProviderCapability.RESTART)
         # Deliberately retain records: there is no external process to restart.
 
-    def history_for(self, memory_id: str) -> tuple[Mapping[str, Any], ...]:
+    def history_for(
+        self,
+        memory_id: str,
+        *,
+        namespace: str | None = None,
+    ) -> tuple[Mapping[str, Any], ...]:
         """Return the related normalized records already retained in memory."""
 
         related = []
-        for records in self._records.values():
+        record_groups = (
+            (self._namespace_records(namespace),)
+            if namespace is not None
+            else self._records.values()
+        )
+        for records in record_groups:
             for record in records.values():
                 if memory_id in {
                     record.memory_id,

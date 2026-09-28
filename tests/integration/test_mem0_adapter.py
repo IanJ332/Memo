@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 
 from memlife.adapters.mem0 import MEM0_VERSION, Mem0MemoryAdapter
@@ -12,27 +10,6 @@ from memlife.models.memory import DeleteCommand, QueryCommand, SupersedeCommand,
 from tests.contract.provider_contract import run_lifecycle_smoke
 
 pytestmark = pytest.mark.mem0_integration
-
-
-@pytest.fixture
-def mem0_adapter(monkeypatch: pytest.MonkeyPatch) -> Mem0MemoryAdapter:
-    """Create Mem0 from the pre-fetched cache and forbid LLM inference."""
-
-    monkeypatch.setenv("HF_HUB_OFFLINE", "1")
-    monkeypatch.setenv("TRANSFORMERS_OFFLINE", "1")
-    adapter = Mem0MemoryAdapter.from_runtime(Path.cwd())
-    llm_calls: list[object] = []
-
-    def fail_on_llm_call(*args: object, **kwargs: object) -> None:
-        llm_calls.append((args, kwargs))
-        pytest.fail("Mem0 attempted an LLM call during the infer=False baseline")
-
-    adapter.native_memory.llm.generate_response = fail_on_llm_call
-    adapter._phase02a_llm_calls = llm_calls  # type: ignore[attr-defined]
-    try:
-        yield adapter
-    finally:
-        adapter.close()
 
 
 def test_mem0_uses_required_oss_mode_and_reusable_contract(

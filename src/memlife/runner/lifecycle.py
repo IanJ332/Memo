@@ -112,7 +112,10 @@ class LifecycleRunner:
         ]
 
     def _history_summary(
-        self, memory_ids: Iterable[str]
+        self,
+        memory_ids: Iterable[str],
+        *,
+        namespace: str,
     ) -> tuple[bool, dict[str, Any]]:
         summaries: dict[str, Any] = {}
         visible = False
@@ -120,7 +123,7 @@ class LifecycleRunner:
         errors: list[str] = []
         for memory_id in dict.fromkeys(memory_ids):
             try:
-                entries = self.adapter.history_for(memory_id)
+                entries = self.adapter.history_for(memory_id, namespace=namespace)
                 visible = visible or bool(entries)
                 events = []
                 for entry in entries:
@@ -198,7 +201,10 @@ class LifecycleRunner:
                     if step.target_key is not None
                     else list(memory_ids.values())
                 )
-                history_visible, history_metadata = self._history_summary(targets)
+                history_visible, history_metadata = self._history_summary(
+                    targets,
+                    namespace=scenario.namespace,
+                )
                 provider_metadata.update(history_metadata)
         except UnsupportedCapabilityError as exc:
             status = OperationStatus.UNSUPPORTED
