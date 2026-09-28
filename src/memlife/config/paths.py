@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import os
+import subprocess
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Mapping
+from typing import Callable, Mapping
 
 DATA_ROOT_ENV = "MEMLIFE_DATA_ROOT"
-JETSTREAM_VOLUME = Path("/media/volume/sdb")
+JETSTREAM_DEVICE = "/dev/sdb"
 RUNTIME_DIRECTORIES = (
     "providers",
     "datasets",
@@ -42,15 +43,33 @@ def repository_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
 
+def resolve_mountpoint(device: str = JETSTREAM_DEVICE) -> Path | None:
+    """Return the current mountpoint for a block device, if it is mounted."""
+
+    result = subprocess.run(
+        ["findmnt", "-n", "-o", "TARGET", device],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        return None
+    value = result.stdout.strip()
+    if not value or not value.startswith("/"):
+        return None
+    return Path(value)
+
+
 def resolve_data_root(
     environment: Mapping[str, str] | None = None,
     repo_root: Path | None = None,
-    jetstream_volume: Path = JETSTREAM_VOLUME,
+    mount_resolver: Callable[[], Path | None] = resolve_mountpoint,
+    platform_name: str | None = None,
 ) -> DataRootConfig:
     """Resolve storage without creating or modifying any filesystem objects.
 
     An explicit ``MEMLIFE_DATA_ROOT`` wins. On POSIX systems, an existing
-    Jetstream persistent volume selects ``/media/volume/sdb/memlife``.
+    the mounted ``/dev/sdb`` persistent volume selects ``<mount>/memlife``.
     Every other environment safely falls back to ``<repository>/runtime``.
     """
 
@@ -64,8 +83,11 @@ def resolve_data_root(
             candidate = root / candidate
         return DataRootConfig(candidate.resolve(), DataRootMode.CONFIGURED)
 
-    if os.name == "posix" and jetstream_volume.is_dir():
-        return DataRootConfig(jetstream_volume / "memlife", DataRootMode.JETSTREAM)
+    current_platform = os.name if platform_name is None else platform_name
+    if current_platform == "posix":
+        jetstream_volume = mount_resolver()
+        if jetstream_volume is not None and jetstream_volume.is_dir():
+            return DataRootConfig(jetstream_volume / "memlife", DataRootMode.JETSTREAM)
 
     return DataRootConfig(root / "runtime", DataRootMode.LOCAL)
 
