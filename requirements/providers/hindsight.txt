@@ -1,0 +1,4 @@
+# Phase 04 approved Hindsight self-hosted service and Python client.
+# The official slim+ONNX path avoids PyTorch/CUDA on the CPU-only Jetstream VM.
+hindsight-api-slim[embedded-db,local-onnx]==0.10.1
+hindsight-client==0.10.1

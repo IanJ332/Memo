@@ -1,0 +1,55 @@
+{
+  "provider": "hindsight",
+  "provider_version": "0.10.1",
+  "upstream_tag": "v0.10.1",
+  "upstream_commit": "f8950b0c07d9e34c76493dba802bb309f0ce60fd",
+  "deployment_mode": "bare-metal self-hosted API service",
+  "packages": [
+    "hindsight-api-slim[embedded-db,local-onnx]==0.10.1",
+    "hindsight-client==0.10.1"
+  ],
+  "database": {
+    "url_class": "pg0://named-instance",
+    "instance": "memlife-phase04",
+    "backend": "embedded pg0/PostgreSQL with pgvector",
+    "path_class": "persistent-volume/providers/hindsight/pg0"
+  },
+  "internal_llm": {
+    "provider": "openai",
+    "model": "gpt-oss-120b",
+    "base_endpoint_class": "course-authorized OpenAI-compatible hosted endpoint",
+    "api_key_class": "course-supported non-secret placeholder",
+    "purpose": "Hindsight fact extraction and consolidation only"
+  },
+  "embeddings": {
+    "provider": "onnx",
+    "model": "intfloat/multilingual-e5-small",
+    "dimensions": 384,
+    "query_prefix": "query: ",
+    "passage_prefix": "passage: ",
+    "cache_path_class": "persistent-volume/model_cache/hindsight"
+  },
+  "reranker": {
+    "provider": "rrf"
+  },
+  "processing": {
+    "retain_async": false,
+    "retain_batch_enabled": false,
+    "worker_processes": 1,
+    "worker_slots": 2,
+    "consolidation_reserved_slots": 1,
+    "graph_maintenance_reserved_slots": 1,
+    "quiescence": "poll provider operation status until no new operation is pending or processing"
+  },
+  "retrieval": {
+    "primitive": "recall",
+    "types": [
+      "world",
+      "experience",
+      "observation"
+    ],
+    "include_observation_source_facts": true,
+    "reflect_used": false
+  },
+  "rq3_decision_model_calls": 0
+}
