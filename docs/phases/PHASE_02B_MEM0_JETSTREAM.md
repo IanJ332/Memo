@@ -2,118 +2,95 @@
 
 ## Objective
 
-Phase 02B attempted to validate the approved Mem0 OSS 2.2.1 Phase 02A
-configuration on the `jisheng3` Jetstream2 VM. This was a portability and
-reproducibility run, not a provider redesign or security evaluation.
+Validate the approved Mem0 OSS 2.2.1 Phase 02A configuration on the
+`jisheng3` Jetstream2 VM without redesigning the provider or running security
+experiments. **Final status: PASS.**
 
-**Status: BLOCKED.** The single authorized managed session reached remote
-dependency installation and embedding-model acquisition, then stopped before
-the remote test gate because `/home/exouser/Memo/.venv` did not contain
-`pytest`. No second VM lifecycle was started.
+The first managed attempt stopped before tests because the remote `.venv`
+lacked `pytest`. Cleanup succeeded. A separately authorized retry installed the
+pinned core requirements and completed every required test and lifecycle check.
 
 ## Execution Environment
 
-- Target: Jetstream2 instance `jisheng3`
-- Verified instance UUID: `5baeeae7-4c29-4903-89fe-2e9df0a8eced`
-- Machine class: `m3.small`, 2 vCPU, approximately 5.78 GiB RAM, no GPU
-- OS baseline: Ubuntu 24.04.5 LTS
-- Remote Python: 3.12.3
-- Initial VM state: `SHELVED`
-- Final VM state: `SHELVED`
-- Temporary floating IP: created by the run, associated, then disassociated and
-  deleted by the run; its numeric value was not persisted
-
-The controller reused the Phase 02B-0 instance, identity, floating-IP ownership,
-SSH, and cleanup safeguards. Remote work ran as a callback inside the same
-managed `try/finally` lifecycle.
+- Instance: `jisheng3`
+- UUID: `5baeeae7-4c29-4903-89fe-2e9df0a8eced`
+- Machine: Jetstream2 `m3.small`, 2 vCPU, approximately 5.78 GiB RAM, no GPU
+- OS: Ubuntu 24.04.5 LTS
+- Python: 3.12.3
+- Initial/final VM state: `SHELVED` / `SHELVED`
+- Temporary floating IP: created, associated, disassociated, and deleted by the
+  retry; its numeric address was not persisted
 
 ## Git Commit Tested
 
 - Branch: `phase-02b-mem0-jetstream`
 - Approved base: `b140e204c14bef8b9c72de62c3f22bffe6e3839c`
-- Remote-work preparation commit:
-  `3be787735a23c3a8853c7ef29251df1dec5538f9`
+- Exact tested commit: `813a32ad1b14736b08ba13f819cb18a8c22b6a34`
 
-The remote clone was clean after preserving and locally excluding
-`JETSTREAM2_SERVER_CONTEXT.txt`. It fetched the branch and verified the exact
-commit before invoking the branch-only remote validation script. The initial
-probe records the pre-sync clone state (`main` at `3a19888`); it is not the
-commit used by the remote-work script.
+The remote clone preserved the local-only `JETSTREAM2_SERVER_CONTEXT.txt`,
+fast-forwarded to the pushed branch, and verified the exact commit before work.
 
 ## Live Storage Verification
 
-Live `findmnt /dev/sdb` resolved the mount as:
+Live `findmnt /dev/sdb` reported:
 
 ```text
-device: /dev/sdb
-mount:  /media/volume/jisheng3_volume
-size:   approximately 49G
+source: /dev/sdb
+filesystem: ext4
+mount: /media/volume/jisheng3_volume
 ```
 
-The former cached path `/media/volume/sdb` was stale and was not used. The run
-derived `MEMLIFE_DATA_ROOT` as:
+The stale `/media/volume/sdb` path was not used. The derived MemLife root was
+`/media/volume/jisheng3_volume/memlife`.
 
-```text
-/media/volume/jisheng3_volume/memlife
-```
-
-The final sanitized result was not produced, so root- and volume-free byte
-counts and the filesystem type were not transferred locally.
+| Filesystem | Free before | Free after |
+| --- | ---: | ---: |
+| Root | 5,885,071,360 bytes | 5,880,119,296 bytes |
+| Persistent volume | 52,131,151,872 bytes | 52,129,026,048 bytes |
 
 ## Dependency Installation
 
-The remote script redirected `PIP_CACHE_DIR`, `HF_HOME`, `TORCH_HOME`, and
-`SENTENCE_TRANSFORMERS_HOME` beneath the persistent MemLife model cache. It ran
-the provider requirements dry-run, established a CPU-only torch runtime, checked
-for installed `nvidia-*` packages, installed the pinned provider requirements,
-and reached successful loading of the approved embedding model.
+The retry installed `requirements/core.txt` before the provider stack, resolving
+the first attempt's missing-pytest blocker. Final remote versions were:
 
-The provider file pins `mem0ai==2.2.1` and
-`sentence-transformers==6.1.0`. Exact remote `torch` and `qdrant-client`
-versions were printed remotely but were not returned in the failure result, so
-they remain unverified rather than inferred.
+- pytest 9.0.2
+- mem0ai 2.2.1
+- sentence-transformers 6.1.0
+- torch 2.7.1+cpu
+- qdrant-client 1.19.1
 
-The blocking omission was that the remote script had not first installed the
-pinned `requirements/core.txt`; consequently, the first remote pytest command
-failed with `No module named pytest`. The preparation script now installs the
-core requirements before the provider stack for a future separately authorized
-attempt.
+`pip check` passed. Pinned installation was idempotent against the partial first
+attempt and reused the persistent pip and Hugging Face caches.
 
 ## CPU-Only Embedding Runtime
 
-The installer accepted an existing torch only if `torch.version.cuda is None`;
-otherwise it selected official CPU-only `torch==2.7.1+cpu`. It then rejected
-the environment if any installed package name began with `nvidia-`, and asserted
-both `torch.version.cuda is None` and `torch.cuda.is_available() is False`.
-Those gates completed before the model load. No CUDA or NVIDIA runtime was
-intentionally installed. The exact resulting torch version was not captured
-locally and is therefore reported as unknown.
+Torch reported no CUDA runtime and `torch.cuda.is_available()` was false. Both
+the dry-run proposal and final installed-package check contained no `nvidia-*`
+packages. The approved `paraphrase-MiniLM-L3-v2` model loaded from the
+persistent-volume cache with offline Hugging Face modes enabled for validation.
 
 ## Mem0 Configuration
 
-The prepared configuration remained the Phase 02A research configuration:
-
-- Mem0 OSS `Memory`, not hosted `MemoryClient`
-- writes with `infer=False`
-- telemetry disabled
-- Hugging Face `sentence-transformers/paraphrase-MiniLM-L3-v2`
-- embedded/local Qdrant, on disk
-- SQLite native history
-- loopback-only unused LLM placeholder
-- no paid API, Mem0 cloud service, chat LLM, or Jetstream hosted LLM
+- API: Mem0 OSS `Memory`, not hosted `MemoryClient`
+- Writes: `infer=False`
+- Telemetry: disabled
+- Embedding: Hugging Face
+  `sentence-transformers/paraphrase-MiniLM-L3-v2`, 384 dimensions
+- Vector store: embedded/local Qdrant, on disk
+- History: SQLite
+- LLM: unused loopback-only constructor placeholder; no inference call
+- No paid API, Mem0 cloud, chat LLM, or Jetstream hosted LLM
 
 Configuration SHA-256:
 `23c068e16db7d4bb90aad7755b997d5a4104c433a4a0083ef43b3506680ff2e8`.
 
 ## Persistent Storage Layout
 
-The remote script created the idempotent runtime layout below the live mount:
-
 ```text
 /media/volume/jisheng3_volume/memlife/
 ├── providers/mem0/phase-02b/
 │   ├── qdrant/
-│   ├── history/
+│   ├── history/history.db
 │   └── scratch/
 ├── model_cache/
 │   ├── pip/
@@ -124,86 +101,93 @@ The remote script created the idempotent runtime layout below the live mount:
 └── artifacts/
 ```
 
-Provider data and model caches were not placed in Git or under the repository's
-root-disk `runtime/` directory. Persistent state was retained after shelving.
+Caches, databases, logs, and experiment artifacts remained on the persistent
+volume and were not copied into Git.
 
 ## Contract Validation
 
-- Local unit suite before remote work: `30 passed`
-- Local contract suite before remote work: `2 passed`
-- Local complete suite before remote work: `35 passed`
-- Remote provider-independent command:
+- Local unit: `30 passed`
+- Local contract: `2 passed`
+- Local complete suite: `35 passed`
+- Remote unit + contract:
   `/home/exouser/Memo/.venv/bin/python -m pytest tests/unit tests/contract -q -p no:cacheprovider`
-- Remote result: **BLOCKED before collection** because the interpreter had no
-  `pytest` module
-- Remote Mem0 integration suite: **NOT RUN**
+  → `32 passed in 0.25s`
+- Remote Mem0 integration:
+  `/home/exouser/Memo/.venv/bin/python -m pytest tests/integration/test_mem0_adapter.py -q -m mem0_integration -p no:cacheprovider`
+  → `3 passed in 7.79s`
 
 ## Native Lifecycle Observations
 
-No remote write, query, update, delete, list, or native-history operation ran.
-The session stopped at the test gate. Phase 02A observations must not be
-projected onto Jetstream.
+- Write returned memory ID `f54c1d3d-15c4-481c-a71e-05fccb6808f4` and exposed
+  native `ADD` history.
+- Query retrieved the Alice v1 proposition.
+- Native update retained the same UUID; the Bob v2 text became current in both
+  query and list.
+- Pre-delete history contained `ADD`, `UPDATE`.
+- Native delete removed the record from query and list.
+- Post-delete history contained `ADD`, `UPDATE`, `DELETE`; the delete entry
+  exposed `is_deleted=true`.
+
+These are observations for Mem0 OSS 2.2.1 under this pinned configuration, not
+general security or deletion-durability claims.
 
 ## Restart / Reconstruction Result
 
-**NOT RUN.** No claim is made about remote write persistence, post-delete
-retrieval, or history visibility after reconstruction.
+Reconstructing the Mem0 object after write preserved and retrieved the memory.
+Reconstructing after delete kept the value absent from normal retrieval while
+native `DELETE` history remained visible. Result: **PASS**.
 
 ## Phase 02A vs Phase 02B Comparison
 
-| Dimension | Result | Local Windows Phase 02A | Jetstream Ubuntu Phase 02B |
+| Dimension | Result | Phase 02A Windows | Phase 02B Jetstream |
 | --- | --- | --- | --- |
 | Python | DIFFERENCE | 3.14.3 | 3.12.3 |
-| mem0ai | MATCH | 2.2.1 | pinned 2.2.1 installation completed before blocker |
-| sentence-transformers | MATCH | 6.1.0 | pinned 6.1.0 installation and model load completed |
-| torch | NOT COMPARABLE | 2.14.0 | exact version not captured |
-| qdrant-client | NOT COMPARABLE | 1.19.1 | exact version not captured |
-| embedding model | MATCH | `paraphrase-MiniLM-L3-v2` | same model downloaded and loaded |
-| infer mode | MATCH (configuration only) | false | configured false; operation not run |
-| vector-store mode | MATCH (configuration only) | embedded/local Qdrant | same configured; operation not run |
-| history store | MATCH (configuration only) | SQLite | same configured; operation not run |
-| write behavior | NOT COMPARABLE | ADD observed | not run |
-| query behavior | NOT COMPARABLE | v1/v2 retrieved | not run |
-| update ID behavior | NOT COMPARABLE | same UUID | not run |
-| update history | NOT COMPARABLE | UPDATE retained | not run |
-| delete retrieval | NOT COMPARABLE | absent | not run |
-| delete history | NOT COMPARABLE | DELETE retained | not run |
-| reconstruction | NOT COMPARABLE | write persisted; deleted value absent | not run |
+| mem0ai | MATCH | 2.2.1 | 2.2.1 |
+| sentence-transformers | MATCH | 6.1.0 | 6.1.0 |
+| torch | DIFFERENCE | 2.14.0 | 2.7.1+cpu |
+| qdrant-client | MATCH | 1.19.1 | 1.19.1 |
+| embedding model | MATCH | `paraphrase-MiniLM-L3-v2` | same |
+| vector store | MATCH | embedded/local Qdrant | embedded/local Qdrant |
+| history store | MATCH | SQLite | SQLite |
+| write | MATCH | UUID + ADD | UUID + ADD |
+| query | MATCH | v1/current v2 retrieved | v1/current v2 retrieved |
+| update UUID | MATCH | same UUID | same UUID |
+| update history | MATCH | ADD, UPDATE | ADD, UPDATE |
+| delete retrieval | MATCH | absent from query/list | absent from query/list |
+| delete history | MATCH | DELETE, `is_deleted=true` | DELETE, `is_deleted=true` |
+| reconstruction | MATCH | write survives; delete remains absent; history visible | same |
 
-Overall: **NOT COMPARABLE for provider lifecycle semantics**. Only environment,
-storage, configuration, dependency progression, model acquisition, and cleanup
-facts were established.
+Overall: **MATCH** for the tested lifecycle semantics, with measured Python and
+torch version differences.
 
 ## Reproducibility
 
-The tracked sanitized manifest is
-`manifests/phase-02b-mem0-jetstream.json`. Large caches, logs, dry-run reports,
-and partial runtime directories remain on the persistent volume. A future run
-requires new lifecycle authorization and should use the corrected branch code;
-it must not assume the partially installed environment is equivalent to a
-completed validation.
+The sanitized tracked manifest is
+`manifests/phase-02b-mem0-jetstream.json`. It records the exact tested commit,
+versions, disk metrics, storage paths, tests, lifecycle booleans, comparison,
+attempt history, and cleanup result. It contains no floating IP or credential.
 
 ## Limitations
 
-- The one authorized lifecycle ended before remote tests.
-- Root/volume free-space snapshots and exact remote torch/Qdrant versions were
-  not transferred before failure.
-- No provider lifecycle or reconstruction observation exists for Jetstream.
-- This run says nothing about Mem0 security, universal deletion durability, or
-  stale-memory attack behavior.
+- This is one pinned Mem0 version, model, configuration, VM class, and lifecycle
+  sequence.
+- No concurrency, performance benchmark, attack campaign, authorization
+  gateway, revocation implementation, or security conclusion was tested.
+- Normal query/list surfaces do not expose deleted records; native SQLite
+  history was inspected separately.
 
 ## Git Trace
 
 - `b140e20` — approved Phase 02B-0 predecessor
-- `3be7877` — `chore: prepare Mem0 Jetstream validation`
-- `81a58e1` — `fix: prepare retry after Jetstream dependency blocker`
-- `be01b9d` — `docs: record blocked Mem0 Jetstream validation`
-
-The final trace-only documentation commit is the branch HEAD reported in the
-completion response.
+- `3be7877` — prepare managed Mem0 validation
+- `81a58e1` — fix core-dependency and UTF-8 blocker
+- `be01b9d` — record the blocked first attempt
+- `510209c` — complete the blocked-attempt trace
+- `813a32a` — capture all required retry dependency facts; exact tested commit
+- Completion/result commits: recorded in final branch history
 
 ## Next Phase Handoff
 
-Phase 02 is not complete. With new user authorization, rerun Phase 02B once
-using the corrected core-dependency installation and UTF-8 output handling.
-Do not start Hindsight, the Memory Authority Gateway, or attack experiments.
+Phase 02 is complete for Mem0 provider bring-up and Jetstream portability.
+Further providers, the Memory Authority Gateway, and lifecycle-security attacks
+remain separately authorized future work.
