@@ -38,14 +38,16 @@ def assert_complete_capability_declaration(adapter: MemoryProviderAdapter) -> No
     )
 
 
-def run_lifecycle_smoke(adapter: MemoryProviderAdapter) -> None:
+def run_lifecycle_smoke(
+    adapter: MemoryProviderAdapter,
+    namespace: str = "contract-smoke",
+) -> None:
     """Exercise only behavior guaranteed by the normalized smoke profile."""
 
     assert_complete_capability_declaration(adapter)
     for capability in SMOKE_CAPABILITIES:
         assert adapter.support_for(capability) is CapabilitySupport.SUPPORTED
 
-    namespace = "contract-smoke"
     adapter.reset_namespace(namespace)
     assert adapter.list_or_inspect(namespace) == ()
 
