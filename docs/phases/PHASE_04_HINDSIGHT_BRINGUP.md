@@ -183,6 +183,17 @@ The controller recorded exact VM UUID
 `5baeeae7-4c29-4903-89fe-2e9df0a8eced`, deleted the temporary floating IP it
 created, and returned the initially shelved VM to `SHELVED`.
 
+## Git Trace
+
+- `4bc25488ba4579cf1d3dcea872aba1ccdb168841` — freeze Hindsight configuration
+- `7508bd7d2244f98f842e657e45a0568485bd60ed` — add Hindsight adapter
+- `59222a27fcd59dc474ec282141a8b33bbc376088` — add tests and managed validation; exact live tested commit
+- `31e7cc6d975e2ae708b5736734c5c59961b63387` — record the sanitized blocked result
+
+The final trace-only documentation commit is the branch HEAD reported in the
+completion response. The approved base remains
+`c125a59740819f264b5d57c67cde293fbf490346`.
+
 ## Next Experiment Handoff
 
 Before any new live attempt, explicitly review an isolated Hindsight provider
