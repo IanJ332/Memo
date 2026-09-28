@@ -1,0 +1,127 @@
+{
+  "phase": "02B",
+  "status": "BLOCKED",
+  "provider": "mem0",
+  "provider_version": "2.2.1",
+  "branch": "phase-02b-mem0-jetstream",
+  "git_commit_tested": "3be787735a23c3a8853c7ef29251df1dec5538f9",
+  "remote_python": "3.12.3",
+  "remote_os": "Ubuntu 24.04.5 LTS",
+  "machine_class": "Jetstream2 m3.small (2 vCPU, approximately 5.78 GiB RAM, no GPU)",
+  "live_volume_device": "/dev/sdb",
+  "live_volume_mount": "/media/volume/jisheng3_volume",
+  "live_volume_fstype": null,
+  "memlife_data_root": "/media/volume/jisheng3_volume/memlife",
+  "root_free_before_bytes": null,
+  "root_free_after_bytes": null,
+  "volume_free_before_bytes": null,
+  "volume_free_after_bytes": null,
+  "embedding_provider": "huggingface",
+  "embedding_model": "sentence-transformers/paraphrase-MiniLM-L3-v2",
+  "sentence_transformers_version": "6.1.0",
+  "torch_version": null,
+  "torch_cpu_only": true,
+  "vector_store": "qdrant",
+  "vector_store_mode": "embedded/local",
+  "vector_store_path": "/media/volume/jisheng3_volume/memlife/providers/mem0/phase-02b/qdrant",
+  "qdrant_client_version": null,
+  "history_store": "sqlite",
+  "history_path": "/media/volume/jisheng3_volume/memlife/providers/mem0/phase-02b/history/history.db",
+  "infer": false,
+  "telemetry": false,
+  "model_cache": "/media/volume/jisheng3_volume/memlife/model_cache/huggingface",
+  "config_sha256": "23c068e16db7d4bb90aad7755b997d5a4104c433a4a0083ef43b3506680ff2e8",
+  "contract_result": "BLOCKED before execution: the remote project virtual environment lacked pytest",
+  "integration_result": "NOT RUN",
+  "restart_result": "NOT RUN",
+  "comparison_to_phase02a": {
+    "python_version": {
+      "status": "DIFFERENCE",
+      "phase02a": "3.14.3",
+      "phase02b": "3.12.3"
+    },
+    "mem0ai_version": {
+      "status": "MATCH",
+      "phase02a": "2.2.1",
+      "phase02b": "2.2.1 (pinned installation completed before the blocker)"
+    },
+    "sentence_transformers_version": {
+      "status": "MATCH",
+      "phase02a": "6.1.0",
+      "phase02b": "6.1.0 (pinned installation and model load completed before the blocker)"
+    },
+    "torch_version": {
+      "status": "NOT COMPARABLE",
+      "phase02a": "2.14.0",
+      "phase02b": "exact pip-show output was not collected before failure"
+    },
+    "qdrant_client_version": {
+      "status": "NOT COMPARABLE",
+      "phase02a": "1.19.1",
+      "phase02b": "exact pip-show output was not collected before failure"
+    },
+    "embedding_model": {
+      "status": "MATCH",
+      "phase02a": "sentence-transformers/paraphrase-MiniLM-L3-v2",
+      "phase02b": "model downloaded and loaded from the persistent-volume cache"
+    },
+    "infer_mode": {
+      "status": "MATCH",
+      "phase02a": false,
+      "phase02b": "configured false; lifecycle test not reached"
+    },
+    "vector_store_mode": {
+      "status": "MATCH",
+      "phase02a": "qdrant embedded/local",
+      "phase02b": "configured qdrant embedded/local; lifecycle test not reached"
+    },
+    "history_store": {
+      "status": "MATCH",
+      "phase02a": "sqlite",
+      "phase02b": "configured sqlite; lifecycle test not reached"
+    },
+    "write_behavior": {
+      "status": "NOT COMPARABLE"
+    },
+    "update_id_behavior": {
+      "status": "NOT COMPARABLE"
+    },
+    "update_history": {
+      "status": "NOT COMPARABLE"
+    },
+    "delete_retrieval_behavior": {
+      "status": "NOT COMPARABLE"
+    },
+    "delete_history": {
+      "status": "NOT COMPARABLE"
+    },
+    "process_reconstruction_persistence": {
+      "status": "NOT COMPARABLE"
+    }
+  },
+  "lifecycle": {
+    "write": "NOT RUN",
+    "query": "NOT RUN",
+    "update": "NOT RUN",
+    "delete": "NOT RUN",
+    "history": "NOT RUN",
+    "reconstruction": "NOT RUN"
+  },
+  "dependency_result": {
+    "status": "PARTIAL",
+    "provider_requirements_install_completed": true,
+    "embedding_model_cache_populated": true,
+    "no_cuda_runtime_observed": true,
+    "exact_torch_and_qdrant_versions_captured": false
+  },
+  "blocker": "The remote project .venv did not contain pytest, so provider-independent tests could not start. The session then stopped as required.",
+  "cleanup": {
+    "initial_vm_state": "SHELVED",
+    "temporary_floating_ip_created": true,
+    "temporary_floating_ip_deleted": true,
+    "floating_ip_address_persisted": false,
+    "final_vm_state": "SHELVED",
+    "persistent_provider_state_retained": true
+  },
+  "timestamp": "2026-09-28T03:45:45.677894+00:00"
+}

@@ -7,7 +7,14 @@
 Phase 02A is implemented on branch `phase-02-mem0-bringup` from approved Phase
 01 commit `e524eb53e3f5242466f723dc8ec2847f2e508f21`.
 
-**PHASE 02B JETSTREAM VALIDATION HAS NOT STARTED.**
+**PHASE 02B — JETSTREAM MEM0 VALIDATION: BLOCKED.**
+
+One authorized managed session verified the target VM, SSH path, live persistent
+mount, CPU-only dependency safeguards, and model-cache location. It stopped
+before remote tests because the remote project `.venv` lacked `pytest`. The
+temporary floating IP was deleted and the run-opened VM returned to `SHELVED`.
+No second lifecycle was started, and no Jetstream Mem0 lifecycle semantics are
+claimed. See `PHASE_02B_MEM0_JETSTREAM.md` and the tracked sanitized manifest.
 
 ## Phase 02A Baseline
 
@@ -83,6 +90,10 @@ Phase 02B requires separate authorization. It may validate this baseline on
 Jetstream, but must not silently change provider versions, embedding models,
 storage modes, or lifecycle claims. No Jetstream VM was accessed or unshelved
 during Phase 02A.
+
+The first Phase 02B attempt is `BLOCKED`, not a provider validation pass. A
+future attempt requires new authorization and must complete the remote contract,
+integration, and reconstruction checks before Phase 02 can be marked complete.
 
 ## Later Extension Points
 
