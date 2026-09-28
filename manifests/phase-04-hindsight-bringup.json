@@ -1,0 +1,94 @@
+{
+  "phase": "04",
+  "status": "BLOCKED",
+  "provider": "hindsight",
+  "provider_version": "0.10.1",
+  "upstream_tag": "v0.10.1",
+  "upstream_commit": "f8950b0c07d9e34c76493dba802bb309f0ce60fd",
+  "tested_repo_commit": "59222a27fcd59dc474ec282141a8b33bbc376088",
+  "timestamp": "2026-09-28T23:16:40.673094+00:00",
+  "os": "Ubuntu 24.04.5 LTS",
+  "python": "3.12.3",
+  "deployment_mode": "bare-metal self-hosted API service (planned; not started)",
+  "storage_backend": "embedded pg0/PostgreSQL with pgvector (planned; not initialized)",
+  "persistent_path_class": "/dev/sdb live mount/memlife/providers/hindsight/pg0",
+  "live_volume": {
+    "device": "/dev/sdb",
+    "mount": "/media/volume/jisheng3_volume",
+    "filesystem": "ext4"
+  },
+  "internal_llm": {
+    "provider": "openai",
+    "model": "gpt-oss-120b",
+    "base_endpoint_class": "course-authorized OpenAI-compatible hosted endpoint",
+    "structured_output": "NOT RUN",
+    "purpose": "provider-internal fact extraction and consolidation",
+    "rq3_decision_model_calls": 0
+  },
+  "embedding": {
+    "provider": "onnx",
+    "model": "intfloat/multilingual-e5-small",
+    "dimensions": 384,
+    "query_prefix": "query: ",
+    "passage_prefix": "passage: ",
+    "live_result": "NOT RUN"
+  },
+  "reranker": {
+    "provider": "rrf",
+    "live_result": "NOT RUN"
+  },
+  "async_mode": {
+    "retain": "synchronous",
+    "derived_processing": "status-polled asynchronous consolidation",
+    "live_result": "NOT RUN"
+  },
+  "benchmark_version": "0.1",
+  "trace_schema_version": "0.1",
+  "lifecycle_result_summary": {
+    "baseline": "NOT RUN",
+    "correction_update": "NOT RUN",
+    "supersession": "NOT RUN",
+    "revocation": "NOT RUN",
+    "delete_restart": "NOT RUN",
+    "reason": "dependency compatibility check failed before service startup"
+  },
+  "provenance_capability_summary": {
+    "known_by_contract": [
+      "observation source_memory_ids/source_fact_ids when exposed",
+      "directly observed retrieval"
+    ],
+    "unknown_by_contract": [
+      "primary-fact causal lineage",
+      "same-ID edit supersession edge",
+      "relationships with unresolved provider source IDs"
+    ],
+    "live_trace": "NOT RUN"
+  },
+  "compatibility_probe": "NOT RUN",
+  "persistence_restart": "NOT RUN",
+  "blocker": {
+    "stage": "dependency installation / pip check",
+    "hindsight_requirement": "protobuf>=7.35.1",
+    "mem0_requirement": "protobuf>=5.29.6,<7.0.0",
+    "resolved_protobuf": "7.36.2",
+    "message": "mem0ai 2.2.1 requires protobuf<7.0.0,>=5.29.6, but protobuf 7.36.2 was installed"
+  },
+  "local_tests": {
+    "unit": "64 passed in 0.42s",
+    "contract": "5 passed in 0.17s",
+    "integration": "5 passed, 1 skipped in 9.72s",
+    "full": "74 passed, 1 skipped in 9.90s",
+    "mem0_regression": "5 passed in 9.33s",
+    "real_hindsight_skip_reason": "opt-in self-hosted service was unavailable locally"
+  },
+  "cleanup": {
+    "initial_vm_state": "SHELVED",
+    "temporary_floating_ip_created": true,
+    "temporary_floating_ip_deleted": true,
+    "floating_ip_address_persisted": false,
+    "final_vm_state": "SHELVED",
+    "persistent_hindsight_paths_retained": true,
+    "hindsight_service_started": false
+  },
+  "config_sha256": "1174925b29fa288e88899f9d0fd906865d5117ecc671d16d4af93ec356436b00"
+}

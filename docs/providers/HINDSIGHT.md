@@ -10,7 +10,7 @@ fully successful result is useful as a negative control for later RQ1/RQ2 work.
 ## First-Party Version Freeze
 
 The configuration was derived from the official `vectorize-io/hindsight`
-repository and Hindsight documentation. The tested release is `v0.10.1`, Git
+repository and Hindsight documentation. The pinned candidate is `v0.10.1`, Git
 commit `f8950b0c07d9e34c76493dba802bb309f0ce60fd`. The provider requirements are
 isolated from `requirements/core.txt`:
 
@@ -23,6 +23,13 @@ The service packages require Python 3.11 or newer; the Jetstream target uses
 Python 3.12.3. The broad `local-ml` extra is intentionally not used because it
 includes PyTorch. The officially supported `local-onnx` extra provides a CPU
 embedding path for the no-GPU VM.
+
+The single live installation attempt on 2026-09-28 stopped at `pip check`:
+Hindsight 0.10.1 requires `protobuf>=7.35.1`, whereas the predecessor's pinned
+Mem0 2.2.1 installation requires `protobuf>=5.29.6,<7.0.0`. Pip selected
+protobuf 7.36.2 for Hindsight, making the shared virtual environment
+inconsistent. In accordance with the one-run failure policy, no alternate
+Hindsight version, Mem0 version, virtual environment, or backend was tried.
 
 ## Deployment
 
@@ -37,6 +44,10 @@ the run refuses to replace an existing non-symlink path. Hindsight's model cache
 run artifacts, and database therefore remain on the persistent volume. The
 database URL is `pg0://memlife-phase04`; pg0's own instance layout remains
 provider-managed beneath that redirected root.
+
+The live attempt created the persistent-volume directories and pg0 path link,
+but it stopped before starting the API. Consequently no Hindsight database was
+initialized and no persistence or restart claim was measured.
 
 ## Fixed Provider-Internal LLM
 
@@ -125,3 +136,8 @@ managed controller performs the single lifecycle, synchronizes the exact Git
 commit, validates package resolution before installation, runs the compatibility
 probe first, captures sanitized results, deletes its temporary floating IP, and
 returns a VM that it opened to `SHELVED`.
+
+For the 2026-09-28 run, dependency installation blocked before the compatibility
+probe. The controller still deleted its temporary floating IP and returned the
+VM to `SHELVED`. See `manifests/phase-04-hindsight-bringup.json` and
+`docs/phases/PHASE_04_HINDSIGHT_BRINGUP.md` for the measured result.
