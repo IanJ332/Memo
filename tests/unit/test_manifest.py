@@ -36,3 +36,24 @@ def test_manifest_records_real_environment_without_config_values(tmp_path: Path)
     assert payload["package_versions"]["pydantic"]
     assert payload["package_versions"]["package-that-does-not-exist"] is None
     assert "reference" not in destination.read_text(encoding="utf-8")
+
+
+def test_manifest_can_record_non_secret_provider_details(tmp_path: Path) -> None:
+    data_root = DataRootConfig(tmp_path / "runtime", DataRootMode.LOCAL)
+    details = {"provider": "mem0", "infer": False}
+    manifest = build_manifest(
+        phase="02A",
+        data_root=data_root,
+        repo_root=tmp_path,
+        configuration=details,
+        details=details,
+    )
+    assert manifest.details == details
+
+    with pytest.raises(ValueError, match="sensitive"):
+        build_manifest(
+            phase="02A",
+            data_root=data_root,
+            repo_root=tmp_path,
+            details={"api_token": "must-not-be-recorded"},
+        )

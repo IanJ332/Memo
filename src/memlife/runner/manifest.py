@@ -12,7 +12,7 @@ from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from memlife.config.paths import DataRootConfig
 
@@ -33,6 +33,7 @@ class EnvironmentManifest(BaseModel):
     package_versions: dict[str, str | None]
     data_root_mode: str
     config_hash_sha256: str | None
+    details: dict[str, Any] = Field(default_factory=dict)
 
 
 def _git_commit(repo_root: Path) -> str | None:
@@ -96,8 +97,12 @@ def build_manifest(
     repo_root: Path,
     configuration: Mapping[str, Any] | None = None,
     package_names: Sequence[str] = DEFAULT_PACKAGES,
+    details: Mapping[str, Any] | None = None,
 ) -> EnvironmentManifest:
     """Capture current environment facts; missing Git/package data stays null."""
+
+    if details is not None and _contains_sensitive_key(details):
+        raise ValueError("manifest details contain a potentially sensitive key")
 
     return EnvironmentManifest(
         phase=phase,
@@ -108,6 +113,7 @@ def build_manifest(
         package_versions=_package_versions(package_names),
         data_root_mode=data_root.mode.value,
         config_hash_sha256=hash_configuration(configuration),
+        details=dict(details or {}),
     )
 
 

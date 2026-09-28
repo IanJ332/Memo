@@ -37,6 +37,28 @@ _ALL_SUPPORTED = {
 }
 
 
+def phase02a_manifest_configuration() -> dict[str, Any]:
+    """Return non-secret, path-class-only Phase 02A provider facts."""
+
+    return {
+        "phase": "02A",
+        "provider": "mem0",
+        "provider_version": MEM0_VERSION,
+        "embedding_provider": EMBEDDING_PROVIDER,
+        "embedding_model": EMBEDDING_MODEL,
+        "embedding_dimensions": EMBEDDING_DIMS,
+        "vector_store": "qdrant",
+        "vector_store_mode": "embedded/local",
+        "vector_store_path_class": "runtime/providers/mem0/qdrant",
+        "history_store": "sqlite",
+        "history_path_class": "runtime/providers/mem0/history/history.db",
+        "model_cache_path_class": "runtime/model_cache/huggingface",
+        "infer": False,
+        "telemetry_enabled": False,
+        "llm_network_policy": "loopback-only placeholder; no calls permitted",
+    }
+
+
 @dataclass(frozen=True)
 class Mem0LocalPaths:
     """Explicit project-local paths consumed by Mem0 and its dependencies."""
@@ -149,23 +171,7 @@ class Mem0MemoryAdapter(MemoryProviderAdapter):
     def manifest_configuration(self) -> dict[str, Any]:
         """Return the non-secret, path-class-only configuration for hashing."""
 
-        return {
-            "phase": "02A",
-            "provider": "mem0",
-            "provider_version": MEM0_VERSION,
-            "embedding_provider": EMBEDDING_PROVIDER,
-            "embedding_model": EMBEDDING_MODEL,
-            "embedding_dimensions": EMBEDDING_DIMS,
-            "vector_store": "qdrant",
-            "vector_store_mode": "embedded/local",
-            "vector_store_path_class": "runtime/providers/mem0/qdrant",
-            "history_store": "sqlite",
-            "history_path_class": "runtime/providers/mem0/history/history.db",
-            "model_cache_path_class": "runtime/model_cache/huggingface",
-            "infer": False,
-            "telemetry_enabled": False,
-            "llm_network_policy": "loopback-only placeholder; no calls permitted",
-        }
+        return phase02a_manifest_configuration()
 
     def _create_memory(self) -> Any:
         installed_version = version("mem0ai")
