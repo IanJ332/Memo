@@ -1,0 +1,7 @@
+# Existing environment dependencies
+openai==3.13.0
+psutil==7.2.2
+
+# MemLife provider-independent core and offline validation
+pydantic==2.13.5
+pytest==9.0.2

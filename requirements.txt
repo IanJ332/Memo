@@ -1,2 +1,1 @@
-openai
-psutil
+-r requirements/core.txt

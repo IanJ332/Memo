@@ -22,5 +22,8 @@ Thumbs.db
 # Server / runtime baseline reports (machine-specific inventory)
 runtime_reports/
 
+# MemLife local runtime data and experiment artifacts
+runtime/
+
 # Machine-local context and persistent agent cache
 .local/
