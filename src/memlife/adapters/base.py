@@ -13,6 +13,7 @@ from memlife.models.memory import (
     SupersedeCommand,
     WriteCommand,
 )
+from memlife.models.provenance import MemorySurface, ProvenanceStatus
 
 
 class CapabilitySupport(str, Enum):
@@ -93,6 +94,22 @@ class MemoryProviderAdapter(ABC):
         """Return a small sanitized provider description for result records."""
 
         return {}
+
+    @property
+    def trace_provenance_status(self) -> ProvenanceStatus:
+        """Declare provider-internal causal provenance available to traces.
+
+        UNKNOWN is deliberately the default. An adapter must opt into KNOWN
+        only when the relationship is directly observable or provider-controlled.
+        """
+
+        return ProvenanceStatus.UNKNOWN
+
+    @property
+    def trace_source_surface(self) -> MemorySurface:
+        """Name the provider surface supporting causal edges, when known."""
+
+        return MemorySurface.UNKNOWN
 
     def history_for(
         self,

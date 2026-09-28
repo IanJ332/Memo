@@ -25,6 +25,7 @@ from memlife.models.memory import (
     SupersedeCommand,
     WriteCommand,
 )
+from memlife.models.provenance import MemorySurface, ProvenanceStatus
 
 MEM0_VERSION = "2.2.1"
 EMBEDDING_PROVIDER = "huggingface"
@@ -174,6 +175,16 @@ class Mem0MemoryAdapter(MemoryProviderAdapter):
             "history_store": "sqlite",
             "update_semantics": "native update of same UUID",
         }
+
+    @property
+    def trace_provenance_status(self) -> ProvenanceStatus:
+        # Mem0 exposes IDs and native history, but not provider-internal causal
+        # edges connecting source events to all derived/retrieval state.
+        return ProvenanceStatus.UNKNOWN
+
+    @property
+    def trace_source_surface(self) -> MemorySurface:
+        return MemorySurface.UNKNOWN
 
     @property
     def capabilities(self) -> Mapping[ProviderCapability, CapabilitySupport]:

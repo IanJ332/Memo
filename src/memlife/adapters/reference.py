@@ -20,6 +20,7 @@ from memlife.models.memory import (
     SupersedeCommand,
     WriteCommand,
 )
+from memlife.models.provenance import MemorySurface, ProvenanceStatus
 
 _ALL_SUPPORTED = MappingProxyType(
     {capability: CapabilitySupport.SUPPORTED for capability in ProviderCapability}
@@ -64,6 +65,14 @@ class ReferenceMemoryAdapter(MemoryProviderAdapter):
             "update_semantics": "new successor ID; predecessor retained",
             "restart_semantics": "logical no-op",
         }
+
+    @property
+    def trace_provenance_status(self) -> ProvenanceStatus:
+        return ProvenanceStatus.KNOWN
+
+    @property
+    def trace_source_surface(self) -> MemorySurface:
+        return MemorySurface.SOURCE
 
     @property
     def capabilities(self) -> Mapping[ProviderCapability, CapabilitySupport]:

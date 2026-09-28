@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 from datetime import datetime
 from enum import Enum
 from typing import Any, Self
@@ -11,12 +10,8 @@ from typing import Any, Self
 from pydantic import Field, field_validator, model_validator
 
 from memlife.models.memory import NonEmptyText, StrictModel
+from memlife.models.safety import reject_sensitive_keys
 from memlife.scenarios.models import BENCHMARK_VERSION, LifecycleEvent
-
-_SENSITIVE_KEY = re.compile(
-    r"(^|_)(api[_-]?key|password|passwd|secret|token|private[_-]?key)($|_)",
-    re.IGNORECASE,
-)
 
 
 class OperationStatus(str, Enum):
@@ -67,18 +62,7 @@ class BenchmarkResult(StrictModel):
     @field_validator("provider_metadata")
     @classmethod
     def metadata_has_no_sensitive_keys(cls, value: dict[str, Any]) -> dict[str, Any]:
-        def check(item: Any) -> None:
-            if isinstance(item, dict):
-                for key, nested in item.items():
-                    if _SENSITIVE_KEY.search(str(key)):
-                        raise ValueError("provider_metadata contains a sensitive key")
-                    check(nested)
-            elif isinstance(item, (list, tuple)):
-                for nested in item:
-                    check(nested)
-
-        check(value)
-        return value
+        return reject_sensitive_keys(value, field_name="provider_metadata")
 
     @model_validator(mode="after")
     def status_fields_agree(self) -> Self:

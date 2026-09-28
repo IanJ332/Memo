@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Mapping
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from time import perf_counter
 from typing import Any
@@ -25,6 +26,16 @@ from memlife.scenarios.models import (
 
 Clock = Callable[[], datetime]
 Timer = Callable[[], float]
+
+
+@dataclass(frozen=True)
+class LifecycleStepObservation:
+    """Internal normalized records plus the unchanged Phase 03 result."""
+
+    step_index: int
+    step: LifecycleStep
+    result: BenchmarkResult
+    records: tuple[MemoryRecord, ...]
 
 
 def normalize_query_observation(
@@ -74,19 +85,33 @@ class LifecycleRunner:
     def run_scenario(
         self, scenario: LifecycleScenario
     ) -> tuple[BenchmarkResult, ...]:
+        return tuple(
+            observation.result
+            for observation in self.run_scenario_observed(scenario)
+        )
+
+    def run_scenario_observed(
+        self, scenario: LifecycleScenario
+    ) -> tuple[LifecycleStepObservation, ...]:
+        """Run a scenario and retain normalized records for trace consumers.
+
+        The normal ``run_scenario`` API still returns only BenchmarkResult, so
+        Phase 03 callers and serialized results remain unchanged.
+        """
+
         self.adapter.reset_namespace(scenario.namespace)
         memory_ids: dict[str, str] = {}
-        results: list[BenchmarkResult] = []
+        observations: list[LifecycleStepObservation] = []
         for index, step in enumerate(scenario.lifecycle_steps):
-            results.append(
-                self._run_step(
+            observations.append(
+                self._run_step_observed(
                     scenario=scenario,
                     step=step,
                     step_index=index,
                     memory_ids=memory_ids,
                 )
             )
-        return tuple(results)
+        return tuple(observations)
 
     def _inspect_safely(
         self, namespace: str
@@ -145,14 +170,14 @@ class LifecycleRunner:
             metadata["history_errors"] = errors
         return visible, metadata
 
-    def _run_step(
+    def _run_step_observed(
         self,
         *,
         scenario: LifecycleScenario,
         step: LifecycleStep,
         step_index: int,
         memory_ids: dict[str, str],
-    ) -> BenchmarkResult:
+    ) -> LifecycleStepObservation:
         before, before_supported, before_error = self._inspect_safely(
             scenario.namespace
         )
@@ -226,7 +251,7 @@ class LifecycleRunner:
         if after_error:
             provider_metadata["inspection_after_note"] = after_error
 
-        return BenchmarkResult(
+        result = BenchmarkResult(
             scenario_id=scenario.scenario_id,
             provider=self.adapter.provider_name,
             provider_version=self.adapter.provider_version,
@@ -251,6 +276,12 @@ class LifecycleRunner:
             latency_ms=latency_ms,
             error=error,
             timestamp=self.clock(),
+        )
+        return LifecycleStepObservation(
+            step_index=step_index,
+            step=step,
+            result=result,
+            records=observed,
         )
 
     def _execute_step(
