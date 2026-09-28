@@ -25,6 +25,7 @@ KNOWN_HOSTS = LOCAL_ROOT / "jetstream" / "known_hosts"
 CONFIG_FILE = REPO_ROOT / "configs" / "jetstream.json"
 ACCEPTANCE_FILE = REPO_ROOT / "manifests" / "jetstream-automation-acceptance.json"
 PHASE02B_SESSION_FILE = LOCAL_ROOT / "jetstream" / "phase-02b-session.json"
+PHASE04_SESSION_FILE = LOCAL_ROOT / "jetstream" / "phase-04-session.json"
 OPENSTACK = LOCAL_ROOT / "jetstream" / "cli-venv" / "Scripts" / "openstack.exe"
 
 EXPECTED_NAME = "jisheng3"
@@ -808,7 +809,15 @@ def run_managed_session(
         )
         if remote_work is not None:
             result["failure_stage"] = "REMOTE_WORK"
-            result["remote_work"] = dict(remote_work(address, facts))
+            remote_payload = dict(remote_work(address, facts))
+            result["remote_work"] = remote_payload
+            if remote_payload.get("status") not in {None, "PASS"}:
+                detail = str(
+                    remote_payload.get("blocker")
+                    or remote_payload.get("error_message")
+                    or "remote validation reported a non-PASS status"
+                )
+                raise JetstreamError(detail)
     except BaseException as exc:
         failure = exc
         result["status"] = "BLOCKED"
@@ -880,9 +889,29 @@ def run_phase02b(credentials: Mapping[str, str]) -> dict[str, Any]:
     )
 
 
+def run_phase04(credentials: Mapping[str, str]) -> dict[str, Any]:
+    """Run the one authorized Hindsight validation in a managed session."""
+
+    from phase04 import run_remote_validation
+
+    expected_commit = run_command(["git", "rev-parse", "HEAD"]).stdout.strip()
+    return run_managed_session(
+        credentials,
+        phase="04",
+        manifest_path=PHASE04_SESSION_FILE,
+        remote_work=lambda address, facts: run_remote_validation(
+            address=address,
+            facts=facts,
+            expected_commit=expected_commit,
+            ssh_builder=ssh_command,
+            runner=run_command,
+        ),
+    )
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("doctor", "status", "unshelve", "address", "ssh-check", "probe", "shelve", "acceptance", "phase02b"))
+    parser.add_argument("command", choices=("doctor", "status", "unshelve", "address", "ssh-check", "probe", "shelve", "acceptance", "phase02b", "phase04"))
     args = parser.parse_args(argv)
     try:
         credentials = load_credentials()
@@ -914,8 +943,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 output = {"ssh_success": True} if args.command == "ssh-check" else probe(address)
             elif args.command == "acceptance":
                 output = run_acceptance(credentials)
-            else:
+            elif args.command == "phase02b":
                 output = run_phase02b(credentials)
+            else:
+                output = run_phase04(credentials)
         print(json.dumps(output, indent=2))
         return 0
     except (JetstreamError, FileNotFoundError, subprocess.TimeoutExpired) as exc:
