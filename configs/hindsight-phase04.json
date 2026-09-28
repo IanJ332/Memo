@@ -5,9 +5,14 @@
   "upstream_commit": "f8950b0c07d9e34c76493dba802bb309f0ce60fd",
   "deployment_mode": "bare-metal self-hosted API service",
   "packages": [
-    "hindsight-api-slim[embedded-db,local-onnx]==0.10.1",
-    "hindsight-client==0.10.1"
+    "hindsight-api-slim[embedded-db,local-onnx]==0.10.1"
   ],
+  "runtime_isolation": {
+    "harness_environment_class": "/home/exouser/Memo/.venv",
+    "provider_environment_class": "persistent-volume/venvs/hindsight-0.10.1",
+    "boundary": "loopback HTTP",
+    "python_client_installed": false
+  },
   "database": {
     "url_class": "pg0://named-instance",
     "instance": "memlife-phase04",

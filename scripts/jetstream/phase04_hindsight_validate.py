@@ -6,11 +6,18 @@ import argparse
 import json
 import os
 import platform
+import re
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
 from memlife.adapters.hindsight import HindsightMemoryAdapter
 from memlife.models.benchmark import OperationStatus
@@ -18,47 +25,24 @@ from memlife.models.memory import QueryCommand, WriteCommand
 from memlife.models.provenance import TRACE_SCHEMA_VERSION, serialize_trace
 from memlife.runner.provenance import ProvenanceTraceRunner
 from memlife.scenarios import canonical_scenarios
+from phase04_runtime import HindsightServiceController
+from phase04_runtime import restart_hindsight_service, start_hindsight_service
+from phase04_runtime import stop_hindsight_service, wait_hindsight_ready
 
-REPO = Path("/home/exouser/Memo")
-PYTHON = REPO / ".venv" / "bin" / "python"
-SERVICE = REPO / ".venv" / "bin" / "hindsight-api"
-
-
-class ServiceController:
-    def __init__(self, log_path: Path) -> None:
-        self.log_path = log_path
-        self.process: subprocess.Popen[bytes] | None = None
-        self._log = None
-
-    def start(self) -> None:
-        if self.process is not None and self.process.poll() is None:
-            raise RuntimeError("Hindsight service is already running")
-        self._log = self.log_path.open("ab")
-        self.process = subprocess.Popen(
-            [str(SERVICE)],
-            cwd=REPO,
-            env=os.environ.copy(),
-            stdout=self._log,
-            stderr=subprocess.STDOUT,
-        )
-
-    def stop(self) -> None:
-        process = self.process
-        if process is not None and process.poll() is None:
-            process.terminate()
-            try:
-                process.wait(timeout=45)
-            except subprocess.TimeoutExpired:
-                process.kill()
-                process.wait(timeout=15)
-        self.process = None
-        if self._log is not None:
-            self._log.close()
-            self._log = None
-
-    def restart(self) -> None:
-        self.stop()
-        self.start()
+REPO = Path(os.environ.get("PHASE04_REPO", "/home/exouser/Memo"))
+HARNESS_PYTHON = Path(
+    os.environ.get("PHASE04_HARNESS_PYTHON", str(REPO / ".venv" / "bin" / "python"))
+)
+HINDSIGHT_VENV = Path(
+    os.environ.get(
+        "PHASE04_HINDSIGHT_VENV", "/volume/memlife/venvs/hindsight-0.10.1"
+    )
+)
+HINDSIGHT_SERVICE = Path(
+    os.environ.get(
+        "PHASE04_HINDSIGHT_SERVICE", str(HINDSIGHT_VENV / "bin" / "hindsight-api")
+    )
+)
 
 
 def _record_summary(record) -> dict[str, Any]:
@@ -87,9 +71,41 @@ def _run_command(command: list[str], *, env: dict[str, str] | None = None) -> st
     return result.stdout.strip().splitlines()[-1] if result.stdout.strip() else "passed"
 
 
+def _sanitized_log_tail(path: Path, *, line_limit: int = 80) -> list[str]:
+    """Return bounded startup diagnostics without credentials or public IPs."""
+
+    if not path.exists():
+        return []
+    lines = path.read_text(encoding="utf-8", errors="replace").splitlines()[-line_limit:]
+    secrets = [
+        value
+        for key, value in os.environ.items()
+        if value
+        and value != "empty"
+        and any(marker in key.upper() for marker in ("KEY", "TOKEN", "SECRET", "PASSWORD"))
+    ]
+    sanitized: list[str] = []
+    for line in lines:
+        for secret in secrets:
+            line = line.replace(secret, "<redacted-secret>")
+        line = re.sub(
+            r"\b(?!127\.0\.0\.1\b)(?:\d{1,3}\.){3}\d{1,3}\b",
+            "<redacted-ip>",
+            line,
+        )
+        sanitized.append(line[-1000:])
+    return sanitized
+
+
 def run(output: Path) -> dict[str, Any]:
     run_root = Path(os.environ["PHASE04_RUN_ROOT"])
-    controller = ServiceController(run_root / "hindsight-service.log")
+    controller = HindsightServiceController(
+        service_executable=HINDSIGHT_SERVICE,
+        repo=REPO,
+        run_root=run_root,
+        environment=os.environ,
+    )
+    fingerprint_path = Path(os.environ["PHASE04_ENVIRONMENT_FINGERPRINT"])
     result: dict[str, Any] = {
         "status": "IN_PROGRESS",
         "phase": "04",
@@ -106,6 +122,24 @@ def run(output: Path) -> dict[str, Any]:
         "volume_free_before": int(os.environ["PHASE04_VOLUME_FREE_BEFORE"]),
         "dependency_dry_run": json.loads(os.environ["PHASE04_DRY_RUN_SUMMARY"]),
         "unit_contract": os.environ["PHASE04_UNIT_SUMMARY"],
+        "runtime_isolation": {
+            "harness_python": str(HARNESS_PYTHON),
+            "hindsight_python": os.environ["PHASE04_HINDSIGHT_PYTHON"],
+            "hindsight_venv": str(HINDSIGHT_VENV),
+            "communication_boundary": "loopback HTTP",
+            "hindsight_venv_created_by_this_run": (
+                os.environ["PHASE04_HINDSIGHT_VENV_CREATED_BY_THIS_RUN"] == "true"
+            ),
+        },
+        "environment_checks": {
+            "harness_before_hindsight": os.environ["PHASE04_HARNESS_PIP_CHECK_BEFORE"],
+            "hindsight_provider": os.environ["PHASE04_HINDSIGHT_PIP_CHECK"],
+            "harness_after_hindsight": os.environ["PHASE04_HARNESS_PIP_CHECK_AFTER"],
+            "comparison_rule": "each environment must pass independently; cross-venv protobuf versions may differ",
+        },
+        "hindsight_environment_fingerprint": json.loads(
+            fingerprint_path.read_text(encoding="utf-8")
+        ),
         "internal_llm": {
             "provider": "openai",
             "model": "gpt-oss-120b",
@@ -117,13 +151,13 @@ def run(output: Path) -> dict[str, Any]:
     }
     adapter: HindsightMemoryAdapter | None = None
     try:
-        controller.start()
+        start_hindsight_service(controller)
         adapter = HindsightMemoryAdapter.from_environment(
-            restart_callback=controller.restart
+            restart_callback=lambda: restart_hindsight_service(controller)
         )
         adapter.poll_interval_seconds = 0.5
         adapter.quiescence_timeout_seconds = 600
-        adapter.wait_until_ready(timeout_seconds=600)
+        wait_hindsight_ready(adapter, timeout_seconds=600)
         result["server_version"] = dict(adapter.verify_server())
 
         # Mandatory first live compatibility probe. No later work runs if this fails.
@@ -173,14 +207,14 @@ def run(output: Path) -> dict[str, Any]:
             "before_restart_count": len(before_restart),
             "inspect_count": len(inspected),
             "after_restart_count": len(after_restart),
-            "restart_result": "persistent source fact recalled after service + pg0 restart",
+            "restart_result": "persistent source fact recalled after run-owned service restart",
         }
 
         integration_env = os.environ.copy()
         integration_env["MEMLIFE_RUN_HINDSIGHT_INTEGRATION"] = "1"
         result["hindsight_integration"] = _run_command(
             [
-                str(PYTHON),
+                str(HARNESS_PYTHON),
                 "-m",
                 "pytest",
                 "tests/integration/test_hindsight_adapter.py",
@@ -273,7 +307,7 @@ def run(output: Path) -> dict[str, Any]:
 
         result["mem0_regression"] = _run_command(
             [
-                str(PYTHON),
+                str(HARNESS_PYTHON),
                 "-m",
                 "pytest",
                 "tests/integration/test_mem0_adapter.py",
@@ -286,7 +320,7 @@ def run(output: Path) -> dict[str, Any]:
             ]
         )
         result["full_suite"] = _run_command(
-            [str(PYTHON), "-m", "pytest", "-q", "-p", "no:cacheprovider"],
+            [str(HARNESS_PYTHON), "-m", "pytest", "-q", "-p", "no:cacheprovider"],
             env=integration_env,
         )
         result["root_free_after"] = int(
@@ -310,9 +344,19 @@ def run(output: Path) -> dict[str, Any]:
         result["status"] = "BLOCKED"
         result["blocker_type"] = type(exc).__name__
         result["blocker"] = str(exc)
+        result["service_log_tail"] = _sanitized_log_tail(controller.log_path)
     finally:
-        controller.stop()
-        result["service_stopped_cleanly"] = controller.process is None
+        result["hindsight_service_started_by_this_run"] = (
+            controller.hindsight_service_started_by_this_run
+        )
+        try:
+            stop_hindsight_service(controller)
+            result["service_stopped_cleanly"] = (
+                controller.process is None and not controller.pid_path.exists()
+            )
+        except Exception as cleanup_exc:
+            result["service_stopped_cleanly"] = False
+            result["service_cleanup_error"] = str(cleanup_exc)
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     return result

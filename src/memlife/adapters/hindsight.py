@@ -49,7 +49,8 @@ def phase04_manifest_configuration() -> dict[str, Any]:
         "upstream_commit": HINDSIGHT_UPSTREAM_COMMIT,
         "deployment_mode": "bare-metal self-hosted API service",
         "service_package": "hindsight-api-slim[embedded-db,local-onnx]",
-        "client_package": "hindsight-client",
+        "client_package": "not installed; urllib.request REST transport",
+        "runtime_isolation": "dedicated provider venv over loopback HTTP",
         "storage_backend": "embedded pg0/PostgreSQL with pgvector",
         "storage_path_class": "persistent-volume/providers/hindsight/pg0",
         "internal_llm_provider": INTERNAL_LLM_PROVIDER,
@@ -211,7 +212,7 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
             "SUPERSEDE": "PATCH /memories/{id} (same-ID edit; no supersession edge)",
             "REVOKE": "PATCH /memories/{id} state=invalidated",
             "DELETE": "DELETE /documents/{document_id}",
-            "RESTART": "stop/start self-hosted API + pg0 reconstruction",
+            "RESTART": "stop/start run-owned API; preserve persistent pg0 state",
             "QUERY": "POST /memories/recall (world + experience only)",
             "INSPECT": "GET /memories/list (valid + invalidated, all fact types)",
         }.get(intended_event, super().native_operation_for(intended_event))

@@ -1,4 +1,5 @@
-# Phase 04 approved Hindsight self-hosted service and Python client.
+# Phase 04 Hindsight service runtime only. Install this file exclusively into
+# the provider venv on the persistent volume, never into the MemLife .venv.
+# The HTTP adapter uses urllib.request and does not need hindsight-client.
 # The official slim+ONNX path avoids PyTorch/CUDA on the CPU-only Jetstream VM.
 hindsight-api-slim[embedded-db,local-onnx]==0.10.1
-hindsight-client==0.10.1
