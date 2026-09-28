@@ -20,7 +20,7 @@ def mem0_adapter(monkeypatch: pytest.MonkeyPatch) -> Mem0MemoryAdapter:
 
     monkeypatch.setenv("HF_HUB_OFFLINE", "1")
     monkeypatch.setenv("TRANSFORMERS_OFFLINE", "1")
-    adapter = Mem0MemoryAdapter.from_local_runtime(Path.cwd())
+    adapter = Mem0MemoryAdapter.from_runtime(Path.cwd())
     llm_calls: list[object] = []
 
     def fail_on_llm_call(*args: object, **kwargs: object) -> None:

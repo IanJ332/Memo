@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass
 from importlib.metadata import version
 from pathlib import Path
@@ -30,6 +31,7 @@ EMBEDDING_PROVIDER = "huggingface"
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L3-v2"
 EMBEDDING_DIMS = 384
 COLLECTION_NAME = "memlife_phase02a"
+PROVIDER_INSTANCE_ENV = "MEMLIFE_MEM0_PROVIDER_INSTANCE"
 _PLACEHOLDER_LLM_KEY = "unused-phase02a"
 _LOOPBACK_LLM_URL = "http://127.0.0.1:9/v1"
 _ALL_SUPPORTED = {
@@ -71,13 +73,25 @@ class Mem0LocalPaths:
     model_cache: Path
 
     @classmethod
-    def from_data_root(cls, config: DataRootConfig) -> "Mem0LocalPaths":
-        if config.mode is not DataRootMode.LOCAL:
-            raise ValueError(
-                "Phase 02A requires the repository-local runtime data-root mode"
-            )
+    def from_data_root(
+        cls,
+        config: DataRootConfig,
+        *,
+        provider_instance: str | None = None,
+    ) -> "Mem0LocalPaths":
+        """Build paths below an already-resolved MemLife runtime root.
+
+        Phase 02A keeps the historical ``providers/mem0`` layout. Remote
+        validations can select one safe child directory so multiple pinned
+        runs do not share mutable Qdrant or SQLite files.
+        """
+
         prepare_runtime(config)
         provider_root = config.root / "providers" / "mem0"
+        if provider_instance:
+            if not re.fullmatch(r"[A-Za-z0-9._-]+", provider_instance):
+                raise ValueError("provider_instance must be one safe path component")
+            provider_root /= provider_instance
         paths = cls(
             data_root=config.root,
             provider_root=provider_root,
@@ -115,7 +129,22 @@ class Mem0MemoryAdapter(MemoryProviderAdapter):
     @classmethod
     def from_local_runtime(cls, repo_root: Path | None = None) -> "Mem0MemoryAdapter":
         config = resolve_data_root(repo_root=repo_root)
+        if config.mode is not DataRootMode.LOCAL:
+            raise ValueError("local runtime requires repository-local data-root mode")
         return cls(Mem0LocalPaths.from_data_root(config))
+
+    @classmethod
+    def from_runtime(cls, repo_root: Path | None = None) -> "Mem0MemoryAdapter":
+        """Create an adapter from local, configured, or live Jetstream storage."""
+
+        config = resolve_data_root(repo_root=repo_root)
+        provider_instance = os.environ.get(PROVIDER_INSTANCE_ENV, "").strip() or None
+        return cls(
+            Mem0LocalPaths.from_data_root(
+                config,
+                provider_instance=provider_instance,
+            )
+        )
 
     @property
     def provider_name(self) -> str:

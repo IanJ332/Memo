@@ -24,6 +24,7 @@ SSH_KEY = LOCAL_ROOT / "ssh" / "id_ed25519_jisheng3"
 KNOWN_HOSTS = LOCAL_ROOT / "jetstream" / "known_hosts"
 CONFIG_FILE = REPO_ROOT / "configs" / "jetstream.json"
 ACCEPTANCE_FILE = REPO_ROOT / "manifests" / "jetstream-automation-acceptance.json"
+PHASE02B_SESSION_FILE = LOCAL_ROOT / "jetstream" / "phase-02b-session.json"
 OPENSTACK = LOCAL_ROOT / "jetstream" / "cli-venv" / "Scripts" / "openstack.exe"
 
 EXPECTED_NAME = "jisheng3"
@@ -657,7 +658,7 @@ def sanitize_acceptance_payload(
 
 def write_acceptance_manifest(
     result: Mapping[str, Any], credentials: Mapping[str, str],
-    transient_address: str | None,
+    transient_address: str | None, destination: Path | None = None,
 ) -> None:
     sanitized = sanitize_acceptance_payload(result, credentials, transient_address)
     serialized = json.dumps(sanitized, indent=2) + "\n"
@@ -667,10 +668,20 @@ def write_acceptance_manifest(
         secret = str(credentials.get(name) or "")
         if secret and secret in serialized:
             raise JetstreamError("refusing to serialize an OpenStack credential")
-    ACCEPTANCE_FILE.write_text(serialized, encoding="utf-8")
+    target = ACCEPTANCE_FILE if destination is None else destination
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(serialized, encoding="utf-8")
 
 
-def run_acceptance(credentials: Mapping[str, str]) -> dict[str, Any]:
+def run_managed_session(
+    credentials: Mapping[str, str],
+    *,
+    phase: str,
+    manifest_path: Path,
+    remote_work: Callable[[str, Mapping[str, str]], Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Run one owned VM/FIP session and guarantee best-effort cleanup."""
+
     initial, _ = resolve_server(credentials)
     target_uuid = require_target_uuid(field(initial, "id"))
     initial_state = normalize_state(field(initial, "status"))
@@ -678,7 +689,7 @@ def run_acceptance(credentials: Mapping[str, str]) -> dict[str, Any]:
         raise JetstreamError(f"acceptance requires ACTIVE or SHELVED, found {initial_state}")
     opened = was_opened_by_run(initial_state)
     result: dict[str, Any] = {
-        "phase": "02B-0", "timestamp": datetime.now(timezone.utc).isoformat(),
+        "phase": phase, "timestamp": datetime.now(timezone.utc).isoformat(),
         "status": "IN_PROGRESS",
         "branch": run_command(["git", "branch", "--show-current"]).stdout.strip(),
         "git_commit": run_command(["git", "rev-parse", "HEAD"]).stdout.strip(),
@@ -794,6 +805,9 @@ def run_acceptance(credentials: Mapping[str, str]) -> dict[str, Any]:
             remote_python=facts.get("python"),
             derived_memlife_root=facts["resolved_volume_mount"].rstrip("/") + "/memlife",
         )
+        if remote_work is not None:
+            result["failure_stage"] = "REMOTE_WORK"
+            result["remote_work"] = dict(remote_work(address, facts))
     except BaseException as exc:
         failure = exc
         result["status"] = "BLOCKED"
@@ -829,15 +843,45 @@ def run_acceptance(credentials: Mapping[str, str]) -> dict[str, Any]:
     elif failure is None:
         result["status"] = "PASS"
         result.pop("failure_stage", None)
-    write_acceptance_manifest(result, credentials, transient_address)
+    write_acceptance_manifest(result, credentials, transient_address, manifest_path)
     if failure is not None or cleanup_errors:
         raise JetstreamError(str(failure or "; ".join(cleanup_errors)))
     return result
 
 
+def run_acceptance(credentials: Mapping[str, str]) -> dict[str, Any]:
+    """Run the Phase 02B-0 lifecycle acceptance through the managed session."""
+
+    return run_managed_session(
+        credentials,
+        phase="02B-0",
+        manifest_path=ACCEPTANCE_FILE,
+    )
+
+
+def run_phase02b(credentials: Mapping[str, str]) -> dict[str, Any]:
+    """Run the authorized Mem0 validation inside one managed Jetstream session."""
+
+    from phase02b import run_remote_validation
+
+    expected_commit = run_command(["git", "rev-parse", "HEAD"]).stdout.strip()
+    return run_managed_session(
+        credentials,
+        phase="02B",
+        manifest_path=PHASE02B_SESSION_FILE,
+        remote_work=lambda address, facts: run_remote_validation(
+            address=address,
+            facts=facts,
+            expected_commit=expected_commit,
+            ssh_builder=ssh_command,
+            runner=run_command,
+        ),
+    )
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("doctor", "status", "unshelve", "address", "ssh-check", "probe", "shelve", "acceptance"))
+    parser.add_argument("command", choices=("doctor", "status", "unshelve", "address", "ssh-check", "probe", "shelve", "acceptance", "phase02b"))
     args = parser.parse_args(argv)
     try:
         credentials = load_credentials()
@@ -867,8 +911,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                     raise JetstreamError("no current OpenStack address was reported")
                 wait_for_ssh(address)
                 output = {"ssh_success": True} if args.command == "ssh-check" else probe(address)
-            else:
+            elif args.command == "acceptance":
                 output = run_acceptance(credentials)
+            else:
+                output = run_phase02b(credentials)
         print(json.dumps(output, indent=2))
         return 0
     except (JetstreamError, FileNotFoundError, subprocess.TimeoutExpired) as exc:

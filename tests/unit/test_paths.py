@@ -11,6 +11,7 @@ from memlife.config.paths import (
     resolve_mountpoint,
     resolve_data_root,
 )
+from memlife.adapters.mem0 import Mem0LocalPaths
 
 
 def test_configured_relative_root_is_repository_relative(tmp_path: Path) -> None:
@@ -76,3 +77,22 @@ def test_mountpoint_parser_uses_findmnt_output(monkeypatch) -> None:
     monkeypatch.setattr(subprocess, "run", fake_run)
     assert resolve_mountpoint("/dev/sdb") == Path("/media/volume/current")
     assert observed["command"] == ["findmnt", "-n", "-o", "TARGET", "/dev/sdb"]
+
+
+def test_mem0_provider_instance_is_isolated_below_runtime_root(tmp_path: Path) -> None:
+    config = DataRootConfig(tmp_path / "memlife", DataRootMode.JETSTREAM)
+
+    paths = Mem0LocalPaths.from_data_root(config, provider_instance="phase-02b")
+
+    assert paths.provider_root == tmp_path / "memlife" / "providers" / "mem0" / "phase-02b"
+    assert paths.qdrant == paths.provider_root / "qdrant"
+    assert paths.history == paths.provider_root / "history"
+
+
+def test_mem0_provider_instance_rejects_path_traversal(tmp_path: Path) -> None:
+    config = DataRootConfig(tmp_path / "memlife", DataRootMode.CONFIGURED)
+
+    import pytest
+
+    with pytest.raises(ValueError, match="safe path component"):
+        Mem0LocalPaths.from_data_root(config, provider_instance="../outside")
