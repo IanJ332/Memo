@@ -327,3 +327,62 @@ address. The provider venv, state, caches, and run artifacts were retained on
 the persistent volume. Phase 05C's original blocker and Phase 05D's repair
 remain unchanged; the exact Phase 05E record is
 `manifests/phase-05e-openviking-live-retry.json`.
+
+## Phase 05F — Local Readiness-Contract and Startup-Diagnostic Repair
+
+Phase history remains cumulative:
+
+- 05A: **PASS** — architecture preparation;
+- 05B: **PASS** — live-readiness hardening;
+- 05C: **BLOCKED** — package-name checker false negative;
+- 05D: **PASS** — dependency/controller repair;
+- 05E: **BLOCKED** — installation and configuration passed; readiness and all
+  provider semantics remained unestablished;
+- 05F: local readiness-contract and startup diagnosis.
+
+Phase 05F used base commit
+`1271ed4ae6cb5aa5b123c23252f804357656cab1` and did not contact Jetstream. The
+pinned OpenViking router at `v0.4.22` commit
+`e8716760934d95ef73414484a45bfe475b9296e2` returns liveness from `/health` as
+`{"status":"ok","healthy":true,...}` and successful readiness from `/ready`
+as `{"status":"ready","checks":{...}}`. `/ready` returns HTTP 503 with
+`status: not_ready` during initialization or when configured subsystems fail.
+
+MemLife's former readiness predicate could not accept the pinned successful
+shape. It accepted only literal `true`, `ready: true`, or `healthy: true`. The
+new gate requires `status == "ready"` for the pinned contract, keeps 503 and
+transport failure retryable until a bounded deadline, and records final health,
+readiness, HTTP, elapsed-time, and exception-class diagnostics. A healthy
+`/health` response cannot satisfy readiness.
+
+The preserved local Phase 05E result and session report were inspected before
+code changes. They show the pre-uvicorn startup banner, repeated benign
+workspace-path deprecation warnings, session-manager shutdown near the end of
+the 180-second interval, and final connection refusal. Because the log tail was
+collected after `finally` stopped the owned process, the shutdown line may be
+normal cleanup and does not prove a pre-cleanup exit. The artifacts contain no
+HTTP payload, traceback, or exit code. The retained-log classification and
+secondary startup root cause are therefore **insufficient evidence**, not an
+inferred embedding, vector DB, configuration, or VLM defect.
+
+Pinned `openviking/server/bootstrap.py` prints the startup banner before
+`uvicorn.run()`, and ASGI lifespan performs `service.initialize()` afterward.
+The banner is no longer treated as readiness evidence. The controller now
+checks only its owned `Popen` child, reports its exit code, preserves PID
+ownership, and supplies a bounded sanitized tail. An exit during readiness
+immediately yields `BLOCKED` at `service_startup` with
+`ServiceExitedBeforeReady`; it does not consume the remaining 180 seconds.
+
+The future result contract distinguishes `service_liveness` from
+`service_readiness` and records `health_status`, `health_version`,
+`readiness_status`, `readiness_checks`, `service_process_alive`, and
+`service_exit_code` where observable. The future shell also reuses the retained
+OpenViking venv fail-closed after exact metadata, executable, `pip check`, and
+no-CUDA validation. It does not delete the venv or embedding cache.
+
+No provider settings changed: embedding remains local
+`bge-small-zh-v1.5-f16` dimension 512, and VLM remains OpenAI-compatible
+`gpt-oss-120b` at the course endpoint with temperature 0, concurrency 1, and
+one retry. Session/message/commit/task/memory-diff writes, direct-find queries,
+unsupported update/supersession/revocation, correlated URI deletion, and
+service restart semantics are unchanged.

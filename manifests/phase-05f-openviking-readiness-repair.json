@@ -1,0 +1,138 @@
+{
+  "phase": "05F",
+  "status": "PASS",
+  "phase05_status": "READY_FOR_LIVE_RETRY",
+  "execution_target": "LOCAL_ONLY",
+  "jetstream_used": false,
+  "jetstream_state": "SHELVED",
+  "branch": "phase-05-openviking-bringup",
+  "base_commit": "1271ed4ae6cb5aa5b123c23252f804357656cab1",
+  "provider": {
+    "name": "openviking",
+    "version": "0.4.22",
+    "tag": "v0.4.22",
+    "upstream_commit": "e8716760934d95ef73414484a45bfe475b9296e2"
+  },
+  "phase05_history": {
+    "05A": "PASS - architecture preparation",
+    "05B": "PASS - live readiness hardening",
+    "05C": "BLOCKED - package-name checker false negative",
+    "05D": "PASS - dependency/controller repair",
+    "05E": "BLOCKED - installation passed; readiness not established",
+    "05F": "PASS - local readiness-contract and startup-diagnostic repair"
+  },
+  "pinned_readiness_contract": {
+    "health": {
+      "endpoint": "GET /health",
+      "role": "liveness",
+      "success": {
+        "http_status": 200,
+        "status": "ok",
+        "healthy": true
+      }
+    },
+    "ready": {
+      "endpoint": "GET /ready",
+      "role": "subsystem readiness",
+      "success": {
+        "http_status": 200,
+        "status": "ready",
+        "checks": "provider subsystem check object"
+      },
+      "not_ready": {
+        "http_status": 503,
+        "status": "not_ready",
+        "retryable_until_deadline": true
+      }
+    },
+    "old_predicate": "literal true OR ready=true OR healthy=true",
+    "new_predicate": "GET /ready returns HTTP 200 and status=ready; older boolean fake shapes remain endpoint-scoped compatibility",
+    "confirmed_old_predicate_mismatch": true,
+    "health_substitutes_for_ready": false
+  },
+  "phase05e_retained_evidence": {
+    "result": "runtime_reports/phase-05-openviking/result.json",
+    "session": "runtime_reports/phase-05-openviking-session.json",
+    "result_found": true,
+    "service_log_found": true,
+    "reported_blocker_type": "TimeoutError",
+    "reported_stage": "readiness (historical Phase 05E result did not serialize a stage field)",
+    "http_observation": "terminal connection refused; no response payload retained",
+    "log_observations": [
+      "RAGFS binding loaded",
+      "session manager started",
+      "pre-uvicorn startup banner printed",
+      "deprecated storage path warnings used the same configured workspace",
+      "session manager shutdown logged after the readiness interval"
+    ],
+    "classification": "D - evidence insufficient",
+    "process_exited_before_cleanup": "NOT_ESTABLISHED; log tail was collected after finally cleanup",
+    "second_root_cause": "NOT_ESTABLISHED",
+    "facts_not_claimed": [
+      "embedding readiness",
+      "vector DB readiness",
+      "VLM compatibility",
+      "ASGI lifespan failure",
+      "pre-cleanup process exit"
+    ]
+  },
+  "startup_diagnostics": {
+    "owned_process_alive_check": true,
+    "owned_process_exit_code": true,
+    "early_exit_blocker_type": "ServiceExitedBeforeReady",
+    "early_exit_stage": "service_startup",
+    "bounded_sanitized_log_tail": true,
+    "arbitrary_process_inspection": false,
+    "broad_kill_commands": false,
+    "startup_banner_is_readiness": false,
+    "result_fields": [
+      "service_liveness",
+      "service_readiness",
+      "health_status",
+      "health_version",
+      "readiness_status",
+      "readiness_checks",
+      "service_process_alive",
+      "service_exit_code"
+    ]
+  },
+  "remote_environment_reuse": {
+    "venv": "<MEMLIFE_DATA_ROOT>/venvs/openviking-0.4.22",
+    "reinstall_when_valid_venv_exists": false,
+    "fail_closed_validation": [
+      "provider Python exists",
+      "openviking-server exists",
+      "openviking==0.4.22",
+      "llama-cpp-python metadata present",
+      "pip check PASS",
+      "no CUDA/NVIDIA distributions"
+    ],
+    "embedding_cache": "<MEMLIFE_DATA_ROOT>/model_cache/openviking/embedding",
+    "embedding_cache_deleted": false
+  },
+  "configuration": {
+    "changed": false,
+    "embedding": "local / bge-small-zh-v1.5-f16 / dimension 512",
+    "vlm": "openai / gpt-oss-120b / course endpoint / temperature 0 / concurrency 1 / retries 1"
+  },
+  "provider_semantics_changed": false,
+  "tests": {
+    "readiness_and_phase05_focused": "44 passed",
+    "process_exit": "PASS",
+    "shell_syntax": "PASS (Git Bash bash -n)",
+    "unit": "119 passed",
+    "contract": "6 passed",
+    "integration": "5 passed, 1 skipped (opt-in live Hindsight service unavailable)",
+    "mem0": "5 passed",
+    "hindsight": "11 passed, 1 skipped (opt-in live Hindsight service unavailable)",
+    "phase03": "15 passed",
+    "phase03b": "13 passed",
+    "full": "130 passed, 1 skipped"
+  },
+  "live_retry": {
+    "authorized_in_phase05f": false,
+    "ready_for_one_separately_authorized_controlled_retry": true
+  },
+  "secrets_audit": "PASS",
+  "remote_facts_fabricated": false
+}

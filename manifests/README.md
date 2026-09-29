@@ -20,3 +20,8 @@ separately authorized live retry.
 commit `8104aa682650393a9d36c881c7224721ff7bc252`, its authoritative readiness
 timeout after installation/configuration gates passed, and completed managed
 service, floating-IP, and VM cleanup.
+
+`phase-05f-openviking-readiness-repair.json` records the local-only pinned
+readiness-contract repair, retained Phase 05E log diagnosis, run-owned process
+exit detection, fail-closed retained-environment reuse, and local regressions
+before one separately authorized controlled retry.

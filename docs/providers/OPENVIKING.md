@@ -471,3 +471,56 @@ volume, and a post-run read-only controller check reconfirmed `jisheng3` as
 `SHELVED` with no address. Structured evidence is recorded in
 `manifests/phase-05e-openviking-live-retry.json`; Phase 05C remains the earlier
 pre-install blocker and Phase 05D remains the local repair.
+
+## Phase 05F — Readiness Contract and Startup Diagnostics
+
+Phase 05F is local-only. Jetstream remained shelved and no provider or hosted
+model call was made. The exact `v0.4.22` source at commit
+`e8716760934d95ef73414484a45bfe475b9296e2` establishes two separate system
+contracts in `openviking/server/routers/system.py`:
+
+- `GET /health` is liveness. Success is HTTP 200 with `status: "ok"`,
+  `healthy: true`, and `version`.
+- `GET /ready` is subsystem readiness. Success is HTTP 200 with
+  `status: "ready"` and `checks`; initialization or a failed AGFS, vector DB,
+  embedding, API-key-manager, or configured Ollama check returns HTTP 503 with
+  `status: "not_ready"` and a reason or checks.
+
+The old MemLife predicate accepted only literal `true`, `ready: true`, or
+`healthy: true`. It therefore rejected the pinned provider's valid
+`status: "ready"` response. The repaired predicate accepts `status == "ready"`
+from `/ready`; it never treats `/health` or an arbitrary HTTP 200 as readiness.
+The older boolean shapes remain only as compatibility for deterministic fakes
+on the `/ready` endpoint. HTTP 503/not-ready, unknown payloads, and connection
+failures are retried only until the bounded deadline. Final diagnostics retain
+the last HTTP status, provider readiness status/checks, health status/version,
+elapsed time, and request-error class without secrets.
+
+The pinned bootstrap prints `OpenViking HTTP Server is running on ...` before
+calling `uvicorn.run()`. ASGI lifespan then calls `service.initialize()`.
+Consequently the banner proves neither socket/lifespan success nor AGFS,
+vector DB, or embedding readiness.
+
+The retained sanitized Phase 05E evidence contains the banner at 19:17:02,
+workspace deprecation warnings, a session-manager shutdown at 19:19:55, and a
+terminal connection-refused timeout. The log tail was collected after the
+controller's `finally` cleanup, so the shutdown line may be cleanup itself; it
+does not establish a pre-cleanup process exit. Nor does the evidence contain a
+successful or rejected HTTP payload, lifespan traceback, or exit code. The
+retained-log classification is therefore insufficient evidence for a second
+root cause. Phase 05F does not infer embedding, vector DB, configuration, or
+VLM failure from that evidence.
+
+The run-owned controller now exposes `is_running()`, `exit_code()`, and a
+bounded sanitized log tail for its own child only. Readiness stops immediately
+if that child exits and future results report `stage: service_startup`,
+`blocker_type: ServiceExitedBeforeReady`, the exit code, liveness/readiness
+fields, and the log tail. No process-table scan or broad kill is used.
+
+The next authorized runner preserves and validates
+`<MEMLIFE_DATA_ROOT>/venvs/openviking-0.4.22`. If it exists, exact OpenViking
+0.4.22 and `llama-cpp-python` metadata, `pip check`, executable presence, and
+the CUDA/NVIDIA guard must pass; a bad retained environment blocks rather than
+being replaced or upgraded. The embedding cache at
+`<MEMLIFE_DATA_ROOT>/model_cache/openviking/embedding` is likewise preserved.
+Provider configuration and all lifecycle mappings remain unchanged.
