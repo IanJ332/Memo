@@ -64,6 +64,16 @@ isolation boundary. The validator then raised
 metadata, before starting the service. No service compatibility, persistence,
 lifecycle, or provenance result was produced.
 
+Phase 04D then executed the frozen service/runtime validation at commit
+`3851543d6d5ef013fbe635bfe495c443227c076c`. Both retained environments were
+reused after exact fingerprint and dependency validation. Hindsight 0.10.1
+started on loopback, passed its health and version gates, and parsed the fixed
+`gpt-oss-120b` structured extraction for the Alice compatibility fact. Retain,
+recall, persistent restart, all five canonical lifecycle scenarios, the real
+Phase 03B trace, and the bounded derived-state probe completed. The post-provider
+Mem0 regression passed `5` tests and the full remote suite passed `86` tests.
+The authoritative structured result reports `PASS`.
+
 ## Provider Runtime Isolation
 
 The reviewed retry architecture uses three intentionally distinct environment
@@ -123,8 +133,9 @@ The first live attempt created the persistent-volume directories and pg0 path
 link, but it stopped before starting the API. Attempt 2 stopped even earlier at
 harness health validation. Attempt 3 validated and retained both isolated
 environments but failed in result assembly immediately before service startup.
-Consequently no Hindsight database was runtime-qualified and no persistence or
-restart claim was measured.
+Phase 04D subsequently live-qualified the embedded database and confirmed that
+two recalled records remained available after a run-owned API restart against
+the same pg0 state.
 
 ## Fixed Provider-Internal LLM
 
@@ -205,6 +216,14 @@ not a performance, concurrency, attack, RQ3, or final RQ4 evaluation. Provider
 history is observation history, not a general source-edit audit log. Native
 same-ID curation is not represented as a fabricated supersession chain.
 
+The measured Phase 04D lifecycle outcomes were `CURRENT_ONLY` for baseline,
+correction/update, and supersession; `ABSENT` after revocation; and
+`CURRENT_ONLY` before delete followed by `ABSENT` after delete and after
+restart. No canonical step errored. A real derived-state probe exposed two
+`world` SOURCE records and one `observation` DERIVED record whose two
+`source_memory_ids` were recorded directly. Primary-fact causal lineage and a
+same-ID-edit supersession edge remain `UNKNOWN` rather than inferred.
+
 ## Reproduction
 
 The exact non-secret configuration is in `configs/hindsight-phase04.json`; the
@@ -247,7 +266,15 @@ Phase 04C fixed the two shell-to-validator assignments locally and added a
 contract test covering every strict validator environment key. All local test
 layers and the Mem0 semantic gate passed; the optional local `bash -n` check was
 unavailable because Windows could not instantiate WSL. The retained clean
-harness and Hindsight venv remain eligible for reuse through their unchanged
-fail-closed health and fingerprint checks. Phase 04 is ready for one separately
-authorized live service retry; no Hindsight service result is implied by this
-local repair.
+harness and Hindsight venv remained eligible for reuse through their unchanged
+fail-closed health and fingerprint checks.
+
+Phase 04D synchronized and executed commit
+`3851543d6d5ef013fbe635bfe495c443227c076c`. The remote result was written at
+`2026-09-29T03:30:19.147644+00:00` and reports `PASS`. The final service log
+records graceful shutdown of the worker, PostgreSQL pool, and embedded pg0.
+After result generation, the local lifecycle controller hung while waiting on
+the completed SSH command. Recovery preserved and validated the result before
+interrupting the controller, deleted only the temporary floating IP created by
+that run, and shelved `jisheng3`. This was cleanup recovery for the existing
+lifecycle; no second experiment run or provider/model call occurred.

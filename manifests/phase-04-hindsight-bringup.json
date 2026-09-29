@@ -1,7 +1,7 @@
 {
   "phase": "04",
-  "status": "READY_FOR_RETRY",
-  "live_attempt_status": "BLOCKED",
+  "status": "PASS",
+  "live_attempt_status": "PASS",
   "phase_04b_status": "PASS",
   "phase_04c_status": "PASS",
   "phase_04c_base_head": "8756bd3d4b420337c9f0a7f15cdaa8f8d0d865f8",
@@ -9,18 +9,20 @@
   "attempt_3_service_startup": "NOT_RUN",
   "attempt_3_blocker": "shell_to_validator_environment_handoff",
   "phase04c_handoff_fix": "PASS",
+  "attempt_4_status": "PASS",
+  "attempt_4_controller_recovery": "CONTROLLER_POST_RESULT_HANG",
   "provider": "hindsight",
   "provider_version": "0.10.1",
   "upstream_tag": "v0.10.1",
   "upstream_commit": "f8950b0c07d9e34c76493dba802bb309f0ce60fd",
-  "tested_repo_commit": "8187ccdd718a1b40be1079cfd1660e9f8ea5689d",
+  "tested_repo_commit": "3851543d6d5ef013fbe635bfe495c443227c076c",
   "retry_preparation_base_head": "22209fcc8d6f202ba8181cff80dc3367cb5980f2",
   "phase_04b_base_head": "b366e3cb3c0abda521955cf99410141117de32ef",
   "phase_04b_validated_implementation_head": "e28d47de8ec1c27530159347699f0a24cce71c6d",
-  "timestamp": "2026-09-29T02:43:41.513488+00:00",
+  "timestamp": "2026-09-29T03:30:19.147644+00:00",
   "os": "Ubuntu 24.04.5 LTS",
   "python": "3.12.3",
-  "deployment_mode": "bare-metal self-hosted API service (not started in attempt 3)",
+  "deployment_mode": "bare-metal self-hosted API service (live-qualified in attempt 4)",
   "retry_architecture_reviewed": true,
   "legacy_harness_environment_class": "/home/exouser/Memo/.venv",
   "legacy_harness_status": "contaminated_do_not_use",
@@ -84,7 +86,16 @@
       "sentence_transformers_version_gate": "6.1.0 PASS",
       "cpu_only_torch_gate": "PASS",
       "cuda_nvidia_package_gate": "PASS",
-      "fingerprint": "CREATED OR EXACTLY REUSED, BUT NOT RETURNED LOCALLY BECAUSE RESULT ASSEMBLY ABORTED"
+      "fingerprint": "11f12ed9ba0d9876a0a6d1f42e134c4c5dc7875ed07c7f3b79f8481c1eaec378",
+      "python_version": "3.12.3",
+      "protobuf_version": "6.33.6",
+      "openai_version": "3.20.0",
+      "litellm_version": null,
+      "torch_version": "2.14.0+cpu",
+      "qdrant_client_version": "1.19.1",
+      "reused": true,
+      "mem0_pre_hindsight_regression": "PASS",
+      "mem0_post_hindsight_regression": "5 passed in 7.83s"
     }
   },
   "provider_environment_fingerprint": {
@@ -100,10 +111,13 @@
       "hindsight_api_slim_version_gate": "0.10.1 PASS",
       "pip_check": "PASS",
       "torch_cuda_nvidia_package_gate": "PASS",
-      "fingerprint": "CREATED, BUT NOT RETURNED LOCALLY BECAUSE RESULT ASSEMBLY ABORTED"
+      "fingerprint": "a50f85c1c32aa98a08825135a6537845c0edc3dcaff0260273d744418ff7dd7c",
+      "python_version": "3.12.3",
+      "protobuf_version": "7.36.2",
+      "reused": true
     }
   },
-  "storage_backend": "embedded pg0/PostgreSQL with pgvector (planned; not initialized)",
+  "storage_backend": "embedded pg0/PostgreSQL with pgvector (live-qualified and persistent)",
   "persistent_path_class": "/dev/sdb live mount/memlife/providers/hindsight/pg0",
   "live_volume": {
     "device": "/dev/sdb",
@@ -114,7 +128,7 @@
     "provider": "openai",
     "model": "gpt-oss-120b",
     "base_endpoint_class": "course-authorized OpenAI-compatible hosted endpoint",
-    "structured_output": "NOT RUN",
+    "structured_output": "PASS",
     "purpose": "provider-internal fact extraction and consolidation",
     "rq3_decision_model_calls": 0
   },
@@ -124,26 +138,32 @@
     "dimensions": 384,
     "query_prefix": "query: ",
     "passage_prefix": "passage: ",
-    "live_result": "NOT RUN"
+    "live_result": "PASS"
   },
   "reranker": {
     "provider": "rrf",
-    "live_result": "NOT RUN"
+    "live_result": "PASS"
   },
   "async_mode": {
     "retain": "synchronous",
     "derived_processing": "status-polled asynchronous consolidation",
-    "live_result": "NOT RUN"
+    "live_result": "PASS: operation IDs and submitted/completed timestamps recorded; quiescence required no pending or processing operations"
   },
   "benchmark_version": "0.1",
   "trace_schema_version": "0.1",
   "lifecycle_result_summary": {
-    "baseline": "NOT RUN",
-    "correction_update": "NOT RUN",
-    "supersession": "NOT RUN",
-    "revocation": "NOT RUN",
-    "delete_restart": "NOT RUN",
-    "reason": "attempt 3 passed both isolated environment gates and the Mem0 semantic gate, then result assembly raised KeyError before service startup"
+    "baseline": "CURRENT_ONLY",
+    "correction_update": "CURRENT_ONLY",
+    "supersession": "CURRENT_ONLY",
+    "revocation": "ABSENT",
+    "delete_restart": "CURRENT_ONLY before delete; ABSENT after delete and after restart",
+    "step_count": 24,
+    "operation_errors": 0,
+    "normalized_outcomes_observed": [
+      "CURRENT_ONLY",
+      "ABSENT"
+    ],
+    "reason": "all five canonical scenarios completed against Hindsight 0.10.1 without stale-state visibility"
   },
   "provenance_capability_summary": {
     "known_by_contract": [
@@ -155,10 +175,11 @@
       "same-ID edit supersession edge",
       "relationships with unresolved provider source IDs"
     ],
-    "live_trace": "NOT RUN"
+    "live_trace": "PASS: 5 scenarios, PassThroughFilter only, model execution NOT_RUN",
+    "derived_probe": "PASS: two world records classified SOURCE and one observation classified DERIVED with two directly exposed source_memory_ids"
   },
-  "compatibility_probe": "NOT RUN",
-  "persistence_restart": "NOT RUN",
+  "compatibility_probe": "PASS: retain and Alice-related recall succeeded; structured fact extraction parsed",
+  "persistence_restart": "PASS: two records recalled before and after run-owned service restart",
   "current_blocker": null,
   "blocker_scope": "attempt_3_benchmark_code_defect_before_service_startup_resolved_locally_in_phase_04c",
   "blocker": {
@@ -192,7 +213,14 @@
     "floating_ip_address_persisted": false,
     "final_vm_state": "SHELVED",
     "persistent_hindsight_paths_retained": true,
-    "hindsight_service_started": false
+    "hindsight_service_started": true,
+    "hindsight_service_stopped_cleanly": true,
+    "controller_post_result_hang": true,
+    "controller_graceful_interrupt": "PASS",
+    "cleanup_recovery": "PASS",
+    "final_public_address_present": false,
+    "provider_database_retained": true,
+    "model_cache_retained": true
   },
   "attempt_history": {
     "attempt_1": {
@@ -257,8 +285,30 @@
       "retained_hindsight_venv_reuse": "VALIDATED BY UNCHANGED FAIL-CLOSED LOGIC",
       "service_started": false,
       "model_calls": 0
+    },
+    "attempt_4": {
+      "status": "PASS",
+      "tested_commit": "3851543d6d5ef013fbe635bfe495c443227c076c",
+      "result": "retained environments reused; live service, structured-output compatibility, restart persistence, canonical lifecycle benchmark, provenance trace, derived-state probe, Mem0 post-provider regression, and full suite passed",
+      "remote_result_status": "PASS",
+      "unit_contract": "80 passed in 0.39s",
+      "real_hindsight_integration": "1 passed in 26.21s",
+      "phase_02b_mem0_regression": "PASS",
+      "mem0_post_provider_regression": "5 passed in 7.83s",
+      "full_suite": "86 passed in 31.47s",
+      "rq3_decision_model_calls": 0,
+      "service_started": true,
+      "service_stopped_cleanly": true,
+      "controller_result_handling": "CONTROLLER_POST_RESULT_HANG after authoritative JSON and graceful remote service shutdown",
+      "result_preserved_locally": true,
+      "graceful_controller_interrupt": true,
+      "cleanup_recovery_only": true,
+      "second_experiment_run": false,
+      "temporary_floating_ip_deleted": true,
+      "final_vm_state": "SHELVED"
     }
   },
   "live_attempt_config_sha256": "1174925b29fa288e88899f9d0fd906865d5117ecc671d16d4af93ec356436b00",
+  "phase04d_config_sha256": "baca300bdce174d8cb2d00fa576df73d0cf5c4f9230aed370d2767bd35f4d73d",
   "config_sha256": "baca300bdce174d8cb2d00fa576df73d0cf5c4f9230aed370d2767bd35f4d73d"
 }

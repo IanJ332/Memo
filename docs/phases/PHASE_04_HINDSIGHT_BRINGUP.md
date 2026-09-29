@@ -15,7 +15,10 @@ the pre/post Hindsight harness checks, and the Mem0 semantic gate passed. The
 run then stopped before service startup because the validator attempted to read
 an unset result-metadata environment variable. Phase 04C fixed that local
 shell-to-validator handoff and added full required-key contract coverage. Phase
-04 is **READY_FOR_RETRY**; no Hindsight service semantics have yet been measured.
+04D executed commit `3851543d6d5ef013fbe635bfe495c443227c076c` and is
+**PASS**: the retained environments, live service, structured-output probe,
+persistence restart, canonical benchmark, provenance trace, derived-state
+probe, post-provider Mem0 regression, and full suite all passed.
 
 ## Why Hindsight
 
@@ -40,6 +43,8 @@ seek a vulnerability and made no RQ3 or final RQ4 claim.
   `e28d47de8ec1c27530159347699f0a24cce71c6d`
 - Attempt 3: 2026-09-29, tested commit
   `8187ccdd718a1b40be1079cfd1660e9f8ea5689d`
+- Phase 04C handoff-fix commit / Phase 04D tested commit:
+  `3851543d6d5ef013fbe635bfe495c443227c076c`
 - Blocked live-attempt configuration SHA-256:
   `1174925b29fa288e88899f9d0fd906865d5117ecc671d16d4af93ec356436b00`
 - Isolated-retry configuration SHA-256:
@@ -59,7 +64,9 @@ embedded database, and fixed internal LLM endpoint form the provider runtime.
 Attempt 1 stopped during dependency validation. Attempt 2 stopped during the
 pre-provider harness gate. Attempt 3 live-qualified the isolated dependency
 boundary but stopped in result assembly before the service process was started.
-The Hindsight service and its native behavior therefore remain unqualified.
+Phase 04D then reused both retained environments and live-qualified the
+loopback service, embedded pg0 state, and native behavior without changing the
+frozen architecture.
 
 ## Provider Runtime Isolation
 
@@ -212,9 +219,8 @@ and its supported non-secret placeholder. Its intended purpose is Hindsight fact
 extraction and consolidation.
 
 This is distinct from a future downstream decision LLM. Phase 04 made zero RQ3
-decision-model calls. Because the service never started in any attempt,
-structured-output compatibility is **NOT RUN**, and no alternate course model
-was tried.
+decision-model calls. Phase 04D's Alice compatibility retain/recall passed and
+confirmed structured-output parsing. No alternate course model was tried.
 
 ## Storage Architecture
 
@@ -227,12 +233,11 @@ Live `findmnt` resolved `/dev/sdb` as ext4 mounted at
 - `runs/phase-04-hindsight/`
 - `artifacts/`
 
-The planned backend is embedded pg0/PostgreSQL with pgvector and the named URL
+The backend is embedded pg0/PostgreSQL with pgvector and the named URL
 `pg0://memlife-phase04`. `/home/exouser/.pg0` was managed as a link to the
 persistent provider root. Attempt 3 validated the isolated provider environment
-and retained it on the volume, but its blocker still occurred before service
-startup, so no provider database, derived state, or async state was
-runtime-verified.
+and retained it on the volume. Phase 04D started the provider, preserved recalled
+records across service restart, and live-verified derived and async state.
 
 ## Native Memory Model
 
@@ -251,23 +256,24 @@ invented as an additional normalized memory record. Mental models and knowledge
 structures remain unmapped in Phase 04 because the selected recall/list path
 does not justify equating them with these records.
 
-These classifications passed deterministic fake-transport tests but were not
-confirmed against a running service in the blocked live attempt.
+Phase 04D confirmed these classifications against the running service: two
+`world` rows were SOURCE and one `observation` row was DERIVED. The observation
+directly exposed both source record IDs.
 
 ## Lifecycle Capability Mapping
 
 | Capability | Pinned native mapping | Live result |
 | --- | --- | --- |
-| Write | synchronous retain | NOT RUN |
-| Query | recall over world, experience, observation | NOT RUN |
-| Update | same-ID memory text curation | NOT RUN |
-| Supersede | same-ID edit; no native supersession edge | NOT RUN |
-| Revoke/invalidate | state=`invalidated` curation | NOT RUN |
-| Delete | document-scoped native delete | NOT RUN |
-| History | observation history endpoint; source facts may be empty | NOT RUN |
-| Inspect | list valid and invalidated memory units | NOT RUN |
-| Restart | stop/start service against the same pg0 instance | NOT RUN |
-| Trigger derivation | submit consolidation and poll operation | NOT RUN |
+| Write | synchronous retain | PASS |
+| Query | recall over world, experience, observation | PASS |
+| Update | same-ID memory text curation | PASS — `CURRENT_ONLY` |
+| Supersede | same-ID edit; no native supersession edge | PASS — `CURRENT_ONLY`; edge remains unsupported |
+| Revoke/invalidate | state=`invalidated` curation | PASS — `ABSENT` |
+| Delete | document-scoped native delete | PASS — `ABSENT` |
+| History | observation history endpoint; source facts may be empty | PASS with native scope retained |
+| Inspect | list valid and invalidated memory units | PASS |
+| Restart | stop/start service against the same pg0 instance | PASS |
+| Trigger derivation | submit consolidation and poll operation | PASS |
 
 Unsupported or non-equivalent semantics are explicit. In particular, the
 adapter does not fabricate a supersession relationship, source-fact history, or
@@ -283,8 +289,10 @@ source ID cannot be resolved to an experiment lifecycle event. Text similarity
 is never used to create provenance.
 
 The provider-independent trace extension and PassThroughFilter behavior passed
-local tests, including a fake observation with explicit source IDs. A real
-Hindsight trace was not produced because dependency validation failed first.
+local tests, including a fake observation with explicit source IDs. Phase 04D
+also completed the real five-scenario trace and bounded derived-state probe.
+Directly exposed observation source IDs are known; primary-fact causal lineage
+and same-ID edit supersession remain unknown.
 
 ## Async / Quiescence Semantics
 
@@ -295,44 +303,52 @@ pre-date a mutation and polls new operations until none is `pending` or
 returned ID until `completed`. Benchmark metadata records submitted/completed
 timestamps and the quiescence criterion.
 
-This mechanism passed deterministic unit tests but did not run against the live
-service.
+This mechanism passed deterministic unit tests and the live service run.
+Operation IDs, submitted/completed timestamps, and the no-pending-or-processing
+quiescence condition were recorded in benchmark metadata.
 
 ## Canonical Benchmark Result
 
-The canonical Phase 03 scenarios were **NOT RUN**. Attempts 1 and 2 exposed the
-shared-environment dependency conflict and the contaminated legacy harness,
-respectively. Attempt 3 resolved those blockers in practice: both isolated
-environments and the Mem0 semantic regression passed. It then stopped on the
-missing result-metadata environment variable before service startup, so the
-canonical benchmark was never entered.
+Phase 04D completed all 24 canonical benchmark steps with no operation errors:
 
-No normalized provider outcome is reported for baseline, correction/update,
-supersession, revocation, or delete+restart.
+- baseline: `CURRENT_ONLY`;
+- correction/update: `CURRENT_ONLY`;
+- supersession: `CURRENT_ONLY` using the frozen same-ID edit mapping;
+- revocation: `ABSENT`; and
+- delete + restart: `CURRENT_ONLY` before deletion, then `ABSENT` after delete
+  and again after service restart.
+
+No stale state was visible in a canonical query. Only `CURRENT_ONLY` and
+`ABSENT` were observed; unsupported semantics remain explicit rather than
+emulated.
 
 ## Restart Result
 
-**NOT RUN.** Neither service startup nor pg0 reconstruction occurred.
+**PASS.** The smoke probe recalled two records before restart and two after the
+run-owned service restarted against the same provider venv and pg0 state. The
+delete scenario also remained `ABSENT` after restart.
 
 ## Negative-Control Interpretation
 
-No negative-control interpretation is possible from this run. The result is an
-environment/package co-installation blocker, not evidence for or against
-Hindsight lifecycle propagation.
+Hindsight propagated every measured lifecycle change without stale canonical
+recall, making the provider a useful negative control for later RQ1/RQ2 work.
+The benchmark was not changed to manufacture a failure.
 
 ## Limitations
 
-- All three authorized lifecycles ended before the compatibility probe.
+- The first three authorized lifecycles ended before the compatibility probe;
+  Phase 04D completed it and the remaining live flow.
 - Attempt 1 exposed the shared-environment conflict; attempt 2 exposed its
   persisted contamination during harness preflight.
 - Attempt 3 validated dependency isolation but exposed a benchmark-code result
   assembly defect before service startup.
-- None of the blockers is a Hindsight memory-semantics result.
+- The earlier blockers remain environment/automation history, not Hindsight
+  memory-semantics results.
 - No alternate version, internal LLM, embedding backend, database backend, or
-  additional lifecycle was attempted. Attempt 3 retained the validated clean
-  harness and Hindsight venv on the persistent volume.
+  scenario was attempted. Phase 04D reused the retained clean harness and
+  Hindsight venv.
 - Local Windows tests use a deterministic fake transport; they do not replace
-  the required real self-hosted validation.
+  the real self-hosted evidence now recorded from Phase 04D.
 
 ## Reproduction
 
@@ -386,6 +402,24 @@ Hindsight service. The controller deleted and disassociated its owned temporary
 floating IP and returned `jisheng3` to `SHELVED`; the final read-only status
 check reported no address.
 
+Phase 04D synchronized and executed commit
+`3851543d6d5ef013fbe635bfe495c443227c076c`. The retained clean harness and
+Hindsight environment matched their fingerprints and passed independent `pip
+check` gates. Remote unit/contract tests passed `80` tests, the Phase 02B Mem0
+semantic gate passed, the real Hindsight integration passed, the post-provider
+Mem0 regression passed `5` tests, and the full remote suite passed `86` tests.
+The authoritative `phase-04-result.json` reports `PASS`; the service log ends
+with graceful Hindsight, worker, PostgreSQL-pool, and pg0 shutdown.
+
+After the result and log were complete, the local controller remained blocked
+waiting on the finished SSH command (`CONTROLLER_POST_RESULT_HANG`). Cleanup
+recovery copied and validated the result before sending Ctrl+C to the original
+controller. Because its cleanup did not execute, the recovery path
+disassociated and deleted only the temporary floating IP created by this run,
+shelved the already-active `jisheng3`, and verified `SHELVED` with no associated
+floating IP. No second experiment run, Hindsight start, benchmark, or model call
+occurred.
+
 ## Git Trace
 
 - `4bc25488ba4579cf1d3dcea872aba1ccdb168841` — freeze Hindsight configuration
@@ -398,6 +432,7 @@ check reported no address.
 - `b87db40cb3c0efc30d3f295413fad23217e34673` — prepare the clean persistent-volume harness runtime
 - `e28d47de8ec1c27530159347699f0a24cce71c6d` — validate clean-harness recovery and fail-closed behavior
 - `8187ccdd718a1b40be1079cfd1660e9f8ea5689d` — prepare the final live retry; exact attempt-3 tested commit
+- `3851543d6d5ef013fbe635bfe495c443227c076c` — fix the shell handoff and prepare Phase 04D; exact live tested commit
 
 The Phase 04B documentation commit is the branch HEAD reported in the
 completion response. The Phase 04B base is
@@ -405,8 +440,7 @@ completion response. The Phase 04B base is
 
 ## Next Experiment Handoff
 
-Phase 04 is READY FOR RETRY and all Hindsight service/benchmark fields remain
-NOT RUN. In one separately authorized lifecycle, preserve the mandatory
-clean-harness-first order and reuse the retained environments only after their
-exact validation gates pass. The legacy `.venv` remains evidence only and must
-not participate in execution.
+Phase 04 is complete with a structured remote `PASS`. Continue to the next
+planned project phase without rerunning Phase 04D. Preserve the legacy `.venv`
+as forensic evidence and retain the clean harness, isolated Hindsight venv,
+provider database, and model cache on the persistent volume.
