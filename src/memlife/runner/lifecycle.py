@@ -17,6 +17,7 @@ from memlife.models.benchmark import (
 from memlife.models.lifecycle import LifecycleState
 from memlife.models.memory import DeleteCommand, MemoryRecord, QueryCommand
 from memlife.models.memory import SupersedeCommand, WriteCommand
+from memlife.models.provenance import ProvenanceStatus
 from memlife.scenarios.models import (
     LifecycleEvent,
     LifecycleScenario,
@@ -36,6 +37,10 @@ class LifecycleStepObservation:
     step: LifecycleStep
     result: BenchmarkResult
     records: tuple[MemoryRecord, ...]
+
+
+class DependencyMaterializationError(RuntimeError):
+    """A target identity is absent because its producer step failed."""
 
 
 def normalize_query_observation(
@@ -101,6 +106,7 @@ class LifecycleRunner:
 
         self.adapter.reset_namespace(scenario.namespace)
         memory_ids: dict[str, str] = {}
+        materialization_failures: dict[str, tuple[OperationStatus, str]] = {}
         observations: list[LifecycleStepObservation] = []
         for index, step in enumerate(scenario.lifecycle_steps):
             observations.append(
@@ -109,6 +115,7 @@ class LifecycleRunner:
                     step=step,
                     step_index=index,
                     memory_ids=memory_ids,
+                    materialization_failures=materialization_failures,
                 )
             )
         return tuple(observations)
@@ -170,6 +177,32 @@ class LifecycleRunner:
             metadata["history_errors"] = errors
         return visible, metadata
 
+    def _correlation_visibility(
+        self, records: Iterable[MemoryRecord]
+    ) -> dict[str, Any]:
+        """Summarize only provider-observed source correlation for retrievals."""
+
+        correlated_records: list[MemoryRecord] = []
+        source_ids: list[str] = []
+        for record in records:
+            if (
+                self.adapter.trace_provenance_status_for(record)
+                is not ProvenanceStatus.KNOWN
+            ):
+                continue
+            exposed = self.adapter.trace_source_provider_ids_for(record)
+            if not exposed:
+                continue
+            correlated_records.append(record)
+            source_ids.extend(str(value) for value in exposed)
+        return {
+            "correlated_retrieval_count": len(correlated_records),
+            "correlated_source_ids": list(dict.fromkeys(source_ids)),
+            "correlated_provider_record_ids": [
+                record.memory_id for record in correlated_records
+            ],
+        }
+
     def _run_step_observed(
         self,
         *,
@@ -177,6 +210,7 @@ class LifecycleRunner:
         step: LifecycleStep,
         step_index: int,
         memory_ids: dict[str, str],
+        materialization_failures: dict[str, tuple[OperationStatus, str]],
     ) -> LifecycleStepObservation:
         before, before_supported, before_error = self._inspect_safely(
             scenario.namespace
@@ -206,6 +240,20 @@ class LifecycleRunner:
 
         start = self.timer()
         try:
+            if step.target_key is not None and step.target_key not in memory_ids:
+                dependency = materialization_failures.get(str(step.target_key))
+                if dependency is not None:
+                    dependency_status, producer_reason = dependency
+                    reason = (
+                        f"target {step.target_key} was not materialized because its "
+                        "producer operation was unsupported"
+                    )
+                    if dependency_status is OperationStatus.UNSUPPORTED:
+                        raise UnsupportedCapabilityError(reason)
+                    raise DependencyMaterializationError(
+                        f"target {step.target_key} was not materialized because its "
+                        f"producer operation failed: {producer_reason}"
+                    )
             observed, query = self._execute_step(
                 scenario=scenario,
                 step=step,
@@ -220,6 +268,7 @@ class LifecycleRunner:
                     current_state_correct,
                 ) = normalize_query_observation(observed, query)
                 stale_state_visible = bool(retrieved_stale)
+                provider_metadata.update(self._correlation_visibility(observed))
             if step.event is LifecycleEvent.INSPECT:
                 targets = (
                     [memory_ids[step.target_key]]
@@ -239,6 +288,17 @@ class LifecycleRunner:
             status = OperationStatus.ERROR
             outcome = NormalizedOutcome.ERROR
             error = f"{type(exc).__name__}: {exc}"
+        if step.memory_key is not None and str(step.memory_key) not in memory_ids:
+            if status is OperationStatus.UNSUPPORTED:
+                materialization_failures[str(step.memory_key)] = (
+                    status,
+                    unsupported_reason or "producer operation was unsupported",
+                )
+            elif status is OperationStatus.ERROR:
+                materialization_failures[str(step.memory_key)] = (
+                    status,
+                    error or "producer operation failed",
+                )
         latency_ms = round((self.timer() - start) * 1000, 3)
 
         # Some providers learn operation/quiescence metadata only while the

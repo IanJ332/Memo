@@ -119,6 +119,11 @@ else
         blocked_result provider_install ProviderInstallError "$INSTALL_LOG"
     fi
 fi
+if [ "$REUSE_EXISTING_ENV" -eq 1 ]; then
+    export PHASE05_PROVIDER_ENV_REUSED=true
+else
+    export PHASE05_PROVIDER_ENV_REUSED=false
+fi
 
 PIP_CHECK_LOG="$RUN_ROOT/openviking-pip-check.log"
 if ! "$OPENVIKING_PYTHON" -m pip check >"$PIP_CHECK_LOG" 2>&1; then
@@ -127,6 +132,8 @@ fi
 if ! "$OPENVIKING_PYTHON" -c 'import importlib.metadata as m; assert m.version("openviking") == "0.4.22"; assert m.version("llama-cpp-python")'; then
     blocked_result executable_validation DistributionMetadataError
 fi
+export PHASE05_OPENVIKING_VERSION="$("$OPENVIKING_PYTHON" -c 'import importlib.metadata as m; print(m.version("openviking"))')"
+export PHASE05_LLAMA_CPP_PYTHON_VERSION="$("$OPENVIKING_PYTHON" -c 'import importlib.metadata as m; print(m.version("llama-cpp-python"))')"
 if [ ! -x "$OPENVIKING_SERVICE" ]; then
     blocked_result executable_validation MissingOpenVikingExecutable
 fi

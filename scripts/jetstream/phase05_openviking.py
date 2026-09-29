@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import hashlib
 import json
 import os
 import re
@@ -333,6 +334,12 @@ class OpenVikingServiceController:
 
         return None if self.process is None else self.process.poll()
 
+    @property
+    def service_pid(self) -> int | None:
+        """Return the PID of the exact child owned by this controller."""
+
+        return None if self.process is None else self.process.pid
+
     def log_tail(self, *, lines: int = 40) -> list[str]:
         return _service_log_tail(self.log_path, lines=lines)
 
@@ -389,7 +396,7 @@ class OpenVikingServiceController:
         self.start()
 
 
-def write_config(output: Path) -> None:
+def write_config(output: Path) -> str:
     """Create a private runtime config from future-run environment variables."""
 
     provider = os.environ["PHASE05_OPENVIKING_VLM_PROVIDER"]
@@ -432,6 +439,49 @@ def write_config(output: Path) -> None:
     output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     os.chmod(output, 0o600)
     (Path(model_cache) / "embedding").mkdir(parents=True, exist_ok=True)
+    return hashlib.sha256(output.read_bytes()).hexdigest()
+
+
+def _runtime_evidence(controller: OpenVikingServiceController) -> dict[str, Any]:
+    reused = os.environ.get("PHASE05_PROVIDER_ENV_REUSED")
+    if reused not in {"true", "false"}:
+        raise RuntimeError("PHASE05_PROVIDER_ENV_REUSED must be true or false")
+    config = Path(os.environ["PHASE05_OPENVIKING_CONFIG"])
+    return {
+        "provider_environment_reused": reused == "true",
+        "openviking_version": os.environ["PHASE05_OPENVIKING_VERSION"],
+        "llama_cpp_python_version": os.environ["PHASE05_LLAMA_CPP_PYTHON_VERSION"],
+        "service_pid": controller.service_pid,
+        "config_sha256": hashlib.sha256(config.read_bytes()).hexdigest(),
+    }
+
+
+def strict_liveness_passes(readiness: Mapping[str, Any]) -> bool:
+    """Require both provider status and provider healthy evidence."""
+
+    return (
+        readiness.get("health_status") == "ok"
+        and readiness.get("health_healthy") is True
+    )
+
+
+def _canary_result_fields(canary: Mapping[str, Any]) -> dict[str, Any]:
+    """Promote completed-write evidence into stable result fields."""
+
+    return {
+        "canary_session_id": canary["session_id"],
+        "canary_archive_uri": canary["archive_uri"],
+        "canary_task_id": canary["task_id"],
+        "canary_task_final_status": canary["task_final_status"],
+        "canary_task_submitted_at": canary["task_submitted_at"],
+        "canary_task_completed_at": canary["task_completed_at"],
+        "canary_quiescence_seconds": canary["quiescence_seconds"],
+        "canary_provider_memory_uri_count": canary["provider_memory_uri_count"],
+        "canary_memory_diff_add_count": canary["memory_diff_add_count"],
+        "canary_memory_diff_update_count": canary["memory_diff_update_count"],
+        "canary_memory_diff_delete_count": canary["memory_diff_delete_count"],
+        "canary_memory_diff_skipped_count": canary["memory_diff_skipped_count"],
+    }
 
 
 def validate_remote(output: Path) -> None:
@@ -464,14 +514,14 @@ def validate_remote(output: Path) -> None:
             process_exit_code=controller.exit_code,
         )
         controller.start()
+        result.update(_runtime_evidence(controller))
         result["stage"] = "service_readiness"
         adapter.wait_until_ready(timeout_seconds=180)
         readiness = adapter.readiness_diagnostics
         result.update(
             service_liveness=(
                 "PASS"
-                if readiness.get("health_status") == "ok"
-                and readiness.get("health_healthy") is True
+                if strict_liveness_passes(readiness)
                 else "NOT_ESTABLISHED"
             ),
             service_readiness="PASS",
@@ -487,8 +537,10 @@ def validate_remote(output: Path) -> None:
         source = adapter.write(
             WriteCommand(namespace=namespace, content="Phase 05 persistence canary is amber.")
         )
+        canary = adapter.completed_write_metadata(source.memory_id)
         before = adapter.query(QueryCommand(namespace=namespace, query="persistence canary amber"))
         adapter.restart()
+        result["service_pid_after_restart"] = controller.service_pid
         after = adapter.query(QueryCommand(namespace=namespace, query="persistence canary amber"))
         if not before or not after:
             raise RuntimeError("OpenViking persistence canary was not retrieved")
@@ -515,6 +567,7 @@ def validate_remote(output: Path) -> None:
                 run.trace.model_dump(mode="json") for run in traced_runs
             ],
         )
+        result.update(_canary_result_fields(canary))
     except Exception as exc:
         readiness = getattr(adapter, "readiness_diagnostics", {}) if adapter is not None else {}
         exited = isinstance(exc, (ServiceExitedBeforeReady, AdapterServiceExitedBeforeReady))
@@ -539,10 +592,7 @@ def validate_remote(output: Path) -> None:
             readiness_last_http_status=readiness.get("last_http_status"),
             readiness_request_error_class=readiness.get("request_error_class"),
         )
-        if (
-            readiness.get("health_status") == "ok"
-            and readiness.get("health_healthy") is True
-        ):
+        if strict_liveness_passes(readiness):
             result["service_liveness"] = "PASS"
     finally:
         result.setdefault("service_process_alive", controller.is_running())

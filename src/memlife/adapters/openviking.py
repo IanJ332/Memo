@@ -198,7 +198,10 @@ class UrllibOpenVikingTransport:
         if isinstance(response, Mapping) and response.get("status") == "ok":
             if "result" in response:
                 return response.get("result")
-            return {key: value for key, value in response.items() if key != "status"}
+            # A status-only envelope is not the same shape as a successful
+            # provider response. Preserve the provider's complete mapping when
+            # there is no result member (notably /health liveness evidence).
+            return dict(response)
         return response
 
 
@@ -521,10 +524,10 @@ class OpenVikingMemoryAdapter(MemoryProviderAdapter):
 
     def wait_for_quiescence(self, task_id: str) -> Mapping[str, Any]:
         submitted_at = self._clock()
-        started = time.monotonic()
+        started = self._monotonic()
         deadline = started + self.quiescence_timeout_seconds
         last_status = "unknown"
-        while time.monotonic() < deadline:
+        while self._monotonic() < deadline:
             task = self.transport.request(
                 "GET", f"/api/v1/tasks/{quote(task_id, safe='')}"
             )
@@ -538,7 +541,7 @@ class OpenVikingMemoryAdapter(MemoryProviderAdapter):
                     "task_status": last_status,
                     "task_submitted_at": submitted_at.isoformat(),
                     "task_completed_at": completed_at.isoformat(),
-                    "quiescence_seconds": round(time.monotonic() - started, 6),
+                    "quiescence_seconds": round(self._monotonic() - started, 6),
                     "quiescence_criterion": "provider task status=completed",
                 }
                 return task
@@ -613,13 +616,23 @@ class OpenVikingMemoryAdapter(MemoryProviderAdapter):
         archive_uri = str(commit.get("archive_uri") or "")
         if not archive_uri:
             raise AdapterError("OpenViking accepted commit returned no archive_uri")
-        self.wait_for_quiescence(task_id)
+        completed_task = self.wait_for_quiescence(task_id)
         memory_diff = self._read_memory_diff(archive_uri)
         applied = tuple(
             operation
             for operation in memory_diff.operations
             if operation.operation in {"add", "update"}
         )
+        diff_counts = {
+            "adds": sum(operation.operation == "add" for operation in memory_diff.operations),
+            "updates": sum(
+                operation.operation == "update" for operation in memory_diff.operations
+            ),
+            "deletes": sum(
+                operation.operation == "delete" for operation in memory_diff.operations
+            ),
+            "skipped": len(memory_diff.skipped_operations),
+        }
         correlation = {
             "namespace": command.namespace,
             "source_event_id": source_event_id,
@@ -628,9 +641,14 @@ class OpenVikingMemoryAdapter(MemoryProviderAdapter):
             "archive_uri": archive_uri,
             "archive_id": self._archive_id(archive_uri),
             "task_id": task_id,
-            "task_status": "completed",
+            "task_status": str(completed_task.get("status") or "completed").casefold(),
+            "task_submitted_at": self._last_operation["task_submitted_at"],
+            "task_completed_at": self._last_operation["task_completed_at"],
+            "quiescence_seconds": self._last_operation["quiescence_seconds"],
             "extracted_at": memory_diff.extracted_at,
             "operations": memory_diff.operations,
+            "memory_diff_counts": diff_counts,
+            "skipped_operations": memory_diff.skipped_operations,
             "provider_memory_uris": tuple(operation.uri for operation in applied),
         }
         self._correlations[source_event_id] = correlation
@@ -640,6 +658,10 @@ class OpenVikingMemoryAdapter(MemoryProviderAdapter):
                 "session_id": session_id,
                 "archive_uri": archive_uri,
                 "memory_diff_operation_count": len(memory_diff.operations),
+                "memory_diff_add_count": diff_counts["adds"],
+                "memory_diff_update_count": diff_counts["updates"],
+                "memory_diff_delete_count": diff_counts["deletes"],
+                "memory_diff_skipped_count": diff_counts["skipped"],
                 "provider_memory_uri_count": len(applied),
                 "write_correlation": "one-to-many; no provider URI selected as canonical",
             }
@@ -654,13 +676,37 @@ class OpenVikingMemoryAdapter(MemoryProviderAdapter):
                 "openviking_session_id": session_id,
                 "openviking_archive_uri": archive_uri,
                 "openviking_task_id": task_id,
-                "openviking_task_status": "completed",
+                "openviking_task_status": correlation["task_status"],
                 "openviking_provider_memory_uris": list(correlation["provider_memory_uris"]),
                 "openviking_extracted_at": memory_diff.extracted_at,
             },
             state=LifecycleState.ACTIVE,
             revision=1,
         )
+
+    def completed_write_metadata(self, source_event_id: str) -> Mapping[str, Any]:
+        """Return sanitized, directly observed correlation for one completed write."""
+
+        correlation = self._correlations.get(source_event_id)
+        if correlation is None:
+            raise MemoryNotFoundError("OpenViking write correlation was not observed")
+        metadata = {
+            "source_event_id": correlation["source_event_id"],
+            "session_id": correlation["session_id"],
+            "archive_uri": correlation["archive_uri"],
+            "task_id": correlation["task_id"],
+            "task_final_status": correlation["task_status"],
+            "task_submitted_at": correlation["task_submitted_at"],
+            "task_completed_at": correlation["task_completed_at"],
+            "quiescence_seconds": correlation["quiescence_seconds"],
+            "provider_memory_uris": list(correlation["provider_memory_uris"]),
+            "provider_memory_uri_count": len(correlation["provider_memory_uris"]),
+            "memory_diff_add_count": correlation["memory_diff_counts"]["adds"],
+            "memory_diff_update_count": correlation["memory_diff_counts"]["updates"],
+            "memory_diff_delete_count": correlation["memory_diff_counts"]["deletes"],
+            "memory_diff_skipped_count": correlation["memory_diff_counts"]["skipped"],
+        }
+        return reject_sensitive_keys(metadata, field_name="OpenViking write metadata")
 
     def _known_uri_map(self, namespace: str) -> dict[str, tuple[str, MemoryDiffOperation]]:
         known: dict[str, tuple[str, MemoryDiffOperation]] = {}
