@@ -11,6 +11,7 @@ from memlife.adapters.base import (
 )
 from memlife.adapters.reference import ReferenceMemoryAdapter
 from memlife.adapters.hindsight import HindsightMemoryAdapter
+from memlife.adapters.openviking import OpenVikingMemoryAdapter
 
 __all__ = [
     "AdapterError",
@@ -19,6 +20,7 @@ __all__ = [
     "MemoryNotFoundError",
     "MemoryProviderAdapter",
     "HindsightMemoryAdapter",
+    "OpenVikingMemoryAdapter",
     "ProviderCapability",
     "ReferenceMemoryAdapter",
     "UnsupportedCapabilityError",
