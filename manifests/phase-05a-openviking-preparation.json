@@ -1,0 +1,119 @@
+{
+  "phase": "05A",
+  "status": "PREPARED_LOCAL_TESTS_PENDING",
+  "provider": "openviking",
+  "verified_latest_version": "0.4.22",
+  "verified_release_date": "2026-09-28",
+  "pinned_candidate_version": "0.4.22",
+  "upstream_tag": "v0.4.22",
+  "upstream_commit": "e8716760934d95ef73414484a45bfe475b9296e2",
+  "python_requirement": ">=3.10",
+  "sdk_package": "openviking-sdk==0.1.12 (not installed; direct HTTP selected)",
+  "service_package": "openviking==0.4.22",
+  "service_command": "openviking-server",
+  "http_host": "127.0.0.1",
+  "http_port": 1933,
+  "authentication": "loopback-only dev mode for provider bring-up; API key/OIDC/LDAP/trusted modes documented; distinct from final app OAuth",
+  "storage_model": {
+    "content": "VikingFS over local AGFS",
+    "index": "local persistent vector index storing URIs/vectors/metadata",
+    "workspace": "<MEMLIFE_DATA_ROOT>/providers/openviking",
+    "archive": "session history with messages, summaries, memory_diff, done/failed markers"
+  },
+  "async_semantics": {
+    "submission": "commit status=accepted with task_id",
+    "nonterminal": [
+      "pending",
+      "running",
+      "cancelling"
+    ],
+    "success": "completed",
+    "failure": [
+      "failed",
+      "cancelled"
+    ],
+    "quiescence": "bounded polling of GET /api/v1/tasks/{task_id}; no fixed correctness sleep"
+  },
+  "model_dependencies": {
+    "vlm": "semantic L0/L1 generation, memory extraction, dedup/reconciliation",
+    "query_planner": "not used by selected find primitive",
+    "future_configuration": "explicitly supplied in separately authorized live run; compatibility not assumed"
+  },
+  "embedding_dependencies": {
+    "required": true,
+    "prepared_candidate": "documented built-in local dense default (local / bge-small-zh-v1.5-f16)",
+    "course_endpoint_assumption": "none; chat compatibility does not imply embeddings",
+    "live_gate": "CPU footprint, model availability, dimension, indexing and retrieval"
+  },
+  "reranker": {
+    "required": false,
+    "prepared_configuration": "disabled; find falls back to vector similarity"
+  },
+  "native_requirements": {
+    "wheel": "CPython 3.10 ABI3 manylinux_2_31_x86_64, 28.8 MB",
+    "packaged_components": "Rust RAGFS, native vector engine, Rust CLI binary",
+    "source_build": "CMake >=3.15 and Maturin >=1,<2; not planned"
+  },
+  "lifecycle_capability_map": {
+    "write": "supported via isolated session add/commit/task/diff",
+    "query": "supported via direct find scoped to correlated memory URIs",
+    "update": "unsupported",
+    "supersede": "unsupported",
+    "revoke_invalidate": "unsupported",
+    "delete": "supported by external URI deletion for all diff-correlated memory URIs",
+    "history_audit": "supported for adapter-observed memory_diff operations",
+    "inspect": "supported for correlated provider memory URIs",
+    "restart": "supported only with run-owned service-controller callback",
+    "trigger_derivation": "supported helper via session extract"
+  },
+  "canonical_benchmark_compatibility": {
+    "baseline": "needs mapping/live qualification",
+    "correction_update": "unsupported",
+    "supersession": "unsupported",
+    "revocation": "unsupported",
+    "delete_restart": "needs mapping/live qualification"
+  },
+  "provenance_surfaces": {
+    "known": [
+      "MemLife source event ID",
+      "session ID",
+      "archive URI",
+      "task ID and completion status",
+      "memory_diff operation and provider memory URI",
+      "retrieval candidate URI"
+    ],
+    "unknown": [
+      "message-span to extracted-field causal lineage",
+      "unexposed VLM reasoning",
+      "supersession relation",
+      "revocation relation"
+    ],
+    "memory_diff_value": "known operation correlation at commit granularity, not full causal provenance"
+  },
+  "jetstream_feasibility": {
+    "assessment": "plausible but not live-qualified",
+    "target": "Ubuntu 24.04, x86_64, Python 3.12.3, 2 vCPU, approximately 5.78 GiB RAM, no GPU",
+    "positive_evidence": "prebuilt compatible wheel; official small deployment guidance around 0.5 GB resident memory",
+    "live_blockers": [
+      "provider-internal VLM protocol compatibility",
+      "built-in local embedding CPU/RAM/cache/latency"
+    ],
+    "resource_guards": "persistent-volume venv/state/cache/runs, root/volume free-space gates, CUDA/NVIDIA rejection, one loopback service"
+  },
+  "future_runtime": {
+    "provider_venv": "<MEMLIFE_DATA_ROOT>/venvs/openviking-0.4.22",
+    "provider_state": "<MEMLIFE_DATA_ROOT>/providers/openviking",
+    "model_cache": "<MEMLIFE_DATA_ROOT>/model_cache/openviking",
+    "runs": "<MEMLIFE_DATA_ROOT>/runs/phase-05-openviking",
+    "authorization_gate": "MEMLIFE_AUTHORIZE_PHASE05_LIVE=YES",
+    "executed_in_phase_05a": false
+  },
+  "benchmark_version": "0.1",
+  "trace_schema_version": "0.1",
+  "tested_repo_commit": "PENDING_FINAL_LOCAL_TEST_COMMIT",
+  "timestamp": "2026-09-29T04:58:12.3449479Z",
+  "config_hash": "ad1216520de78aa6dd6fe0c34393e3830b05b035aa7dda367d92725dafe53258",
+  "jetstream_used": false,
+  "hosted_model_calls": 0,
+  "final_experiment_matrix_run": false
+}

@@ -909,9 +909,30 @@ def run_phase04(credentials: Mapping[str, str]) -> dict[str, Any]:
     )
 
 
+def run_phase05(credentials: Mapping[str, str]) -> dict[str, Any]:
+    """Run a separately authorized OpenViking validation in a managed session."""
+
+    from phase05_openviking import require_live_authorization, run_remote_validation
+
+    require_live_authorization()
+    expected_commit = run_command(["git", "rev-parse", "HEAD"]).stdout.strip()
+    return run_managed_session(
+        credentials,
+        phase="05",
+        manifest_path=ROOT / "runtime_reports" / "phase-05-openviking-session.json",
+        remote_work=lambda address, facts: run_remote_validation(
+            address=address,
+            facts=facts,
+            expected_commit=expected_commit,
+            ssh_builder=ssh_command,
+            runner=run_command,
+        ),
+    )
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("doctor", "status", "unshelve", "address", "ssh-check", "probe", "shelve", "acceptance", "phase02b", "phase04"))
+    parser.add_argument("command", choices=("doctor", "status", "unshelve", "address", "ssh-check", "probe", "shelve", "acceptance", "phase02b", "phase04", "phase05"))
     args = parser.parse_args(argv)
     try:
         credentials = load_credentials()
@@ -945,8 +966,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 output = run_acceptance(credentials)
             elif args.command == "phase02b":
                 output = run_phase02b(credentials)
-            else:
+            elif args.command == "phase04":
                 output = run_phase04(credentials)
+            else:
+                output = run_phase05(credentials)
         print(json.dumps(output, indent=2))
         return 0
     except (JetstreamError, FileNotFoundError, subprocess.TimeoutExpired) as exc:
