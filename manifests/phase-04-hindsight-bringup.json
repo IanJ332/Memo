@@ -1,20 +1,20 @@
 {
   "phase": "04",
-  "status": "READY_FOR_RETRY",
+  "status": "BLOCKED",
   "live_attempt_status": "BLOCKED",
   "phase_04b_status": "PASS",
   "provider": "hindsight",
   "provider_version": "0.10.1",
   "upstream_tag": "v0.10.1",
   "upstream_commit": "f8950b0c07d9e34c76493dba802bb309f0ce60fd",
-  "tested_repo_commit": "2f85ba07a3172103c6008f566c3c017fd5cce884",
+  "tested_repo_commit": "8187ccdd718a1b40be1079cfd1660e9f8ea5689d",
   "retry_preparation_base_head": "22209fcc8d6f202ba8181cff80dc3367cb5980f2",
   "phase_04b_base_head": "b366e3cb3c0abda521955cf99410141117de32ef",
   "phase_04b_validated_implementation_head": "e28d47de8ec1c27530159347699f0a24cce71c6d",
-  "timestamp": "2026-09-29T01:49:11.838886+00:00",
+  "timestamp": "2026-09-29T02:43:41.513488+00:00",
   "os": "Ubuntu 24.04.5 LTS",
   "python": "3.12.3",
-  "deployment_mode": "bare-metal self-hosted API service (not started in retry)",
+  "deployment_mode": "bare-metal self-hosted API service (not started in attempt 3)",
   "retry_architecture_reviewed": true,
   "legacy_harness_environment_class": "/home/exouser/Memo/.venv",
   "legacy_harness_status": "contaminated_do_not_use",
@@ -23,7 +23,7 @@
   "provider_environment_class": "persistent-volume/venvs/hindsight-0.10.1",
   "isolation_boundary": "loopback HTTP at 127.0.0.1:8888",
   "provider_venv_path_class": "<live /dev/sdb mount>/memlife/venvs/hindsight-0.10.1",
-  "dependency_conflict_resolved_by_isolation": "VALIDATED LOCALLY FOR THE CLEAN HARNESS; NOT YET VALIDATED LIVE WITH HINDSIGHT",
+  "dependency_conflict_resolved_by_isolation": "PASS: clean Mem0 harness and isolated Hindsight venv each passed their own live dependency gates",
   "forced_dependency_overrides": false,
   "dependency_ownership_audit": {
     "openai_direct_repository_usage": [
@@ -70,7 +70,16 @@
       "normalized_pip_freeze_sha256": "77425bc59d2ca563c20248e041e9cf603ff710816f11addd4364be1c23343813",
       "pip_check": "PASS"
     },
-    "live_result": "NOT RUN"
+    "live_result": {
+      "acceptance": "PASS",
+      "pip_check_before_hindsight": "PASS",
+      "pip_check_after_hindsight": "PASS",
+      "mem0ai_version_gate": "2.2.1 PASS",
+      "sentence_transformers_version_gate": "6.1.0 PASS",
+      "cpu_only_torch_gate": "PASS",
+      "cuda_nvidia_package_gate": "PASS",
+      "fingerprint": "CREATED OR EXACTLY REUSED, BUT NOT RETURNED LOCALLY BECAUSE RESULT ASSEMBLY ABORTED"
+    }
   },
   "provider_environment_fingerprint": {
     "fields": [
@@ -80,7 +89,13 @@
       "protobuf_version",
       "normalized_pip_freeze_sha256"
     ],
-    "live_result": "NOT RUN"
+    "live_result": {
+      "acceptance": "PASS",
+      "hindsight_api_slim_version_gate": "0.10.1 PASS",
+      "pip_check": "PASS",
+      "torch_cuda_nvidia_package_gate": "PASS",
+      "fingerprint": "CREATED, BUT NOT RETURNED LOCALLY BECAUSE RESULT ASSEMBLY ABORTED"
+    }
   },
   "storage_backend": "embedded pg0/PostgreSQL with pgvector (planned; not initialized)",
   "persistent_path_class": "/dev/sdb live mount/memlife/providers/hindsight/pg0",
@@ -122,7 +137,7 @@
     "supersession": "NOT RUN",
     "revocation": "NOT RUN",
     "delete_restart": "NOT RUN",
-    "reason": "dependency compatibility check failed before service startup"
+    "reason": "attempt 3 passed both isolated environment gates and the Mem0 semantic gate, then result assembly raised KeyError before service startup"
   },
   "provenance_capability_summary": {
     "known_by_contract": [
@@ -138,16 +153,15 @@
   },
   "compatibility_probe": "NOT RUN",
   "persistence_restart": "NOT RUN",
-  "current_blocker": null,
-  "blocker_scope": "historical_attempt_2",
+  "current_blocker": "phase04_hindsight_validate.py requires PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN, but phase04_remote.sh exported the name without assigning it from HARNESS_VENV_CREATED_BY_THIS_RUN",
+  "blocker_scope": "attempt_3_benchmark_code_defect_before_service_startup",
   "blocker": {
-    "stage": "harness preflight before isolated Hindsight setup",
-    "hindsight_requirement": "protobuf>=7.35.1",
-    "mem0_requirement": "protobuf>=5.29.6,<7.0.0",
-    "resolved_protobuf": "7.36.2",
-    "harness_openai": "3.13.0",
-    "litellm_requirement": "openai>=2.20.0,<3.0.0",
-    "message": "The preexisting remote harness environment remained contaminated from attempt 1. After the pinned core install, pip check still reported protobuf 7.36.2 incompatible with mem0ai 2.2.1 and openai 3.13.0 incompatible with litellm 1.103.0. The retry stopped before creating, installing, or starting the isolated Hindsight provider runtime."
+    "stage": "sanitized result assembly before Hindsight service startup",
+    "exception": "KeyError: PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN",
+    "file": "scripts/jetstream/phase04_hindsight_validate.py",
+    "line": 141,
+    "root_cause": "phase04_remote.sh exports PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN and PHASE04_HINDSIGHT_VENV_CREATED_BY_THIS_RUN without first assigning them from the corresponding HARNESS_VENV_CREATED_BY_THIS_RUN and HINDSIGHT_VENV_CREATED_BY_THIS_RUN shell variables",
+    "message": "Attempt 3 passed clean-harness health, CPU/CUDA checks, fingerprint validation, remote unit/contract tests, the Phase 02B Mem0 semantic gate, isolated Hindsight installation/health, and the post-install harness recheck. The validator then failed while constructing its initial result object, before starting Hindsight. Per the one-lifecycle rule, no retry or live repair was attempted."
   },
   "local_tests": {
     "environment": "fresh disposable Windows Python 3.14.3 venv",
@@ -159,7 +173,8 @@
     "phase_02b_semantic_gate": "PASS: construct, write, query, update, history, delete, reconstruction, query absence after delete",
     "phase_03_regression": "15 passed in 0.19s",
     "phase_03b_regression": "13 passed in 0.18s",
-    "real_hindsight_skip_reason": "opt-in self-hosted service was unavailable locally"
+    "real_hindsight_skip_reason": "opt-in self-hosted service was unavailable locally",
+    "attempt_3_focused_preflight": "21 passed in 0.18s"
   },
   "cleanup": {
     "initial_vm_state": "SHELVED",
@@ -200,6 +215,22 @@
       "result": "fresh clean harness resolved consistently and passed dependency, Mem0 semantic, Phase 03, Phase 03B, and full-suite gates",
       "hindsight_isolation_changed": false,
       "hindsight_live_semantics": "NOT RUN"
+    },
+    "attempt_3": {
+      "status": "BLOCKED",
+      "tested_commit": "8187ccdd718a1b40be1079cfd1660e9f8ea5689d",
+      "result": "isolated environment and Mem0 gates passed; validator result assembly failed on a missing environment variable before Hindsight service startup",
+      "clean_harness_pip_check": "PASS before and after Hindsight setup",
+      "mem0_semantic_regression": "PASS",
+      "hindsight_environment_pip_check": "PASS",
+      "hindsight_venv_touched": true,
+      "service_started": false,
+      "compatibility_probe": "NOT RUN",
+      "canonical_benchmark": "NOT RUN",
+      "real_trace": "NOT RUN",
+      "rq3_decision_model_calls": 0,
+      "temporary_floating_ip_deleted": true,
+      "final_vm_state": "SHELVED"
     }
   },
   "live_attempt_config_sha256": "1174925b29fa288e88899f9d0fd906865d5117ecc671d16d4af93ec356436b00",

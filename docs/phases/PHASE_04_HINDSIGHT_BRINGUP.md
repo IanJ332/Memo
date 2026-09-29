@@ -8,10 +8,13 @@ session. Attempt 1 was **BLOCKED before service startup** by a shared-environmen
 dependency incompatibility. Phase 04A passed the isolated-runtime redesign.
 The one authorized attempt 2 is also **BLOCKED**: its mandatory harness
 preflight found that attempt 1's incompatible packages remained installed in
-the remote harness `.venv`. The retry stopped before touching the isolated
-Hindsight environment. Phase 04B has now passed its local clean-harness recovery
-and regression gates. Phase 04 is **READY_FOR_RETRY**, but no third live attempt
-has occurred and no Hindsight semantics have yet been measured.
+the remote harness `.venv`. Phase 04B then passed its local clean-harness
+recovery and regression gates. Attempt 3 executed the prepared live flow at
+commit `8187ccdd718a1b40be1079cfd1660e9f8ea5689d`. Both isolated environments,
+the pre/post Hindsight harness checks, and the Mem0 semantic gate passed. The
+run then stopped before service startup because the validator attempted to read
+an unset result-metadata environment variable. Phase 04 remains **BLOCKED**;
+no Hindsight service semantics have yet been measured.
 
 ## Why Hindsight
 
@@ -34,6 +37,8 @@ seek a vulnerability and made no RQ3 or final RQ4 claim.
 - Phase 04B base: `b366e3cb3c0abda521955cf99410141117de32ef`
 - Phase 04B locally validated implementation:
   `e28d47de8ec1c27530159347699f0a24cce71c6d`
+- Attempt 3: 2026-09-29, tested commit
+  `8187ccdd718a1b40be1079cfd1660e9f8ea5689d`
 - Blocked live-attempt configuration SHA-256:
   `1174925b29fa288e88899f9d0fd906865d5117ecc671d16d4af93ec356436b00`
 - Isolated-retry configuration SHA-256:
@@ -51,8 +56,9 @@ networks are untouched. The API, embedded worker, local ONNX embedding model,
 embedded database, and fixed internal LLM endpoint form the provider runtime.
 
 Attempt 1 stopped during dependency validation. Attempt 2 stopped during the
-pre-provider harness gate. The isolated service architecture therefore remains
-locally reviewed but not runtime-qualified.
+pre-provider harness gate. Attempt 3 live-qualified the isolated dependency
+boundary but stopped in result assembly before the service process was started.
+The Hindsight service and its native behavior therefore remain unqualified.
 
 ## Provider Runtime Isolation
 
@@ -141,6 +147,45 @@ Hindsight setup. The clean harness fingerprint records Python, pip, Mem0,
 protobuf, OpenAI, optional LiteLLM, sentence-transformers, Torch,
 qdrant-client, and normalized `pip freeze` SHA-256.
 
+## Attempt 3 — Final Prepared Live Retry
+
+The managed run began from a clean local branch whose local and fetched remote
+heads both equaled `8187ccdd718a1b40be1079cfd1660e9f8ea5689d`. The focused
+local isolation preflight passed 21 tests. Jetstream began `SHELVED`, the
+controller created and owned a temporary floating IP, reached the exact VM by
+SSH, resolved `/dev/sdb` to `/media/volume/jisheng3_volume`, and synchronized
+the remote branch before executing the frozen script.
+
+Execution advanced beyond every environment and predecessor gate that had
+blocked the earlier attempts:
+
+- the persistent-volume clean harness passed `pip check`, Mem0 2.2.1,
+  sentence-transformers 6.1.0, CPU-only Torch, and no-CUDA/no-NVIDIA checks;
+- remote unit/contract tests completed successfully;
+- the Phase 02B Mem0 write/query/update/history/delete/reconstruction semantic
+  regression completed successfully;
+- the isolated Hindsight environment passed its version, executable,
+  `pip check`, and no-Torch/no-CUDA/no-NVIDIA checks; and
+- the clean harness passed its post-install health check, confirming that
+  provider installation did not mutate it.
+
+The next command invoked `phase04_hindsight_validate.py`. While constructing
+the initial sanitized result object, line 141 read
+`PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN` from `os.environ`. The shell script
+had exported that name without assigning it from
+`HARNESS_VENV_CREATED_BY_THIS_RUN`, so Bash did not place a value in the child
+environment and Python raised `KeyError`. The analogous Hindsight-created flag
+has the same wiring defect, although evaluation stopped at the first missing
+name. The failure preceded the validator's `try` block and its
+`start_hindsight_service` call. Therefore the API, health/version endpoints,
+structured-output probe, persistence smoke, benchmark, and trace were all
+**NOT RUN**.
+
+No live repair or second attempt was made. The controller disassociated and
+deleted only its owned floating IP, shelved the VM, and a separate read-only
+status check confirmed `SHELVED` with no address. The valid persistent-volume
+environments and provider state were retained.
+
 ## Internal LLM Configuration
 
 The fixed provider-internal configuration is OpenAI-compatible provider
@@ -149,7 +194,7 @@ and its supported non-secret placeholder. Its intended purpose is Hindsight fact
 extraction and consolidation.
 
 This is distinct from a future downstream decision LLM. Phase 04 made zero RQ3
-decision-model calls. Because the service never started in either attempt,
+decision-model calls. Because the service never started in any attempt,
 structured-output compatibility is **NOT RUN**, and no alternate course model
 was tried.
 
@@ -166,8 +211,10 @@ Live `findmnt` resolved `/dev/sdb` as ext4 mounted at
 
 The planned backend is embedded pg0/PostgreSQL with pgvector and the named URL
 `pg0://memlife-phase04`. `/home/exouser/.pg0` was managed as a link to the
-persistent provider root. The blocker occurred before service startup, so no
-provider database, derived state, or async state was runtime-verified.
+persistent provider root. Attempt 3 validated the isolated provider environment
+and retained it on the volume, but its blocker still occurred before service
+startup, so no provider database, derived state, or async state was
+runtime-verified.
 
 ## Native Memory Model
 
@@ -235,19 +282,12 @@ service.
 
 ## Canonical Benchmark Result
 
-The canonical Phase 03 scenarios were **NOT RUN**. The shared remote `.venv`
-became inconsistent after Hindsight installation: Hindsight 0.10.1 requires
-`protobuf>=7.35.1`, while Mem0 2.2.1 requires
-`protobuf>=5.29.6,<7.0.0`. `pip check` reported protobuf 7.36.2 as incompatible
-with Mem0 and the script stopped before starting Hindsight, exactly as required
-by the failure policy.
-
-Attempt 2 confirmed before provider setup that this contamination persisted in
-the harness. The pinned core install did not downgrade the already installed
-protobuf 7.36.2 or OpenAI 3.13.0, and `pip check` also reported OpenAI 3.13.0
-outside LiteLLM 1.103.0's supported range. The retry stopped immediately; it
-did not create/install the Hindsight venv, start the API, or repeat the live
-lifecycle.
+The canonical Phase 03 scenarios were **NOT RUN**. Attempts 1 and 2 exposed the
+shared-environment dependency conflict and the contaminated legacy harness,
+respectively. Attempt 3 resolved those blockers in practice: both isolated
+environments and the Mem0 semantic regression passed. It then stopped on the
+missing result-metadata environment variable before service startup, so the
+canonical benchmark was never entered.
 
 No normalized provider outcome is reported for baseline, correction/update,
 supersession, revocation, or delete+restart.
@@ -264,13 +304,15 @@ Hindsight lifecycle propagation.
 
 ## Limitations
 
-- Both authorized lifecycles ended before the compatibility probe.
+- All three authorized lifecycles ended before the compatibility probe.
 - Attempt 1 exposed the shared-environment conflict; attempt 2 exposed its
   persisted contamination during harness preflight.
-- Neither blocker is a Hindsight memory-semantics result.
+- Attempt 3 validated dependency isolation but exposed a benchmark-code result
+  assembly defect before service startup.
+- None of the blockers is a Hindsight memory-semantics result.
 - No alternate version, internal LLM, embedding backend, database backend, or
-  additional lifecycle was attempted. Attempt 2 did not touch the isolated
-  provider venv.
+  additional lifecycle was attempted. Attempt 3 retained the validated clean
+  harness and Hindsight venv on the persistent volume.
 - Local Windows tests use a deterministic fake transport; they do not replace
   the required real self-hosted validation.
 
@@ -288,8 +330,8 @@ The attempt-2 local preparation results were `71 passed` (unit), `5 passed`
 (full). The skip is the opt-in real Hindsight integration test; the Mem0
 regression subset remained green with `5 passed`, and the focused Phase 03/03B
 lifecycle/trace regression had `17 passed`. The second command is historical
-reproduction provenance only: the one authorized retry has been consumed and
-must not be rerun without explicit approval.
+reproduction provenance only. Attempt 3 consumed the one lifecycle authorized
+for its conversation and must not be rerun without separate explicit approval.
 
 Phase 04B validation used a newly created disposable environment rather than
 the development `.venv`: `74 passed` (unit), `5 passed` (contract), `5 passed,
@@ -309,6 +351,15 @@ then failed the harness `pip check`. It deleted and disassociated its owned
 temporary floating IP and independently reverified `jisheng3` as `SHELVED`
 with no address.
 
+Attempt 3 synchronized and executed commit
+`8187ccdd718a1b40be1079cfd1660e9f8ea5689d`. Its live clean-harness,
+Mem0-regression, provider-environment, and post-provider harness gates passed.
+The result validator then raised
+`KeyError: PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN` before starting the
+Hindsight service. The controller deleted and disassociated its owned temporary
+floating IP and returned `jisheng3` to `SHELVED`; the final read-only status
+check reported no address.
+
 ## Git Trace
 
 - `4bc25488ba4579cf1d3dcea872aba1ccdb168841` — freeze Hindsight configuration
@@ -320,6 +371,7 @@ with no address.
 - `31ea2a4172c8fb68ee04e8f81517fabd83ef8d6b` — separate harness dependency ownership
 - `b87db40cb3c0efc30d3f295413fad23217e34673` — prepare the clean persistent-volume harness runtime
 - `e28d47de8ec1c27530159347699f0a24cce71c6d` — validate clean-harness recovery and fail-closed behavior
+- `8187ccdd718a1b40be1079cfd1660e9f8ea5689d` — prepare the final live retry; exact attempt-3 tested commit
 
 The Phase 04B documentation commit is the branch HEAD reported in the
 completion response. The Phase 04B base is
@@ -327,7 +379,9 @@ completion response. The Phase 04B base is
 
 ## Next Experiment Handoff
 
-Phase 04 is READY_FOR_RETRY and all Hindsight live benchmark fields remain NOT
-RUN. A new conversation may perform one separately authorized local +
-Jetstream2 retry using the mandatory clean-harness-first order. The legacy
-`.venv` remains evidence only and must not participate in execution.
+Phase 04 is BLOCKED and all Hindsight service/benchmark fields remain NOT RUN.
+Before any separately authorized future lifecycle, fix and locally test the two
+created-by-this-run environment-variable assignments used by the sanitized
+result builder. Preserve the mandatory clean-harness-first order and reuse only
+exact validated fingerprints. The legacy `.venv` remains evidence only and
+must not participate in execution.

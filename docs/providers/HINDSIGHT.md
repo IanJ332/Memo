@@ -53,6 +53,17 @@ Hindsight 0.10.1 directly owns LiteLLM on Linux. The repository's explicit
 moved from core to `requirements/infra/jetstream-llm.txt`. No protobuf or
 OpenAI override was added to the Mem0 harness.
 
+The final prepared live retry ran on 2026-09-29 at commit
+`8187ccdd718a1b40be1079cfd1660e9f8ea5689d`. The clean persistent-volume
+harness passed its pre/post provider `pip check`, pinned-version, CPU-only, and
+no-CUDA/no-NVIDIA gates. The Phase 02B Mem0 semantic regression passed. The
+isolated Hindsight environment also passed its 0.10.1, executable, `pip check`,
+and no-Torch/no-CUDA/no-NVIDIA gates. This live evidence validates the package
+isolation boundary. The validator then raised
+`KeyError: PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN` while assembling result
+metadata, before starting the service. No service compatibility, persistence,
+lifecycle, or provenance result was produced.
+
 ## Provider Runtime Isolation
 
 The reviewed retry architecture uses three intentionally distinct environment
@@ -109,9 +120,11 @@ database URL is `pg0://memlife-phase04`; pg0's own instance layout remains
 provider-managed beneath that redirected root.
 
 The first live attempt created the persistent-volume directories and pg0 path
-link, but it stopped before starting the API. The retry stopped even earlier at
-harness health validation. Consequently no Hindsight database was initialized
-and no persistence or restart claim was measured.
+link, but it stopped before starting the API. Attempt 2 stopped even earlier at
+harness health validation. Attempt 3 validated and retained both isolated
+environments but failed in result assembly immediately before service startup.
+Consequently no Hindsight database was runtime-qualified and no persistence or
+restart claim was measured.
 
 ## Fixed Provider-Internal LLM
 
@@ -215,6 +228,17 @@ VM `SHELVED` with no address.
 
 Phase 04B ran locally only. Its disposable clean environment passed `pip check`,
 the Phase 02B semantic gate, focused Phase 03 and Phase 03B regressions, and the
-full local suite. This makes the architecture ready for one separately
-authorized live retry; it does not supply any Hindsight compatibility,
-lifecycle, persistence, or provenance result.
+full local suite. That work prepared the architecture for attempt 3 but did not
+itself supply any Hindsight compatibility, lifecycle, persistence, or
+provenance result.
+
+The final prepared retry synchronized and executed commit
+`8187ccdd718a1b40be1079cfd1660e9f8ea5689d`. It live-validated the clean
+harness, Mem0 semantic regression, isolated Hindsight environment, and harness
+immutability after provider setup. The validator failed before service startup
+because `phase04_remote.sh` exported the two created-by-this-run result names
+without assigning their corresponding shell values. No in-lifecycle repair or
+retry was attempted. Cleanup deleted the owned temporary floating IP and
+returned the VM to `SHELVED` with no address. A future live attempt requires
+separate authorization after the result-metadata wiring is fixed and locally
+tested.
