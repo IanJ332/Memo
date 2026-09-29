@@ -265,6 +265,8 @@ with no address.
 - `7508bd7d2244f98f842e657e45a0568485bd60ed` — add Hindsight adapter
 - `59222a27fcd59dc474ec282141a8b33bbc376088` — add tests and managed validation; exact live tested commit
 - `31e7cc6d975e2ae708b5736734c5c59961b63387` — record the sanitized blocked result
+- `2f85ba07a3172103c6008f566c3c017fd5cce884` — complete Phase 04A isolated-runtime retry preparation; exact retry tested commit
+- `7af3156` — record the sanitized attempt-2 harness-preflight blocker
 
 The final trace-only documentation commit is the branch HEAD reported in the
 completion response. The approved base remains
