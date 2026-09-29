@@ -433,6 +433,7 @@ occurred.
 - `e28d47de8ec1c27530159347699f0a24cce71c6d` — validate clean-harness recovery and fail-closed behavior
 - `8187ccdd718a1b40be1079cfd1660e9f8ea5689d` — prepare the final live retry; exact attempt-3 tested commit
 - `3851543d6d5ef013fbe635bfe495c443227c076c` — fix the shell handoff and prepare Phase 04D; exact live tested commit
+- `7c4ab41b68075304c7138dadcc347a60218659e4` — record the Phase 04D PASS result and cleanup recovery
 
 The Phase 04B documentation commit is the branch HEAD reported in the
 completion response. The Phase 04B base is

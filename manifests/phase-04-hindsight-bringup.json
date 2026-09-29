@@ -11,6 +11,7 @@
   "phase04c_handoff_fix": "PASS",
   "attempt_4_status": "PASS",
   "attempt_4_controller_recovery": "CONTROLLER_POST_RESULT_HANG",
+  "attempt_4_result_commit": "7c4ab41b68075304c7138dadcc347a60218659e4",
   "provider": "hindsight",
   "provider_version": "0.10.1",
   "upstream_tag": "v0.10.1",
