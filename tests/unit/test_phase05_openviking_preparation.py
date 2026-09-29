@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import base64
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -145,7 +146,7 @@ def test_generated_config_uses_pinned_v0422_schema(tmp_path: Path, monkeypatch) 
     for name, value in values.items():
         monkeypatch.setenv(name, value)
     output = tmp_path / "ov.conf"
-    module.write_config(output)
+    config_hash = module.write_config(output)
     config = json.loads(output.read_text(encoding="utf-8"))
     assert set(config) >= {"server", "storage", "embedding", "vlm", "memory"}
     assert config["server"] == {"host": "127.0.0.1", "port": 1933, "auth_mode": "dev"}
@@ -173,6 +174,7 @@ def test_generated_config_uses_pinned_v0422_schema(tmp_path: Path, monkeypatch) 
     }
     assert config["memory"]["extraction_enabled"] is True
     assert (cache / "embedding").is_dir()
+    assert config_hash == hashlib.sha256(output.read_bytes()).hexdigest()
 
 
 def test_managed_controller_provisions_mode_600_config_before_run(monkeypatch) -> None:
@@ -263,6 +265,7 @@ def test_owned_controller_reports_alive_and_exact_exit_code(
     process = _FakeOwnedProcess()
     _, controller = _owned_controller(tmp_path, monkeypatch, process)
     controller.start()
+    assert controller.service_pid == process.pid
     assert controller.is_running() is True
     assert controller.exit_code() is None
     process.return_code = exit_code
@@ -270,6 +273,61 @@ def test_owned_controller_reports_alive_and_exact_exit_code(
     assert controller.exit_code() == exit_code
     controller.stop()
     assert not controller.pid_path.exists()
+
+
+def test_strict_liveness_requires_real_status_and_healthy_flag() -> None:
+    module = _module()
+    assert module.strict_liveness_passes(
+        {"health_status": "ok", "health_healthy": True}
+    )
+    assert not module.strict_liveness_passes(
+        {"health_status": None, "health_healthy": True}
+    )
+
+
+def test_runtime_evidence_serializes_reuse_versions_pid_and_config_hash(
+    tmp_path: Path, monkeypatch
+) -> None:
+    process = _FakeOwnedProcess(pid=9876)
+    module, controller = _owned_controller(tmp_path, monkeypatch, process)
+    controller.start()
+    monkeypatch.setenv("PHASE05_PROVIDER_ENV_REUSED", "true")
+    monkeypatch.setenv("PHASE05_OPENVIKING_VERSION", "0.4.22")
+    monkeypatch.setenv("PHASE05_LLAMA_CPP_PYTHON_VERSION", "0.3.35")
+    evidence = module._runtime_evidence(controller)
+    assert evidence == {
+        "provider_environment_reused": True,
+        "openviking_version": "0.4.22",
+        "llama_cpp_python_version": "0.3.35",
+        "service_pid": 9876,
+        "config_sha256": hashlib.sha256(controller.config.read_bytes()).hexdigest(),
+    }
+    assert "api_key" not in json.dumps(evidence).casefold()
+    controller.stop()
+
+
+def test_canary_result_fields_promote_complete_correlation() -> None:
+    module = _module()
+    fields = module._canary_result_fields(
+        {
+            "session_id": "session-1",
+            "archive_uri": "viking://archive/1",
+            "task_id": "task-1",
+            "task_final_status": "completed",
+            "task_submitted_at": "2026-09-29T00:00:00Z",
+            "task_completed_at": "2026-09-29T00:00:02Z",
+            "quiescence_seconds": 2.0,
+            "provider_memory_uri_count": 1,
+            "memory_diff_add_count": 1,
+            "memory_diff_update_count": 0,
+            "memory_diff_delete_count": 0,
+            "memory_diff_skipped_count": 0,
+        }
+    )
+    assert fields["canary_session_id"] == "session-1"
+    assert fields["canary_task_final_status"] == "completed"
+    assert fields["canary_quiescence_seconds"] == 2.0
+    assert fields["canary_memory_diff_add_count"] == 1
 
 
 def test_owned_controller_preserves_pid_ownership_and_uses_bounded_log_tail(
@@ -464,6 +522,10 @@ def test_remote_shell_emits_serialized_result_before_exit_check() -> None:
         "config_generation",
     ):
         assert stage in text
+    assert "PHASE05_PROVIDER_ENV_REUSED" in text
+    assert "PHASE05_OPENVIKING_VERSION" in text
+    assert "PHASE05_LLAMA_CPP_PYTHON_VERSION" in text
+    assert "importlib.metadata" in text
 
 
 def test_result_payload_rejects_api_key_fields() -> None:

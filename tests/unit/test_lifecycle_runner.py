@@ -8,7 +8,13 @@ from memlife.adapters.base import UnsupportedCapabilityError
 from memlife.adapters.reference import ReferenceMemoryAdapter
 from memlife.models.benchmark import NormalizedOutcome, OperationStatus
 from memlife.models.lifecycle import LifecycleState
-from memlife.models.memory import DeleteCommand, MemoryRecord, QueryCommand, WriteCommand
+from memlife.models.memory import (
+    DeleteCommand,
+    MemoryRecord,
+    QueryCommand,
+    SupersedeCommand,
+    WriteCommand,
+)
 from memlife.runner.lifecycle import LifecycleRunner, normalize_query_observation
 from memlife.scenarios import LifecycleEvent, canonical_scenarios
 from memlife.scenarios.models import ScenarioQuery
@@ -141,3 +147,51 @@ def test_restart_step_executes_and_deleted_fact_remains_absent() -> None:
     assert inspect.provider_metadata["history"]["memory-0001"]["events"] == [
         "deleted"
     ]
+
+
+class UnsupportedSupersessionAdapter(ReferenceMemoryAdapter):
+    def update_or_supersede(self, command: SupersedeCommand) -> MemoryRecord:
+        raise UnsupportedCapabilityError("fixture has no native supersession")
+
+
+class ErroredSupersessionAdapter(ReferenceMemoryAdapter):
+    def update_or_supersede(self, command: SupersedeCommand) -> MemoryRecord:
+        raise RuntimeError("synthetic supersession failure")
+
+
+def _supersession_results(adapter):
+    scenario = next(
+        item for item in canonical_scenarios() if item.scenario_id == "supersession"
+    )
+    return LifecycleRunner(adapter).run_scenario(scenario)
+
+
+def test_supported_producer_materializes_target_for_inspection() -> None:
+    inspect = _supersession_results(ReferenceMemoryAdapter())[-1]
+    assert inspect.intended_event is LifecycleEvent.INSPECT
+    assert inspect.operation_status is OperationStatus.SUCCESS
+    assert inspect.error is None
+
+
+def test_unsupported_producer_propagates_only_to_dependent_target() -> None:
+    results = _supersession_results(UnsupportedSupersessionAdapter())
+    supersede, old_query, new_query, inspect = results[1:]
+    assert supersede.operation_status is OperationStatus.UNSUPPORTED
+    assert old_query.operation_status is OperationStatus.SUCCESS
+    assert new_query.operation_status is OperationStatus.SUCCESS
+    assert inspect.operation_status is OperationStatus.UNSUPPORTED
+    assert inspect.unsupported_reason == (
+        "target v2 was not materialized because its producer operation was unsupported"
+    )
+    assert inspect.error is None
+
+
+def test_errored_producer_propagates_error_not_unsupported() -> None:
+    results = _supersession_results(ErroredSupersessionAdapter())
+    inspect = results[-1]
+    assert results[1].operation_status is OperationStatus.ERROR
+    assert inspect.operation_status is OperationStatus.ERROR
+    assert inspect.normalized_outcome is NormalizedOutcome.ERROR
+    assert inspect.unsupported_reason is None
+    assert "target v2 was not materialized" in str(inspect.error)
+    assert "KeyError" not in str(inspect.error)

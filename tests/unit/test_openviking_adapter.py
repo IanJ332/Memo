@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import json
 
 import pytest
 
@@ -53,6 +54,40 @@ class _ReadinessTransport:
         return response
 
 
+class _JSONResponse:
+    def __init__(self, payload) -> None:
+        self.payload = json.dumps(payload).encode("utf-8")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        return None
+
+    def read(self):
+        return self.payload
+
+
+@pytest.mark.parametrize(
+    ("payload", "expected"),
+    [
+        ({"status": "ok", "result": {"x": 1}}, {"x": 1}),
+        (
+            {"status": "ok", "healthy": True, "version": "0.4.22"},
+            {"status": "ok", "healthy": True, "version": "0.4.22"},
+        ),
+    ],
+)
+def test_http_ok_response_contract_is_shape_sensitive(
+    monkeypatch, payload, expected
+) -> None:
+    monkeypatch.setattr(
+        "memlife.adapters.openviking.urlopen",
+        lambda *_args, **_kwargs: _JSONResponse(payload),
+    )
+    assert UrllibOpenVikingTransport().request("GET", "/health") == expected
+
+
 def _readiness_adapter(transport, **kwargs) -> OpenVikingMemoryAdapter:
     return OpenVikingMemoryAdapter(
         transport,
@@ -94,6 +129,21 @@ def test_healthy_liveness_never_substitutes_for_readiness() -> None:
         adapter.wait_until_ready(timeout_seconds=0.3)
     assert captured.value.diagnostics["health_status"] == "ok"
     assert captured.value.diagnostics["readiness_status"] == "not_ready"
+
+
+def test_healthy_without_provider_status_does_not_fabricate_liveness() -> None:
+    class MissingStatusTransport(_ReadinessTransport):
+        def request(self, method, path, *, query=None, payload=None):
+            if path == "/health":
+                return {"healthy": True, "version": "0.4.22"}
+            return super().request(method, path, query=query, payload=payload)
+
+    adapter = _readiness_adapter(
+        MissingStatusTransport([{"status": "ready", "checks": {}}])
+    )
+    adapter.wait_until_ready()
+    assert adapter.readiness_diagnostics["health_status"] is None
+    assert adapter.readiness_diagnostics["health_healthy"] is True
 
 
 def test_unknown_ready_payload_is_never_silently_accepted() -> None:
@@ -222,6 +272,26 @@ def test_one_source_event_retains_multiple_provider_uris_without_selecting_one()
     assert adapter.benchmark_metadata()["write_correlation"].startswith("one-to-many")
 
 
+def test_completed_write_metadata_serializes_quiescence_and_diff_counts() -> None:
+    fake = FakeOpenVikingTransport()
+    fake.memory_count_per_commit = 2
+    adapter, _ = _adapter(fake)
+    record = adapter.write(WriteCommand(namespace="evidence", content="Remember two facts."))
+    evidence = adapter.completed_write_metadata(record.memory_id)
+    assert evidence["session_id"] == record.metadata["openviking_session_id"]
+    assert evidence["archive_uri"] == record.metadata["openviking_archive_uri"]
+    assert evidence["task_id"] == record.metadata["openviking_task_id"]
+    assert evidence["task_final_status"] == "completed"
+    assert evidence["task_submitted_at"]
+    assert evidence["task_completed_at"]
+    assert evidence["quiescence_seconds"] >= 0
+    assert evidence["provider_memory_uri_count"] == 2
+    assert evidence["memory_diff_add_count"] == 2
+    assert evidence["memory_diff_update_count"] == 0
+    assert evidence["memory_diff_delete_count"] == 0
+    assert evidence["memory_diff_skipped_count"] == 0
+
+
 def test_delete_removes_all_correlated_uris_but_revocation_is_unsupported() -> None:
     fake = FakeOpenVikingTransport()
     fake.memory_count_per_commit = 2
@@ -318,3 +388,24 @@ def test_memory_diff_correlation_generates_known_provenance_trace() -> None:
     assert candidate.provenance_status is ProvenanceStatus.KNOWN
     assert candidate.source_event_ids
     assert serialize_trace(run.trace) == serialize_trace(run.trace)
+
+
+def test_exact_match_remains_absent_while_direct_correlation_is_visible() -> None:
+    class DerivedTextTransport(FakeOpenVikingTransport):
+        def request(self, method, path, *, query=None, payload=None):
+            response = super().request(method, path, query=query, payload=payload)
+            if method.upper() == "POST" and path.endswith("/commit"):
+                for uri, content in list(self.memory.items()):
+                    self.memory[uri] = f"{content} Provider-derived summary."
+            return response
+
+    adapter, _ = _adapter(DerivedTextTransport())
+    scenario = canonical_scenarios()[0]
+    query_result = LifecycleRunner(adapter).run_scenario(scenario)[1]
+    assert query_result.normalized_outcome.value == "ABSENT"
+    assert query_result.current_state_correct is False
+    assert query_result.provider_metadata["correlated_retrieval_count"] == 1
+    assert query_result.provider_metadata["correlated_source_ids"] == ["source-0001"]
+    assert query_result.provider_metadata["correlated_provider_record_ids"][0].startswith(
+        "viking://"
+    )
