@@ -36,6 +36,16 @@ inconsistent. In accordance with the one-run failure policy, no alternate
 Hindsight version, Mem0 version, virtual environment, or backend was tried in
 that live lifecycle.
 
+The one authorized isolated-runtime retry ran on 2026-09-29 at commit
+`2f85ba07a3172103c6008f566c3c017fd5cce884`. It stopped at the mandatory
+harness preflight, before the isolated provider venv was created or installed.
+The preexisting harness still contained protobuf 7.36.2 from attempt 1, which
+is incompatible with Mem0 2.2.1, and also contained OpenAI 3.13.0, which is
+incompatible with LiteLLM 1.103.0's `<3.0.0` constraint. No Hindsight service,
+compatibility probe, benchmark, or real trace ran. This is a persisted harness
+state blocker, not evidence against the isolation architecture or Hindsight's
+memory semantics.
+
 ## Provider Runtime Isolation
 
 The reviewed retry architecture uses two intentionally independent Python
@@ -83,9 +93,10 @@ run artifacts, and database therefore remain on the persistent volume. The
 database URL is `pg0://memlife-phase04`; pg0's own instance layout remains
 provider-managed beneath that redirected root.
 
-The live attempt created the persistent-volume directories and pg0 path link,
-but it stopped before starting the API. Consequently no Hindsight database was
-initialized and no persistence or restart claim was measured.
+The first live attempt created the persistent-volume directories and pg0 path
+link, but it stopped before starting the API. The retry stopped even earlier at
+harness health validation. Consequently no Hindsight database was initialized
+and no persistence or restart claim was measured.
 
 ## Fixed Provider-Internal LLM
 
@@ -171,12 +182,17 @@ same-ID curation is not represented as a fabricated supersession chain.
 The exact non-secret configuration is in `configs/hindsight-phase04.json`; the
 runtime environment is defined by `scripts/jetstream/phase04_remote.sh`, with
 service ownership and environment fingerprinting in
-`scripts/jetstream/phase04_runtime.py`. A future separately authorized managed
-controller will synchronize the exact Git commit, validate both environments,
-run the compatibility probe first, capture sanitized results, delete its
-temporary floating IP, and return a VM that it opened to `SHELVED`.
+`scripts/jetstream/phase04_runtime.py`. A future separately authorized recovery
+must first repair or recreate the harness `.venv` under an explicitly reviewed
+procedure; no further live retry is authorized by Phase 04 attempt 2.
 
 For the 2026-09-28 run, dependency installation blocked before the compatibility
 probe. The controller still deleted its temporary floating IP and returned the
 VM to `SHELVED`. See `manifests/phase-04-hindsight-bringup.json` and
 `docs/phases/PHASE_04_HINDSIGHT_BRINGUP.md` for the measured result.
+
+For the 2026-09-29 retry, the controller synchronized the retry commit and
+stopped when the harness preflight exposed the persisted protobuf/OpenAI
+conflicts. It did not touch the isolated provider environment or start a
+service. Cleanup again deleted the owned temporary floating IP and verified the
+VM `SHELVED` with no address.

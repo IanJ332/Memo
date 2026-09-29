@@ -1,23 +1,23 @@
 {
   "phase": "04",
-  "status": "READY_FOR_RETRY",
+  "status": "BLOCKED",
   "live_attempt_status": "BLOCKED",
   "provider": "hindsight",
   "provider_version": "0.10.1",
   "upstream_tag": "v0.10.1",
   "upstream_commit": "f8950b0c07d9e34c76493dba802bb309f0ce60fd",
-  "tested_repo_commit": "59222a27fcd59dc474ec282141a8b33bbc376088",
+  "tested_repo_commit": "2f85ba07a3172103c6008f566c3c017fd5cce884",
   "retry_preparation_base_head": "22209fcc8d6f202ba8181cff80dc3367cb5980f2",
-  "timestamp": "2026-09-28T23:16:40.673094+00:00",
+  "timestamp": "2026-09-29T01:49:11.838886+00:00",
   "os": "Ubuntu 24.04.5 LTS",
   "python": "3.12.3",
-  "deployment_mode": "bare-metal self-hosted API service (planned; not started)",
+  "deployment_mode": "bare-metal self-hosted API service (not started in retry)",
   "retry_architecture_reviewed": true,
   "harness_environment_class": "/home/exouser/Memo/.venv",
   "provider_environment_class": "persistent-volume/venvs/hindsight-0.10.1",
   "isolation_boundary": "loopback HTTP at 127.0.0.1:8888",
   "provider_venv_path_class": "<live /dev/sdb mount>/memlife/venvs/hindsight-0.10.1",
-  "dependency_conflict_resolved_by_isolation": true,
+  "dependency_conflict_resolved_by_isolation": "NOT VALIDATED LIVE; harness preflight failed before provider setup",
   "forced_dependency_overrides": false,
   "provider_environment_fingerprint": {
     "fields": [
@@ -86,19 +86,21 @@
   "compatibility_probe": "NOT RUN",
   "persistence_restart": "NOT RUN",
   "blocker": {
-    "stage": "dependency installation / pip check",
+    "stage": "harness preflight before isolated Hindsight setup",
     "hindsight_requirement": "protobuf>=7.35.1",
     "mem0_requirement": "protobuf>=5.29.6,<7.0.0",
     "resolved_protobuf": "7.36.2",
-    "message": "mem0ai 2.2.1 requires protobuf<7.0.0,>=5.29.6, but protobuf 7.36.2 was installed"
+    "harness_openai": "3.13.0",
+    "litellm_requirement": "openai>=2.20.0,<3.0.0",
+    "message": "The preexisting remote harness environment remained contaminated from attempt 1. After the pinned core install, pip check still reported protobuf 7.36.2 incompatible with mem0ai 2.2.1 and openai 3.13.0 incompatible with litellm 1.103.0. The retry stopped before creating, installing, or starting the isolated Hindsight provider runtime."
   },
   "local_tests": {
-    "unit": "71 passed in 0.52s",
-    "contract": "5 passed in 0.17s",
-    "integration": "5 passed, 1 skipped in 9.25s",
-    "full": "81 passed, 1 skipped in 9.77s",
-    "mem0_regression": "5 passed in 9.53s",
-    "phase_03_03b_regression": "15 passed in 0.19s",
+    "unit": "71 passed in 0.44s",
+    "contract": "5 passed in 0.15s",
+    "integration": "5 passed, 1 skipped in 10.63s",
+    "full": "81 passed, 1 skipped in 9.97s",
+    "mem0_regression": "5 passed in 9.58s",
+    "phase_03_03b_regression": "17 passed in 0.16s",
     "real_hindsight_skip_reason": "opt-in self-hosted service was unavailable locally"
   },
   "cleanup": {
@@ -109,6 +111,28 @@
     "final_vm_state": "SHELVED",
     "persistent_hindsight_paths_retained": true,
     "hindsight_service_started": false
+  },
+  "attempt_history": {
+    "attempt_1": {
+      "status": "BLOCKED",
+      "tested_commit": "59222a27fcd59dc474ec282141a8b33bbc376088",
+      "result": "shared harness/provider environment produced a protobuf conflict"
+    },
+    "phase_04a": {
+      "status": "PASS",
+      "head": "2f85ba07a3172103c6008f566c3c017fd5cce884",
+      "result": "isolated provider-runtime design and local regression validation"
+    },
+    "attempt_2": {
+      "status": "BLOCKED",
+      "tested_commit": "2f85ba07a3172103c6008f566c3c017fd5cce884",
+      "result": "preexisting harness environment failed pip check before isolated provider setup",
+      "hindsight_venv_touched": false,
+      "service_started": false,
+      "compatibility_probe": "NOT RUN",
+      "canonical_benchmark": "NOT RUN",
+      "real_trace": "NOT RUN"
+    }
   },
   "live_attempt_config_sha256": "1174925b29fa288e88899f9d0fd906865d5117ecc671d16d4af93ec356436b00",
   "config_sha256": "baca300bdce174d8cb2d00fa576df73d0cf5c4f9230aed370d2767bd35f4d73d"

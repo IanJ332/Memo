@@ -4,9 +4,12 @@
 
 Pin Hindsight, connect its native operations to the MemLife adapter and Phase
 03B trace, then validate the self-hosted runtime in one controlled Jetstream2
-session. The first live lifecycle is **BLOCKED before service startup** by an
-exact dependency incompatibility. The isolated retry design is locally
-**READY_FOR_RETRY**, but no second live lifecycle has been authorized or run.
+session. Attempt 1 was **BLOCKED before service startup** by a shared-environment
+dependency incompatibility. Phase 04A passed the isolated-runtime redesign.
+The one authorized attempt 2 is also **BLOCKED**: its mandatory harness
+preflight found that attempt 1's incompatible packages remained installed in
+the remote harness `.venv`. The retry stopped before touching the isolated
+Hindsight environment.
 
 ## Why Hindsight
 
@@ -22,8 +25,10 @@ seek a vulnerability and made no RQ3 or final RQ4 claim.
 - Upstream commit: `f8950b0c07d9e34c76493dba802bb309f0ce60fd`
 - API package: `hindsight-api-slim[embedded-db,local-onnx]==0.10.1`
 - Python client: not installed; the adapter uses `urllib.request` over REST
-- Install attempt: 2026-09-28
-- Exact tested repository commit: `59222a27fcd59dc474ec282141a8b33bbc376088`
+- Attempt 1: 2026-09-28, tested commit
+  `59222a27fcd59dc474ec282141a8b33bbc376088`
+- Attempt 2: 2026-09-29, tested commit
+  `2f85ba07a3172103c6008f566c3c017fd5cce884`
 - Blocked live-attempt configuration SHA-256:
   `1174925b29fa288e88899f9d0fd906865d5117ecc671d16d4af93ec356436b00`
 - Isolated-retry configuration SHA-256:
@@ -40,8 +45,9 @@ Ubuntu 24.04 Jetstream VM. It avoids Docker so Exosphere-managed containers and
 networks are untouched. The API, embedded worker, local ONNX embedding model,
 embedded database, and fixed internal LLM endpoint form the provider runtime.
 
-The live run stopped during dependency validation, so this architecture was not
-started or runtime-qualified.
+Attempt 1 stopped during dependency validation. Attempt 2 stopped during the
+pre-provider harness gate. The isolated service architecture therefore remains
+locally reviewed but not runtime-qualified.
 
 ## Provider Runtime Isolation
 
@@ -85,6 +91,13 @@ lifecycle semantics, retrieval semantics, provenance results, or security
 claims: the unchanged benchmark client still exercises Hindsight 0.10.1 through
 the same public service API.
 
+Attempt 2 did not contradict this design. Its pre-provider gate found that the
+existing harness itself was unhealthy: `mem0ai==2.2.1` was paired with
+`protobuf==7.36.2`, and `litellm==1.103.0` was paired with
+`openai==3.13.0`. `pip check` failed exactly as required. Because the failure
+preceded provider setup, the run neither installed nor validated the separate
+Hindsight venv.
+
 ## Internal LLM Configuration
 
 The fixed provider-internal configuration is OpenAI-compatible provider
@@ -93,8 +106,9 @@ and its supported non-secret placeholder. Its intended purpose is Hindsight fact
 extraction and consolidation.
 
 This is distinct from a future downstream decision LLM. Phase 04 made zero RQ3
-decision-model calls. Because the service never started, structured-output
-compatibility is **NOT RUN**, and no alternate course model was tried.
+decision-model calls. Because the service never started in either attempt,
+structured-output compatibility is **NOT RUN**, and no alternate course model
+was tried.
 
 ## Storage Architecture
 
@@ -185,6 +199,13 @@ became inconsistent after Hindsight installation: Hindsight 0.10.1 requires
 with Mem0 and the script stopped before starting Hindsight, exactly as required
 by the failure policy.
 
+Attempt 2 confirmed before provider setup that this contamination persisted in
+the harness. The pinned core install did not downgrade the already installed
+protobuf 7.36.2 or OpenAI 3.13.0, and `pip check` also reported OpenAI 3.13.0
+outside LiteLLM 1.103.0's supported range. The retry stopped immediately; it
+did not create/install the Hindsight venv, start the API, or repeat the live
+lifecycle.
+
 No normalized provider outcome is reported for baseline, correction/update,
 supersession, revocation, or delete+restart.
 
@@ -200,11 +221,13 @@ Hindsight lifecycle propagation.
 
 ## Limitations
 
-- The only authorized lifecycle ended before the compatibility probe.
-- The blocker concerns co-installing current pinned Hindsight and predecessor
-  Mem0 in one virtual environment; it is not a Hindsight memory-semantics result.
-- No alternate version, isolated provider virtual environment, internal LLM,
-  embedding backend, database backend, or second lifecycle was attempted.
+- Both authorized lifecycles ended before the compatibility probe.
+- Attempt 1 exposed the shared-environment conflict; attempt 2 exposed its
+  persisted contamination during harness preflight.
+- Neither blocker is a Hindsight memory-semantics result.
+- No alternate version, internal LLM, embedding backend, database backend, or
+  additional lifecycle was attempted. Attempt 2 did not touch the isolated
+  provider venv.
 - Local Windows tests use a deterministic fake transport; they do not replace
   the required real self-hosted validation.
 
@@ -217,17 +240,24 @@ Local preparation at the tested commit:
 .venv\Scripts\python.exe scripts\jetstream\jetstreamctl.py phase04
 ```
 
-The isolated-runtime preparation results were `71 passed` (unit), `5 passed`
+The attempt-2 local preparation results were `71 passed` (unit), `5 passed`
 (contract), `5 passed, 1 skipped` (integration), and `81 passed, 1 skipped`
 (full). The skip is the opt-in real Hindsight integration test; the Mem0
 regression subset remained green with `5 passed`, and the focused Phase 03/03B
-lifecycle/trace regression had `15 passed`. The second command is recorded only
-as historical reproduction provenance: the one authorized Phase 04 lifecycle
-has already been consumed and must not be rerun without explicit approval.
+lifecycle/trace regression had `17 passed`. The second command is historical
+reproduction provenance only: the one authorized retry has been consumed and
+must not be rerun without explicit approval.
 
 The controller recorded exact VM UUID
 `5baeeae7-4c29-4903-89fe-2e9df0a8eced`, deleted the temporary floating IP it
 created, and returned the initially shelved VM to `SHELVED`.
+
+Attempt 2 synchronized commit
+`2f85ba07a3172103c6008f566c3c017fd5cce884`, verified `/dev/sdb` mounted at
+`/media/volume/jisheng3_volume`, reached SSH with public-key authentication,
+then failed the harness `pip check`. It deleted and disassociated its owned
+temporary floating IP and independently reverified `jisheng3` as `SHELVED`
+with no address.
 
 ## Git Trace
 
@@ -242,7 +272,7 @@ completion response. The approved base remains
 
 ## Next Experiment Handoff
 
-The isolated provider virtual environment is now reviewed and locally tested.
-A new conversation and separate authorization may run one managed Phase 04
-Jetstream retry from the current branch; until then the original live result
-remains BLOCKED and all live benchmark fields remain NOT RUN.
+Phase 04 remains BLOCKED and all live benchmark fields remain NOT RUN. A new
+conversation must define and review a harness-recovery procedure before any
+separately authorized live lifecycle. No further retry is authorized by this
+phase.
