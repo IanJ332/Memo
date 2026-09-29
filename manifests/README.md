@@ -25,3 +25,8 @@ service, floating-IP, and VM cleanup.
 readiness-contract repair, retained Phase 05E log diagnosis, run-owned process
 exit detection, fail-closed retained-environment reuse, and local regressions
 before one separately authorized controlled retry.
+
+`phase-05g-openviking-live-retry.json` records the successful controlled live
+qualification and managed cleanup. `phase-05h-openviking-closure.json` records
+the local instrumentation, schema, dependency-propagation, and interpretation
+closure that completes Phase 05 without another provider run.

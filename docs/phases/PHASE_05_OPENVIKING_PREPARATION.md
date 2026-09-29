@@ -431,3 +431,52 @@ task IDs, quiescence duration, per-operation memory-diff counts, the exact
 hash. The detailed chronological record is
 `manifests/phase-05g-openviking-live-retry.json`; earlier 05C through 05F
 diagnoses remain unchanged.
+
+## Phase 05H — Local Closure and Phase Completion
+
+Phase 05H ran locally from exact clean base
+`acbad71da6073eb477c08f03da79893b1bb19d5b`. Local and origin matched before
+work. Jetstream was not contacted, the VM remained shelved, and no provider or
+model execution was repeated.
+
+The chronology is 05A PASS, 05B PASS, 05C BLOCKED, 05D PASS, 05E BLOCKED, 05F
+PASS, 05G LIVE PASS, and 05H LOCAL PASS. The 05G operational qualification
+remains authoritative and Phase 05 is complete.
+
+Three 05G anomalies are benchmark instrumentation artifacts:
+
+- Null health status came from transport code discarding `status` on an `ok`
+  response without a result envelope. The mapping is preserved; strict
+  liveness requires real `status=ok` plus `healthy=true`.
+- Supersession inspect `KeyError: 'v2'` came from dereferencing a target whose
+  unsupported producer never materialized it. Generic dependency state now
+  propagates producer `UNSUPPORTED` or `ERROR` only to dependent target steps;
+  independent queries continue.
+- Baseline `ABSENT` remains the historically correct Phase 03 exact-string
+  result. A separate directly observed correlation diagnostic records
+  correlated retrieval count, source IDs, and provider record IDs without
+  rewriting provider content or changing the metric.
+
+The future result contract contains an explicit environment-reuse boolean,
+exact provider dependency versions, owned service PID, and config SHA-256.
+Completed canary correlation can serialize session/archive/task IDs, task final
+status and timestamps, provider-reported quiescence seconds, provider memory URI
+count, and separate add/update/delete/skipped counts. Raw configuration and
+secrets remain prohibited.
+
+The retained local 05G artifacts recover the canary source event ID
+`4fe51613-4c42-4867-bb24-4f2de8bad4c6`, its one provider memory URI, and
+pre/post-restart retrieval counts of one. They do not contain the canary session
+ID, archive URI, task ID, quiescence duration, or separate diff counts; those
+are `NOT_RECOVERED`. Canonical task evidence is not relabeled as canary evidence.
+
+The 05G payload reached `status=PASS`, `stage=complete` after semantic work,
+restart/persistence, canonical benchmark, and provenance trace. Its service log
+was collected afterward in cleanup and ends with `RuntimeError: Event loop is
+closed`; this is a shutdown-cleanup warning, not a qualification failure.
+
+Local validation passed: focused closure 60 tests; unit 130; contract 6;
+integration 5 with 1 expected skip; Mem0 5; Hindsight 11 with 1 expected skip;
+Phase 03 18; Phase 03B 12; and full suite 141 with 1 expected skip. Next is
+small Mem0 prior-work calibration followed by experiment freeze, not another
+OpenViking bring-up lifecycle.

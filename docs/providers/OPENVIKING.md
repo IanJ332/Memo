@@ -566,3 +566,52 @@ because strict liveness was not established, this record does not claim every
 Phase 05 completion checkbox is satisfied even though Phase 05G's
 authoritative remote status is PASS. Exact tracked evidence is in
 `manifests/phase-05g-openviking-live-retry.json`.
+
+## Phase 05H — Local Bring-up Closure
+
+Phase 05H is a local-only closure on base
+`acbad71da6073eb477c08f03da79893b1bb19d5b`; Jetstream remained shelved and no
+provider or hosted-model call was made. The chronology is 05A PASS, 05B PASS,
+05C BLOCKED, 05D PASS, 05E BLOCKED, 05F PASS, 05G LIVE PASS, and 05H LOCAL
+PASS. Phase 05 is complete.
+
+Provider operational facts remain those established by 05G: OpenViking 0.4.22
+started, became ready, completed semantic extraction through the configured
+provider-internal model, emitted and completed tasks, exposed memory diffs,
+returned directly correlated memory through `find`, and retained it across an
+owned-service restart. Phase 05H did not change the provider configuration,
+embedding, VLM, capability map, source/derived distinction, or lifecycle
+semantics.
+
+The apparent liveness gap was an HTTP transport normalization defect. A
+successful response with `status: ok` and a `result` member still unwraps the
+result. A successful response without `result` now preserves the entire
+provider mapping, including its real status. Strict liveness requires both
+observed `status=ok` and `healthy=true`; `healthy=true` alone does not fabricate
+status.
+
+Future results serialize the explicit provider-environment reuse boolean,
+exact OpenViking and `llama-cpp-python` versions from `importlib.metadata`, the
+PID of the controller-owned child, and SHA-256 of the exact config bytes without
+serializing those credential-bearing bytes. Completed-write evidence promotes
+session, archive, task status/timestamps, provider-reported quiescence duration,
+provider memory URI count, and separate add/update/delete/skipped diff counts.
+
+The supersession `KeyError: 'v2'` was generic runner bookkeeping, not an
+OpenViking failure. A dependent target now inherits `UNSUPPORTED` from an
+unsupported producer or `ERROR` from an errored producer; unrelated queries
+continue. Supported producers and existing Mem0/Hindsight behavior are
+unchanged.
+
+Phase 03 exact-text normalization is unchanged, and transformed derived memory
+is never overwritten with source text. A supplementary diagnostic records only
+directly observed, known source correlation: correlated retrieval count,
+source IDs, and provider record IDs. It uses no similarity, LLM judge, or
+inferred lineage. The experiment-wide authority rule remains an
+experiment-freeze decision.
+
+The retained 05G result is authoritative `PASS`/`complete`; its bounded service
+log, collected in cleanup after semantic work, restart/persistence, canonical
+execution, and PASS assignment, ends with `RuntimeError: Event loop is closed`.
+This is retained as an upstream shutdown-cleanup warning and does not invalidate
+operational qualification.

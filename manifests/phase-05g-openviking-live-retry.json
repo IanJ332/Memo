@@ -164,6 +164,32 @@
     "changed": false,
     "config_hash": "not serialized"
   },
+  "phase05h_local_recovery": {
+    "source": [
+      "runtime_reports/phase-05-openviking/result.json",
+      "runtime_reports/phase-05-openviking-session.json"
+    ],
+    "provenance_note": "recovered_from_local_runtime_artifact",
+    "canary_source_event_id": "4fe51613-4c42-4867-bb24-4f2de8bad4c6",
+    "canary_provider_memory_uris": [
+      "viking://user/default/memories/entities/system_component/phase_05_persistence_canary.md"
+    ],
+    "canary_retrieval_before_restart": 1,
+    "canary_retrieval_after_restart": 1,
+    "canary_session_id": "NOT_RECOVERED",
+    "canary_archive_uri": "NOT_RECOVERED",
+    "canary_task_id": "NOT_RECOVERED",
+    "canary_quiescence_seconds": "NOT_RECOVERED",
+    "canary_memory_diff_counts": "NOT_RECOVERED",
+    "provider_environment_reused": "NOT_RECOVERED",
+    "llama_cpp_python_version": "NOT_RECOVERED",
+    "service_pid": "NOT_RECOVERED",
+    "config_sha256": "NOT_RECOVERED",
+    "shutdown_warning": {
+      "classification": "shutdown cleanup warning",
+      "evidence": "The authoritative payload is PASS/complete and the bounded service-log tail, collected in validator finally after semantic work, restart, canonical execution, and result assignment, ends with RuntimeError: Event loop is closed."
+    }
+  },
   "secrets_audit": "PASS",
   "completion_gaps": [
     "Strict service liveness remained NOT_ESTABLISHED because health status was null despite healthy=true and version=0.4.22.",

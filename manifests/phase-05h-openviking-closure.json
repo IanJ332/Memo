@@ -1,0 +1,91 @@
+{
+  "phase": "05H",
+  "status": "PASS",
+  "phase05_complete": true,
+  "execution_target": "LOCAL ONLY",
+  "jetstream_used": false,
+  "jetstream_state": "SHELVED",
+  "branch": "phase-05-openviking-bringup",
+  "base_commit": "acbad71da6073eb477c08f03da79893b1bb19d5b",
+  "phase05g_live_qualification_commit": "aa976a7d9b2ef37d8e8ba49b4c5091c1ec83e75e",
+  "phase05g_record_commit": "acbad71da6073eb477c08f03da79893b1bb19d5b",
+  "phase05g_operational_qualification": "PASS",
+  "liveness_normalization_fix": {
+    "old_behavior": "status=ok without result discarded the status member",
+    "new_behavior": "result envelopes still unwrap; otherwise the complete provider mapping is preserved",
+    "strict_predicate": "observed status=ok and healthy=true",
+    "fabricated_status": false
+  },
+  "result_schema_additions": {
+    "provider_environment_reused": "explicit true/false shell evidence",
+    "openviking_version": "importlib.metadata",
+    "llama_cpp_python_version": "importlib.metadata",
+    "service_pid": "exact controller-owned child",
+    "config_sha256": "SHA-256 of exact generated config bytes; raw config excluded",
+    "canary": [
+      "session ID",
+      "archive URI",
+      "task ID",
+      "task final status",
+      "task submitted/completed timestamps",
+      "provider-reported quiescence seconds",
+      "provider memory URI count",
+      "memory_diff add/update/delete/skipped counts"
+    ]
+  },
+  "supersession_dependency_propagation_fix": {
+    "scope": "generic LifecycleRunner memory-key materialization state",
+    "unsupported_producer": "dependent target step is UNSUPPORTED with causal reason",
+    "errored_producer": "dependent target step is ERROR, never mislabeled UNSUPPORTED",
+    "independent_steps": "continue",
+    "keyerror_v2_remaining": false
+  },
+  "exact_match_baseline_interpretation": {
+    "phase03_semantics_changed": false,
+    "historical_outcome": "ABSENT/current_state_correct=false remains true",
+    "classification": "evaluator/provider-representation mismatch for experiment-freeze metric design",
+    "provider_content_rewritten": false,
+    "semantic_similarity_used": false,
+    "llm_judge_used": false
+  },
+  "correlation_visibility_diagnostic": {
+    "evidence_basis": "direct adapter-exposed KNOWN source correlation only",
+    "fields": [
+      "correlated_retrieval_count",
+      "correlated_source_ids",
+      "correlated_provider_record_ids"
+    ],
+    "authority_metric_finalized": false
+  },
+  "phase05g_recovered_evidence": {
+    "provenance": "recovered_from_local_runtime_artifact",
+    "source_event_id": "4fe51613-4c42-4867-bb24-4f2de8bad4c6",
+    "provider_memory_uri_count": 1,
+    "persistence_before_restart": 1,
+    "persistence_after_restart": 1,
+    "session_id": "NOT_RECOVERED",
+    "archive_uri": "NOT_RECOVERED",
+    "task_id": "NOT_RECOVERED",
+    "quiescence_seconds": "NOT_RECOVERED",
+    "memory_diff_counts": "NOT_RECOVERED"
+  },
+  "retained_log_shutdown_classification": {
+    "classification": "shutdown cleanup warning",
+    "evidence": "PASS/complete preceded the service-log tail captured in validator finally; semantic work, restart/persistence, canonical benchmark, and provenance trace completed before cleanup."
+  },
+  "tests": {
+    "focused_phase05h": "60 passed",
+    "unit": "130 passed",
+    "contract": "6 passed",
+    "integration": "5 passed, 1 skipped",
+    "mem0_regression": "5 passed",
+    "hindsight_regression": "11 passed, 1 skipped",
+    "phase03": "18 passed",
+    "phase03b": "12 passed",
+    "full": "141 passed, 1 skipped"
+  },
+  "provider_config_changed": false,
+  "provider_semantics_changed": false,
+  "next_project_phase": "small Mem0 prior-work calibration, then experiment freeze",
+  "blockers": []
+}
