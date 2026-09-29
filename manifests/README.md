@@ -10,3 +10,8 @@ configuration values or secrets.
 `phase-05c-openviking-live-validation.json` records the single controlled
 OpenViking lifecycle, its pre-install dependency-plan blocker, and completed
 Jetstream cleanup without serializing protected runtime configuration values.
+
+`phase-05d-openviking-preflight-repair.json` records the local-only package-name
+normalization repair, official CPU-wheel route, controller import isolation,
+structured pre-validator coverage, and regression results before a future
+separately authorized live retry.

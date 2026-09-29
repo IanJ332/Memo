@@ -1,0 +1,99 @@
+{
+  "phase": "05D",
+  "status": "PASS",
+  "execution_target": "LOCAL_ONLY",
+  "jetstream_used": false,
+  "jetstream_state": "SHELVED",
+  "branch": "phase-05-openviking-bringup",
+  "base_commit": "8bcfa360b853f57263d13e832afe62d9d2f8dfe9",
+  "phase05_history": {
+    "05A": "PASS - provider architecture preparation",
+    "05B": "PASS - live-readiness hardening",
+    "05C": "BLOCKED - dependency-plan name false negative before installation; no OpenViking semantic result",
+    "05D": "PASS - local dependency-plan normalization and controller preflight repair"
+  },
+  "upstream": {
+    "openviking_version": "0.4.22",
+    "tag": "v0.4.22",
+    "commit": "e8716760934d95ef73414484a45bfe475b9296e2",
+    "local_embed_requirement": "llama-cpp-python>=0.3.0",
+    "metadata_reverified": true,
+    "sources": [
+      "https://github.com/volcengine/OpenViking/tree/v0.4.22",
+      "https://raw.githubusercontent.com/volcengine/OpenViking/e8716760934d95ef73414484a45bfe475b9296e2/pyproject.toml",
+      "https://pypi.org/project/llama-cpp-python/",
+      "https://abetlen.github.io/llama-cpp-python/whl/cpu/"
+    ]
+  },
+  "dependency_name_normalization": {
+    "algorithm": "lowercase and replace each run of hyphen, underscore, or dot with hyphen",
+    "raw_expected": "llama-cpp-python",
+    "raw_observed": "llama_cpp_python",
+    "canonical": "llama-cpp-python",
+    "old_logic_false_negative_reproduced": true,
+    "fixture_passes_with_canonicalization": true,
+    "forbidden_prefixes": ["nvidia-", "cuda-"]
+  },
+  "local_resolution": {
+    "operation": "pip install --dry-run --report; no packages installed",
+    "openviking_candidate": "0.4.22",
+    "llama_cpp_python_candidate": "0.3.35",
+    "observed_distribution_name": "llama_cpp_python"
+  },
+  "linux_python312_installation": {
+    "route": "official upstream CPU wheel index",
+    "index": "https://abetlen.github.io/llama-cpp-python/whl/cpu",
+    "artifact": "llama_cpp_python-0.3.35-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+    "target_resolver_check": "PASS",
+    "cpu_wheel": true,
+    "cuda_or_gpu_enabled": false,
+    "source_build_fallback": "C/C++ compiler and CMake required; material time/RAM risk on 2 vCPU and approximately 5.78 GiB RAM"
+  },
+  "controller": {
+    "local_import_stdlib_only": true,
+    "openstack_cli_pydantic_required": false,
+    "memlife_imports": "lazy inside remote validate_remote",
+    "undefined_root_fixed": true,
+    "manifest_path": "runtime_reports/phase-05-openviking-session.json",
+    "process_local_monkeypatch_required": false
+  },
+  "structured_prevalidator_results": {
+    "covered_stages": [
+      "dependency_dry_run",
+      "dependency_plan",
+      "provider_install",
+      "pip_check",
+      "executable_validation",
+      "config_generation"
+    ],
+    "status": "BLOCKED",
+    "diagnostic_tail_max_characters": 8000,
+    "sensitive_content_sanitized": true,
+    "payload_emitted_before_successful_transport_exit": true,
+    "controller_uses_payload_status": true
+  },
+  "semantics": {
+    "embedding": "local / bge-small-zh-v1.5-f16 / dimension 512 / GPU disabled",
+    "provider_internal_vlm_changed": false,
+    "provider_lifecycle_changed": false,
+    "protected_mode_600_config_preserved": true
+  },
+  "tests": {
+    "phase05_focused": "17 passed",
+    "dependency_normalization": "PASS (three equivalent spellings, false-negative fixture, required and forbidden plan cases)",
+    "controller_import": "PASS (isolated -S smoke and actual OpenStack CLI Python; memlife and pydantic absent)",
+    "controller_entrypoint": "PASS",
+    "preflight_result": "PASS (bounded and sanitized BLOCKED payload plus six shell stage contracts)",
+    "unit": "108 passed",
+    "contract": "6 passed",
+    "integration": "5 passed, 1 skipped (opt-in live Hindsight service unavailable)",
+    "mem0": "5 passed",
+    "hindsight": "11 passed, 1 skipped (opt-in live Hindsight service unavailable)",
+    "phase03": "15 passed",
+    "phase03b": "13 passed",
+    "full": "119 passed, 1 skipped",
+    "shell_syntax": "NOT_AVAILABLE (Windows WSL bash launcher returned E_ACCESSDENIED; static shell contracts passed)"
+  },
+  "future_live_readiness": "READY_FOR_ONE_CONTROLLED_RETRY_AFTER_COMMIT_AND_PUSH",
+  "secrets_audit": "PASS"
+}

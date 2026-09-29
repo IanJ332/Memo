@@ -403,3 +403,33 @@ run-created floating IP was disassociated and deleted, and the VM returned to
 `SHELVED`. This result does not operationally qualify OpenViking and makes no
 security, vulnerability, resurrection, or deletion-durability claim. The
 tracked evidence is `manifests/phase-05c-openviking-live-validation.json`.
+
+## Phase 05D Local Dependency and Controller Repair
+
+Phase 05D confirmed that the Phase 05C blocker was a package-name
+normalization defect, not evidence that the `local-embed` extra omitted its
+dependency. The pinned OpenViking 0.4.22 metadata still declares
+`llama-cpp-python>=0.3.0`; the resolved pip metadata spells the distribution
+`llama_cpp_python`. Both canonicalize to `llama-cpp-python`, as does
+`llama.cpp.python`. Plan validation now returns normalized names, both required
+version candidates, missing requirements, and any forbidden `nvidia-*` or
+`cuda-*` packages.
+
+The locally observed candidate is `llama-cpp-python` 0.3.35. Its upstream
+maintainer's CPU index provides a Python-compatible
+`manylinux2014_x86_64.manylinux_2_17_x86_64` wheel, and a CPython 3.12 target
+dry-run selected that artifact. The future remote commands use only that
+official CPU index in addition to PyPI. They do not enable CUDA, GPU, Vulkan,
+or an unofficial mirror. If wheel resolution changes and a source build is
+required, the fallback needs a C/C++ compiler plus CMake and carries material
+time/RAM risk on the small Jetstream VM.
+
+The controller module no longer imports MemLife or Pydantic at local import
+time. Runtime-only imports are confined to the remote validator. The undefined
+`ROOT` manifest reference is replaced with `REPO_ROOT`, eliminating the
+one-time Phase 05C recovery monkeypatch. Pre-validator gates now deliver
+structured, bounded, sanitized `BLOCKED` results before returning a successful
+transport exit, while the managed controller continues to decide live outcome
+from the payload status. No provider or configuration semantics changed, and
+Phase 05C still has no OpenViking semantic result because it stopped before
+installation.

@@ -244,3 +244,42 @@ and `jisheng3` was verified `SHELVED`. The provider venv/state/cache and dry-run
 artifact were retained on the persistent volume. Exact structured evidence is
 in `manifests/phase-05c-openviking-live-validation.json`; Phase 05A and 05B
 history above remains unchanged.
+
+## Phase 05D — Local Preflight Repair
+
+Phase 05D is local-only and does not reinterpret Phase 05C as an OpenViking
+runtime failure. The Phase 05C pip report used distribution metadata name
+`llama_cpp_python`, while the shell compared the raw lowercased value with
+`llama-cpp-python`. Python distribution names are equivalent after PEP
+503-style canonicalization: lowercase and replace each run of `-`, `_`, or `.`
+with `-`. A deterministic fixture confirms the old comparison rejects the
+reported spelling and the canonicalized comparison accepts it.
+
+The pinned `v0.4.22` source at commit
+`e8716760934d95ef73414484a45bfe475b9296e2` was rechecked: its `local-embed`
+extra requires `llama-cpp-python>=0.3.0`. A local no-install pip report resolved
+OpenViking 0.4.22 and `llama_cpp_python` 0.3.35. The official upstream CPU
+wheel index contains a `0.3.35` `manylinux2014_x86_64` wheel, and a target
+resolver check for CPython 3.12 selected it. The future remote dry-run and
+installation therefore include the official CPU-only index; CUDA/NVIDIA
+distributions remain forbidden. Source compilation is only a fallback; it
+would require a C/C++ compiler and CMake and is undesirable on the 2-vCPU,
+5.78-GiB target.
+
+Local controller imports are now stdlib-only. MemLife adapter, command,
+scenario, and provenance imports occur lazily inside `validate_remote`, under
+the remote clean harness, so the OpenStack CLI interpreter does not own or
+need Pydantic. `run_phase05` now uses `REPO_ROOT` for
+`runtime_reports/phase-05-openviking-session.json`; callers no longer inject a
+process-local `ROOT` binding.
+
+Expected pre-validator failures now serialize sanitized `status: BLOCKED`
+payloads for dependency dry-run, dependency-plan validation, provider install,
+pip check, executable validation, and config generation. Dependency-plan
+results retain normalized observed names, required names, version candidates,
+and forbidden distributions. Install diagnostics are bounded to their final
+8,000 sanitized characters. The shell emits `PHASE05_RESULT_B64` and exits
+successfully after delivery; the managed controller continues to treat
+`payload["status"]`, not SSH status, as authoritative. Phase 05B protected
+configuration and all provider, embedding, VLM, and lifecycle semantics remain
+unchanged.
