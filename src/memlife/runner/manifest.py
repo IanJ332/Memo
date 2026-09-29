@@ -16,7 +16,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from memlife.config.paths import DataRootConfig
 
-DEFAULT_PACKAGES = ("openai", "psutil", "pydantic", "pytest")
+DEFAULT_PACKAGES = ("psutil", "pydantic", "pytest")
 SENSITIVE_KEY_PARTS = ("api_key", "credential", "password", "secret", "token")
 
 

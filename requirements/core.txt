@@ -1,5 +1,4 @@
-# Existing environment dependencies
-openai==3.13.0
+# Provider-independent runtime and host inspection
 psutil==7.2.2
 
 # MemLife provider-independent core and offline validation

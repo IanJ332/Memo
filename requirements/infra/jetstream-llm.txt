@@ -1,0 +1,3 @@
+# OpenAI-compatible Jetstream hosted-LLM connectivity utility only.
+# This pin is not part of the MemLife/Mem0 harness dependency set.
+openai==3.13.0

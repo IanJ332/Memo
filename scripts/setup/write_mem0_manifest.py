@@ -18,7 +18,14 @@ from memlife.runner.manifest import (  # noqa: E402
     write_manifest,
 )
 
-PROVIDER_PACKAGES = ("mem0ai", "sentence-transformers", "qdrant-client")
+PROVIDER_PACKAGES = (
+    "mem0ai",
+    "openai",
+    "protobuf",
+    "qdrant-client",
+    "sentence-transformers",
+    "torch",
+)
 
 
 def main() -> int:
