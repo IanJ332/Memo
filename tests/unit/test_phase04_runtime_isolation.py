@@ -4,14 +4,20 @@ from pathlib import Path
 
 import pytest
 
+from scripts.jetstream import phase04_runtime
 from scripts.jetstream.phase04_runtime import EnvironmentCheck
 from scripts.jetstream.phase04_runtime import HindsightServiceController
 from scripts.jetstream.phase04_runtime import Phase04RuntimePaths
+from scripts.jetstream.phase04_runtime import harness_environment_fingerprint
 from scripts.jetstream.phase04_runtime import validate_environment_checks
+from scripts.jetstream.phase04_runtime import validate_harness_fingerprint
 
 
 REPO = Path(__file__).resolve().parents[2]
 REMOTE_SCRIPT = REPO / "scripts" / "jetstream" / "phase04_remote.sh"
+CORE_REQUIREMENTS = REPO / "requirements" / "core.txt"
+MEM0_REQUIREMENTS = REPO / "requirements" / "providers" / "mem0.txt"
+INFRA_LLM_REQUIREMENTS = REPO / "requirements" / "infra" / "jetstream-llm.txt"
 
 
 class FakeProcess:
@@ -43,12 +49,21 @@ def test_install_and_launch_commands_preserve_environment_ownership() -> None:
         repo="/home/exouser/Memo",
         data_root="/media/volume/live/memlife",
     )
-    assert str(paths.harness_python) == "/home/exouser/Memo/.venv/bin/python"
+    assert str(paths.legacy_harness_python) == "/home/exouser/Memo/.venv/bin/python"
+    assert str(paths.harness_venv) == (
+        "/media/volume/live/memlife/venvs/memlife-harness-phase04"
+    )
+    assert str(paths.harness_python) == (
+        "/media/volume/live/memlife/venvs/memlife-harness-phase04/bin/python"
+    )
     assert str(paths.hindsight_venv) == (
         "/media/volume/live/memlife/venvs/hindsight-0.10.1"
     )
     assert paths.harness_install_command()[0] == str(paths.harness_python)
-    assert paths.harness_install_command()[-1].endswith("requirements/core.txt")
+    harness_install = " ".join(paths.harness_install_command())
+    assert "requirements/core.txt" in harness_install
+    assert "requirements/providers/mem0.txt" in harness_install
+    assert "requirements/providers/hindsight.txt" not in harness_install
     assert paths.hindsight_install_command()[0] == str(paths.hindsight_python)
     assert paths.hindsight_install_command()[-1].endswith(
         "requirements/providers/hindsight.txt"
@@ -57,13 +72,18 @@ def test_install_and_launch_commands_preserve_environment_ownership() -> None:
     assert paths.benchmark_command("benchmark.py")[0] == str(paths.harness_python)
     assert paths.run_root.is_relative_to(paths.data_root)
     assert not paths.run_root.is_relative_to(paths.repo)
+    assert paths.harness_venv != paths.hindsight_venv
+    assert paths.harness_python != paths.legacy_harness_python
 
 
-def test_remote_script_never_installs_hindsight_into_harness() -> None:
+def test_remote_script_builds_and_gates_clean_harness_before_hindsight() -> None:
     source = REMOTE_SCRIPT.read_text(encoding="utf-8")
-    assert 'HARNESS_PYTHON="$REPO/.venv/bin/python"' in source
+    assert 'LEGACY_HARNESS_VENV="$REPO/.venv"' in source
+    assert 'CLEAN_HARNESS_VENV="$MEMLIFE_DATA_ROOT/venvs/memlife-harness-phase04"' in source
+    assert 'HARNESS_PYTHON="$CLEAN_HARNESS_VENV/bin/python"' in source
     assert 'HINDSIGHT_VENV="$MEMLIFE_DATA_ROOT/venvs/hindsight-0.10.1"' in source
-    assert '"$HARNESS_PYTHON" -m pip install -r "$REPO/requirements/core.txt"' in source
+    assert '-r "$REPO/requirements/core.txt"' in source
+    assert '-r "$REPO/requirements/providers/mem0.txt"' in source
     assert (
         '"$HINDSIGHT_PYTHON" -m pip install --no-cache-dir '
         '-r "$REPO/requirements/providers/hindsight.txt"'
@@ -72,9 +92,69 @@ def test_remote_script_never_installs_hindsight_into_harness() -> None:
         '"$HARNESS_PYTHON" scripts/jetstream/phase04_hindsight_validate.py'
         in source
     )
-    assert '"$HARNESS_PYTHON" -m pip install --no-cache-dir' not in source
     assert "/.venv/bin/hindsight-api" not in source
     assert "pip install --no-deps" not in source
+
+    pip_check = source.index("capture_harness_health before-hindsight")
+    mem0_gate = source.index("scripts/jetstream/phase04_mem0_regression.py")
+    hindsight_setup = source.index(
+        "# Hindsight setup begins only after the clean harness and Mem0 regression pass."
+    )
+    hindsight_creation = source.index('if [ ! -e "$HINDSIGHT_VENV" ]')
+    assert pip_check < mem0_gate < hindsight_setup < hindsight_creation
+
+
+def test_dependency_ownership_keeps_openai_pin_out_of_core() -> None:
+    core = CORE_REQUIREMENTS.read_text(encoding="utf-8").casefold()
+    mem0 = MEM0_REQUIREMENTS.read_text(encoding="utf-8").casefold()
+    infrastructure = INFRA_LLM_REQUIREMENTS.read_text(encoding="utf-8").casefold()
+    remote = REMOTE_SCRIPT.read_text(encoding="utf-8").casefold()
+
+    assert "openai" not in core
+    assert "openai==3.13.0" in infrastructure
+    assert "protobuf==" not in core + mem0 + remote
+    assert "openai==" not in core + mem0 + remote
+
+
+def test_clean_harness_fingerprint_records_required_dependency_identity(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    versions = {
+        "mem0ai": "2.2.1",
+        "protobuf": "6.33.5",
+        "openai": "2.29.0",
+        "litellm": None,
+        "sentence-transformers": "6.1.0",
+        "torch": "2.7.1+cpu",
+        "qdrant-client": "1.19.1",
+    }
+    monkeypatch.setattr(
+        phase04_runtime,
+        "_optional_distribution_version",
+        lambda name: versions[name],
+    )
+    monkeypatch.setattr(phase04_runtime, "_distribution_version", lambda name: "26.0.1")
+    monkeypatch.setattr(phase04_runtime, "_normalized_freeze_sha256", lambda: "a" * 64)
+
+    fingerprint = harness_environment_fingerprint()
+    assert fingerprint["mem0ai_version"] == "2.2.1"
+    assert fingerprint["protobuf_version"] == "6.33.5"
+    assert fingerprint["openai_version"] == "2.29.0"
+    assert fingerprint["litellm_version"] is None
+    assert fingerprint["sentence_transformers_version"] == "6.1.0"
+    assert fingerprint["torch_version"] == "2.7.1+cpu"
+    assert fingerprint["qdrant_client_version"] == "1.19.1"
+    assert fingerprint["normalized_pip_freeze_sha256"] == "a" * 64
+
+
+def test_changed_clean_harness_fingerprint_fails_closed() -> None:
+    expected = {"mem0ai_version": "2.2.1", "normalized_pip_freeze_sha256": "a"}
+    validate_harness_fingerprint(expected, expected.copy())
+    with pytest.raises(RuntimeError, match="refusing automatic rebuild"):
+        validate_harness_fingerprint(
+            expected,
+            {"mem0ai_version": "2.2.1", "normalized_pip_freeze_sha256": "b"},
+        )
 
 
 def test_cross_environment_protobuf_difference_is_valid() -> None:
