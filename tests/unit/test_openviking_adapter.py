@@ -4,12 +4,15 @@ from datetime import datetime, timezone
 
 import pytest
 
-from memlife.adapters.base import CapabilitySupport, ProviderCapability
+from memlife.adapters.base import AdapterError, CapabilitySupport, ProviderCapability
 from memlife.adapters.base import UnsupportedCapabilityError
 from memlife.adapters.openviking import (
     OPENVIKING_UPSTREAM_COMMIT,
     OPENVIKING_VERSION,
+    OpenVikingHTTPError,
     OpenVikingMemoryAdapter,
+    OpenVikingReadinessTimeout,
+    ServiceExitedBeforeReady,
     UrllibOpenVikingTransport,
     parse_memory_diff,
     phase05a_manifest_configuration,
@@ -23,6 +26,105 @@ from memlife.runner.lifecycle import LifecycleRunner
 from memlife.runner.provenance import ProvenanceTraceRunner
 from memlife.scenarios.canonical import canonical_scenarios
 from tests.fakes.openviking import FakeOpenVikingTransport
+
+
+class _SteppingMonotonic:
+    def __init__(self, step: float = 0.05) -> None:
+        self.value = -step
+        self.step = step
+
+    def __call__(self) -> float:
+        self.value += self.step
+        return self.value
+
+
+class _ReadinessTransport:
+    def __init__(self, ready_responses) -> None:
+        self.ready_responses = iter(ready_responses)
+        self.requests: list[str] = []
+
+    def request(self, method, path, *, query=None, payload=None):
+        self.requests.append(path)
+        if path == "/health":
+            return {"status": "ok", "healthy": True, "version": "0.4.22"}
+        response = next(self.ready_responses)
+        if isinstance(response, Exception):
+            raise response
+        return response
+
+
+def _readiness_adapter(transport, **kwargs) -> OpenVikingMemoryAdapter:
+    return OpenVikingMemoryAdapter(
+        transport,
+        quiescence_timeout_seconds=1,
+        poll_interval_seconds=0.01,
+        sleeper=lambda _: None,
+        monotonic=_SteppingMonotonic(),
+        **kwargs,
+    )
+
+
+def _not_ready(checks=None) -> OpenVikingHTTPError:
+    payload = {"status": "not_ready", "checks": checks or {"embedding": "not_initialized"}}
+    return OpenVikingHTTPError(503, str(payload), payload=payload)
+
+
+def test_pinned_ready_status_passes_immediately() -> None:
+    transport = _ReadinessTransport(
+        [{"status": "ready", "checks": {"agfs": "ok", "embedding": "ok"}}]
+    )
+    adapter = _readiness_adapter(transport)
+    assert adapter.wait_until_ready()["status"] == "ready"
+    assert transport.requests == ["/health", "/ready"]
+    assert adapter.readiness_diagnostics["readiness_status"] == "ready"
+
+
+def test_pinned_503_not_ready_retries_then_passes() -> None:
+    transport = _ReadinessTransport(
+        [_not_ready(), {"status": "ready", "checks": {"embedding": "ok"}}]
+    )
+    adapter = _readiness_adapter(transport)
+    assert adapter.wait_until_ready()["status"] == "ready"
+    assert transport.requests.count("/ready") == 2
+
+
+def test_healthy_liveness_never_substitutes_for_readiness() -> None:
+    adapter = _readiness_adapter(_ReadinessTransport([_not_ready()] * 20))
+    with pytest.raises(OpenVikingReadinessTimeout) as captured:
+        adapter.wait_until_ready(timeout_seconds=0.3)
+    assert captured.value.diagnostics["health_status"] == "ok"
+    assert captured.value.diagnostics["readiness_status"] == "not_ready"
+
+
+def test_unknown_ready_payload_is_never_silently_accepted() -> None:
+    adapter = _readiness_adapter(_ReadinessTransport([{"status": "mystery"}] * 20))
+    with pytest.raises(OpenVikingReadinessTimeout) as captured:
+        adapter.wait_until_ready(timeout_seconds=0.3)
+    assert captured.value.diagnostics["readiness_status"] == "mystery"
+
+
+def test_connection_refused_retries_while_owned_process_is_alive() -> None:
+    failures = [AdapterError("connection refused")] * 20
+    adapter = _readiness_adapter(
+        _ReadinessTransport(failures), process_is_running=lambda: True
+    )
+    with pytest.raises(OpenVikingReadinessTimeout) as captured:
+        adapter.wait_until_ready(timeout_seconds=0.3)
+    assert captured.value.diagnostics["request_error_class"] == "AdapterError"
+    assert captured.value.diagnostics["service_process_alive"] is True
+
+
+def test_owned_process_exit_stops_readiness_immediately() -> None:
+    states = iter([True, False])
+    adapter = _readiness_adapter(
+        _ReadinessTransport([AdapterError("connection refused")]),
+        process_is_running=lambda: next(states),
+        process_exit_code=lambda: 17,
+    )
+    with pytest.raises(ServiceExitedBeforeReady) as captured:
+        adapter.wait_until_ready(timeout_seconds=10)
+    assert captured.value.exit_code == 17
+    assert captured.value.diagnostics["service_process_alive"] is False
 
 
 def _adapter(

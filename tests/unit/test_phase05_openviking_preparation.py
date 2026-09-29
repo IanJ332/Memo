@@ -47,6 +47,18 @@ def test_remote_script_has_isolation_and_resource_guards() -> None:
     assert "sleep 30" not in text
 
 
+def test_remote_script_reuses_retained_provider_environment_fail_closed() -> None:
+    text = REMOTE_SCRIPT.read_text(encoding="utf-8")
+    assert "REUSE_EXISTING_ENV=0" in text
+    assert 'if [ -e "$OPENVIKING_VENV" ]' in text
+    assert "environment_reuse DistributionMetadataError" in text
+    assert 'phase05_provider_env_reused=%s' in text
+    assert 'pip check' in text
+    assert 'nvidia-' in text and 'cuda-' in text
+    assert 'rm -rf "$OPENVIKING_VENV"' not in text
+    assert 'rm -rf "$MODEL_CACHE"' not in text
+
+
 def test_local_embedding_requirement_is_exact() -> None:
     assert REQUIREMENT.read_text(encoding="utf-8").strip() == (
         "openviking[local-embed]==0.4.22"
@@ -209,6 +221,136 @@ def test_managed_controller_provisions_mode_600_config_before_run(monkeypatch) -
     assert "PHASE05_OPENVIKING_VLM_API_KEY" not in serialized
 
 
+class _FakeOwnedProcess:
+    def __init__(self, pid: int = 4321) -> None:
+        self.pid = pid
+        self.return_code = None
+        self.terminated = False
+        self.killed = False
+
+    def poll(self):
+        return self.return_code
+
+    def terminate(self):
+        self.terminated = True
+        self.return_code = 0
+
+    def wait(self, timeout=None):
+        return self.return_code
+
+    def kill(self):
+        self.killed = True
+        self.return_code = -9
+
+
+def _owned_controller(tmp_path: Path, monkeypatch, process: _FakeOwnedProcess):
+    module = _module()
+    executable = tmp_path / "openviking-server"
+    config = tmp_path / "ov.conf"
+    executable.write_text("fake", encoding="utf-8")
+    config.write_text("{}", encoding="utf-8")
+    monkeypatch.setenv("PHASE05_OPENVIKING_SERVICE", str(executable))
+    monkeypatch.setenv("PHASE05_OPENVIKING_CONFIG", str(config))
+    monkeypatch.setenv("PHASE05_RUN_ROOT", str(tmp_path / "run"))
+    monkeypatch.setattr(module.subprocess, "Popen", lambda *args, **kwargs: process)
+    return module, module.OpenVikingServiceController()
+
+
+@pytest.mark.parametrize("exit_code", [0, 19])
+def test_owned_controller_reports_alive_and_exact_exit_code(
+    tmp_path: Path, monkeypatch, exit_code: int
+) -> None:
+    process = _FakeOwnedProcess()
+    _, controller = _owned_controller(tmp_path, monkeypatch, process)
+    controller.start()
+    assert controller.is_running() is True
+    assert controller.exit_code() is None
+    process.return_code = exit_code
+    assert controller.is_running() is False
+    assert controller.exit_code() == exit_code
+    controller.stop()
+    assert not controller.pid_path.exists()
+
+
+def test_owned_controller_preserves_pid_ownership_and_uses_bounded_log_tail(
+    tmp_path: Path, monkeypatch
+) -> None:
+    process = _FakeOwnedProcess()
+    module, controller = _owned_controller(tmp_path, monkeypatch, process)
+    controller.start()
+    controller.pid_path.write_text("9999\n", encoding="ascii")
+    with pytest.raises(RuntimeError, match="PID ownership changed"):
+        controller.stop()
+
+    controller.log_path.write_text(
+        "\n".join(f"line-{index}" for index in range(60)), encoding="utf-8"
+    )
+    tail = module._service_log_tail(controller.log_path)
+    assert len(tail) == 40
+    assert tail[0] == "line-20"
+    source = PYTHON_SCRIPT.read_text(encoding="utf-8")
+    assert "pkill" not in source and "killall" not in source
+
+
+def test_process_exit_serializes_startup_blocker(tmp_path: Path, monkeypatch) -> None:
+    module = _module()
+    monkeypatch.setenv(module.LIVE_AUTH_ENV, "YES")
+    log_path = tmp_path / "openviking.log"
+    log_path.write_text("lifespan failed\n", encoding="utf-8")
+
+    class FakeController:
+        def __init__(self):
+            self.log_path = log_path
+
+        def start(self):
+            raise module.ServiceExitedBeforeReady(23)
+
+        def stop(self):
+            return None
+
+        def restart(self):
+            return None
+
+        def is_running(self):
+            return False
+
+        def exit_code(self):
+            return 23
+
+        def log_tail(self, *, lines=40):
+            return module._service_log_tail(self.log_path, lines=lines)
+
+    class FakeAdapter:
+        @staticmethod
+        def from_environment(**kwargs):
+            return object()
+
+    fake_modules = {
+        "memlife.adapters.openviking": {
+            "OpenVikingMemoryAdapter": FakeAdapter,
+            "ServiceExitedBeforeReady": RuntimeError,
+        },
+        "memlife.models.memory": {"QueryCommand": object, "WriteCommand": object},
+        "memlife.runner.provenance": {"ProvenanceTraceRunner": object},
+        "memlife.scenarios.canonical": {"canonical_scenarios": lambda: []},
+    }
+    for name, attributes in fake_modules.items():
+        fake = types.ModuleType(name)
+        for attribute, value in attributes.items():
+            setattr(fake, attribute, value)
+        monkeypatch.setitem(sys.modules, name, fake)
+    monkeypatch.setattr(module, "OpenVikingServiceController", FakeController)
+    output = tmp_path / "result.json"
+    module.validate_remote(output)
+    result = json.loads(output.read_text(encoding="utf-8"))
+    assert result["status"] == "BLOCKED"
+    assert result["stage"] == "service_startup"
+    assert result["blocker_type"] == "ServiceExitedBeforeReady"
+    assert result["service_process_alive"] is False
+    assert result["service_exit_code"] == 23
+    assert result["service_log_tail"] == ["lifespan failed"]
+
+
 def test_provider_failure_serializes_blocked_result_and_sanitized_log(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -234,10 +376,22 @@ def test_provider_failure_serializes_blocked_result_and_sanitized_log(
         def restart(self):
             return None
 
+        def is_running(self):
+            return False
+
+        def exit_code(self):
+            return 1
+
+        def log_tail(self, *, lines=40):
+            return module._service_log_tail(self.log_path, lines=lines)
+
     class FakeAdapter:
         @staticmethod
         def from_environment(**kwargs):
             return object()
+
+    class FakeAdapterServiceExitedBeforeReady(RuntimeError):
+        pass
 
     fake_modules = {
         "memlife.adapters.openviking": ("OpenVikingMemoryAdapter", FakeAdapter),
@@ -248,6 +402,8 @@ def test_provider_failure_serializes_blocked_result_and_sanitized_log(
     for name, (attribute, value) in fake_modules.items():
         fake = types.ModuleType(name)
         setattr(fake, attribute, value)
+        if name == "memlife.adapters.openviking":
+            fake.ServiceExitedBeforeReady = FakeAdapterServiceExitedBeforeReady
         if name == "memlife.models.memory":
             fake.WriteCommand = object
         monkeypatch.setitem(sys.modules, name, fake)
