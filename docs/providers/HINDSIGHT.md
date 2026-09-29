@@ -242,3 +242,12 @@ retry was attempted. Cleanup deleted the owned temporary floating IP and
 returned the VM to `SHELVED` with no address. A future live attempt requires
 separate authorization after the result-metadata wiring is fixed and locally
 tested.
+
+Phase 04C fixed the two shell-to-validator assignments locally and added a
+contract test covering every strict validator environment key. All local test
+layers and the Mem0 semantic gate passed; the optional local `bash -n` check was
+unavailable because Windows could not instantiate WSL. The retained clean
+harness and Hindsight venv remain eligible for reuse through their unchanged
+fail-closed health and fingerprint checks. Phase 04 is ready for one separately
+authorized live service retry; no Hindsight service result is implied by this
+local repair.

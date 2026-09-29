@@ -13,8 +13,9 @@ recovery and regression gates. Attempt 3 executed the prepared live flow at
 commit `8187ccdd718a1b40be1079cfd1660e9f8ea5689d`. Both isolated environments,
 the pre/post Hindsight harness checks, and the Mem0 semantic gate passed. The
 run then stopped before service startup because the validator attempted to read
-an unset result-metadata environment variable. Phase 04 remains **BLOCKED**;
-no Hindsight service semantics have yet been measured.
+an unset result-metadata environment variable. Phase 04C fixed that local
+shell-to-validator handoff and added full required-key contract coverage. Phase
+04 is **READY_FOR_RETRY**; no Hindsight service semantics have yet been measured.
 
 ## Why Hindsight
 
@@ -186,6 +187,23 @@ deleted only its owned floating IP, shelved the VM, and a separate read-only
 status check confirmed `SHELVED` with no address. The valid persistent-volume
 environments and provider state were retained.
 
+## Phase 04C — Environment Handoff Repair
+
+Phase 04C ran locally only from base
+`8756bd3d4b420337c9f0a7f15cdaa8f8d0d865f8`. It assigned both
+`PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN` and
+`PHASE04_HINDSIGHT_VENV_CREATED_BY_THIS_RUN` from their lowercase-valued shell
+source variables. A focused contract test derives all 21 strict
+`os.environ[...]` keys from the validator and requires an explicit-value shell
+export for each. No other missing required handoff was found.
+
+The existing reuse paths remain unchanged. A retained clean harness records
+`false`, skips installation, and must match its fingerprint and pass health,
+version, CPU-only, and no-CUDA checks. A retained Hindsight venv likewise
+records `false`, skips installation, and must pass its executable, version,
+dependency, and no-CUDA checks. The next authorized live run can therefore
+reuse both retained environments without recreating them.
+
 ## Internal LLM Configuration
 
 The fixed provider-internal configuration is OpenAI-compatible provider
@@ -340,6 +358,14 @@ the development `.venv`: `74 passed` (unit), `5 passed` (contract), `5 passed,
 regressions passed `15` and `13` tests respectively. The skip remains the
 opt-in real Hindsight service test. Jetstream was not contacted.
 
+Phase 04C local validation passed the 11-test runtime-isolation suite, 75 unit
+tests, 5 contract tests, 5 integration tests with the live Hindsight test
+skipped, the 15-test Phase 03 regression, the 13-test Phase 03B regression, the
+Phase 02B Mem0 semantic gate, and the full suite at 85 passed with 1 skipped.
+Windows could not instantiate its optional WSL `bash.exe` (`E_ACCESSDENIED`),
+so `bash -n` was unavailable; the all-required-key static contract test passed.
+Jetstream was not contacted.
+
 The controller recorded exact VM UUID
 `5baeeae7-4c29-4903-89fe-2e9df0a8eced`, deleted the temporary floating IP it
 created, and returned the initially shelved VM to `SHELVED`.
@@ -379,9 +405,8 @@ completion response. The Phase 04B base is
 
 ## Next Experiment Handoff
 
-Phase 04 is BLOCKED and all Hindsight service/benchmark fields remain NOT RUN.
-Before any separately authorized future lifecycle, fix and locally test the two
-created-by-this-run environment-variable assignments used by the sanitized
-result builder. Preserve the mandatory clean-harness-first order and reuse only
-exact validated fingerprints. The legacy `.venv` remains evidence only and
-must not participate in execution.
+Phase 04 is READY FOR RETRY and all Hindsight service/benchmark fields remain
+NOT RUN. In one separately authorized lifecycle, preserve the mandatory
+clean-harness-first order and reuse the retained environments only after their
+exact validation gates pass. The legacy `.venv` remains evidence only and must
+not participate in execution.

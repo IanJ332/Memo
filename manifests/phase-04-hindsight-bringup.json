@@ -1,8 +1,14 @@
 {
   "phase": "04",
-  "status": "BLOCKED",
+  "status": "READY_FOR_RETRY",
   "live_attempt_status": "BLOCKED",
   "phase_04b_status": "PASS",
+  "phase_04c_status": "PASS",
+  "phase_04c_base_head": "8756bd3d4b420337c9f0a7f15cdaa8f8d0d865f8",
+  "attempt_3_environment_setup": "PASS",
+  "attempt_3_service_startup": "NOT_RUN",
+  "attempt_3_blocker": "shell_to_validator_environment_handoff",
+  "phase04c_handoff_fix": "PASS",
   "provider": "hindsight",
   "provider_version": "0.10.1",
   "upstream_tag": "v0.10.1",
@@ -153,8 +159,8 @@
   },
   "compatibility_probe": "NOT RUN",
   "persistence_restart": "NOT RUN",
-  "current_blocker": "phase04_hindsight_validate.py requires PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN, but phase04_remote.sh exported the name without assigning it from HARNESS_VENV_CREATED_BY_THIS_RUN",
-  "blocker_scope": "attempt_3_benchmark_code_defect_before_service_startup",
+  "current_blocker": null,
+  "blocker_scope": "attempt_3_benchmark_code_defect_before_service_startup_resolved_locally_in_phase_04c",
   "blocker": {
     "stage": "sanitized result assembly before Hindsight service startup",
     "exception": "KeyError: PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN",
@@ -166,15 +172,18 @@
   "local_tests": {
     "environment": "fresh disposable Windows Python 3.14.3 venv",
     "pip_check": "PASS",
-    "unit": "74 passed in 0.61s",
-    "contract": "5 passed in 0.23s",
-    "integration": "5 passed, 1 skipped in 8.44s",
-    "full": "84 passed, 1 skipped in 8.75s",
+    "handoff_contract": "1 passed in 0.03s",
+    "runtime_isolation": "11 passed in 0.05s",
+    "unit": "75 passed in 0.50s",
+    "contract": "5 passed in 0.17s",
+    "integration": "5 passed, 1 skipped in 9.39s",
+    "full": "85 passed, 1 skipped in 9.46s",
     "phase_02b_semantic_gate": "PASS: construct, write, query, update, history, delete, reconstruction, query absence after delete",
-    "phase_03_regression": "15 passed in 0.19s",
-    "phase_03b_regression": "13 passed in 0.18s",
+    "phase_03_regression": "15 passed in 8.48s",
+    "phase_03b_regression": "13 passed in 0.16s",
     "real_hindsight_skip_reason": "opt-in self-hosted service was unavailable locally",
-    "attempt_3_focused_preflight": "21 passed in 0.18s"
+    "attempt_3_focused_preflight": "21 passed in 0.18s",
+    "shell_syntax": "UNAVAILABLE: Windows WSL bash.exe could not instantiate (E_ACCESSDENIED); static handoff contract passed"
   },
   "cleanup": {
     "initial_vm_state": "SHELVED",
@@ -231,6 +240,23 @@
       "rq3_decision_model_calls": 0,
       "temporary_floating_ip_deleted": true,
       "final_vm_state": "SHELVED"
+    },
+    "phase_04c": {
+      "status": "PASS",
+      "base_head": "8756bd3d4b420337c9f0a7f15cdaa8f8d0d865f8",
+      "execution_target": "LOCAL ONLY",
+      "jetstream_used": false,
+      "result": "fixed both created-by-this-run shell exports and added a complete strict validator environment-key contract test",
+      "required_validator_environment_keys": 21,
+      "missing_before_fix": [
+        "PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN",
+        "PHASE04_HINDSIGHT_VENV_CREATED_BY_THIS_RUN"
+      ],
+      "missing_after_fix": [],
+      "retained_clean_harness_reuse": "VALIDATED BY UNCHANGED FAIL-CLOSED LOGIC",
+      "retained_hindsight_venv_reuse": "VALIDATED BY UNCHANGED FAIL-CLOSED LOGIC",
+      "service_started": false,
+      "model_calls": 0
     }
   },
   "live_attempt_config_sha256": "1174925b29fa288e88899f9d0fd906865d5117ecc671d16d4af93ec356436b00",
