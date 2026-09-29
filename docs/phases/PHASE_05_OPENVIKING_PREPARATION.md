@@ -213,3 +213,34 @@ Pinned retrieval source confirms that `/api/v1/search/find` calls
 `openviking/service/search_service.py:139-177`). It uses the embedding model
 for vector retrieval but not query-planner/VLM intent analysis. The adapter and
 canonical lifecycle capability mapping are unchanged.
+
+## Phase 05C — Controlled Live Validation Result
+
+Phase 05C used exactly one managed Jetstream2 lifecycle from initial
+`SHELVED` state at live commit
+`913391b46eadde62a0d8dc7cd426f5a993ec8555`. Target identity, SSH, the live
+`/dev/sdb` mount (`/media/volume/jisheng3_volume`), persistent clean harness,
+and protected mode-600 runtime configuration passed. The prepared dependency
+dry-run then returned a proposal that failed the mandatory
+`llama-cpp-python`-presence assertion:
+
+```text
+AssertionError: local-embed plan omitted llama-cpp-python
+```
+
+The result is **BLOCKED** and Phase 05 is not complete. In accordance with the
+frozen failure policy, no live repair or second experiment was attempted.
+OpenViking and `llama-cpp-python` were not installed; `pip check`, installed
+CUDA/NVIDIA inspection, config generation, service startup/readiness, internal
+VLM compatibility, the persistence canary, direct find retrieval, service
+restart, canonical benchmark, delete/restart check, memory-diff audit, and
+provenance trace were not run. RQ3 decision calls were zero. Because failure
+preceded validator invocation, the shell emitted no `PHASE05_RESULT_B64` and
+the authoritative remote result is `NOT_RETURNED`, while the managed session
+record is `BLOCKED`.
+
+Cleanup completed: the run-owned floating IP was disassociated and deleted,
+and `jisheng3` was verified `SHELVED`. The provider venv/state/cache and dry-run
+artifact were retained on the persistent volume. Exact structured evidence is
+in `manifests/phase-05c-openviking-live-validation.json`; Phase 05A and 05B
+history above remains unchanged.

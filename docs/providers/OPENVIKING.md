@@ -369,3 +369,37 @@ the result exists, even if an unexpected validator exit occurs; missing result
 serialization remains a transport failure. The managed lifecycle controller
 parses `payload.status` and treats non-PASS as the experiment blocker. PASS and
 BLOCKED are the only Phase 05 live outcome values.
+
+## Phase 05C Controlled Live Validation
+
+The single authorized Jetstream2 lifecycle on 2026-09-29 is **BLOCKED before
+installation and service startup**. Local and fetched remote branch heads were
+both `913391b46eadde62a0d8dc7cd426f5a993ec8555`, and the managed session synced
+the remote checkout to that exact commit. The live target was `jisheng3`
+(`5baeeae7-4c29-4903-89fe-2e9df0a8eced`). The controller dynamically resolved
+`/dev/sdb` to `/media/volume/jisheng3_volume`, used the persistent Phase 04
+harness, and automatically provisioned the protected runtime file as
+`exouser`, mode 600.
+
+The required pip dry-run for `openviking[local-embed]==0.4.22` stopped on the
+frozen guard:
+
+```text
+AssertionError: local-embed plan omitted llama-cpp-python
+```
+
+Per the no-live-fixes policy, the run did not install packages, change the
+embedding provider, alter Python or package metadata, generate `ov.conf`, start
+`openviking-server`, or retry. Consequently readiness, the compatibility
+canary, provider-internal `gpt-oss-120b` compatibility, memory-diff parsing,
+retrieval, restart persistence, canonical scenarios, and provenance were not
+run. OpenViking made zero provider-internal model calls, and RQ3 decision calls
+remain zero. No `PHASE05_RESULT_B64` payload was produced, so the remote result
+status is `NOT_RETURNED`; the managed session status is `BLOCKED`.
+
+The isolated provider venv, provider state, model cache, and run artifacts were
+retained beneath the dynamically resolved persistent-volume root. The
+run-created floating IP was disassociated and deleted, and the VM returned to
+`SHELVED`. This result does not operationally qualify OpenViking and makes no
+security, vulnerability, resurrection, or deletion-durability claim. The
+tracked evidence is `manifests/phase-05c-openviking-live-validation.json`.

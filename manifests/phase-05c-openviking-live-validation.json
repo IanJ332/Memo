@@ -1,0 +1,101 @@
+{
+  "phase": "05C",
+  "status": "BLOCKED",
+  "phase_complete": false,
+  "execution_target": "LOCAL_AND_JETSTREAM2",
+  "jetstream_lifecycles_used": 1,
+  "timestamp": "2026-09-29T18:42:54.109197+00:00",
+  "branch": "phase-05-openviking-bringup",
+  "base_live_commit": "913391b46eadde62a0d8dc7cd426f5a993ec8555",
+  "tested_commit": "913391b46eadde62a0d8dc7cd426f5a993ec8555",
+  "provider": "openviking",
+  "requested_provider_version": "0.4.22",
+  "remote_result_status": "NOT_RETURNED",
+  "blocker": {
+    "stage": "provider dependency dry-run",
+    "type": "dependency proposal assertion",
+    "message": "local-embed plan omitted llama-cpp-python",
+    "policy_result": "stopped without installation, service startup, configuration mutation, or retry"
+  },
+  "jetstream": {
+    "instance_name": "jisheng3",
+    "instance_uuid": "5baeeae7-4c29-4903-89fe-2e9df0a8eced",
+    "initial_state": "SHELVED",
+    "unshelve": "PASS",
+    "temporary_floating_ip_created": true,
+    "temporary_floating_ip_disassociated": true,
+    "temporary_floating_ip_deleted": true,
+    "final_state": "SHELVED",
+    "auto_shelve": "PASS"
+  },
+  "remote": {
+    "os": "Ubuntu 24.04.5 LTS",
+    "python": "3.12.3",
+    "volume_device": "/dev/sdb",
+    "filesystem": "ext4 (previously verified; not re-reported by the structured session payload)",
+    "mount": "/media/volume/jisheng3_volume",
+    "volume_capacity": "49G",
+    "memlife_data_root": "/media/volume/jisheng3_volume/memlife",
+    "root_free_before": "NOT_RETURNED",
+    "root_free_after": "NOT_RETURNED",
+    "volume_free_before": "NOT_RETURNED",
+    "volume_free_after": "NOT_RETURNED",
+    "remote_sync_completed_before_blocker": true
+  },
+  "protected_runtime_config": {
+    "path": "/home/exouser/Memo/.local/phase05_openviking.env",
+    "owner": "exouser",
+    "mode": "600",
+    "automatic_provisioning": "PASS",
+    "contents_serialized": false
+  },
+  "openviking_environment": {
+    "path": "/media/volume/jisheng3_volume/memlife/venvs/openviking-0.4.22",
+    "created_or_reused": true,
+    "retained": true,
+    "openviking_version": "NOT_INSTALLED",
+    "llama_cpp_python": "NOT_INSTALLED",
+    "pip_check": "NOT_RUN",
+    "cuda_nvidia_installed_audit": "NOT_RUN",
+    "dependency_plan_artifact": "/media/volume/jisheng3_volume/memlife/runs/phase-05-openviking/openviking-pip-plan.json"
+  },
+  "provider_state": "/media/volume/jisheng3_volume/memlife/providers/openviking",
+  "embedding_cache": "/media/volume/jisheng3_volume/memlife/model_cache/openviking/embedding",
+  "generated_openviking_config": "NOT_GENERATED",
+  "config_hash": "NOT_AVAILABLE",
+  "service": {
+    "startup": "NOT_RUN",
+    "readiness": "NOT_RUN",
+    "port": "NOT_BOUND",
+    "run_owned_process_started": false,
+    "cleanup": "NO_PROCESS_TO_STOP"
+  },
+  "provider_internal_vlm": {
+    "provider": "openai",
+    "model": "gpt-oss-120b",
+    "endpoint_class": "course-authorized OpenAI-compatible endpoint",
+    "compatibility": "NOT_TESTED",
+    "calls": 0
+  },
+  "rq3_decision_calls": 0,
+  "compatibility_probe": "NOT_RUN",
+  "persistence": "NOT_RUN",
+  "canonical_benchmark": "NOT_RUN",
+  "provenance_trace": "NOT_RUN",
+  "async_evidence": "NOT_RUN",
+  "structured_result": {
+    "phase05_result_b64_emitted": false,
+    "reason": "the remote shell stopped at the pre-install dependency-plan assertion before validator serialization"
+  },
+  "controller_preflight_notes": [
+    "The prepared OpenStack CLI venv lacked pydantic; this failed locally before cloud access.",
+    "The phase05 entry point referenced an undefined ROOT; this failed locally before run_managed_session.",
+    "The unchanged controller was then invoked with a process-local ROOT binding; only that invocation entered the single managed lifecycle."
+  ],
+  "secrets_audit": "PASS",
+  "claims": {
+    "openviking_operationally_qualified": false,
+    "security_claim_made": false,
+    "live_result_fabricated": false
+  }
+}
