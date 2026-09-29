@@ -94,6 +94,6 @@
     "full": "119 passed, 1 skipped",
     "shell_syntax": "NOT_AVAILABLE (Windows WSL bash launcher returned E_ACCESSDENIED; static shell contracts passed)"
   },
-  "future_live_readiness": "READY_FOR_ONE_CONTROLLED_RETRY_AFTER_COMMIT_AND_PUSH",
+  "future_live_readiness": "READY_FOR_ONE_CONTROLLED_RETRY",
   "secrets_audit": "PASS"
 }
