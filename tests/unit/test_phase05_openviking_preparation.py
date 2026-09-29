@@ -5,6 +5,8 @@ import base64
 import json
 from pathlib import Path
 import subprocess
+import sys
+import types
 
 import pytest
 
@@ -38,6 +40,7 @@ def test_remote_script_has_isolation_and_resource_guards() -> None:
     assert "llama-cpp-python" in text
     assert "memlife-harness-phase04" in text
     assert "nvidia-" in text and "cuda-" in text
+    assert "https://abetlen.github.io/llama-cpp-python/whl/cpu" in text
     assert '.local/phase05_openviking.env' in text
     assert 'test "$LIVE_CONFIG_MODE" = 600' in text
     assert "/media/volume/sdb" not in text
@@ -48,6 +51,70 @@ def test_local_embedding_requirement_is_exact() -> None:
     assert REQUIREMENT.read_text(encoding="utf-8").strip() == (
         "openviking[local-embed]==0.4.22"
     )
+
+
+@pytest.mark.parametrize(
+    "raw", ["llama-cpp-python", "llama_cpp_python", "llama.cpp.python"]
+)
+def test_distribution_names_use_pep503_canonicalization(raw: str) -> None:
+    assert _module().canonicalize_distribution_name(raw) == "llama-cpp-python"
+
+
+def test_dependency_plan_accepts_normalized_local_embed_fixture() -> None:
+    module = _module()
+    report = {
+        "install": [
+            {"metadata": {"name": "openviking", "version": "0.4.22"}},
+            {"metadata": {"name": "llama_cpp_python", "version": "0.3.35"}},
+        ]
+    }
+    old_names = {
+        item["metadata"]["name"].lower() for item in report["install"]
+    }
+    assert "llama-cpp-python" not in old_names
+    result = module.validate_dependency_plan(report)
+    assert result["status"] == "PASS"
+    assert result["llama_cpp_python_version_candidate"] == "0.3.35"
+    assert "llama-cpp-python" in result["normalized_distributions"]
+
+
+def test_dependency_plan_blocks_missing_and_forbidden_distributions() -> None:
+    module = _module()
+    missing = module.validate_dependency_plan(
+        {"install": [{"metadata": {"name": "openviking", "version": "0.4.22"}}]}
+    )
+    assert missing["status"] == "BLOCKED"
+    assert missing["blocker_type"] == "MissingRequiredDistribution"
+    assert missing["required"] == "llama-cpp-python"
+    forbidden = module.validate_dependency_plan(
+        {
+            "install": [
+                {"metadata": {"name": "openviking", "version": "0.4.22"}},
+                {"metadata": {"name": "llama_cpp_python", "version": "0.3.35"}},
+                {"metadata": {"name": "NVIDIA_CUBLAS", "version": "1"}},
+            ]
+        }
+    )
+    assert forbidden["status"] == "BLOCKED"
+    assert forbidden["forbidden_distributions"] == ["nvidia-cublas"]
+
+
+def test_local_orchestrator_import_is_stdlib_only() -> None:
+    code = (
+        "import sys; "
+        f"sys.path.insert(0, {str(PYTHON_SCRIPT.parent)!r}); "
+        "import phase05_openviking; "
+        "assert 'memlife' not in sys.modules; "
+        "assert 'pydantic' not in sys.modules"
+    )
+    completed = subprocess.run(
+        [sys.executable, "-S", "-c", code],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr
 
 
 def test_generated_config_uses_pinned_v0422_schema(tmp_path: Path, monkeypatch) -> None:
@@ -167,12 +234,24 @@ def test_provider_failure_serializes_blocked_result_and_sanitized_log(
         def restart(self):
             return None
 
+    class FakeAdapter:
+        @staticmethod
+        def from_environment(**kwargs):
+            return object()
+
+    fake_modules = {
+        "memlife.adapters.openviking": ("OpenVikingMemoryAdapter", FakeAdapter),
+        "memlife.models.memory": ("QueryCommand", object),
+        "memlife.runner.provenance": ("ProvenanceTraceRunner", object),
+        "memlife.scenarios.canonical": ("canonical_scenarios", lambda: []),
+    }
+    for name, (attribute, value) in fake_modules.items():
+        fake = types.ModuleType(name)
+        setattr(fake, attribute, value)
+        if name == "memlife.models.memory":
+            fake.WriteCommand = object
+        monkeypatch.setitem(sys.modules, name, fake)
     monkeypatch.setattr(module, "OpenVikingServiceController", FakeController)
-    monkeypatch.setattr(
-        module.OpenVikingMemoryAdapter,
-        "from_environment",
-        lambda **kwargs: object(),
-    )
     output = tmp_path / "result.json"
     module.validate_remote(output)
     result = json.loads(output.read_text(encoding="utf-8"))
@@ -188,15 +267,53 @@ def test_provider_failure_serializes_blocked_result_and_sanitized_log(
     assert result["service_log_tail"][-1] == "provider failed"
 
 
+def test_prevalidator_blocked_result_is_bounded_and_sanitized(
+    tmp_path: Path, monkeypatch
+) -> None:
+    module = _module()
+    monkeypatch.setenv("PHASE05_OPENVIKING_VLM_API_KEY", "do-not-record")
+    diagnostic = tmp_path / "install.log"
+    diagnostic.write_text(
+        "x" * 9000
+        + " api_key=do-not-record token=also-secret at 203.0.113.9",
+        encoding="utf-8",
+    )
+    output = tmp_path / "result.json"
+    result = module.write_blocked_result(
+        output,
+        stage="provider_install",
+        blocker_type="Compiler/Toolchain Error!",
+        diagnostic_file=diagnostic,
+    )
+    assert result["status"] == "BLOCKED"
+    assert result["stage"] == "provider_install"
+    assert result["blocker_type"] == "CompilerToolchainError"
+    assert len(result["blocker"]) <= 8000
+    serialized = output.read_text(encoding="utf-8")
+    assert "do-not-record" not in serialized
+    assert "also-secret" not in serialized
+    assert "203.0.113.9" not in serialized
+
+
 def test_remote_shell_emits_serialized_result_before_exit_check() -> None:
     text = REMOTE_SCRIPT.read_text(encoding="utf-8")
     assert "|| VALIDATOR_STATUS=$?" in text
     assert text.index("PHASE05_RESULT_B64=") < text.index('test "$VALIDATOR_STATUS" -eq 0')
+    for stage in (
+        "dependency_dry_run",
+        "dependency_plan",
+        "provider_install",
+        "pip_check",
+        "executable_validation",
+        "config_generation",
+    ):
+        assert stage in text
 
 
 def test_result_payload_rejects_api_key_fields() -> None:
     module = _module()
     assert module._contains_sensitive_result_key({"api_key": "redacted"}) is True
+    assert module._contains_sensitive_result_key({"nested": {"secret": "x"}}) is True
     assert module._contains_sensitive_result_key({"nested": [{"status": "BLOCKED"}]}) is False
 
 

@@ -1,7 +1,7 @@
 """Guarded Phase 05 OpenViking orchestrator and remote validator.
 
-Phase 05A only prepares this module.  The local-only preparation never invokes
-``run_remote_validation`` or the ``validate`` command.
+Local orchestration intentionally remains stdlib-only.  MemLife runtime imports
+are deferred until ``validate_remote`` is executing in the remote harness.
 """
 
 from __future__ import annotations
@@ -17,15 +17,6 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SRC_ROOT = REPO_ROOT / "src"
-if str(SRC_ROOT) not in sys.path:
-    sys.path.insert(0, str(SRC_ROOT))
-
-from memlife.adapters.openviking import OpenVikingMemoryAdapter
-from memlife.models.memory import QueryCommand, WriteCommand
-from memlife.runner.provenance import ProvenanceTraceRunner
-from memlife.scenarios.canonical import canonical_scenarios
-
 REMOTE_REPO = "/home/exouser/Memo"
 BRANCH = "phase-05-openviking-bringup"
 RESULT_PREFIX = "PHASE05_RESULT_B64="
@@ -37,6 +28,7 @@ LOCAL_RESULT = (
 )
 LIVE_AUTH_ENV = "MEMLIFE_AUTHORIZE_PHASE05_LIVE"
 LIVE_CONFIG_PATH = f"{REMOTE_REPO}/.local/phase05_openviking.env"
+REQUIRED_DISTRIBUTIONS = ("openviking", "llama-cpp-python")
 LIVE_CONFIG_VALUES = {
     "PHASE05_OPENVIKING_VLM_PROVIDER": "openai",
     "PHASE05_OPENVIKING_VLM_MODEL": "gpt-oss-120b",
@@ -106,13 +98,83 @@ def _contains_sensitive_result_key(value: object) -> bool:
     if isinstance(value, Mapping):
         for key, child in value.items():
             normalized = str(key).lower().replace("-", "_")
-            if normalized in {"api_key", "authorization", "password", "token"}:
+            if normalized in {
+                "api_key",
+                "authorization",
+                "password",
+                "token",
+                "secret",
+                "access_key",
+            }:
                 return True
             if _contains_sensitive_result_key(child):
                 return True
     elif isinstance(value, (list, tuple)):
         return any(_contains_sensitive_result_key(item) for item in value)
     return False
+
+
+def canonicalize_distribution_name(name: object) -> str:
+    """Return the PEP 503 canonical form used for dependency comparisons."""
+
+    return re.sub(r"[-_.]+", "-", str(name).strip().lower())
+
+
+def _git_commit_tested() -> str:
+    return subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+        cwd=REPO_ROOT,
+    ).stdout.strip()
+
+
+def validate_dependency_plan(report: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate and describe a pip ``--report`` plan without losing context."""
+
+    candidates: dict[str, str] = {}
+    normalized_names: set[str] = set()
+    for item in report.get("install", []):
+        metadata = item.get("metadata", {}) if isinstance(item, Mapping) else {}
+        name = canonicalize_distribution_name(metadata.get("name", ""))
+        if not name:
+            continue
+        normalized_names.add(name)
+        version = str(metadata.get("version", "")).strip()
+        if version:
+            candidates[name] = version
+
+    observed = sorted(normalized_names)
+    forbidden = sorted(
+        name for name in normalized_names if name.startswith(("nvidia-", "cuda-"))
+    )
+    missing = [name for name in REQUIRED_DISTRIBUTIONS if name not in normalized_names]
+    result: dict[str, Any] = {
+        "status": "PASS",
+        "stage": "dependency_plan",
+        "git_commit_tested": _git_commit_tested(),
+        "normalized_distributions": observed,
+        "required_distributions": list(REQUIRED_DISTRIBUTIONS),
+        "openviking_version_candidate": candidates.get("openviking"),
+        "llama_cpp_python_version_candidate": candidates.get("llama-cpp-python"),
+        "forbidden_distributions": forbidden,
+    }
+    if missing:
+        result.update(
+            status="BLOCKED",
+            blocker_type="MissingRequiredDistribution",
+            missing_required_distributions=missing,
+            required=missing[0],
+            blocker=f"dependency plan omitted required distribution: {missing[0]}",
+        )
+    elif forbidden:
+        result.update(
+            status="BLOCKED",
+            blocker_type="ForbiddenDistribution",
+            blocker="dependency plan contains forbidden CUDA/NVIDIA distributions",
+        )
+    return result
 
 
 def run_remote_validation(
@@ -165,8 +227,8 @@ def _sanitize_runtime_text(value: object) -> str:
     if secret and secret != "empty":
         text = text.replace(secret, "[REDACTED]")
     text = re.sub(
-        r'''(?i)["']?api[_-]?key["']?\s*[:=]\s*["']?[^\s,"'}\]]+["']?''',
-        "api_key=[REDACTED]",
+        r'''(?i)(["']?(?:api[_-]?key|authorization|password|token|secret|access[_-]?key)["']?\s*[:=]\s*)["']?[^\s,"'}\]]+["']?''',
+        r"\1[REDACTED]",
         text,
     )
     text = re.sub(
@@ -180,6 +242,37 @@ def _sanitize_runtime_text(value: object) -> str:
         text,
     )
     return text[-8000:]
+
+
+def write_blocked_result(
+    output: Path,
+    *,
+    stage: str,
+    blocker_type: str,
+    message: object = "",
+    diagnostic_file: Path | None = None,
+) -> dict[str, Any]:
+    """Write a bounded, sanitized result for an expected pre-validator gate."""
+
+    diagnostic = str(message or "")
+    if diagnostic_file is not None:
+        try:
+            diagnostic = diagnostic_file.read_text(
+                encoding="utf-8", errors="replace"
+            )
+        except OSError as exc:
+            diagnostic = f"diagnostic unavailable: {type(exc).__name__}"
+    result = {
+        "status": "BLOCKED",
+        "stage": canonicalize_distribution_name(stage).replace("-", "_"),
+        "blocker_type": re.sub(r"[^A-Za-z0-9_.-]", "", blocker_type)[:120]
+        or "PreflightError",
+        "blocker": _sanitize_runtime_text(diagnostic),
+        "git_commit_tested": _git_commit_tested(),
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    return result
 
 
 def _service_log_tail(path: Path, *, lines: int = 40) -> list[str]:
@@ -303,15 +396,18 @@ def write_config(output: Path) -> None:
 
 def validate_remote(output: Path) -> None:
     require_live_authorization()
+    src_root = REPO_ROOT / "src"
+    if str(src_root) not in sys.path:
+        sys.path.insert(0, str(src_root))
+    from memlife.adapters.openviking import OpenVikingMemoryAdapter
+    from memlife.models.memory import QueryCommand, WriteCommand
+    from memlife.runner.provenance import ProvenanceTraceRunner
+    from memlife.scenarios.canonical import canonical_scenarios
+
     controller = OpenVikingServiceController()
     result: dict[str, Any] = {
         "status": "IN_PROGRESS",
-        "git_commit_tested": subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.strip(),
+        "git_commit_tested": _git_commit_tested(),
         "model_calls": "provider-internal only; RQ3=0",
     }
     try:
@@ -381,12 +477,34 @@ def main(argv: Sequence[str] | None = None) -> int:
     config.add_argument("--output", type=Path, required=True)
     validate = subparsers.add_parser("validate")
     validate.add_argument("--output", type=Path, required=True)
+    plan = subparsers.add_parser("dependency-plan")
+    plan.add_argument("--report", type=Path, required=True)
+    plan.add_argument("--output", type=Path, required=True)
+    blocked = subparsers.add_parser("blocked-result")
+    blocked.add_argument("--output", type=Path, required=True)
+    blocked.add_argument("--stage", required=True)
+    blocked.add_argument("--type", dest="blocker_type", required=True)
+    blocked.add_argument("--message", default="")
+    blocked.add_argument("--diagnostic-file", type=Path)
     args = parser.parse_args(argv)
     if args.command == "write-config":
         require_live_authorization()
         write_config(args.output)
-    else:
+    elif args.command == "validate":
         validate_remote(args.output)
+    elif args.command == "dependency-plan":
+        report = json.loads(args.report.read_text(encoding="utf-8"))
+        result = validate_dependency_plan(report)
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    else:
+        write_blocked_result(
+            args.output,
+            stage=args.stage,
+            blocker_type=args.blocker_type,
+            message=args.message,
+            diagnostic_file=args.diagnostic_file,
+        )
     return 0
 
 

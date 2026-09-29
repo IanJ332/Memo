@@ -40,6 +40,30 @@ RUN_ROOT="$MEMLIFE_DATA_ROOT/runs/phase-05-openviking"
 CONFIG="$PROVIDER_STATE/ov.conf"
 RESULT="$RUN_ROOT/phase-05-result.json"
 OPENVIKING_REQUIREMENTS="$REPO/requirements/providers/openviking.txt"
+LLAMA_CPU_WHEEL_INDEX="https://abetlen.github.io/llama-cpp-python/whl/cpu"
+PLAN_REPORT="$RUN_ROOT/openviking-pip-plan.json"
+PLAN_RESULT="$RUN_ROOT/openviking-dependency-plan-result.json"
+
+emit_result() {
+    printf 'PHASE05_RESULT_B64=%s\n' "$(base64 -w0 "$RESULT")"
+}
+
+blocked_result() {
+    stage="$1"
+    blocker_type="$2"
+    diagnostic_file="${3:-}"
+    if [ -n "$diagnostic_file" ]; then
+        "$HARNESS_PYTHON" "$REPO/scripts/jetstream/phase05_openviking.py" blocked-result \
+            --output "$RESULT" --stage "$stage" --type "$blocker_type" \
+            --diagnostic-file "$diagnostic_file"
+    else
+        "$HARNESS_PYTHON" "$REPO/scripts/jetstream/phase05_openviking.py" blocked-result \
+            --output "$RESULT" --stage "$stage" --type "$blocker_type" \
+            --message "$stage failed"
+    fi
+    emit_result
+    exit 0
+}
 
 test "$HARNESS_VENV" != "$LEGACY_VENV"
 test -x "$HARNESS_PYTHON"
@@ -61,28 +85,53 @@ export PHASE05_RUN_ROOT="$RUN_ROOT"
 if [ ! -e "$OPENVIKING_VENV" ]; then
     python3 -m venv "$OPENVIKING_VENV"
 fi
-"$OPENVIKING_PYTHON" -m pip install --dry-run --ignore-installed --report "$RUN_ROOT/openviking-pip-plan.json" -r "$OPENVIKING_REQUIREMENTS"
-"$HARNESS_PYTHON" -c 'import json,sys; p=json.load(open(sys.argv[1])); n={str(x.get("metadata",{}).get("name","")).lower() for x in p.get("install",[])}; assert "llama-cpp-python" in n, "local-embed plan omitted llama-cpp-python"' "$RUN_ROOT/openviking-pip-plan.json"
-if "$HARNESS_PYTHON" -c 'import json,sys; p=json.load(open(sys.argv[1])); n=[str(x.get("metadata",{}).get("name","")).lower() for x in p.get("install",[])]; raise SystemExit(0 if any(x.startswith(("nvidia-","cuda-")) for x in n) else 1)' "$RUN_ROOT/openviking-pip-plan.json"; then
-    printf '%s\n' 'OpenViking plan includes unexpected CUDA/NVIDIA packages' >&2
-    exit 44
+DRY_RUN_LOG="$RUN_ROOT/openviking-pip-dry-run.log"
+if ! "$OPENVIKING_PYTHON" -m pip install --dry-run --ignore-installed \
+    --report "$PLAN_REPORT" --extra-index-url "$LLAMA_CPU_WHEEL_INDEX" \
+    -r "$OPENVIKING_REQUIREMENTS" >"$DRY_RUN_LOG" 2>&1; then
+    blocked_result dependency_dry_run PipDryRunError "$DRY_RUN_LOG"
 fi
-"$OPENVIKING_PYTHON" -m pip install --no-cache-dir -r "$OPENVIKING_REQUIREMENTS"
+if ! "$HARNESS_PYTHON" "$REPO/scripts/jetstream/phase05_openviking.py" \
+    dependency-plan --report "$PLAN_REPORT" --output "$PLAN_RESULT"; then
+    blocked_result dependency_plan DependencyPlanValidationError
+fi
+if [ "$("$HARNESS_PYTHON" -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$PLAN_RESULT")" != PASS ]; then
+    cp "$PLAN_RESULT" "$RESULT"
+    emit_result
+    exit 0
+fi
 
-"$OPENVIKING_PYTHON" -m pip check
-"$OPENVIKING_PYTHON" -c 'import importlib.metadata as m; assert m.version("openviking") == "0.4.22"; assert m.version("llama-cpp-python")'
-test -x "$OPENVIKING_SERVICE"
+INSTALL_LOG="$RUN_ROOT/openviking-install.log"
+if ! "$OPENVIKING_PYTHON" -m pip install --no-cache-dir \
+    --extra-index-url "$LLAMA_CPU_WHEEL_INDEX" \
+    -r "$OPENVIKING_REQUIREMENTS" >"$INSTALL_LOG" 2>&1; then
+    blocked_result provider_install ProviderInstallError "$INSTALL_LOG"
+fi
+
+PIP_CHECK_LOG="$RUN_ROOT/openviking-pip-check.log"
+if ! "$OPENVIKING_PYTHON" -m pip check >"$PIP_CHECK_LOG" 2>&1; then
+    blocked_result pip_check PipCheckError "$PIP_CHECK_LOG"
+fi
+if ! "$OPENVIKING_PYTHON" -c 'import importlib.metadata as m; assert m.version("openviking") == "0.4.22"; assert m.version("llama-cpp-python")'; then
+    blocked_result executable_validation DistributionMetadataError
+fi
+if [ ! -x "$OPENVIKING_SERVICE" ]; then
+    blocked_result executable_validation MissingOpenVikingExecutable
+fi
 if "$OPENVIKING_PYTHON" -m pip list --format=json | "$HARNESS_PYTHON" -c 'import json,sys; n=[p["name"].lower() for p in json.load(sys.stdin)]; raise SystemExit(0 if any(x.startswith(("nvidia-","cuda-")) for x in n) else 1)'; then
-    printf '%s\n' 'OpenViking environment contains unexpected CUDA/NVIDIA packages' >&2
-    exit 45
+    blocked_result pip_check ForbiddenInstalledDistribution
 fi
 
 cd "$REPO"
-"$HARNESS_PYTHON" scripts/jetstream/phase05_openviking.py write-config --output "$CONFIG"
+CONFIG_LOG="$RUN_ROOT/openviking-config.log"
+if ! "$HARNESS_PYTHON" scripts/jetstream/phase05_openviking.py write-config \
+    --output "$CONFIG" >"$CONFIG_LOG" 2>&1; then
+    blocked_result config_generation ConfigGenerationError "$CONFIG_LOG"
+fi
 VALIDATOR_STATUS=0
 "$HARNESS_PYTHON" scripts/jetstream/phase05_openviking.py validate --output "$RESULT" || VALIDATOR_STATUS=$?
 if [ -s "$RESULT" ]; then
-    printf 'PHASE05_RESULT_B64=%s\n' "$(base64 -w0 "$RESULT")"
+    emit_result
 else
     printf '%s\n' 'Phase 05 validator produced no structured result' >&2
     exit 46

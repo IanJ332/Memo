@@ -4,6 +4,8 @@ import importlib.util
 import json
 from pathlib import Path
 import subprocess
+import sys
+import types
 
 import pytest
 
@@ -101,6 +103,36 @@ def test_secret_paths_are_gitignored() -> None:
     result = subprocess.run(["git", "check-ignore", *paths], cwd=jetstreamctl.REPO_ROOT, capture_output=True, text=True, check=False)
     assert result.returncode == 0
     assert set(result.stdout.splitlines()) == set(paths)
+
+
+def test_phase05_entrypoint_uses_repository_manifest_without_root_monkeypatch(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    authorization_calls: list[bool] = []
+    fake_phase05 = types.ModuleType("phase05_openviking")
+    fake_phase05.require_live_authorization = lambda: authorization_calls.append(True)
+    fake_phase05.run_remote_validation = lambda **kwargs: {"status": "BLOCKED"}
+    monkeypatch.setitem(sys.modules, "phase05_openviking", fake_phase05)
+    monkeypatch.setattr(
+        jetstreamctl,
+        "run_command",
+        lambda *args, **kwargs: subprocess.CompletedProcess(args, 0, "a" * 40 + "\n", ""),
+    )
+    captured: dict[str, object] = {}
+
+    def fake_managed_session(credentials, **kwargs):
+        captured.update(kwargs)
+        return {"status": "BLOCKED"}
+
+    monkeypatch.setattr(jetstreamctl, "run_managed_session", fake_managed_session)
+    result = jetstreamctl.run_phase05({"credential": "not-used"})
+    assert result["status"] == "BLOCKED"
+    assert authorization_calls == [True]
+    assert captured["manifest_path"] == (
+        jetstreamctl.REPO_ROOT
+        / "runtime_reports"
+        / "phase-05-openviking-session.json"
+    )
 
 
 def test_external_network_selection_requires_unambiguous_result() -> None:

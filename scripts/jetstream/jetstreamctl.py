@@ -919,7 +919,7 @@ def run_phase05(credentials: Mapping[str, str]) -> dict[str, Any]:
     return run_managed_session(
         credentials,
         phase="05",
-        manifest_path=ROOT / "runtime_reports" / "phase-05-openviking-session.json",
+        manifest_path=REPO_ROOT / "runtime_reports" / "phase-05-openviking-session.json",
         remote_work=lambda address, facts: run_remote_validation(
             address=address,
             facts=facts,
