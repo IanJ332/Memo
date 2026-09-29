@@ -46,15 +46,23 @@ compatibility probe, benchmark, or real trace ran. This is a persisted harness
 state blocker, not evidence against the isolation architecture or Hindsight's
 memory semantics.
 
+Phase 04B then passed a local-only clean-harness recovery. The dependency audit
+found that Mem0 2.2.1 directly owns its OpenAI and protobuf requirements, while
+Hindsight 0.10.1 directly owns LiteLLM on Linux. The repository's explicit
+`openai==3.13.0` pin was used only by `scripts/test_jetstream_llm.py`, so it
+moved from core to `requirements/infra/jetstream-llm.txt`. No protobuf or
+OpenAI override was added to the Mem0 harness.
+
 ## Provider Runtime Isolation
 
-The reviewed retry architecture uses two intentionally independent Python
-process environments. The MemLife harness and Mem0 remain in
-`/home/exouser/Memo/.venv`. The Hindsight API runtime is derived from the live
+The reviewed retry architecture uses three intentionally distinct environment
+identities. `/home/exouser/Memo/.venv` is contaminated evidence and is never
+selected for execution. The clean MemLife/Mem0 harness is derived from the live
 `/dev/sdb` mount as
-`<MEMLIFE_DATA_ROOT>/venvs/hindsight-0.10.1`. Only
-`requirements/core.txt` is applied to the harness during Phase 04 setup; only
-`requirements/providers/hindsight.txt` is applied to the provider venv.
+`<MEMLIFE_DATA_ROOT>/venvs/memlife-harness-phase04`; it installs
+`requirements/core.txt` plus `requirements/providers/mem0.txt`. The Hindsight
+API runtime remains `<MEMLIFE_DATA_ROOT>/venvs/hindsight-0.10.1` and receives
+only `requirements/providers/hindsight.txt`.
 
 Each environment must pass its own `pip check`. The harness is inspected for
 `mem0ai` and `protobuf` before and after provider setup, and the provider venv
@@ -64,6 +72,13 @@ inside either individual environment remains a hard failure. Existing provider
 venvs are reused only if their interpreter, pinned package, executable, and
 dependency graph validate; incomplete state fails closed and is not deleted or
 rebuilt automatically.
+
+The clean harness is also fail-closed. Before installation, one combined pip
+dry-run report extracts Mem0, protobuf, OpenAI, optional LiteLLM,
+sentence-transformers, and Torch and rejects CUDA/NVIDIA packages. CPU Torch is
+allowed. Reuse requires an exact recorded fingerprint plus `pip check` and
+direct-version validation. The Phase 02B Mem0 lifecycle gate must pass before
+the Hindsight venv, pg0 link, or service is prepared.
 
 The boundary is loopback HTTP at `127.0.0.1:8888`. Hindsight owns its API,
 embedded pg0 process, ONNX runtime, and provider dependencies; the harness owns
@@ -182,9 +197,10 @@ same-ID curation is not represented as a fabricated supersession chain.
 The exact non-secret configuration is in `configs/hindsight-phase04.json`; the
 runtime environment is defined by `scripts/jetstream/phase04_remote.sh`, with
 service ownership and environment fingerprinting in
-`scripts/jetstream/phase04_runtime.py`. A future separately authorized recovery
-must first repair or recreate the harness `.venv` under an explicitly reviewed
-procedure; no further live retry is authorized by Phase 04 attempt 2.
+`scripts/jetstream/phase04_runtime.py`. Phase 04B explicitly preserves the old
+repository `.venv` and creates or validates the clean harness alongside it on
+the persistent volume. The automation will not repair, delete, or execute the
+legacy environment.
 
 For the 2026-09-28 run, dependency installation blocked before the compatibility
 probe. The controller still deleted its temporary floating IP and returned the
@@ -196,3 +212,9 @@ stopped when the harness preflight exposed the persisted protobuf/OpenAI
 conflicts. It did not touch the isolated provider environment or start a
 service. Cleanup again deleted the owned temporary floating IP and verified the
 VM `SHELVED` with no address.
+
+Phase 04B ran locally only. Its disposable clean environment passed `pip check`,
+the Phase 02B semantic gate, focused Phase 03 and Phase 03B regressions, and the
+full local suite. This makes the architecture ready for one separately
+authorized live retry; it does not supply any Hindsight compatibility,
+lifecycle, persistence, or provenance result.

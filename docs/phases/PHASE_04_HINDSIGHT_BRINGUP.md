@@ -9,7 +9,9 @@ dependency incompatibility. Phase 04A passed the isolated-runtime redesign.
 The one authorized attempt 2 is also **BLOCKED**: its mandatory harness
 preflight found that attempt 1's incompatible packages remained installed in
 the remote harness `.venv`. The retry stopped before touching the isolated
-Hindsight environment.
+Hindsight environment. Phase 04B has now passed its local clean-harness recovery
+and regression gates. Phase 04 is **READY_FOR_RETRY**, but no third live attempt
+has occurred and no Hindsight semantics have yet been measured.
 
 ## Why Hindsight
 
@@ -29,6 +31,9 @@ seek a vulnerability and made no RQ3 or final RQ4 claim.
   `59222a27fcd59dc474ec282141a8b33bbc376088`
 - Attempt 2: 2026-09-29, tested commit
   `2f85ba07a3172103c6008f566c3c017fd5cce884`
+- Phase 04B base: `b366e3cb3c0abda521955cf99410141117de32ef`
+- Phase 04B locally validated implementation:
+  `e28d47de8ec1c27530159347699f0a24cce71c6d`
 - Blocked live-attempt configuration SHA-256:
   `1174925b29fa288e88899f9d0fd906865d5117ecc671d16d4af93ec356436b00`
 - Isolated-retry configuration SHA-256:
@@ -56,29 +61,41 @@ Hindsight 0.10.1 requires `protobuf>=7.35.1`; Mem0 2.2.1 requires
 `protobuf>=5.29.6,<7.0.0`. Pip resolved protobuf 7.36.2 and correctly reported
 the single shared environment as inconsistent.
 
-The reviewed retry separates the dependency graphs:
+Phase 04B separates three environment identities:
 
-- Harness environment: `/home/exouser/Memo/.venv`, containing MemLife, Mem0,
-  tests, benchmark code, and result collection.
+- Legacy contaminated environment: `/home/exouser/Memo/.venv`, retained as
+  forensic evidence and explicitly excluded from execution.
+- Clean harness environment:
+  `<live /dev/sdb mount>/memlife/venvs/memlife-harness-phase04`, containing
+  MemLife, tests, Mem0, benchmark code, trace code, and result collection.
 - Provider environment:
   `<live /dev/sdb mount>/memlife/venvs/hindsight-0.10.1`, containing only the
   self-hosted Hindsight service runtime.
 - Communication boundary: loopback HTTP at `127.0.0.1:8888` through the
   existing `UrllibHindsightTransport`.
 
-The live mount remains dynamically derived with `findmnt /dev/sdb`. Explicit
-`HARNESS_PYTHON`, `HINDSIGHT_VENV`, and `HINDSIGHT_PYTHON` names prevent command
-ownership from being blurred. Harness health (`mem0ai`, protobuf, and `pip
-check`) is captured before and after provider setup. The provider environment
-has its own Hindsight/protobuf inspection and `pip check`. Cross-environment
-protobuf versions need not match; a failed check inside either environment is
-still fatal.
+The live mount remains dynamically derived with `findmnt /dev/sdb`.
+`HARNESS_PYTHON` is the interpreter below the persistent-volume clean harness,
+never an activated or repository-local interpreter. Harness health (`mem0ai`,
+protobuf, OpenAI, optional LiteLLM, sentence-transformers, Torch,
+qdrant-client, and `pip check`) is captured before and after provider setup.
+The provider environment has its own Hindsight/protobuf inspection and `pip
+check`. Cross-environment protobuf versions need not match; a failed check
+inside either environment is still fatal.
 
 An absent provider venv may be created and populated from the service-only
 requirements. A present venv is reused only after validation. Incomplete or
 inconsistent state fails closed with bounded diagnostics and is never removed
 automatically. The provider fingerprint records Python, pip, Hindsight, and
 protobuf versions plus a SHA-256 of normalized `pip freeze` output.
+
+The clean harness follows the same fail-closed rule. A new venv is resolved and
+installed from `requirements/core.txt` plus
+`requirements/providers/mem0.txt`. A combined `pip install --dry-run --report`
+is inspected before installation. CPU Torch is selected through the official
+CPU wheel index; CUDA/NVIDIA packages are rejected. An existing candidate must
+match its recorded environment fingerprint exactly and pass `pip check` and
+the pinned direct-version checks. It is never deleted or repaired in place.
 
 Service start uses the executable inside `HINDSIGHT_VENV/bin`. The benchmark
 and validation entry point use `HARNESS_PYTHON`. Restart replaces only the
@@ -97,6 +114,32 @@ existing harness itself was unhealthy: `mem0ai==2.2.1` was paired with
 `openai==3.13.0`. `pip check` failed exactly as required. Because the failure
 preceded provider setup, the run neither installed nor validated the separate
 Hindsight venv.
+
+## Phase 04B Clean Harness Recovery
+
+The repository-wide ownership audit found no OpenAI SDK import in production
+MemLife modules or tests. The sole direct import is
+`scripts/test_jetstream_llm.py`. Its `openai==3.13.0` pin moved from core to
+`requirements/infra/jetstream-llm.txt`. Mem0 2.2.1 itself directly requires
+`openai>=1.90.0` and `protobuf>=5.29.6,<7.0.0`; its optional `llms` extra is not
+installed. Hindsight 0.10.1 directly requires LiteLLM on Linux, so the
+LiteLLM/OpenAI conflict observed in attempt 2 belongs to the contaminated
+shared history, not the new Mem0-only harness graph.
+
+No protobuf or OpenAI override was added. In a disposable Windows Python 3.14.3
+venv, the combined direct requirement set resolved to Mem0 2.2.1, protobuf
+6.33.6, OpenAI 3.20.0, no LiteLLM, sentence-transformers 6.1.0, CPU-only Torch
+2.14.0+cpu, and qdrant-client 1.19.1. `pip check` passed. These are local
+validation facts, not fabricated future Jetstream versions; the live resolver
+may select other compatible transitive versions.
+
+Before Hindsight paths or service state are prepared, the remote flow now runs
+unit/contract tests and `phase04_mem0_regression.py`. The latter constructs
+Mem0 and requires write, query, same-ID update, native history, reconstruction,
+delete, reconstructed history, and post-delete absence. Failure prevents all
+Hindsight setup. The clean harness fingerprint records Python, pip, Mem0,
+protobuf, OpenAI, optional LiteLLM, sentence-transformers, Torch,
+qdrant-client, and normalized `pip freeze` SHA-256.
 
 ## Internal LLM Configuration
 
@@ -248,6 +291,13 @@ lifecycle/trace regression had `17 passed`. The second command is historical
 reproduction provenance only: the one authorized retry has been consumed and
 must not be rerun without explicit approval.
 
+Phase 04B validation used a newly created disposable environment rather than
+the development `.venv`: `74 passed` (unit), `5 passed` (contract), `5 passed,
+1 skipped` (integration), and `84 passed, 1 skipped` (full). The direct Phase
+02B semantic gate passed every lifecycle check. Focused Phase 03 and Phase 03B
+regressions passed `15` and `13` tests respectively. The skip remains the
+opt-in real Hindsight service test. Jetstream was not contacted.
+
 The controller recorded exact VM UUID
 `5baeeae7-4c29-4903-89fe-2e9df0a8eced`, deleted the temporary floating IP it
 created, and returned the initially shelved VM to `SHELVED`.
@@ -267,14 +317,17 @@ with no address.
 - `31e7cc6d975e2ae708b5736734c5c59961b63387` — record the sanitized blocked result
 - `2f85ba07a3172103c6008f566c3c017fd5cce884` — complete Phase 04A isolated-runtime retry preparation; exact retry tested commit
 - `7af3156` — record the sanitized attempt-2 harness-preflight blocker
+- `31ea2a4172c8fb68ee04e8f81517fabd83ef8d6b` — separate harness dependency ownership
+- `b87db40cb3c0efc30d3f295413fad23217e34673` — prepare the clean persistent-volume harness runtime
+- `e28d47de8ec1c27530159347699f0a24cce71c6d` — validate clean-harness recovery and fail-closed behavior
 
-The final trace-only documentation commit is the branch HEAD reported in the
-completion response. The approved base remains
-`c125a59740819f264b5d57c67cde293fbf490346`.
+The Phase 04B documentation commit is the branch HEAD reported in the
+completion response. The Phase 04B base is
+`b366e3cb3c0abda521955cf99410141117de32ef`.
 
 ## Next Experiment Handoff
 
-Phase 04 remains BLOCKED and all live benchmark fields remain NOT RUN. A new
-conversation must define and review a harness-recovery procedure before any
-separately authorized live lifecycle. No further retry is authorized by this
-phase.
+Phase 04 is READY_FOR_RETRY and all Hindsight live benchmark fields remain NOT
+RUN. A new conversation may perform one separately authorized local +
+Jetstream2 retry using the mandatory clean-harness-first order. The legacy
+`.venv` remains evidence only and must not participate in execution.
