@@ -1,0 +1,176 @@
+{
+  "phase": "05G",
+  "status": "PASS",
+  "phase05_complete": false,
+  "execution_target": "LOCAL + JETSTREAM2",
+  "jetstream_lifecycles_used": 1,
+  "branch": "phase-05-openviking-bringup",
+  "base_live_commit": "aa976a7d9b2ef37d8e8ba49b4c5091c1ec83e75e",
+  "tested_commit": "aa976a7d9b2ef37d8e8ba49b4c5091c1ec83e75e",
+  "authoritative_result": {
+    "status": "PASS",
+    "stage": "complete",
+    "local_artifact": "runtime_reports/phase-05-openviking/result.json",
+    "managed_session_artifact": "runtime_reports/phase-05-openviking-session.json"
+  },
+  "managed_lifecycle": {
+    "instance": "jisheng3",
+    "uuid": "5baeeae7-4c29-4903-89fe-2e9df0a8eced",
+    "initial_state": "SHELVED",
+    "opened_by_this_run": true,
+    "unshelve_success": true,
+    "temporary_fip_created": true,
+    "temporary_fip_disassociated": true,
+    "temporary_fip_deleted": true,
+    "auto_shelve_success": true,
+    "final_state": "SHELVED",
+    "second_live_run": false
+  },
+  "remote_execution": {
+    "repository": "/home/exouser/Memo",
+    "branch": "phase-05-openviking-bringup",
+    "tested_head": "aa976a7d9b2ef37d8e8ba49b4c5091c1ec83e75e",
+    "remote_tree_clean": true,
+    "volume_device": "/dev/sdb",
+    "volume_mount": "/media/volume/jisheng3_volume",
+    "memlife_data_root": "/media/volume/jisheng3_volume/memlife"
+  },
+  "environment": {
+    "provider_venv": "/media/volume/jisheng3_volume/memlife/venvs/openviking-0.4.22",
+    "reuse_expected_from_phase05e": true,
+    "reuse_flag_serialized": false,
+    "openviking": "0.4.22 (fail-closed metadata gate passed)",
+    "llama_cpp_python": "present (exact version not serialized)",
+    "pip_check": "PASS (pre-validator gate)",
+    "cuda_nvidia_guard": "PASS (no forbidden installed distribution detected)",
+    "provider_state_retained": true,
+    "model_cache_retained": true
+  },
+  "embedding": {
+    "provider": "local",
+    "model": "bge-small-zh-v1.5-f16",
+    "dimension": 512,
+    "runtime": "CPU-only llama-cpp-python",
+    "cache": "/media/volume/jisheng3_volume/memlife/model_cache/openviking/embedding",
+    "load_result": "PASS (readiness check embedding=ok)"
+  },
+  "service": {
+    "process_started": true,
+    "pid": "not serialized",
+    "process_alive_at_result_capture": true,
+    "process_exit_code": null,
+    "health": {
+      "service_liveness": "NOT_ESTABLISHED",
+      "status": null,
+      "healthy": true,
+      "version": "0.4.22",
+      "note": "The live payload did not expose status=ok, so the strict liveness predicate did not pass."
+    },
+    "readiness": {
+      "result": "PASS",
+      "status": "ready",
+      "checks": {
+        "agfs": {
+          "status": "ok",
+          "checks": {
+            "filesystem": "ok",
+            "multiwrite_sync": "not_supported"
+          }
+        },
+        "vectordb": "ok",
+        "api_key_manager": "not_configured",
+        "embedding": "ok",
+        "ollama": "not_configured"
+      }
+    },
+    "cleanup": "run-owned process stopped by controller finally block",
+    "log_result": "bounded sanitized tail retained; shutdown tail ends with RuntimeError: Event loop is closed"
+  },
+  "internal_vlm": {
+    "provider": "openai",
+    "model": "gpt-oss-120b",
+    "compatibility": "PASS through completed semantic extraction tasks",
+    "rq3_decision_calls": 0
+  },
+  "semantic_compatibility": {
+    "canary": "Phase 05 persistence canary is amber.",
+    "source_event_id": "4fe51613-4c42-4867-bb24-4f2de8bad4c6",
+    "provider_memory_uris": [
+      "viking://user/default/memories/entities/system_component/phase_05_persistence_canary.md"
+    ],
+    "session_create": "PASS inside adapter write flow; ID not promoted to top-level result",
+    "message_add": "PASS inside adapter write flow",
+    "commit": "PASS inside adapter write flow",
+    "archive_uri": "not promoted to top-level result",
+    "task_id": "not promoted to top-level result",
+    "task_final_status": "completed as required by successful adapter write; canary task ID/status not promoted",
+    "quiescence": "provider-reported completion used; canary duration not promoted",
+    "memory_diff": "parsed and correlated to one provider memory URI; operation counts not promoted",
+    "find_retrieval_before_restart": 1,
+    "service_restart": "PASS",
+    "find_retrieval_after_restart": 1,
+    "readiness_after_restart": "PASS implicitly through successful adapter restart; separate diagnostics not serialized"
+  },
+  "canonical_benchmark": {
+    "result_count": 24,
+    "baseline": "RUN; write/find/inspect completed, while exact-match normalization classified the find result ABSENT/current_state_correct=false",
+    "correction_update": "UNSUPPORTED as expected",
+    "supersession": "UNSUPPORTED as expected; later inspect recorded KeyError: 'v2'",
+    "revocation": "UNSUPPORTED as expected",
+    "delete_restart": "supported; correlated delete, post-delete query, restart, and post-restart query completed",
+    "errors": [
+      "supersession final INSPECT: KeyError: 'v2'"
+    ]
+  },
+  "memory_diff": {
+    "canary_provider_uri_count": 1,
+    "canary_adds": "not separately serialized",
+    "canary_updates": "not separately serialized",
+    "canary_deletes": "not separately serialized",
+    "canary_skipped": "not separately serialized",
+    "canonical_observed_operation_counts": {
+      "baseline": 3,
+      "correction_update": 1,
+      "revocation": 2,
+      "delete_restart": 2,
+      "supersession": 0
+    }
+  },
+  "provenance": {
+    "trace_count": 5,
+    "known": [
+      "source event to provider memory URI correlation",
+      "provider session/archive/task metadata for canonical successful writes",
+      "memory_diff add operations for correlated canonical memories",
+      "retrieval candidate provider URIs"
+    ],
+    "unknown": [
+      "semantic message-span causality",
+      "hidden VLM reasoning",
+      "supersession lineage",
+      "revocation lineage"
+    ],
+    "trace_result": "completed for all five canonical scenarios; unsupported and unknown states preserved"
+  },
+  "tests": {
+    "live_provider": "PASS",
+    "mem0": "not rerun in Phase 05G; Phase 05F: 5 passed",
+    "hindsight": "not rerun in Phase 05G; Phase 05F: 11 passed, 1 skipped",
+    "phase03": "live canonical run completed",
+    "phase03b": "live provenance run completed",
+    "full": "not rerun; Phase 05F: 130 passed, 1 skipped"
+  },
+  "configuration": {
+    "changed": false,
+    "config_hash": "not serialized"
+  },
+  "secrets_audit": "PASS",
+  "completion_gaps": [
+    "Strict service liveness remained NOT_ESTABLISHED because health status was null despite healthy=true and version=0.4.22.",
+    "The result contract did not promote canary session ID, archive URI, task ID, quiescence duration, or per-operation memory_diff counts.",
+    "The provider-environment reuse flag, exact llama-cpp-python version, service PID, and config hash were not serialized.",
+    "The canonical supersession scenario preserved its expected UNSUPPORTED operation but its final inspect step recorded KeyError: 'v2'."
+  ],
+  "blockers": [],
+  "remote_facts_fabricated": false
+}

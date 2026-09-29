@@ -386,3 +386,48 @@ No provider settings changed: embedding remains local
 one retry. Session/message/commit/task/memory-diff writes, direct-find queries,
 unsupported update/supersession/revocation, correlated URI deletion, and
 service restart semantics are unchanged.
+
+## Phase 05G — OpenViking Readiness and Semantic Live Retry
+
+Phase 05G used exactly one managed Jetstream2 lifecycle on 2026-09-29. Local,
+origin, and the remote execution checkout all tested
+`aa976a7d9b2ef37d8e8ba49b4c5091c1ec83e75e` on
+`phase-05-openviking-bringup`. The VM began `SHELVED`; the normal controller
+unshelved it, created and associated one owned temporary floating IP, used the
+live `/dev/sdb` mount at `/media/volume/jisheng3_volume`, deleted the owned IP,
+and automatically returned the VM to `SHELVED`. There was no live repair and
+no second execution.
+
+The remote validator emitted an authoritative `status: PASS`, `stage:
+complete` payload. The fail-closed environment gates passed for OpenViking
+0.4.22, `llama-cpp-python`, `pip check`, the executable, and absence of
+CUDA/NVIDIA packages. `/ready` passed with `status: ready`; AGFS filesystem,
+vector DB, and embedding reported `ok`. `/health` supplied `healthy: true` and
+version `0.4.22` but a null status, leaving the strict `service_liveness` field
+`NOT_ESTABLISHED`. This mismatch is retained as an incomplete Phase 05
+criterion even though the remote validator status is PASS.
+
+The single-message amber canary completed extraction and correlated source
+event `4fe51613-4c42-4867-bb24-4f2de8bad4c6` to
+`viking://user/default/memories/entities/system_component/phase_05_persistence_canary.md`.
+Direct `/api/v1/search/find` retrieval returned one result before service
+restart and one afterward. The run therefore exercised session/message/commit,
+provider-reported async completion, memory-diff parsing, provider-internal
+`gpt-oss-120b`, direct retrieval, owned-service restart, and persistence. RQ3
+decision-model calls were zero.
+
+The canonical benchmark emitted 24 results across baseline,
+correction/update, revocation, delete/restart, and supersession, plus five
+Phase 03B provenance traces. Update, supersession, and revocation remained
+`UNSUPPORTED` as designed. Delete/restart completed. The baseline query's
+provider records were semantically relevant but failed the benchmark's exact
+string-currentness normalization, and the supersession scenario's final
+inspect recorded `KeyError: 'v2'` after the expected unsupported operation.
+
+Phase 05G itself is PASS, but Phase 05 is not marked fully complete. Besides
+strict liveness, the serialized contract omitted the canary's session/archive/
+task IDs, quiescence duration, per-operation memory-diff counts, the exact
+`llama-cpp-python` version, the environment-reuse flag, service PID, and config
+hash. The detailed chronological record is
+`manifests/phase-05g-openviking-live-retry.json`; earlier 05C through 05F
+diagnoses remain unchanged.

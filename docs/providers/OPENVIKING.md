@@ -524,3 +524,45 @@ the CUDA/NVIDIA guard must pass; a bad retained environment blocks rather than
 being replaced or upgraded. The embedding cache at
 `<MEMLIFE_DATA_ROOT>/model_cache/openviking/embedding` is likewise preserved.
 Provider configuration and all lifecycle mappings remain unchanged.
+
+## Phase 05G — Live Semantic Qualification
+
+The one authorized managed lifecycle on 2026-09-29 tested exact commit
+`aa976a7d9b2ef37d8e8ba49b4c5091c1ec83e75e`. It began with `jisheng3`
+`SHELVED`, created one owned temporary floating IP, synchronized the remote
+checkout, resolved `/dev/sdb` to `/media/volume/jisheng3_volume`, ran the
+frozen provider path, deleted the owned IP, and returned the VM to `SHELVED`.
+No repair or second lifecycle was attempted.
+
+The authoritative `PHASE05_RESULT_B64` payload is **PASS**. OpenViking 0.4.22,
+`llama-cpp-python`, `pip check`, and the no-CUDA/NVIDIA guard passed before the
+validator. Provider readiness returned `status: ready`; AGFS, vector DB, and
+embedding were `ok`. The live health payload exposed `healthy: true` and
+version `0.4.22`, but no `status` value. The strict result therefore records
+service liveness as `NOT_ESTABLISHED` rather than inventing `status: ok`.
+
+The persistence canary produced source event
+`4fe51613-4c42-4867-bb24-4f2de8bad4c6` and correlated provider URI
+`viking://user/default/memories/entities/system_component/phase_05_persistence_canary.md`.
+Direct find returned one result before restart and one after restart. This
+establishes provider-internal `gpt-oss-120b` compatibility for the exercised
+extraction path, useful memory-diff correlation, direct-find retrieval, and
+restart persistence. RQ3 decision calls remained zero.
+
+All five canonical scenarios and Phase 03B traces ran. Update, supersession,
+and revocation remained explicitly `UNSUPPORTED`; delete plus restart ran as
+supported. The baseline find returned semantically relevant provider records,
+although the benchmark's exact-match normalizer classified the query outcome
+`ABSENT` and `current_state_correct=false`. Supersession correctly recorded
+the operation as `UNSUPPORTED`, while its final inspect step separately
+recorded `KeyError: 'v2'`. These observations are preserved rather than
+relabelled.
+
+The controller's top-level semantic result does not promote the canary session
+ID, archive URI, task ID, quiescence duration, per-operation memory-diff
+counts, service PID, exact `llama-cpp-python` version, environment-reuse flag,
+or config hash. Those fields remain unreported. For the same reason, and
+because strict liveness was not established, this record does not claim every
+Phase 05 completion checkbox is satisfied even though Phase 05G's
+authoritative remote status is PASS. Exact tracked evidence is in
+`manifests/phase-05g-openviking-live-retry.json`.
