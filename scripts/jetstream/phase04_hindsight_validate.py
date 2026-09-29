@@ -30,9 +30,7 @@ from phase04_runtime import restart_hindsight_service, start_hindsight_service
 from phase04_runtime import stop_hindsight_service, wait_hindsight_ready
 
 REPO = Path(os.environ.get("PHASE04_REPO", "/home/exouser/Memo"))
-HARNESS_PYTHON = Path(
-    os.environ.get("PHASE04_HARNESS_PYTHON", str(REPO / ".venv" / "bin" / "python"))
-)
+HARNESS_PYTHON = Path(os.environ["PHASE04_HARNESS_PYTHON"])
 HINDSIGHT_VENV = Path(
     os.environ.get(
         "PHASE04_HINDSIGHT_VENV", "/volume/memlife/venvs/hindsight-0.10.1"
@@ -105,7 +103,9 @@ def run(output: Path) -> dict[str, Any]:
         run_root=run_root,
         environment=os.environ,
     )
-    fingerprint_path = Path(os.environ["PHASE04_ENVIRONMENT_FINGERPRINT"])
+    harness_fingerprint_path = Path(os.environ["PHASE04_HARNESS_FINGERPRINT"])
+    hindsight_fingerprint_path = Path(os.environ["PHASE04_HINDSIGHT_FINGERPRINT"])
+    mem0_regression_path = Path(os.environ["PHASE04_MEM0_REGRESSION"])
     result: dict[str, Any] = {
         "status": "IN_PROGRESS",
         "phase": "04",
@@ -120,13 +120,26 @@ def run(output: Path) -> dict[str, Any]:
         "live_volume_fstype": os.environ["PHASE04_LIVE_VOLUME_FSTYPE"],
         "root_free_before": int(os.environ["PHASE04_ROOT_FREE_BEFORE"]),
         "volume_free_before": int(os.environ["PHASE04_VOLUME_FREE_BEFORE"]),
-        "dependency_dry_run": json.loads(os.environ["PHASE04_DRY_RUN_SUMMARY"]),
+        "dependency_dry_run": {
+            "clean_harness": json.loads(
+                os.environ["PHASE04_HARNESS_DRY_RUN_SUMMARY"]
+            ),
+            "hindsight_provider": json.loads(
+                os.environ["PHASE04_HINDSIGHT_DRY_RUN_SUMMARY"]
+            ),
+        },
         "unit_contract": os.environ["PHASE04_UNIT_SUMMARY"],
         "runtime_isolation": {
+            "legacy_harness_venv": os.environ["PHASE04_LEGACY_HARNESS_VENV"],
+            "legacy_harness_status": "contaminated_do_not_use",
+            "clean_harness_venv": os.environ["PHASE04_CLEAN_HARNESS_VENV"],
             "harness_python": str(HARNESS_PYTHON),
             "hindsight_python": os.environ["PHASE04_HINDSIGHT_PYTHON"],
             "hindsight_venv": str(HINDSIGHT_VENV),
             "communication_boundary": "loopback HTTP",
+            "clean_harness_venv_created_by_this_run": (
+                os.environ["PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN"] == "true"
+            ),
             "hindsight_venv_created_by_this_run": (
                 os.environ["PHASE04_HINDSIGHT_VENV_CREATED_BY_THIS_RUN"] == "true"
             ),
@@ -137,8 +150,14 @@ def run(output: Path) -> dict[str, Any]:
             "harness_after_hindsight": os.environ["PHASE04_HARNESS_PIP_CHECK_AFTER"],
             "comparison_rule": "each environment must pass independently; cross-venv protobuf versions may differ",
         },
+        "clean_harness_environment_fingerprint": json.loads(
+            harness_fingerprint_path.read_text(encoding="utf-8")
+        ),
         "hindsight_environment_fingerprint": json.loads(
-            fingerprint_path.read_text(encoding="utf-8")
+            hindsight_fingerprint_path.read_text(encoding="utf-8")
+        ),
+        "phase02b_mem0_regression_gate": json.loads(
+            mem0_regression_path.read_text(encoding="utf-8")
         ),
         "internal_llm": {
             "provider": "openai",
@@ -305,7 +324,7 @@ def run(output: Path) -> dict[str, Any]:
             "records": [_record_summary(record) for record in derived_records],
         }
 
-        result["mem0_regression"] = _run_command(
+        result["mem0_post_provider_regression"] = _run_command(
             [
                 str(HARNESS_PYTHON),
                 "-m",
