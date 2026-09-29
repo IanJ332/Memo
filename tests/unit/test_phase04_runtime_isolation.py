@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ast
+import re
 from pathlib import Path
 
 import pytest
@@ -15,6 +17,7 @@ from scripts.jetstream.phase04_runtime import validate_harness_fingerprint
 
 REPO = Path(__file__).resolve().parents[2]
 REMOTE_SCRIPT = REPO / "scripts" / "jetstream" / "phase04_remote.sh"
+VALIDATOR_SCRIPT = REPO / "scripts" / "jetstream" / "phase04_hindsight_validate.py"
 CORE_REQUIREMENTS = REPO / "requirements" / "core.txt"
 MEM0_REQUIREMENTS = REPO / "requirements" / "providers" / "mem0.txt"
 INFRA_LLM_REQUIREMENTS = REPO / "requirements" / "infra" / "jetstream-llm.txt"
@@ -102,6 +105,35 @@ def test_remote_script_builds_and_gates_clean_harness_before_hindsight() -> None
     )
     hindsight_creation = source.index('if [ ! -e "$HINDSIGHT_VENV" ]')
     assert pip_check < mem0_gate < hindsight_setup < hindsight_creation
+
+
+def test_remote_script_assigns_every_required_validator_environment_key() -> None:
+    validator_tree = ast.parse(VALIDATOR_SCRIPT.read_text(encoding="utf-8"))
+    required_keys = {
+        node.slice.value
+        for node in ast.walk(validator_tree)
+        if isinstance(node, ast.Subscript)
+        and isinstance(node.value, ast.Attribute)
+        and isinstance(node.value.value, ast.Name)
+        and node.value.value.id == "os"
+        and node.value.attr == "environ"
+        and isinstance(node.slice, ast.Constant)
+        and isinstance(node.slice.value, str)
+    }
+    source = REMOTE_SCRIPT.read_text(encoding="utf-8")
+    assigned_exports = {
+        match.group("key")
+        for match in re.finditer(
+            r"^export\s+(?P<key>PHASE04_[A-Z0-9_]+)=(?P<value>.+)$",
+            source,
+            flags=re.MULTILINE,
+        )
+        if match.group("value").strip()
+    }
+
+    assert "PHASE04_HARNESS_VENV_CREATED_BY_THIS_RUN" in required_keys
+    assert "PHASE04_HINDSIGHT_VENV_CREATED_BY_THIS_RUN" in required_keys
+    assert required_keys <= assigned_exports
 
 
 def test_dependency_ownership_keeps_openai_pin_out_of_core() -> None:
