@@ -1,0 +1,150 @@
+{
+  "phase": "05E",
+  "status": "BLOCKED",
+  "phase_complete": false,
+  "execution_target": "LOCAL_AND_JETSTREAM2",
+  "jetstream_lifecycles_used": 1,
+  "timestamp": "2026-09-29T19:12:59.114993+00:00",
+  "branch": "phase-05-openviking-bringup",
+  "base_live_retry_commit": "8104aa682650393a9d36c881c7224721ff7bc252",
+  "tested_commit": "8104aa682650393a9d36c881c7224721ff7bc252",
+  "provider": "openviking",
+  "requested_provider_version": "0.4.22",
+  "remote_result_status": "BLOCKED",
+  "blocker": {
+    "stage": "readiness",
+    "type": "TimeoutError",
+    "message": "OpenViking readiness timed out after 180 seconds; the adapter's loopback request ended with connection refused.",
+    "service_log_observation": "The service logged that its HTTP server was running on 127.0.0.1:1933, but readiness never succeeded and the run-owned session manager later shut down.",
+    "policy_result": "stopped, serialized evidence, performed managed cleanup, and did not repair or retry"
+  },
+  "phase05_history": {
+    "05A": "PASS - provider architecture preparation",
+    "05B": "PASS - live-readiness hardening",
+    "05C": "BLOCKED - dependency-plan package-name false negative before installation; no provider semantics measured",
+    "05D": "PASS - local package-name normalization and controller repair",
+    "05E": "BLOCKED - installation/configuration completed, but adapter readiness timed out before the compatibility probe"
+  },
+  "local_preflight": {
+    "working_tree_clean": true,
+    "branch": "phase-05-openviking-bringup",
+    "local_head": "8104aa682650393a9d36c881c7224721ff7bc252",
+    "origin_head": "8104aa682650393a9d36c881c7224721ff7bc252",
+    "controller_import": "PASS",
+    "entrypoint_compile": "PASS",
+    "focused_tests": "3 passed"
+  },
+  "dependency_plan": {
+    "result": "PASS (execution advanced beyond the fail-closed dependency-plan gate)",
+    "normalized_openviking": "openviking",
+    "normalized_llama_cpp": "llama-cpp-python",
+    "openviking_candidate": "0.4.22",
+    "llama_cpp_candidate": "0.3.35 expected from Phase 05D; exact live candidate was not serialized in the terminal payload",
+    "cpu_wheel_route": "official llama-cpp-python CPU-wheel extra index",
+    "forbidden_packages": []
+  },
+  "openviking_environment": {
+    "path": "/media/volume/jisheng3_volume/memlife/venvs/openviking-0.4.22",
+    "python": "3.12.3 target; provider-venv patch string not serialized",
+    "pip": "NOT_RETURNED",
+    "openviking": "0.4.22 verified before service startup",
+    "llama_cpp_python": "installed and metadata-present; exact version NOT_RETURNED",
+    "pip_check": "PASS (execution advanced beyond the fail-closed pip-check gate)",
+    "cuda_nvidia": "none (execution advanced beyond the installed-distribution guard)",
+    "retained": true
+  },
+  "jetstream": {
+    "instance_name": "jisheng3",
+    "instance_uuid": "5baeeae7-4c29-4903-89fe-2e9df0a8eced",
+    "initial_state": "SHELVED",
+    "unshelve": "PASS",
+    "temporary_floating_ip_created": true,
+    "temporary_floating_ip_disassociated": true,
+    "temporary_floating_ip_deleted": true,
+    "final_state": "SHELVED",
+    "final_state_reverified": true,
+    "auto_shelve": "PASS"
+  },
+  "remote": {
+    "os": "Ubuntu 24.04.5 LTS",
+    "python": "3.12.3",
+    "volume_device": "/dev/sdb",
+    "filesystem": "ext4 (persistent context; filesystem value not repeated in the run payload)",
+    "mount": "/media/volume/jisheng3_volume",
+    "volume_capacity": "49G",
+    "memlife_data_root": "/media/volume/jisheng3_volume/memlife",
+    "free_space_before_after": "NOT_RETURNED",
+    "remote_sync": "PASS",
+    "remote_execution_head": "8104aa682650393a9d36c881c7224721ff7bc252"
+  },
+  "protected_runtime_config": {
+    "path": "/home/exouser/Memo/.local/phase05_openviking.env",
+    "owner": "exouser",
+    "mode": "600",
+    "automatic_provisioning": "PASS",
+    "contents_serialized": false
+  },
+  "provider_paths": {
+    "state": "/media/volume/jisheng3_volume/memlife/providers/openviking",
+    "config": "/media/volume/jisheng3_volume/memlife/providers/openviking/ov.conf",
+    "embedding_cache": "/media/volume/jisheng3_volume/memlife/model_cache/openviking/embedding",
+    "run_root": "/media/volume/jisheng3_volume/memlife/runs/phase-05-openviking",
+    "config_mode": "600 by tracked writer",
+    "config_hash": "NOT_RETURNED"
+  },
+  "service": {
+    "startup": "process started and logged HTTP server on 127.0.0.1:1933",
+    "pid_ownership": "run-owned controller",
+    "readiness": "BLOCKED",
+    "port": "127.0.0.1:1933",
+    "cleanup": "PASS - run-owned process stopped",
+    "bounded_log_tail_serialized": true
+  },
+  "provider_internal_vlm": {
+    "provider": "openai",
+    "model": "gpt-oss-120b",
+    "endpoint_class": "course-authorized OpenAI-compatible endpoint",
+    "compatibility": "NOT_TESTED; readiness blocked before commit/extraction",
+    "rq3_decision_calls": 0
+  },
+  "embedding": {
+    "provider": "local",
+    "model": "bge-small-zh-v1.5-f16",
+    "dimension": 512,
+    "runtime": "CPU-only llama-cpp-python",
+    "load_result": "NOT_ESTABLISHED by readiness"
+  },
+  "compatibility_probe": "NOT_RUN",
+  "persistence": "NOT_RUN",
+  "canonical_benchmark": "NOT_RUN",
+  "memory_diff": "NOT_RUN",
+  "provenance_trace": "NOT_RUN",
+  "async_evidence": "NOT_RUN",
+  "structured_result": {
+    "phase05_result_b64_emitted": true,
+    "status": "BLOCKED",
+    "authoritative": true,
+    "sensitive_keys_present": false
+  },
+  "retained": {
+    "provider_venv": true,
+    "provider_state": true,
+    "model_cache": true,
+    "run_artifacts": true
+  },
+  "tests": {
+    "local_preflight": "3 passed",
+    "live_provider": "BLOCKED at readiness",
+    "mem0_regression": "NOT_RUN",
+    "hindsight_regression": "NOT_RUN",
+    "phase03_phase03b_regression": "NOT_RUN",
+    "full": "NOT_RUN"
+  },
+  "secrets_audit": "PASS",
+  "claims": {
+    "openviking_operationally_qualified": false,
+    "provider_semantics_measured": false,
+    "security_claim_made": false,
+    "second_live_run_performed": false
+  }
+}

@@ -283,3 +283,47 @@ successfully after delivery; the managed controller continues to treat
 `payload["status"]`, not SSH status, as authoritative. Phase 05B protected
 configuration and all provider, embedding, VLM, and lifecycle semantics remain
 unchanged.
+
+## Phase 05E — Controlled Live Retry Result
+
+Phase 05E used exactly one managed Jetstream2 lifecycle from initial `SHELVED`
+state. The required local preflight was clean on branch
+`phase-05-openviking-bringup`; local and origin heads were both
+`8104aa682650393a9d36c881c7224721ff7bc252`. The normal controller entrypoint
+unshelved the exact target UUID, created and associated one owned temporary
+floating IP, synchronized the remote repository to the tested commit,
+provisioned the mode-600 runtime config, and resolved `/dev/sdb` to
+`/media/volume/jisheng3_volume`.
+
+The run advanced beyond every fail-closed pre-validator gate: normalized
+dependency-plan validation, provider installation, `pip check`, OpenViking
+0.4.22 and `llama-cpp-python` metadata checks, executable validation,
+CUDA/NVIDIA rejection, and config generation. Accordingly those gates passed.
+The structured terminal payload did not include the exact installed
+`llama-cpp-python` version, pip version, free-space samples, or config hash;
+the record marks those fields `NOT_RETURNED` instead of reconstructing them.
+
+The validator started its run-owned OpenViking process. The bounded sanitized
+service log says the HTTP server was running on `127.0.0.1:1933`, along with
+non-fatal warnings that deprecated storage path fields were ignored in favor
+of the same configured workspace. Nevertheless, adapter readiness timed out
+after 180 seconds and the final request reported connection refused. The
+authoritative `PHASE05_RESULT_B64` payload therefore returned `BLOCKED` with
+`TimeoutError` at readiness.
+
+The frozen failure policy was followed: no speculative live fix, configuration
+change, provider/model substitution, manual SSH experiment, or second run was
+performed. Readiness blocked all semantic work, so session creation, message
+addition, commit/archive, async task completion, internal-VLM compatibility,
+memory-diff correlation, retrieval, restart persistence, canonical scenarios,
+delete/restart, and provenance are `NOT_RUN`. RQ3 decision-model calls are
+zero, and Phase 05 is not complete.
+
+Cleanup completed within the managed lifecycle. The run-owned OpenViking
+process shut down, the owned floating IP was disassociated and deleted, and
+the VM was automatically shelved. A separate read-only status check then
+confirmed UUID `5baeeae7-4c29-4903-89fe-2e9df0a8eced` was `SHELVED` with no
+address. The provider venv, state, caches, and run artifacts were retained on
+the persistent volume. Phase 05C's original blocker and Phase 05D's repair
+remain unchanged; the exact Phase 05E record is
+`manifests/phase-05e-openviking-live-retry.json`.

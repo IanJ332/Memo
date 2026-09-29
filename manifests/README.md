@@ -15,3 +15,8 @@ Jetstream cleanup without serializing protected runtime configuration values.
 normalization repair, official CPU-wheel route, controller import isolation,
 structured pre-validator coverage, and regression results before a future
 separately authorized live retry.
+
+`phase-05e-openviking-live-retry.json` records the one controlled retry at
+commit `8104aa682650393a9d36c881c7224721ff7bc252`, its authoritative readiness
+timeout after installation/configuration gates passed, and completed managed
+service, floating-IP, and VM cleanup.

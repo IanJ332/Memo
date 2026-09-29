@@ -433,3 +433,41 @@ transport exit, while the managed controller continues to decide live outcome
 from the payload status. No provider or configuration semantics changed, and
 Phase 05C still has no OpenViking semantic result because it stopped before
 installation.
+
+## Phase 05E Controlled Live Retry
+
+The one authorized retry on 2026-09-29 tested commit
+`8104aa682650393a9d36c881c7224721ff7bc252` through the normal managed
+controller. Local and fetched origin heads matched, the remote checkout was
+fast-forwarded to the same commit, `/dev/sdb` resolved live to
+`/media/volume/jisheng3_volume`, and the protected runtime configuration was
+provisioned automatically as `exouser` with mode 600.
+
+The canonicalized dependency plan passed and execution advanced through
+provider installation, `pip check`, exact OpenViking 0.4.22 metadata,
+`llama-cpp-python` presence, the CUDA/NVIDIA rejection guard, executable
+validation, and tracked config generation. These conclusions follow from the
+remote shell's fail-closed gate order. The terminal result did not serialize
+the exact live `llama-cpp-python`, pip, or config-hash values, so they remain
+unreported rather than inferred.
+
+The run is **BLOCKED at readiness**. The run-owned process started and its
+sanitized log reported `OpenViking HTTP Server is running on 127.0.0.1:1933`,
+but the adapter never observed readiness during the bounded 180-second window;
+its final loopback error was connection refused. The controller emitted an
+authoritative `PHASE05_RESULT_B64` payload with `status: BLOCKED` and a bounded
+log tail. Per policy, no config change, model change, manual probe, repair, or
+second live run was attempted.
+
+Because readiness did not pass, the persistence canary, commit task,
+provider-internal `gpt-oss-120b` compatibility, `memory_diff`, direct find,
+restart persistence, canonical benchmark, deletion check, and provenance
+trace were not run. RQ3 decision-model calls remained zero. The result makes
+no provider-semantic or security claim.
+
+Cleanup passed: the run-owned service stopped, the owned floating IP was
+disassociated and deleted, retained provider assets remained on the persistent
+volume, and a post-run read-only controller check reconfirmed `jisheng3` as
+`SHELVED` with no address. Structured evidence is recorded in
+`manifests/phase-05e-openviking-live-retry.json`; Phase 05C remains the earlier
+pre-install blocker and Phase 05D remains the local repair.
