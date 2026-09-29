@@ -1,0 +1,1 @@
+openviking[local-embed]==0.4.22

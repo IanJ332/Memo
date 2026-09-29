@@ -306,3 +306,66 @@ call, canonical experiment, resurrection experiment, RQ3 decision-model run,
 or final RQ4 defense evaluation. Feasibility is based on current official
 metadata and must be live-qualified. Memory diff is an audit surface, not full
 causal provenance.
+
+## Phase 05B Live Readiness
+
+Phase 05B remains local-only: Jetstream was not contacted, OpenViking was not
+installed or started, and the course endpoint was not called. The readiness
+changes are based on the exact upstream `v0.4.22` tag at commit
+`e8716760934d95ef73414484a45bfe475b9296e2`, rather than current-main
+assumptions. The pinned sources establish these contracts:
+
+- `pyproject.toml:188-190` defines the `local-embed` extra as
+  `llama-cpp-python>=0.3.0`;
+- `openviking/models/embedder/local_embedders.py:19-39` defines the local
+  cache default, model `bge-small-zh-v1.5-f16`, dimension 512, GGUF filename,
+  and download URL;
+- `openviking_cli/utils/config/embedding_config.py:57-125` defines
+  `provider` as the current field, `backend` as deprecated compatibility, and
+  supports `model_path` plus `cache_dir`; its local factory mapping at
+  `985-993` passes those values to `LocalDenseEmbedder`;
+- `openviking_cli/utils/config/vlm_config.py:135-205` supports `api_base`,
+  `temperature`, `max_retries`, and `max_concurrent`, while
+  `openviking/models/vlm/backends/openai_vlm.py` passes `api_base` to the
+  OpenAI client's `base_url`;
+- `openviking/server/routers/search.py:347-380` dispatches `/search/find` to
+  `SearchService.find`, and `openviking/service/search_service.py:139-177`
+  dispatches directly to `VikingFS.find`. It does not invoke the
+  query-planner/VLM intent-analysis path used by `search`.
+
+The provider requirement is now centralized at
+`requirements/providers/openviking.txt` as
+`openviking[local-embed]==0.4.22`. The future clean dependency proposal must contain
+`llama-cpp-python` and must not contain `nvidia-*` or `cuda-*`; the installed
+environment is checked for the same CPU-only policy. The requirement is
+applied to both new and reusable isolated venvs. `llama-cpp-python` may
+need a native Linux build if a compatible wheel is unavailable for the target,
+so compiler time and memory remain a live risk rather than a presumed wheel.
+
+Generated `ov.conf` now explicitly selects dense provider `local`, model
+`bge-small-zh-v1.5-f16`, dimension 512, and cache directory
+`<MEMLIFE_DATA_ROOT>/model_cache/openviking/embedding`. Storage remains local
+AGFS/vector storage under the persistent provider workspace. Memory extraction
+remains enabled.
+
+The fixed provider-internal VLM is `openai` / `gpt-oss-120b` at
+`https://llm.jetstream-cloud.org/gpt-oss-120b/v1/`, with the non-secret course
+placeholder credential `empty`, temperature 0, concurrency 1, and one retry.
+No backup model or aggressive output cap is configured. This is extraction
+configuration, not the RQ3 decision model, and compatibility remains for the
+controlled live probe to determine.
+
+The managed controller now provisions
+`/home/exouser/Memo/.local/phase05_openviking.env` automatically after exact
+Git synchronization and before the remote runner. It creates `.local`, writes
+all four fixed values with `umask 077`, enforces owner `exouser` and mode 600,
+and never copies the values into result artifacts. `.local/` remains covered
+by the repository runtime exclusion policy; no manual SSH setup is required.
+
+Runtime/provider exceptions now serialize `status: BLOCKED`, blocker type,
+sanitized blocker text, and a bounded sanitized service-log tail. They are not
+re-raised by the validator. The remote shell emits `PHASE05_RESULT_B64` whenever
+the result exists, even if an unexpected validator exit occurs; missing result
+serialization remains a transport failure. The managed lifecycle controller
+parses `payload.status` and treats non-PASS as the experiment blocker. PASS and
+BLOCKED are the only Phase 05 live outcome values.

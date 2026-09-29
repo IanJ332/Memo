@@ -36,6 +36,15 @@ LOCAL_RESULT = (
     / "result.json"
 )
 LIVE_AUTH_ENV = "MEMLIFE_AUTHORIZE_PHASE05_LIVE"
+LIVE_CONFIG_PATH = f"{REMOTE_REPO}/.local/phase05_openviking.env"
+LIVE_CONFIG_VALUES = {
+    "PHASE05_OPENVIKING_VLM_PROVIDER": "openai",
+    "PHASE05_OPENVIKING_VLM_MODEL": "gpt-oss-120b",
+    "PHASE05_OPENVIKING_VLM_API_BASE": (
+        "https://llm.jetstream-cloud.org/gpt-oss-120b/v1/"
+    ),
+    "PHASE05_OPENVIKING_VLM_API_KEY": "empty",
+}
 
 
 def require_live_authorization() -> None:
@@ -71,6 +80,41 @@ printf 'remote_head=%s\n' "$actual"
 """
 
 
+def _live_config_command() -> str:
+    """Return a fixed, non-interactive mode-600 runtime-config provisioner."""
+
+    assignments = "\n".join(
+        f"{name}={value}" for name, value in LIVE_CONFIG_VALUES.items()
+    )
+    encoded = base64.b64encode((assignments + "\n").encode("utf-8")).decode("ascii")
+    return f"""set -eu
+config_dir={REMOTE_REPO}/.local
+config_path={LIVE_CONFIG_PATH}
+umask 077
+mkdir -p "$config_dir"
+printf '%s' '{encoded}' | base64 -d > "$config_path.tmp"
+chmod 600 "$config_path.tmp"
+mv -f "$config_path.tmp" "$config_path"
+test "$(stat -c %a "$config_path")" = 600
+test "$(stat -c %U "$config_path")" = exouser
+test "$(wc -l < "$config_path" | xargs)" = 4
+printf '%s\n' 'phase05_runtime_config=provisioned'
+"""
+
+
+def _contains_sensitive_result_key(value: object) -> bool:
+    if isinstance(value, Mapping):
+        for key, child in value.items():
+            normalized = str(key).lower().replace("-", "_")
+            if normalized in {"api_key", "authorization", "password", "token"}:
+                return True
+            if _contains_sensitive_result_key(child):
+                return True
+    elif isinstance(value, (list, tuple)):
+        return any(_contains_sensitive_result_key(item) for item in value)
+    return False
+
+
 def run_remote_validation(
     *,
     address: str,
@@ -83,6 +127,7 @@ def run_remote_validation(
 
     require_live_authorization()
     sync = runner(ssh_builder(address, _sync_command(expected_commit)), timeout=180)
+    runner(ssh_builder(address, _live_config_command()), timeout=60)
     validation = runner(
         ssh_builder(
             address,
@@ -101,6 +146,8 @@ def run_remote_validation(
     if not encoded:
         raise RuntimeError("remote OpenViking validation returned no sanitized payload")
     payload = json.loads(base64.b64decode(encoded).decode("utf-8"))
+    if _contains_sensitive_result_key(payload):
+        raise RuntimeError("remote OpenViking result contained a prohibited sensitive field")
     if payload.get("git_commit_tested") != expected_commit:
         raise RuntimeError("remote result commit did not match the local branch commit")
     payload["remote_sync"] = sync.stdout.strip().splitlines()
@@ -108,6 +155,41 @@ def run_remote_validation(
     LOCAL_RESULT.parent.mkdir(parents=True, exist_ok=True)
     LOCAL_RESULT.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return payload
+
+
+def _sanitize_runtime_text(value: object) -> str:
+    """Bound and redact provider/service diagnostics before result serialization."""
+
+    text = str(value or "")
+    secret = os.environ.get("PHASE05_OPENVIKING_VLM_API_KEY", "")
+    if secret and secret != "empty":
+        text = text.replace(secret, "[REDACTED]")
+    text = re.sub(
+        r'''(?i)["']?api[_-]?key["']?\s*[:=]\s*["']?[^\s,"'}\]]+["']?''',
+        "api_key=[REDACTED]",
+        text,
+    )
+    text = re.sub(
+        r"(?i)(OS_(?:APPLICATION_CREDENTIAL_SECRET|PASSWORD|TOKEN)\s*[:=]\s*)[^\s,}\]]+",
+        r"\1[REDACTED]",
+        text,
+    )
+    text = re.sub(
+        r"\b(?!127\.0\.0\.1\b)(?:\d{1,3}\.){3}\d{1,3}\b",
+        "[REDACTED_IP]",
+        text,
+    )
+    return text[-8000:]
+
+
+def _service_log_tail(path: Path, *, lines: int = 40) -> list[str]:
+    if not path.is_file():
+        return []
+    try:
+        raw_lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError as exc:
+        return [_sanitize_runtime_text(f"service log unavailable: {type(exc).__name__}")]
+    return [_sanitize_runtime_text(line) for line in raw_lines[-lines:]]
 
 
 class OpenVikingServiceController:
@@ -190,26 +272,38 @@ def write_config(output: Path) -> None:
             "agfs": {"backend": "local"},
             "vectordb": {"backend": "local"},
         },
+        "embedding": {
+            "max_concurrent": 1,
+            "max_retries": 1,
+            "dense": {
+                "provider": "local",
+                "model": "bge-small-zh-v1.5-f16",
+                "dimension": 512,
+                "input": "text",
+                "cache_dir": str(Path(model_cache) / "embedding"),
+            },
+        },
         "vlm": {
             "provider": provider,
             "model": model,
             "api_base": api_base,
             "api_key": api_key,
+            "temperature": 0.0,
+            "max_concurrent": 1,
+            "max_retries": 1,
+            "thinking": False,
         },
         "memory": {"extraction_enabled": True},
     }
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     os.chmod(output, 0o600)
-    Path(model_cache).mkdir(parents=True, exist_ok=True)
+    (Path(model_cache) / "embedding").mkdir(parents=True, exist_ok=True)
 
 
 def validate_remote(output: Path) -> None:
     require_live_authorization()
     controller = OpenVikingServiceController()
-    adapter = OpenVikingMemoryAdapter.from_environment(
-        restart_callback=controller.restart
-    )
     result: dict[str, Any] = {
         "status": "IN_PROGRESS",
         "git_commit_tested": subprocess.run(
@@ -221,6 +315,9 @@ def validate_remote(output: Path) -> None:
         "model_calls": "provider-internal only; RQ3=0",
     }
     try:
+        adapter = OpenVikingMemoryAdapter.from_environment(
+            restart_callback=controller.restart
+        )
         controller.start()
         adapter.wait_until_ready(timeout_seconds=180)
         namespace = "phase-05-live-probe"
@@ -256,10 +353,23 @@ def validate_remote(output: Path) -> None:
             ],
         )
     except Exception as exc:
-        result.update(status="FAIL", failure_type=type(exc).__name__)
-        raise
+        result.update(
+            status="BLOCKED",
+            blocker_type=type(exc).__name__,
+            blocker=_sanitize_runtime_text(exc),
+        )
     finally:
-        controller.stop()
+        try:
+            controller.stop()
+        except Exception as exc:
+            result.update(
+                status="BLOCKED",
+                blocker_type="ServiceCleanupError",
+                blocker=_sanitize_runtime_text(exc),
+            )
+        log_tail = _service_log_tail(controller.log_path)
+        if log_tail:
+            result["service_log_tail"] = log_tail
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
 

@@ -1,0 +1,76 @@
+{
+  "phase": "05B",
+  "phase05b_status": "PASS",
+  "phase05a_historical_status": "PASS",
+  "execution_target": "LOCAL_ONLY",
+  "jetstream_used": false,
+  "jetstream_state": "SHELVED",
+  "base_commit": "a1827d3ded53491ab3d57d7afe918f0ae85a1b33",
+  "upstream": {
+    "tag": "v0.4.22",
+    "commit": "e8716760934d95ef73414484a45bfe475b9296e2",
+    "source_verified": true
+  },
+  "requirement": "openviking[local-embed]==0.4.22",
+  "local_embedding": {
+    "extra": "local-embed",
+    "runtime_dependency": "llama-cpp-python>=0.3.0",
+    "provider": "local",
+    "model": "bge-small-zh-v1.5-f16",
+    "dimension": 512,
+    "cache_path_class": "<MEMLIFE_DATA_ROOT>/model_cache/openviking/embedding",
+    "gpu_cuda_policy": "reject nvidia-* and cuda-* in proposal and installed environment",
+    "linux_build_risk": "llama-cpp-python may require native compilation if no compatible target wheel is available"
+  },
+  "provider_internal_vlm": {
+    "provider": "openai",
+    "model": "gpt-oss-120b",
+    "endpoint_class": "course-authorized OpenAI-compatible endpoint",
+    "credential_class": "non-secret course placeholder",
+    "temperature": 0.0,
+    "max_concurrent": 1,
+    "max_retries": 1,
+    "backup_configured": false,
+    "called_in_phase05b": false
+  },
+  "live_config": {
+    "automatic_provisioning": true,
+    "path": "/home/exouser/Memo/.local/phase05_openviking.env",
+    "mode": "600",
+    "owner": "exouser",
+    "git_ignored": true,
+    "manual_setup_required": false
+  },
+  "structured_result": {
+    "status_vocabulary": [
+      "PASS",
+      "BLOCKED"
+    ],
+    "validator_reraises_provider_failure": false,
+    "shell_emits_serialized_blocked_result": true,
+    "controller_parses_payload_status": true,
+    "bounded_sanitized_service_log_tail": true,
+    "sensitive_result_keys_rejected": true
+  },
+  "query_retrieval": {
+    "endpoint": "/api/v1/search/find",
+    "query_planner_invoked": false,
+    "provider_internal_vlm_invoked": false,
+    "embedding_invoked": true
+  },
+  "adapter_semantics_changed": false,
+  "live_openviking_result_fabricated": false,
+  "test_results": {
+    "phase05_focused": "26 passed",
+    "unit": "100 passed",
+    "contract": "6 passed",
+    "integration": "5 passed, 1 skipped (opt-in live Hindsight service unavailable)",
+    "mem0_regression": "5 passed",
+    "hindsight_regression": "11 passed, 1 skipped (opt-in live service unavailable)",
+    "phase03_regression": "18 passed",
+    "phase03b_regression": "16 passed",
+    "full_suite": "111 passed, 1 skipped",
+    "shell_syntax": "PASS (Git Bash bash -n)"
+  },
+  "timestamp": "2026-09-29T18:32:20.1038545Z"
+}

@@ -163,3 +163,53 @@ Jetstream remained shelved. OpenViking was not installed or started. Hosted
 model calls, the canonical experiment matrix, RQ3, and final RQ4 evaluation
 were not run. The live feasibility and provider semantics remain candidates
 until one separately authorized controlled Phase 05 execution.
+
+## Phase 05B Live Readiness
+
+Phase 05B hardened the prepared live path without contacting Jetstream or any
+hosted model. Exact tag `v0.4.22` / commit
+`e8716760934d95ef73414484a45bfe475b9296e2` was inspected locally. Its
+`pyproject.toml:188-190` maps the official `local-embed` extra to
+`llama-cpp-python>=0.3.0`. Its local embedding implementation and schema are in
+`openviking/models/embedder/local_embedders.py:19-112` and
+`openviking_cli/utils/config/embedding_config.py:57-125, 675-685, 985-993`:
+the supported field is `provider` (not deprecated `backend`), the supported
+model/default is `bge-small-zh-v1.5-f16`, its fixed dimension is 512, and
+`cache_dir` is supported.
+
+The future runtime therefore installs
+`requirements/providers/openviking.txt`, pinned to
+`openviking[local-embed]==0.4.22`. Its clean pip proposal must include
+`llama-cpp-python`; proposal and installed environment continue to reject
+`nvidia-*` and `cuda-*`. A compatible `llama-cpp-python` wheel is not assumed:
+native compilation on Ubuntu is a documented live resource/time risk.
+
+Generated `ov.conf` explicitly contains the supported `server`, `storage`,
+`embedding`, `vlm`, and `memory` sections. Dense embedding is local
+`bge-small-zh-v1.5-f16`, dimension 512, input `text`, with cache at
+`<MEMLIFE_DATA_ROOT>/model_cache/openviking/embedding`. The provider-internal
+VLM is fixed to provider `openai`, model `gpt-oss-120b`, API base
+`https://llm.jetstream-cloud.org/gpt-oss-120b/v1/`, and course placeholder
+credential `empty`. It uses temperature 0, concurrency 1, one retry, no backup,
+and no guessed output-token cap. No local VLM call was made.
+
+The managed controller now provisions the Git-ignored live environment file
+at `/home/exouser/Memo/.local/phase05_openviking.env` before execution. It
+creates the directory, writes exactly four required values, enforces owner
+`exouser` and mode 600, and requires no manual SSH action. Neither config values
+nor the API-key field are serialized into manifests/results.
+
+Provider/service experiment errors now become a serialized `BLOCKED` result
+with blocker information and an optional bounded, sanitized service-log tail.
+The validator does not re-raise after successful serialization. The shell
+always base64-emits an existing result before checking an unexpected validator
+exit, and the managed controller evaluates `payload.status`; therefore a
+provider incompatibility remains visible as an experiment blocker while a
+missing payload remains a transport failure.
+
+Pinned retrieval source confirms that `/api/v1/search/find` calls
+`SearchService.find` and then `VikingFS.find` directly
+(`openviking/server/routers/search.py:347-380` and
+`openviking/service/search_service.py:139-177`). It uses the embedding model
+for vector retrieval but not query-planner/VLM intent analysis. The adapter and
+canonical lifecycle capability mapping are unchanged.
