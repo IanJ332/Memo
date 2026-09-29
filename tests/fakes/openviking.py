@@ -32,8 +32,13 @@ class FakeOpenVikingTransport:
     ) -> Any:
         method = method.upper()
         self.requests.append((method, path, deepcopy(query), deepcopy(payload)))
+        if path == "/health" and method == "GET":
+            return {"status": "ok", "healthy": True, "version": "0.4.22"}
         if path == "/ready" and method == "GET":
-            return {"ready": True, "version": "0.4.22"}
+            return {
+                "status": "ready",
+                "checks": {"agfs": "ok", "vectordb": "ok", "embedding": "ok"},
+            }
         if path == "/api/v1/sessions" and method == "GET":
             return [
                 {"session_id": session_id, "uri": f"viking://user/test/sessions/{session_id}"}

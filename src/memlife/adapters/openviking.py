@@ -89,10 +89,35 @@ class OpenVikingTransport(Protocol):
 
 
 class OpenVikingHTTPError(AdapterError):
-    def __init__(self, status_code: int, detail: str) -> None:
+    def __init__(
+        self,
+        status_code: int,
+        detail: str,
+        *,
+        payload: Mapping[str, Any] | None = None,
+    ) -> None:
         super().__init__(f"OpenViking HTTP {status_code}: {detail}")
         self.status_code = status_code
         self.detail = detail
+        self.payload = dict(payload) if payload is not None else None
+
+
+class OpenVikingReadinessTimeout(TimeoutError):
+    """Bounded readiness failure with the final provider diagnostics."""
+
+    def __init__(self, diagnostics: Mapping[str, Any]) -> None:
+        super().__init__("OpenViking readiness timed out")
+        self.diagnostics = dict(diagnostics)
+
+
+class ServiceExitedBeforeReady(AdapterError):
+    """The explicitly run-owned service process exited during readiness."""
+
+    def __init__(self, exit_code: int | None, diagnostics: Mapping[str, Any]) -> None:
+        rendered = "unknown" if exit_code is None else str(exit_code)
+        super().__init__(f"OpenViking service exited before readiness (exit code {rendered})")
+        self.exit_code = exit_code
+        self.diagnostics = dict(diagnostics)
 
 
 @dataclass
@@ -149,13 +174,18 @@ class UrllibOpenVikingTransport:
                 raw = response.read()
         except HTTPError as exc:
             raw_error = exc.read().decode("utf-8", errors="replace")
+            parsed_error: Any = None
             try:
                 parsed_error = json.loads(raw_error)
                 error = parsed_error.get("error", parsed_error)
                 detail = error.get("message", error) if isinstance(error, Mapping) else error
             except json.JSONDecodeError:
                 detail = raw_error or str(exc.reason)
-            raise OpenVikingHTTPError(exc.code, str(detail)) from exc
+            raise OpenVikingHTTPError(
+                exc.code,
+                str(detail),
+                payload=parsed_error if isinstance(parsed_error, Mapping) else None,
+            ) from exc
         except (URLError, TimeoutError) as exc:
             raise AdapterError(f"OpenViking service request failed: {exc}") from exc
         if not raw:
@@ -248,9 +278,12 @@ class OpenVikingMemoryAdapter(MemoryProviderAdapter):
         transport: OpenVikingTransport,
         *,
         restart_callback: Callable[[], None] | None = None,
+        process_is_running: Callable[[], bool] | None = None,
+        process_exit_code: Callable[[], int | None] | None = None,
         quiescence_timeout_seconds: float = 300.0,
         poll_interval_seconds: float = 0.25,
         sleeper: Callable[[float], None] = time.sleep,
+        monotonic: Callable[[], float] = time.monotonic,
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
     ) -> None:
@@ -260,18 +293,26 @@ class OpenVikingMemoryAdapter(MemoryProviderAdapter):
             raise ValueError("poll interval must be positive")
         self.transport = transport
         self._restart_callback = restart_callback
+        self._process_is_running = process_is_running
+        self._process_exit_code = process_exit_code
         self.quiescence_timeout_seconds = quiescence_timeout_seconds
         self.poll_interval_seconds = poll_interval_seconds
         self._sleep = sleeper
+        self._monotonic = monotonic
         self._clock = clock or (lambda: datetime.now(timezone.utc))
         self._id_factory = id_factory or (lambda: str(uuid4()))
         self._correlations: dict[str, dict[str, Any]] = {}
         self._namespace_sources: dict[str, list[str]] = {}
         self._last_operation: dict[str, Any] = {}
+        self._last_readiness_diagnostics: dict[str, Any] = {}
 
     @classmethod
     def from_environment(
-        cls, *, restart_callback: Callable[[], None] | None = None
+        cls,
+        *,
+        restart_callback: Callable[[], None] | None = None,
+        process_is_running: Callable[[], bool] | None = None,
+        process_exit_code: Callable[[], int | None] | None = None,
     ) -> "OpenVikingMemoryAdapter":
         return cls(
             UrllibOpenVikingTransport(
@@ -279,6 +320,8 @@ class OpenVikingMemoryAdapter(MemoryProviderAdapter):
                 api_key=os.environ.get(OPENVIKING_API_KEY_ENV),
             ),
             restart_callback=restart_callback,
+            process_is_running=process_is_running,
+            process_exit_code=process_exit_code,
         )
 
     @property
@@ -391,23 +434,90 @@ class OpenVikingMemoryAdapter(MemoryProviderAdapter):
             return MemorySurface.PROFILE
         return MemorySurface.DERIVED
 
+    @property
+    def readiness_diagnostics(self) -> Mapping[str, Any]:
+        return dict(self._last_readiness_diagnostics)
+
+    def _readiness_process_guard(self, diagnostics: dict[str, Any]) -> None:
+        if self._process_is_running is None:
+            return
+        alive = self._process_is_running()
+        diagnostics["service_process_alive"] = alive
+        if alive:
+            return
+        exit_code = self._process_exit_code() if self._process_exit_code else None
+        diagnostics["service_exit_code"] = exit_code
+        self._last_readiness_diagnostics = dict(diagnostics)
+        raise ServiceExitedBeforeReady(exit_code, diagnostics)
+
     def wait_until_ready(self, *, timeout_seconds: float | None = None) -> Mapping[str, Any]:
         timeout = timeout_seconds or self.quiescence_timeout_seconds
-        deadline = time.monotonic() + timeout
-        last_error: Exception | None = None
-        while time.monotonic() < deadline:
+        started = self._monotonic()
+        deadline = started + timeout
+        diagnostics: dict[str, Any] = {
+            "health_status": None,
+            "health_healthy": None,
+            "health_version": None,
+            "readiness_status": None,
+            "readiness_checks": None,
+            "last_http_status": None,
+            "request_error_class": None,
+            "elapsed_seconds": 0.0,
+        }
+        while self._monotonic() < deadline:
+            self._readiness_process_guard(diagnostics)
+            try:
+                health = self.transport.request("GET", "/health")
+                if isinstance(health, Mapping):
+                    diagnostics["health_status"] = health.get("status")
+                    diagnostics["health_healthy"] = health.get("healthy")
+                    diagnostics["health_version"] = health.get("version")
+                diagnostics["request_error_class"] = None
+            except Exception as exc:
+                diagnostics["request_error_class"] = type(exc).__name__
+                if isinstance(exc, OpenVikingHTTPError):
+                    diagnostics["last_http_status"] = exc.status_code
             try:
                 response = self.transport.request("GET", "/ready")
-                if response is True or (
+                diagnostics["last_http_status"] = 200
+                diagnostics["request_error_class"] = None
+                if isinstance(response, Mapping):
+                    diagnostics["readiness_status"] = response.get("status")
+                    diagnostics["readiness_checks"] = response.get("checks")
+                accepted = (
+                    isinstance(response, Mapping)
+                    and response.get("status") == "ready"
+                )
+                # Preserve the pre-05F fake contract only on the /ready endpoint.
+                accepted = accepted or response is True or (
                     isinstance(response, Mapping)
                     and (response.get("ready") is True or response.get("healthy") is True)
-                ):
+                )
+                if accepted:
+                    diagnostics["elapsed_seconds"] = round(
+                        self._monotonic() - started, 6
+                    )
+                    diagnostics["service_process_alive"] = (
+                        self._process_is_running()
+                        if self._process_is_running is not None
+                        else None
+                    )
+                    self._last_readiness_diagnostics = dict(diagnostics)
                     return response if isinstance(response, Mapping) else {"ready": True}
-            except Exception as exc:  # readiness is retried until the bounded deadline
-                last_error = exc
+            except Exception as exc:  # not-ready and transport errors remain bounded retries
+                diagnostics["request_error_class"] = type(exc).__name__
+                if isinstance(exc, OpenVikingHTTPError):
+                    diagnostics["last_http_status"] = exc.status_code
+                    if exc.payload is not None:
+                        diagnostics["readiness_status"] = exc.payload.get("status")
+                        diagnostics["readiness_checks"] = exc.payload.get("checks")
+            diagnostics["elapsed_seconds"] = round(self._monotonic() - started, 6)
+            self._last_readiness_diagnostics = dict(diagnostics)
+            self._readiness_process_guard(diagnostics)
             self._sleep(self.poll_interval_seconds)
-        suffix = f": {last_error}" if last_error else ""
-        raise TimeoutError(f"OpenViking readiness timed out{suffix}")
+        diagnostics["elapsed_seconds"] = round(self._monotonic() - started, 6)
+        self._last_readiness_diagnostics = dict(diagnostics)
+        raise OpenVikingReadinessTimeout(diagnostics)
 
     def wait_for_quiescence(self, task_id: str) -> Mapping[str, Any]:
         submitted_at = self._clock()
