@@ -1,6 +1,6 @@
 {
   "phase": "05A",
-  "status": "PREPARED_LOCAL_TESTS_PENDING",
+  "status": "PASS",
   "provider": "openviking",
   "verified_latest_version": "0.4.22",
   "verified_release_date": "2026-09-28",
@@ -106,12 +106,23 @@
     "model_cache": "<MEMLIFE_DATA_ROOT>/model_cache/openviking",
     "runs": "<MEMLIFE_DATA_ROOT>/runs/phase-05-openviking",
     "authorization_gate": "MEMLIFE_AUTHORIZE_PHASE05_LIVE=YES",
+    "credential_source": "/home/exouser/Memo/.local/phase05_openviking.env (Git-ignored, mode 400 or 600, future live run only)",
     "executed_in_phase_05a": false
   },
   "benchmark_version": "0.1",
   "trace_schema_version": "0.1",
-  "tested_repo_commit": "PENDING_FINAL_LOCAL_TEST_COMMIT",
-  "timestamp": "2026-09-29T04:58:12.3449479Z",
+  "test_results": {
+    "unit": "94 passed",
+    "contract": "6 passed",
+    "integration": "5 passed, 1 skipped (live Hindsight service unavailable)",
+    "mem0_regression": "5 passed",
+    "hindsight_regression": "11 passed, 1 skipped (live self-hosted service unavailable)",
+    "phase_03_regression": "18 passed",
+    "phase_03b_regression": "16 passed",
+    "full_suite": "105 passed, 1 skipped"
+  },
+  "tested_repo_commit": "c1924d47ff6ba357d410a18777482f83a8f1cd29",
+  "timestamp": "2026-09-29T18:15:47.3943070Z",
   "config_hash": "ad1216520de78aa6dd6fe0c34393e3830b05b035aa7dda367d92725dafe53258",
   "jetstream_used": false,
   "hosted_model_calls": 0,
