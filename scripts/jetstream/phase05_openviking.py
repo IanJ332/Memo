@@ -39,6 +39,15 @@ LIVE_CONFIG_VALUES = {
 }
 
 
+class ServiceExitedBeforeReady(RuntimeError):
+    """The controller's one owned child exited before HTTP readiness."""
+
+    def __init__(self, exit_code: int | None) -> None:
+        rendered = "unknown" if exit_code is None else str(exit_code)
+        super().__init__(f"OpenViking service exited before readiness (exit code {rendered})")
+        self.exit_code = exit_code
+
+
 def require_live_authorization() -> None:
     if os.environ.get(LIVE_AUTH_ENV) != "YES":
         raise RuntimeError(
@@ -244,6 +253,23 @@ def _sanitize_runtime_text(value: object) -> str:
     return text[-8000:]
 
 
+def _sanitize_runtime_value(value: object) -> object:
+    """Recursively sanitize provider diagnostics without changing their shape."""
+
+    if isinstance(value, Mapping):
+        return {
+            str(key): _sanitize_runtime_value(child)
+            for key, child in value.items()
+            if str(key).lower().replace("-", "_")
+            not in {"api_key", "authorization", "password", "token", "secret"}
+        }
+    if isinstance(value, (list, tuple)):
+        return [_sanitize_runtime_value(child) for child in value]
+    if isinstance(value, str):
+        return _sanitize_runtime_text(value)
+    return value
+
+
 def write_blocked_result(
     output: Path,
     *,
@@ -297,6 +323,19 @@ class OpenVikingServiceController:
         self.process: subprocess.Popen[bytes] | None = None
         self._log = None
 
+    def is_running(self) -> bool:
+        """Return liveness for this controller's child only."""
+
+        return self.process is not None and self.process.poll() is None
+
+    def exit_code(self) -> int | None:
+        """Return this controller's child exit code, or None while it is alive/unstarted."""
+
+        return None if self.process is None else self.process.poll()
+
+    def log_tail(self, *, lines: int = 40) -> list[str]:
+        return _service_log_tail(self.log_path, lines=lines)
+
     def start(self) -> None:
         if self.pid_path.exists():
             raise RuntimeError(f"refusing to replace existing PID file: {self.pid_path}")
@@ -319,8 +358,9 @@ class OpenVikingServiceController:
             stdout=self._log,
             stderr=subprocess.STDOUT,
         )
-        if self.process.poll() is not None:
-            raise RuntimeError("OpenViking exited during startup")
+        exit_code = self.process.poll()
+        if exit_code is not None:
+            raise ServiceExitedBeforeReady(exit_code)
         self.pid_path.write_text(f"{self.process.pid}\n", encoding="ascii")
 
     def stop(self) -> None:
@@ -399,7 +439,10 @@ def validate_remote(output: Path) -> None:
     src_root = REPO_ROOT / "src"
     if str(src_root) not in sys.path:
         sys.path.insert(0, str(src_root))
-    from memlife.adapters.openviking import OpenVikingMemoryAdapter
+    from memlife.adapters.openviking import (
+        OpenVikingMemoryAdapter,
+        ServiceExitedBeforeReady as AdapterServiceExitedBeforeReady,
+    )
     from memlife.models.memory import QueryCommand, WriteCommand
     from memlife.runner.provenance import ProvenanceTraceRunner
     from memlife.scenarios.canonical import canonical_scenarios
@@ -407,15 +450,38 @@ def validate_remote(output: Path) -> None:
     controller = OpenVikingServiceController()
     result: dict[str, Any] = {
         "status": "IN_PROGRESS",
+        "stage": "service_startup",
         "git_commit_tested": _git_commit_tested(),
         "model_calls": "provider-internal only; RQ3=0",
+        "service_liveness": "NOT_ESTABLISHED",
+        "service_readiness": "NOT_ESTABLISHED",
     }
+    adapter = None
     try:
         adapter = OpenVikingMemoryAdapter.from_environment(
-            restart_callback=controller.restart
+            restart_callback=controller.restart,
+            process_is_running=controller.is_running,
+            process_exit_code=controller.exit_code,
         )
         controller.start()
+        result["stage"] = "service_readiness"
         adapter.wait_until_ready(timeout_seconds=180)
+        readiness = adapter.readiness_diagnostics
+        result.update(
+            service_liveness=(
+                "PASS"
+                if readiness.get("health_status") == "ok"
+                and readiness.get("health_healthy") is True
+                else "NOT_ESTABLISHED"
+            ),
+            service_readiness="PASS",
+            health_status=readiness.get("health_status"),
+            health_healthy=readiness.get("health_healthy"),
+            health_version=readiness.get("health_version"),
+            readiness_status=readiness.get("readiness_status"),
+            readiness_checks=_sanitize_runtime_value(readiness.get("readiness_checks")),
+        )
+        result["stage"] = "semantic_compatibility"
         namespace = "phase-05-live-probe"
         adapter.reset_namespace(namespace)
         source = adapter.write(
@@ -435,6 +501,7 @@ def validate_remote(output: Path) -> None:
         ]
         result.update(
             status="PASS",
+            stage="complete",
             source_event_id=source.memory_id,
             provider_memory_uris=source.metadata["openviking_provider_memory_uris"],
             persistence_before=len(before),
@@ -449,12 +516,37 @@ def validate_remote(output: Path) -> None:
             ],
         )
     except Exception as exc:
+        readiness = getattr(adapter, "readiness_diagnostics", {}) if adapter is not None else {}
+        exited = isinstance(exc, (ServiceExitedBeforeReady, AdapterServiceExitedBeforeReady))
+        if exited:
+            result["stage"] = "service_startup"
         result.update(
             status="BLOCKED",
-            blocker_type=type(exc).__name__,
+            blocker_type="ServiceExitedBeforeReady" if exited else type(exc).__name__,
             blocker=_sanitize_runtime_text(exc),
+            service_process_alive=controller.is_running(),
+            service_exit_code=(
+                getattr(exc, "exit_code", None)
+                if exited
+                else controller.exit_code()
+            ),
+            health_status=readiness.get("health_status"),
+            health_healthy=readiness.get("health_healthy"),
+            health_version=readiness.get("health_version"),
+            readiness_status=readiness.get("readiness_status"),
+            readiness_checks=_sanitize_runtime_value(readiness.get("readiness_checks")),
+            readiness_elapsed_seconds=readiness.get("elapsed_seconds"),
+            readiness_last_http_status=readiness.get("last_http_status"),
+            readiness_request_error_class=readiness.get("request_error_class"),
         )
+        if (
+            readiness.get("health_status") == "ok"
+            and readiness.get("health_healthy") is True
+        ):
+            result["service_liveness"] = "PASS"
     finally:
+        result.setdefault("service_process_alive", controller.is_running())
+        result.setdefault("service_exit_code", controller.exit_code())
         try:
             controller.stop()
         except Exception as exc:
@@ -463,7 +555,7 @@ def validate_remote(output: Path) -> None:
                 blocker_type="ServiceCleanupError",
                 blocker=_sanitize_runtime_text(exc),
             )
-        log_tail = _service_log_tail(controller.log_path)
+        log_tail = controller.log_tail()
         if log_tail:
             result["service_log_tail"] = log_tail
         output.parent.mkdir(parents=True, exist_ok=True)

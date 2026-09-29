@@ -82,30 +82,42 @@ export PHASE05_PROVIDER_STATE="$PROVIDER_STATE"
 export PHASE05_MODEL_CACHE="$MODEL_CACHE"
 export PHASE05_RUN_ROOT="$RUN_ROOT"
 
-if [ ! -e "$OPENVIKING_VENV" ]; then
+REUSE_EXISTING_ENV=0
+if [ -e "$OPENVIKING_VENV" ]; then
+    # Phase 05E installed this environment. Reuse is fail-closed: a retained
+    # environment that no longer satisfies the exact contract is diagnosed,
+    # never silently replaced or upgraded.
+    test -x "$OPENVIKING_PYTHON" || blocked_result environment_reuse MissingProviderPython
+    test -x "$OPENVIKING_SERVICE" || blocked_result environment_reuse MissingOpenVikingExecutable
+    REUSE_CHECK_LOG="$RUN_ROOT/openviking-reuse-check.log"
+    if ! "$OPENVIKING_PYTHON" -c 'import importlib.metadata as m; assert m.version("openviking") == "0.4.22"; assert m.version("llama-cpp-python")' >"$REUSE_CHECK_LOG" 2>&1; then
+        blocked_result environment_reuse DistributionMetadataError "$REUSE_CHECK_LOG"
+    fi
+    REUSE_EXISTING_ENV=1
+else
     python3 -m venv "$OPENVIKING_VENV"
-fi
-DRY_RUN_LOG="$RUN_ROOT/openviking-pip-dry-run.log"
-if ! "$OPENVIKING_PYTHON" -m pip install --dry-run --ignore-installed \
-    --report "$PLAN_REPORT" --extra-index-url "$LLAMA_CPU_WHEEL_INDEX" \
-    -r "$OPENVIKING_REQUIREMENTS" >"$DRY_RUN_LOG" 2>&1; then
-    blocked_result dependency_dry_run PipDryRunError "$DRY_RUN_LOG"
-fi
-if ! "$HARNESS_PYTHON" "$REPO/scripts/jetstream/phase05_openviking.py" \
-    dependency-plan --report "$PLAN_REPORT" --output "$PLAN_RESULT"; then
-    blocked_result dependency_plan DependencyPlanValidationError
-fi
-if [ "$("$HARNESS_PYTHON" -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$PLAN_RESULT")" != PASS ]; then
-    cp "$PLAN_RESULT" "$RESULT"
-    emit_result
-    exit 0
-fi
+    DRY_RUN_LOG="$RUN_ROOT/openviking-pip-dry-run.log"
+    if ! "$OPENVIKING_PYTHON" -m pip install --dry-run --ignore-installed \
+        --report "$PLAN_REPORT" --extra-index-url "$LLAMA_CPU_WHEEL_INDEX" \
+        -r "$OPENVIKING_REQUIREMENTS" >"$DRY_RUN_LOG" 2>&1; then
+        blocked_result dependency_dry_run PipDryRunError "$DRY_RUN_LOG"
+    fi
+    if ! "$HARNESS_PYTHON" "$REPO/scripts/jetstream/phase05_openviking.py" \
+        dependency-plan --report "$PLAN_REPORT" --output "$PLAN_RESULT"; then
+        blocked_result dependency_plan DependencyPlanValidationError
+    fi
+    if [ "$("$HARNESS_PYTHON" -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$PLAN_RESULT")" != PASS ]; then
+        cp "$PLAN_RESULT" "$RESULT"
+        emit_result
+        exit 0
+    fi
 
-INSTALL_LOG="$RUN_ROOT/openviking-install.log"
-if ! "$OPENVIKING_PYTHON" -m pip install --no-cache-dir \
-    --extra-index-url "$LLAMA_CPU_WHEEL_INDEX" \
-    -r "$OPENVIKING_REQUIREMENTS" >"$INSTALL_LOG" 2>&1; then
-    blocked_result provider_install ProviderInstallError "$INSTALL_LOG"
+    INSTALL_LOG="$RUN_ROOT/openviking-install.log"
+    if ! "$OPENVIKING_PYTHON" -m pip install --no-cache-dir \
+        --extra-index-url "$LLAMA_CPU_WHEEL_INDEX" \
+        -r "$OPENVIKING_REQUIREMENTS" >"$INSTALL_LOG" 2>&1; then
+        blocked_result provider_install ProviderInstallError "$INSTALL_LOG"
+    fi
 fi
 
 PIP_CHECK_LOG="$RUN_ROOT/openviking-pip-check.log"
@@ -121,6 +133,7 @@ fi
 if "$OPENVIKING_PYTHON" -m pip list --format=json | "$HARNESS_PYTHON" -c 'import json,sys; n=[p["name"].lower() for p in json.load(sys.stdin)]; raise SystemExit(0 if any(x.startswith(("nvidia-","cuda-")) for x in n) else 1)'; then
     blocked_result pip_check ForbiddenInstalledDistribution
 fi
+printf 'phase05_provider_env_reused=%s\n' "$REUSE_EXISTING_ENV"
 
 cd "$REPO"
 CONFIG_LOG="$RUN_ROOT/openviking-config.log"
