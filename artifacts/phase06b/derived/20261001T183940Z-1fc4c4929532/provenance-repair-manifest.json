@@ -1,0 +1,70 @@
+{
+  "derived_artifact_path": "artifacts/phase06b/derived/20261001T183940Z-1fc4c4929532/freeze-v1-raw-runs.provenance-repaired.jsonl",
+  "derived_artifact_sha256": "80b82f177adf4a15659bc583df61c78dafaa034ac931b5592e22a47d01f67a9f",
+  "derived_object_count": 32,
+  "exact_transformation_rule": "For each source JSON object, add \"attempt_id\": \"20261001T183940Z-1fc4c4929532\"; preserve every pre-existing key and value.",
+  "fields_added": [
+    "attempt_id"
+  ],
+  "fields_modified": [],
+  "fields_removed": [],
+  "freeze_id": "experiment-freeze-v1",
+  "freeze_sha256": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+  "original_artifact_sha256": {
+    "blocker-evidence.json": "732238df0acd14c737fcc92d5e3b5088f09a28e4152d7b8dfac5c0229ea10621",
+    "execution-ledger.json": "cca324bb1d667c53bd4728d1ddd69b6a6bd52d8010f8420d7884c12558823882",
+    "freeze-v1-aggregate.json": "d7968d0fa96147f6b4d28a4b57704b56af5ff8b89cebc0ec5facb94985134bfe",
+    "freeze-v1-raw-runs.jsonl": "fe6f8cca390fa30b714e7635b9e7e56b987bd8303611f625c3258e90eaea2ef4",
+    "freeze-v1-residual-index.json": "bdd288706e6b5337672f4d575ab8972400361b4a8e24f713a76747ac9c28f6b5",
+    "lifecycle-session.json": "da7b79b836196e393b324f9ba0ce3119de7d183f5b79d529a2de4eeea1e19891",
+    "planned-runs.json": "30fd48df351723a0f4df8d022d0e17e26f8a67179ac484ea48868064ef5ea4c5",
+    "remote-result.json": "0655eeed4cc91cd3892555b72680133cf5f9c4a8c24a975444ebc124a732e067"
+  },
+  "proof_sources_used": [
+    {
+      "finding": "enclosing directory name is 20261001T183940Z-1fc4c4929532",
+      "path": "artifacts/phase06b/attempts/20261001T183940Z-1fc4c4929532"
+    },
+    {
+      "finding": "attempt_id and every remote artifact path identify the same attempt",
+      "path": "artifacts/phase06b/attempts/20261001T183940Z-1fc4c4929532/remote-result.json",
+      "sha256": "0655eeed4cc91cd3892555b72680133cf5f9c4a8c24a975444ebc124a732e067"
+    },
+    {
+      "finding": "session attempt_id and embedded remote_work attempt_id identify the same attempt",
+      "path": "artifacts/phase06b/attempts/20261001T183940Z-1fc4c4929532/lifecycle-session.json",
+      "sha256": "da7b79b836196e393b324f9ba0ce3119de7d183f5b79d529a2de4eeea1e19891"
+    },
+    {
+      "finding": "32 completed run IDs are exactly the 32 raw run IDs; remote-result locates this ledger in the same remote attempt directory",
+      "path": "artifacts/phase06b/attempts/20261001T183940Z-1fc4c4929532/execution-ledger.json",
+      "sha256": "cca324bb1d667c53bd4728d1ddd69b6a6bd52d8010f8420d7884c12558823882"
+    },
+    {
+      "finding": "all parent directories end in attempts/20261001T183940Z-1fc4c4929532",
+      "path": "remote artifact paths recorded in remote-result.json and lifecycle-session.json"
+    }
+  ],
+  "repair_code_commit": "f1221564c0c83cc67df9c8487c735bce3c42fc85",
+  "repair_schema_version": "1.0",
+  "repair_timestamp": "2026-10-01T19:12:11.3499231+00:00",
+  "source_artifact_path": "artifacts/phase06b/attempts/20261001T183940Z-1fc4c4929532/freeze-v1-raw-runs.jsonl",
+  "source_artifact_sha256": "fe6f8cca390fa30b714e7635b9e7e56b987bd8303611f625c3258e90eaea2ef4",
+  "source_attempt_id": "20261001T183940Z-1fc4c4929532",
+  "source_object_count": 32,
+  "tested_commit": "a569a166093c626c5a99a7a33042e0aa7ddb7e74",
+  "validation": {
+    "aggregate_to_residual_consistency": "PASS",
+    "attempt_id_consistency": "PASS",
+    "downstream_decision_model_calls": 0,
+    "duplicate_executions": 0,
+    "fourth_repetitions": 0,
+    "freeze_consistency": "PASS",
+    "object_count": 32,
+    "raw_to_aggregate_consistency": "PASS",
+    "status": "PASS",
+    "tested_commit_consistency": "PASS",
+    "unique_namespaces": 32,
+    "unique_run_ids": 32
+  }
+}
