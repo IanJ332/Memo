@@ -1,0 +1,59 @@
+{
+  "aggregate_artifact": null,
+  "base_commit": "f11a57b27467d8012ef36520f931f281d1b61486",
+  "blocked_not_executed_runs": 42,
+  "branch": "phase-06b-storage-batch",
+  "cleanup": {
+    "final_vm_state": "SHELVED",
+    "hindsight_service": "NOT_STARTED",
+    "mem0": "NOT_STARTED",
+    "model_caches_retained": true,
+    "openviking_service": "NOT_STARTED",
+    "owned_temporary_fip_deleted": true,
+    "persistent_state_retained": true
+  },
+  "downstream_decision_model_calls": 0,
+  "error_runs": 0,
+  "executed_runs": 0,
+  "final_commit": null,
+  "final_commit_note": "Authoritative final branch HEAD is recorded by Git and in the final response; a commit cannot contain its own object ID.",
+  "freeze_id": "experiment-freeze-v1",
+  "freeze_sha256_expected": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+  "freeze_sha256_local": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+  "freeze_sha256_remote": "6b41176154070dd8c58db24a5c5adfe5365e39d0c31408c033019e7d6108b3c9",
+  "freeze_violation": "Remote exact-byte mismatch blocked before all experimental operations; Freeze v1 content was not modified.",
+  "lifecycle_count": 1,
+  "manifest_schema_version": "1.0",
+  "planned_supported_runs": 42,
+  "planned_runs_artifact": "artifacts/phase06b/planned-runs.json",
+  "prepared_live_commit": "d7e9814171f755d749dc03d9fff965fbaa13fe3d",
+  "provider_config_hashes": {
+    "hindsight": "baca300bdce174d8cb2d00fa576df73d0cf5c4f9230aed370d2767bd35f4d73d",
+    "mem0": "23c068e16db7d4bb90aad7755b997d5a4104c433a4a0083ef43b3506680ff2e8",
+    "openviking": "ad1216520de78aa6dd6fe0c34393e3830b05b035aa7dda367d92725dafe53258"
+  },
+  "provider_internal_model_declaration": {
+    "hindsight": "gpt-oss-120b provider_internal; NOT_INVOKED",
+    "openviking": "gpt-oss-120b provider_internal; NOT_INVOKED"
+  },
+  "provider_run_counts": {
+    "hindsight": 0,
+    "mem0": 0,
+    "openviking": 0
+  },
+  "provider_runtime_validation": "NOT_RUN_FREEZE_GATE_BLOCKED",
+  "provider_versions": {
+    "hindsight": "0.10.1",
+    "mem0": "2.2.1",
+    "openviking": "0.4.22"
+  },
+  "remote_freeze_validator": "NOT_RUN_EARLIER_EXACT_HASH_GATE_BLOCKED",
+  "residual_artifact": null,
+  "residual_count": null,
+  "rq3_calls": 0,
+  "secrets_audit": "PASS",
+  "status": "BLOCKED",
+  "tested_live_commit": "d7e9814171f755d749dc03d9fff965fbaa13fe3d",
+  "unsupported_cells": 4,
+  "vm_uuid": "5baeeae7-4c29-4903-89fe-2e9df0a8eced"
+}
