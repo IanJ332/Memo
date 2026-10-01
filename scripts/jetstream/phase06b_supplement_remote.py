@@ -38,6 +38,7 @@ from memlife.runner.phase06b_supplement import (  # noqa: E402
     SUPPLEMENT_PLAN_SHA256,
     blocked_supplement_records,
     execute_supplement_runs,
+    original_persistent_raw_path,
     validate_supplement_rows,
     validate_supplement_selection,
 )
@@ -75,14 +76,6 @@ ORIGINAL_ROWS_PATH = (
     / "derived"
     / "20261001T183940Z-1fc4c4929532"
     / "freeze-v1-raw-runs.provenance-repaired.jsonl"
-)
-ORIGINAL_RAW_PATH = (
-    REPO_ROOT
-    / "artifacts"
-    / "phase06b"
-    / "attempts"
-    / ORIGINAL_ATTEMPT_ID
-    / "freeze-v1-raw-runs.jsonl"
 )
 
 
@@ -375,9 +368,9 @@ def validate_pre_experiment_environment(
         raise RuntimeError("OpenViking frozen configuration hash mismatch")
     _validate_openviking_runtime_config(Path(os.environ["PHASE05_OPENVIKING_CONFIG"]))
     evidence["openviking_runtime_gate"] = "PASS"
-    if not ORIGINAL_RAW_PATH.is_file():
+    if not original_persistent_raw_path().is_file():
         raise RuntimeError("original Phase 06B raw artifact is unavailable")
-    original_raw_sha256 = hashlib.sha256(ORIGINAL_RAW_PATH.read_bytes()).hexdigest()
+    original_raw_sha256 = hashlib.sha256(original_persistent_raw_path().read_bytes()).hexdigest()
     evidence["original_raw_sha256"] = original_raw_sha256
     if original_raw_sha256 != ORIGINAL_RAW_SHA256:
         raise RuntimeError("original Phase 06B raw SHA-256 mismatch")

@@ -1,0 +1,9 @@
+{
+  "artifact_kind": "POST_RUN_DERIVED_RECONSTRUCTION",
+  "attempt": "20261001T232556Z-6b944ec11de5",
+  "executed": 0,
+  "blocked": 10,
+  "provider_started": false,
+  "blocker": "PERSISTENT_ORIGINAL_RAW_PATH_RESOLUTION_DEFECT",
+  "artifact_transfer": "PARTIAL / SSH_TIMEOUT"
+}

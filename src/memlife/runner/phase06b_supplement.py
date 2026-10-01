@@ -26,6 +26,21 @@ SUPPLEMENT_PLAN_SHA256 = "2db182047dd2b1bfddcaddaad40ace58385f8bdcf0bb114354d972
 EXECUTION_ORIGIN = "SUPPLEMENT"
 
 
+def original_persistent_raw_path() -> Path:
+    """Resolve the original persistent Phase 06B attempt artifact without repository coupling."""
+    import os
+    data_root_env = os.environ.get("MEMLIFE_DATA_ROOT")
+    if not data_root_env:
+        raise RuntimeError("MEMLIFE_DATA_ROOT environment variable is required")
+    root = Path(data_root_env).resolve()
+    
+    path = root / "runs" / "phase06b" / "attempts" / "20261001T183940Z-1fc4c4929532" / "freeze-v1-raw-runs.jsonl"
+    if not str(path).startswith(str(root)):
+        raise RuntimeError("original raw path escaped data root")
+    return path
+
+
+
 @dataclass(frozen=True)
 class SupplementSelection:
     """Validated, ordered ten-run selection derived from Freeze v1."""

@@ -197,3 +197,21 @@ each regression. It is not generic troubleshooting advice.
 - **Correct fix:** Use materialize_tracked_text(plan_path).git_blob to read the repository-canonical source bytes regardless of working-tree line endings.
 - **Regression invariant:** No tracked text artifact used as scientific/protocol identity may depend on working-tree EOL representation.
 - **Protection:** src/memlife/runner/phase06b_supplement.py, scripts/validate_phase06b_supplement.py, 	ests/unit/test_phase06b_supplement_plan_eol.py.
+
+## Supplement live original-raw path bound to repository tree
+
+- **Symptom:** Supplement live original-raw path incorrectly bound to repository tree.
+- **Root cause:** Persistent empirical artifact path and tracked repository path were conflated.
+- **Wrong / insufficient:** Relying on tracked artifacts for authoritative raw persistence.
+- **Correct fix:** Implement `original_persistent_raw_path()` resolving `MEMLIFE_DATA_ROOT`.
+- **Regression invariant:** Live source evidence must resolve from its authoritative storage class.
+- **Protection:** `scripts/jetstream/phase06b_supplement_remote.py` usage and `tests/unit/test_phase06b_supplement_path.py`.
+
+## Supplement artifact retrieval fragility
+
+- **Symptom:** Supplement artifact retrieval was fragile to one SSH transfer timeout.
+- **Root cause:** Artifact transfer had no bounded retry, failing the entire download step on a single transient SSH timeout.
+- **Wrong / insufficient:** Rerunning the whole experiment or changing scientific outcome due to network error.
+- **Correct fix:** Implement bounded retry solely on the base64 SSH read command, preserving already downloaded files and failing clearly after retries.
+- **Regression invariant:** Transport retry may retry evidence retrieval only, never scientific execution.
+- **Protection:** `scripts/jetstream/phase06b_supplement.py` bounded retry and `tests/unit/test_phase06b_supplement_retrieval.py`.

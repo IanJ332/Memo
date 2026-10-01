@@ -33,7 +33,7 @@ the main storage-lifecycle experiment.
 | Branch | `phase-06b-storage-batch` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Origin HEAD | `2224704e9bc8223a686a18c91e0eb879cb0a54d7` |
-| Current phase | Phase 06B-S2R local repair/validation passed; publication pending; S2 remains blocked with 0/10 executed |
+| Current phase | Phase 06B-S2R2 local repair/validation passed; publication pending; S2 remains blocked with 0/10 executed |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` |
@@ -68,6 +68,7 @@ experiment or origin state.
   records the ten blocked IDs without modifying the attempt, future preflight
   evidence serialization is complete, and lifecycle vocabulary is normalized.
   No scientific row or canonical source artifact changed.
+- Phase 06B-S2R2: local repair/validation passed; path-resolution bug (original raw artifact was bound to repo instead of MEMLIFE_DATA_ROOT) and SSH artifact-transfer timeout fragility identified. Published code at 88364966 was live-tested; Jetstream is shelved and provider never started. 10 frozen runs remain never executed. Local repair and validation of the path fix and bounded transfer retries passed; publication pending. No new live retry is authorized.
 
 See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 [`EXPERIMENT_LEDGER.md`](EXPERIMENT_LEDGER.md) for canonical provenance.

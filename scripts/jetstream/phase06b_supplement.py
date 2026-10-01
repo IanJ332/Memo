@@ -82,12 +82,21 @@ def _download_artifacts(
     local_root = attempt_path(LOCAL_ARTIFACT_ROOT, attempt_id)
     local_root.mkdir(exist_ok=False)
     for name in ARTIFACT_NAMES:
-        encoded = runner(
-            ssh_builder(address, f"base64 -w0 '{remote_root}/{name}'"), timeout=600
-        ).stdout.strip()
-        data = base64.b64decode(encoded, validate=True)
-        with (local_root / name).open("xb") as stream:
-            stream.write(data)
+        max_attempts = 3
+        last_exception = None
+        for attempt in range(max_attempts):
+            try:
+                encoded = runner(
+                    ssh_builder(address, f"base64 -w0 '{remote_root}/{name}'"), timeout=600
+                ).stdout.strip()
+                data = base64.b64decode(encoded, validate=True)
+                with (local_root / name).open("xb") as stream:
+                    stream.write(data)
+                break
+            except Exception as exc:
+                last_exception = exc
+        else:
+            raise RuntimeError(f"failed to download {name} after {max_attempts} attempts: {last_exception}")
     return local_root
 
 
