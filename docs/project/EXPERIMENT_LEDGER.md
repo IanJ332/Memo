@@ -104,3 +104,24 @@ Canonical source artifacts remain unchanged. Any combined view is derived and
 must retain `attempt_id` plus `execution_origin` (`ORIGINAL` or `SUPPLEMENT`)
 per row. Do not add `execution_origin` by rewriting canonical originals. There
 is no majority voting and no replacement of errors.
+
+## Phase 06B-S2R local repair and derived closure
+
+- Status: **PASS locally; publication pending**. No Jetstream/provider/RQ3
+  action occurred and no supplement observation was executed.
+- The provenance-repaired tracked JSONL is now read from the Git object,
+  JSONL-validated without reserialization, and materialized as canonical CRLF
+  bytes in memory. Its sole identity remains
+  `80b82f177adf4a15659bc583df61c78dafaa034ac931b5592e22a47d01f67a9f`;
+  the LF blob SHA is diagnostic only, not an accepted alternative identity.
+- The immutable S2 attempt directory was not changed. Derived operational
+  closure under
+  `artifacts/phase06b/supplements/derived/20261001T205742Z-67a4ab301c67/`
+  records 0 executed, 10 `BLOCKED_NOT_EXECUTED`, and marks missing disk and
+  harness-prefix samples `NOT_SERIALIZED` rather than reconstructing them.
+- Future attempts snapshot the plan and serialize its SHA/authorized IDs,
+  exact selected harness path and `sys.prefix`, root/volume free bytes,
+  per-run or blocked statuses, and canonical lifecycle status before provider
+  work can proceed.
+- Lifecycle status is canonically `PASS|PARTIAL|BLOCKED`; historical
+  `SUPPLEMENT_*` values remain backward-compatible aliases.

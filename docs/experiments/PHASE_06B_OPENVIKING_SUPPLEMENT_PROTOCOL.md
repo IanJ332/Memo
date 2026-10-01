@@ -27,6 +27,15 @@ but the Git blob/Linux LF form hashes to
 The provider service never started, no frozen run ID was invoked, and the
 original 32 rows remain unchanged.
 
+Phase 06B-S2R repairs this locally by reading the tracked JSONL from the Git
+object, validating its logical JSON lines without reserialization, normalizing
+only EOL representation, and materializing canonical CRLF bytes in memory.
+Future attempts also capture the exact plan, authorized IDs, harness path and
+`sys.prefix`, disk-free samples, and blocked ledger before provider startup.
+The shared lifecycle vocabulary is `PASS`, `PARTIAL`, or `BLOCKED`; historical
+`SUPPLEMENT_*` status values remain parse-compatible. This is validation and
+observability work only and does not authorize another lifecycle.
+
 The dedicated implementation is
 `scripts/jetstream/phase06b_supplement.py` →
 `phase06b_supplement_remote.sh` → `phase06b_supplement_remote.py`. It has no

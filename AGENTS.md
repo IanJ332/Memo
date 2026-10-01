@@ -18,11 +18,13 @@ The active line is `phase-06b-storage-batch`. Phase 06B is partial; Phase
 06B-C passed; local-only Phase 06B-S1 supplement implementation is complete.
 Phase 06B-S2 attempt `20261001T205742Z-67a4ab301c67` was blocked before provider
 startup and executed zero runs because the provenance-repaired artifact hash
-was checkout-EOL-dependent. The dedicated path can select only the exact ten
-never-executed OpenViking runs and adds observability without changing
-experiment behavior. A second live supplement lifecycle is **not authorized**.
-Jetstream is **SHELVED** by default and must not be started without explicit
-authorization.
+was checkout-EOL-dependent. Phase 06B-S2R locally repaired validation to use
+repository-source canonical CRLF materialization, added derived evidence-gap
+closure, and normalized lifecycle statuses; publication is pending. The
+dedicated path can select only the exact ten never-executed OpenViking runs and
+adds observability without changing experiment behavior. A second live
+supplement lifecycle is **not authorized**. Jetstream is **SHELVED** by default
+and must not be started without explicit authorization.
 
 ## Non-negotiable invariants
 

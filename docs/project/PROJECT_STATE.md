@@ -19,6 +19,7 @@ documents and manifests.
 | Phase 06B-S0 — supplement design | PASS, LOCAL ONLY | `0f75d2b`; `478d226` tests | Ten-run plan, validation, handoff system | No live supplement or RQ3 authorization. |
 | Phase 06B-S1 — supplement implementation | PASS, LOCAL ONLY | current local phase | Dedicated plan-derived runner, attempt isolation, provenance, bounded diagnostics, stop policy, combined-view derivation, pre-live gate | Zero supplement runs executed; explicit future live authorization still required. |
 | Phase 06B-S2 — supplement execution | BLOCKED | `2224704e9bc8223a686a18c91e0eb879cb0a54d7` tested | Attempt `20261001T205742Z-67a4ab301c67`; 0/10 runs; [manifest](../../manifests/phase-06b-s2-openviking-supplement.json) | Remote preflight hashed LF checkout bytes against a CRLF-derived expected SHA; provider service never started. One lifecycle used and cleaned up; no retry authorized. |
+| Phase 06B-S2R — portability/evidence closure | PASS, LOCAL ONLY; PUBLICATION PENDING | current local phase | Git-source canonical artifact validation; derived S2 closure; future preflight serialization; canonical lifecycle statuses | No scientific rows changed or added. Live retry remains unauthorized. |
 
 Current branch: `phase-06b-storage-batch`. Jetstream default/end state:
 `SHELVED`.

@@ -32,13 +32,15 @@ each regression. It is not generic troubleshooting advice.
 - **Wrong / insufficient:** validate the ordinary checkout bytes and assume
   the local pass is platform-independent; consume a second live lifecycle to
   test a repair.
-- **Required fix (not yet implemented):** define and validate one canonical
-  byte representation from the Git blob or explicitly materialize the proven
-  CRLF representation in memory, with Windows and Linux regression tests.
+- **Correct fix:** read the tracked JSONL from the Git object, validate each
+  non-empty logical line as JSON without reserialization, normalize only line
+  endings, materialize canonical CRLF bytes in memory, and compare one SHA.
 - **Regression invariant:** provenance evidence validation must not depend on
   checkout EOL conversion.
-- **Protection:** pending local-only repair; the blocked attempt and manifest
-  preserve the failure. No second lifecycle is authorized.
+- **Protection:** `src/memlife/runner/tracked_text.py`,
+  `tests/unit/test_phase06b_s2r.py`; the blocked attempt remains immutable and
+  no second lifecycle is authorized. This generalizes the earlier Freeze-v1
+  repair without changing artifact content.
 
 ## Supplement lifecycle status vocabulary mismatch
 
@@ -52,13 +54,18 @@ each regression. It is not generic troubleshooting advice.
   supplement would be labeled controller `BLOCKED`; cleanup still runs in the
   wrapper's `finally` path. The S2 attempt was already scientifically blocked,
   so this was not its experimental blocker.
-- **Required fix (not yet implemented):** explicitly map supplement completion
-  states to lifecycle success/partial/block semantics while preserving the
-  original supplement status in evidence, and add an integrated wrapper test.
+- **Canonical vocabulary:** shared lifecycle evidence emits `PASS`, `PARTIAL`,
+  or `BLOCKED`. Historical `SUPPLEMENT_COMPLETE`, `SUPPLEMENT_PARTIAL`, and
+  `SUPPLEMENT_BLOCKED` parse as `PASS`, `PARTIAL`, and `BLOCKED`; the
+  supplement-specific value remains separately preserved as
+  `supplement_status` in future evidence.
+- **Correct fix:** normalize at the shared managed-lifecycle boundary and emit
+  only the canonical vocabulary in the future remote result `status` field.
 - **Regression invariant:** provider/phase result vocabularies must be
   normalized explicitly at shared lifecycle boundaries.
-- **Protection:** pending local-only repair; do not work around it during a
-  frozen live execution.
+- **Protection:** `src/memlife/runner/lifecycle_status.py`, integrated wrapper
+  coverage in `tests/unit/test_jetstreamctl.py`, and future-result coverage in
+  `tests/unit/test_phase06b_s2r.py`.
 
 ## Virtualenv identity false positive
 

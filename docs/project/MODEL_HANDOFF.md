@@ -32,7 +32,7 @@ the main storage-lifecycle experiment.
 | --- | --- |
 | Branch | `phase-06b-storage-batch` |
 | Phase baseline and origin HEAD | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
-| Current phase | Phase 06B-S2 supplement attempt blocked in remote preflight; 0/10 executed |
+| Current phase | Phase 06B-S2R local repair/validation passed; publication pending; S2 remains blocked with 0/10 executed |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` |
@@ -62,19 +62,24 @@ experiment or origin state.
   artifact has LF bytes on Linux but its expected SHA-256 is over CRLF bytes.
   Zero supplement runs executed, no service started, RQ3 remained zero, the
   owned floating IP was deleted, and Jetstream returned to `SHELVED`.
+- Phase 06B-S2R: local-only canonical Git-source validation now reproduces the
+  historical CRLF artifact identity from LF or CRLF checkouts. Derived closure
+  records the ten blocked IDs without modifying the attempt, future preflight
+  evidence serialization is complete, and lifecycle vocabulary is normalized.
+  No scientific row or canonical source artifact changed.
 
 See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 [`EXPERIMENT_LEDGER.md`](EXPERIMENT_LEDGER.md) for canonical provenance.
 
 ## Next authorized action
 
-No live action is currently authorized. The next safe work is local-only:
-remove checkout-EOL dependence from provenance-repaired artifact validation,
-cover Linux Git-blob bytes in tests, and normalize supplement completion
-statuses at the generic lifecycle boundary. Any later live attempt requires
-new explicit authorization. Until then, do not start Jetstream, execute any
-supplement run, execute RQ3, probe the remote provider-crash root cause, change
-Freeze v1, or rerun any completed repetition.
+No live action is currently authorized. The next safe work remains **LOCAL
+REPAIR / VALIDATION**: review and publish/synchronize the S2R commits, then
+repeat the local gates from the published checkout. Publication does not
+authorize execution. Any later live attempt requires new explicit
+authorization. Until then, do not start Jetstream, execute any supplement run,
+execute RQ3, probe the remote provider-crash root cause, change Freeze v1, or
+rerun any completed repetition.
 
 The dedicated runner derives only OpenViking S0 r3 and S2/S3/S4 r1–r3 from the
 validated plan. It uses a new attempt ID, emits
