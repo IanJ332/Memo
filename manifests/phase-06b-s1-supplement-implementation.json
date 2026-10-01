@@ -1,0 +1,22 @@
+{
+  "change_classification": "OBSERVABILITY_ONLY",
+  "experimental_behavior_changed": false,
+  "freeze_id": "experiment-freeze-v1",
+  "freeze_sha256": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+  "implementation_scope": [
+    "plan-derived exact supplement selection",
+    "attempt-scoped exclusive artifact creation",
+    "attempt_id and execution_origin provenance at row creation",
+    "read-only process, service, resource, OOM, port, and provider diagnostics",
+    "systemic service-loss stop policy without same-lifecycle retry",
+    "derived-only combined dataset support",
+    "local-only pre-live validation"
+  ],
+  "live_execution_authorized": false,
+  "provider_configuration_changed": false,
+  "rq3_calls": 0,
+  "scenario_payload_changed": false,
+  "supplement_executed_count": 0,
+  "supplement_plan_sha256": "2db182047dd2b1bfddcaddaad40ace58385f8bdcf0bb114354d9724ee5d6626a",
+  "timeout_semantics_changed": false
+}

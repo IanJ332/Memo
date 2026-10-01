@@ -405,6 +405,7 @@ def run_repetition(
     run: Mapping[str, Any],
     tested_git_commit: str,
     attempt_id: str,
+    execution_origin: str | None = None,
 ) -> dict[str, Any]:
     """Execute one already-supported frozen repetition and preserve all evidence."""
 
@@ -722,6 +723,8 @@ def run_repetition(
         for operation_item in operations
         if operation_item.get("quiescence_evidence")
     ]
+    if execution_origin not in {None, "SUPPLEMENT"}:
+        raise ValueError("execution_origin must be SUPPLEMENT when provided")
     result = {
         "attempt_id": attempt_id,
         "freeze_id": "experiment-freeze-v1",
@@ -786,6 +789,8 @@ def run_repetition(
         "residual_signals": residual_signals,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
+    if execution_origin is not None:
+        result["execution_origin"] = execution_origin
     sanitized = sanitize_value(result)
     if contains_sensitive_key(sanitized):
         raise RuntimeError("sanitized result retained a sensitive key")

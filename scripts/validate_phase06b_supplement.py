@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Sequence
@@ -20,6 +21,11 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from memlife.runner.storage_batch import generate_run_plan  # noqa: E402
+from memlife.runner.phase06b_supplement import (  # noqa: E402
+    ORIGINAL_RAW_SHA256,
+    SUPPLEMENT_PLAN_SHA256,
+    validate_supplement_selection,
+)
 
 PLAN_PATH = (
     REPO_ROOT
@@ -90,6 +96,21 @@ def validate_supplement_plan(
     """Return validation errors without changing repository or runtime state."""
 
     errors: list[str] = []
+    original_rows_path = (
+        repo_root
+        / "artifacts"
+        / "phase06b"
+        / "derived"
+        / ORIGINAL_ATTEMPT_ID
+        / "freeze-v1-raw-runs.provenance-repaired.jsonl"
+    )
+    selection_errors, _ = validate_supplement_selection(
+        plan_path=plan_path,
+        freeze_path=repo_root / "experiments" / "freeze" / "experiment-freeze-v1.json",
+        original_rows_path=original_rows_path,
+        expected_plan_sha256=(SUPPLEMENT_PLAN_SHA256 if plan_path == PLAN_PATH else None),
+    )
+    errors.extend(selection_errors)
     plan = _load_json(plan_path)
     freeze = plan.get("original_freeze", {})
     if freeze.get("id") != FREEZE_ID or freeze.get("sha256") != FREEZE_SHA256:
@@ -215,19 +236,170 @@ def validate_supplement_plan(
     ):
         if forbidden.get(key) is not True:
             errors.append(f"forbidden policy missing: {key}")
-    return errors
+    return list(dict.fromkeys(errors))
+
+
+def _git(repo_root: Path, *args: str) -> str:
+    completed = subprocess.run(
+        ["git", *args],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if completed.returncode:
+        raise RuntimeError((completed.stderr or completed.stdout).strip())
+    return completed.stdout.strip()
+
+
+def validate_pre_live_readiness(
+    *, repo_root: Path = REPO_ROOT, plan_path: Path = PLAN_PATH
+) -> tuple[list[str], dict[str, Any]]:
+    """Run local-only pre-live gates without contacting Jetstream or OpenStack."""
+
+    errors = validate_supplement_plan(plan_path, repo_root=repo_root)
+    details: dict[str, Any] = {
+        "jetstream_contacted": False,
+        "openstack_contacted": False,
+        "provider_executed": False,
+    }
+    try:
+        branch = _git(repo_root, "branch", "--show-current")
+        details["branch"] = branch
+        if branch != "phase-06b-storage-batch":
+            errors.append("branch is not phase-06b-storage-batch")
+        divergence = _git(
+            repo_root,
+            "rev-list",
+            "--left-right",
+            "--count",
+            "origin/phase-06b-storage-batch...HEAD",
+        ).split()
+        if len(divergence) != 2:
+            errors.append("origin synchronization status is unreadable")
+        else:
+            behind, ahead = (int(value) for value in divergence)
+            details.update(origin_behind=behind, origin_ahead=ahead)
+            if behind:
+                errors.append("local branch is behind origin")
+    except (RuntimeError, ValueError) as exc:
+        errors.append(f"branch/origin synchronization check failed: {exc}")
+
+    details["supplement_plan_sha256"] = hashlib.sha256(plan_path.read_bytes()).hexdigest()
+    if details["supplement_plan_sha256"] != SUPPLEMENT_PLAN_SHA256:
+        errors.append("supplement plan hash/content mismatch")
+
+    original_raw = (
+        repo_root
+        / "artifacts"
+        / "phase06b"
+        / "attempts"
+        / ORIGINAL_ATTEMPT_ID
+        / "freeze-v1-raw-runs.jsonl"
+    )
+    if not original_raw.is_file():
+        errors.append("attempt-scoped original raw artifact is unavailable")
+    else:
+        observed = hashlib.sha256(original_raw.read_bytes()).hexdigest()
+        details["original_raw_sha256"] = observed
+        if observed != ORIGINAL_RAW_SHA256:
+            errors.append("original raw SHA-256 changed")
+    derived = (
+        repo_root
+        / "artifacts"
+        / "phase06b"
+        / "derived"
+        / ORIGINAL_ATTEMPT_ID
+        / "freeze-v1-raw-runs.provenance-repaired.jsonl"
+    )
+    if not derived.is_file():
+        errors.append("derived provenance-repaired artifact is unavailable")
+    else:
+        observed = hashlib.sha256(derived.read_bytes()).hexdigest()
+        details["derived_raw_sha256"] = observed
+        if observed != DERIVED_RAW_SHA256:
+            errors.append("derived provenance-repaired SHA-256 changed")
+        rows = _load_jsonl(derived)
+        if any(
+            row.get("downstream_decision_model_calls") != 0
+            or row.get("rq3_calls") != 0
+            for row in rows
+        ):
+            errors.append("original downstream decision/RQ3 calls are not zero")
+
+    controller = repo_root / "scripts" / "jetstream" / "phase06b_supplement.py"
+    remote = repo_root / "scripts" / "jetstream" / "phase06b_supplement_remote.py"
+    shell = repo_root / "scripts" / "jetstream" / "phase06b_supplement_remote.sh"
+    for required in (controller, remote, shell):
+        if not required.is_file():
+            errors.append(f"supplement implementation missing: {required.name}")
+    if controller.is_file():
+        controller_text = controller.read_text(encoding="utf-8")
+        if "LOCAL_ARTIFACT_ROOT" not in controller_text or "mkdir(exist_ok=False)" not in controller_text:
+            errors.append("local attempt-isolation exclusive creation hook missing")
+        if "run_id" in " ".join(
+            line for line in controller_text.splitlines() if "add_argument" in line
+        ):
+            errors.append("controller exposes arbitrary run-ID injection")
+    if shell.is_file():
+        shell_text = shell.read_text(encoding="utf-8")
+        required_shell = (
+            'RUN_PARENT="$MEMLIFE_DATA_ROOT/runs/phase06b/supplements/attempts"',
+            'mkdir "$RUN_ROOT"',
+            "phase06b_harness.py",
+            'test "$HARNESS_VENV" != "$LEGACY_VENV"',
+        )
+        if any(fragment not in shell_text for fragment in required_shell):
+            errors.append("remote attempt-isolation or harness policy hook missing")
+        if "pip install" in shell_text:
+            errors.append("supplement shell must not install provider dependencies")
+    if remote.is_file():
+        remote_text = remote.read_text(encoding="utf-8")
+        required_hooks = (
+            "validate_supplement_selection",
+            "execute_supplement_runs",
+            "execution_origin=EXECUTION_ORIGIN",
+            "supplement-diagnostics.jsonl",
+            "same_lifecycle_retries=0",
+            "blocked_supplement_records",
+        )
+        if any(fragment not in remote_text for fragment in required_hooks):
+            errors.append("supplement execution/diagnostics/stop-policy hook missing")
+    details["attempt_isolation_readiness"] = "PASS" if not any(
+        "attempt-isolation" in error for error in errors
+    ) else "FAIL"
+    details["harness_policy_readiness"] = "PASS" if not any(
+        "harness policy" in error for error in errors
+    ) else "FAIL"
+    details["diagnostics_hooks"] = "PASS" if not any(
+        "diagnostics" in error for error in errors
+    ) else "FAIL"
+    return list(dict.fromkeys(errors)), details
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--plan", type=Path, default=PLAN_PATH)
+    parser.add_argument(
+        "--design-only",
+        action="store_true",
+        help="validate only the immutable design content, not local pre-live readiness",
+    )
     args = parser.parse_args(argv)
-    errors = validate_supplement_plan(args.plan)
+    if args.design_only:
+        errors = validate_supplement_plan(args.plan)
+        details: dict[str, Any] = {}
+    else:
+        errors, details = validate_pre_live_readiness(plan_path=args.plan)
     if errors:
         for error in errors:
             print(f"ERROR {error}")
         return 1
-    print("PASS supplement-plan eligible=10 executed-original=32 freeze=experiment-freeze-v1")
+    suffix = " ".join(f"{key}={value}" for key, value in sorted(details.items()))
+    print(
+        "PASS supplement-pre-live eligible=10 executed-original=32 "
+        f"freeze=experiment-freeze-v1 {suffix}".rstrip()
+    )
     return 0
 
 
