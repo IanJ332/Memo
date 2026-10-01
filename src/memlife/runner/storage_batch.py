@@ -7,7 +7,6 @@ existing adapters; no provider capability is emulated here.
 
 from __future__ import annotations
 
-import hashlib
 import json
 import re
 from collections import Counter
@@ -30,10 +29,10 @@ from memlife.models.lifecycle import LifecycleState
 from memlife.models.memory import DeleteCommand, MemoryRecord, QueryCommand
 from memlife.models.memory import SupersedeCommand, WriteCommand
 from memlife.models.provenance import MemorySurface, ProvenanceStatus, RetrievalCandidate
+from memlife.runner.freeze import FREEZE_SHA256, load_freeze_from_git
 from memlife.runner.lifecycle import normalize_query_observation
 from memlife.scenarios.models import ScenarioQuery
 
-FREEZE_SHA256 = "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b"
 EXPECTED_PROVIDER_VERSIONS = {
     "mem0": "2.2.1",
     "hindsight": "0.10.1",
@@ -65,17 +64,13 @@ def canonical_json(value: object) -> str:
     ) + "\n"
 
 
-def file_sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
 def load_frozen_protocol(path: Path) -> dict[str, Any]:
-    """Load Freeze v1 and reject any byte or closed-set mismatch."""
+    """Load Freeze v1 from Git and reject any byte or closed-set mismatch."""
 
-    digest = file_sha256(path)
-    if digest != FREEZE_SHA256:
-        raise ValueError(f"freeze SHA-256 mismatch: {digest}")
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    materialization = load_freeze_from_git(path)
+    if materialization.sha256 != FREEZE_SHA256:
+        raise ValueError(f"freeze SHA-256 mismatch: {materialization.sha256}")
+    payload = materialization.payload
     providers = {item["id"]: item["version"] for item in payload["providers"]}
     if providers != EXPECTED_PROVIDER_VERSIONS:
         raise ValueError("frozen provider/version set mismatch")

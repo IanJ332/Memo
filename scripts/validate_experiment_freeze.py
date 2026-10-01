@@ -3,14 +3,23 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any, Iterable
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from memlife.runner.freeze import (  # noqa: E402
+    FREEZE_SHA256,
+    load_freeze_from_git,
+)
+
 DEFAULT_FREEZE = REPO_ROOT / "experiments" / "freeze" / "experiment-freeze-v1.json"
 DEFAULT_MANIFEST = REPO_ROOT / "manifests" / "phase-06a-mem0-calibration-freeze.json"
 EXPECTED_PROVIDERS = {"mem0": "2.2.1", "hindsight": "0.10.1", "openviking": "0.4.22"}
@@ -19,10 +28,6 @@ EXPECTED_EXACT = {"CURRENT_ONLY", "CURRENT_AND_STALE", "STALE_ONLY", "ABSENT", "
 EXPECTED_AUTHORITY = {"AUTHORITATIVE_ONLY", "AUTHORITATIVE_AND_NONAUTHORITATIVE", "NONAUTHORITATIVE_ONLY", "NONE", "UNKNOWN_PROVENANCE"}
 EXPECTED_MODELS = {"llama-4-scout", "gpt-oss-120b", "muse-glimmer"}
 SUSPICIOUS_KEY = re.compile(r"(?i)(api.?key|password|private.?key|access.?token|refresh.?token|credential)")
-
-
-def file_sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _all_numbers(value: Any) -> Iterable[float]:
@@ -155,19 +160,16 @@ def _parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    freeze_text = args.freeze.read_text(encoding="utf-8")
-    payload = json.loads(freeze_text)
+    try:
+        materialization = load_freeze_from_git(args.freeze)
+    except ValueError as exc:
+        print(f"ERROR: {exc}")
+        return 1
+    payload = materialization.payload
     errors = validate_freeze(payload)
-    canonical = json.dumps(
-        payload,
-        ensure_ascii=False,
-        indent=2,
-        sort_keys=True,
-        separators=(",", ": "),
-    ) + "\n"
-    if freeze_text != canonical:
-        errors.append("freeze file is not canonical sorted UTF-8 JSON")
-    digest = file_sha256(args.freeze)
+    digest = materialization.sha256
+    if digest != FREEZE_SHA256:
+        errors.append(f"freeze canonical SHA-256 mismatch: {digest}")
     if args.manifest.exists():
         manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
         if manifest.get("experiment_freeze_sha256") != digest:

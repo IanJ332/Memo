@@ -29,9 +29,10 @@ blob and ordinary Linux checkout use LF line endings and produce the remote
 hash. This is an exact-byte checkout blocker, not a semantic freeze change or
 provider result.
 
-A repository-scoped `.gitattributes` rule now requests CRLF checkout only for
-the frozen JSON. The freeze file itself was not modified. This repair has not
-been live-tested because a second Jetstream lifecycle was not authorized.
+A repository-scoped `.gitattributes` rule requested CRLF checkout only for the
+frozen JSON, but the first repair was insufficient: a fast-forward of an
+existing remote working tree does not necessarily rematerialize an unchanged
+tracked file after an EOL rule is added.
 
 Local repair validation used four isolated no-local clones. At the prepared
 commit, `core.autocrlf=true` produced the required CRLF hash while
@@ -41,6 +42,16 @@ line endings and the required `0e02a8...49b` SHA-256. The repository's local
 and global settings are unset; Windows Git's system-level `core.autocrlf=true`
 explains the original local conversion. The exact remote Git setting was not
 captured, but its checkout behavior was unambiguously no-CRLF conversion.
+
+The repaired verifier and batch planner now obtain the source bytes with
+`git show HEAD:experiments/freeze/experiment-freeze-v1.json`, require the blob
+to be canonical sorted UTF-8 JSON, materialize the authoritative CRLF byte
+representation in memory, and hash those bytes. Neither gate reads the
+working-tree copy. Regression tests cover existing LF and CRLF checkouts, the
+Git-blob path, and an existing checkout fast-forwarded to the EOL-rule commit.
+The freeze JSON, expected SHA-256, scenario matrix, and repetition count were
+not changed. This second repair has not been live-tested because no new
+Jetstream lifecycle was authorized.
 
 ## Planned coverage
 
@@ -86,6 +97,8 @@ The local preparation verified the frozen configuration-hash evidence:
 - Phase 03B regression: 13 passed
 - Freeze validator: PASS locally
 - Freeze file diff: none
+- Checkout-independent repair tests: 19 passed
+- Complete post-repair local pytest suite: 168 passed, 1 expected skip
 
 ## Managed lifecycle and cleanup
 

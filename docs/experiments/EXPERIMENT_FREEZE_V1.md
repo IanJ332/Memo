@@ -151,7 +151,7 @@ Any repetition disagreement is preserved and labeled `INCONSISTENT`; it is never
 
 ## Freeze SHA-256
 
-The canonical freeze bytes hash to `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b`. The hash is recorded in the Phase 06A manifest, not recursively inside the freeze file.
+The canonical freeze bytes hash to `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b`. Validation reads the committed source with `git show HEAD:experiments/freeze/experiment-freeze-v1.json`, verifies canonical sorted UTF-8 JSON, materializes CRLF line endings in memory, and computes SHA-256 over that canonical byte representation. It does not hash checkout-dependent working-tree bytes. The hash is recorded in the Phase 06A manifest, not recursively inside the freeze file.
 
 ## Change-Control Policy
 
@@ -159,9 +159,8 @@ Provider version/configuration semantics, scenarios, repetition count, authority
 
 ## Phase 06B Entry Gate
 
-`scripts/validate_experiment_freeze.py` validates the artifact and manifest hash. Its `--phase06b-preflight` mode additionally requires an exact expected commit and runtime-evidence JSON. It fails before Jetstream experiment execution on branch/commit, freeze hash, provider set/version/hash, repetition, or downstream-call mismatch. Phase 06B must also check the correct VM, `/dev/sdb`, persistent environments, and provider health before a run.
+`scripts/validate_experiment_freeze.py` validates the committed Git artifact and manifest hash using the canonical materialization above. Its `--phase06b-preflight` mode additionally requires an exact expected commit and runtime-evidence JSON. It fails before Jetstream experiment execution on branch/commit, freeze hash, provider set/version/hash, repetition, or downstream-call mismatch. Phase 06B must also check the correct VM, `/dev/sdb`, persistent environments, and provider health before a run.
 
 ## Non-Claims
 
 Phase 06A does not establish cross-provider failure rates, Hindsight superiority, OpenViking vulnerability, Mem0 insecurity, model susceptibility, defense effectiveness, or tool consequence rates. It establishes only a calibrated measurement pipeline and frozen experiment protocol.
-
