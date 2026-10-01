@@ -2,8 +2,9 @@
 
 ## Status and boundary
 
-**Design status:** ready for local validation. **Execution status:** not
-authorized. Jetstream must remain `SHELVED`.
+**Design status:** validated. **Implementation status:** Phase 06B-S1 local
+implementation complete. **Execution status:** not authorized. Jetstream must
+remain `SHELVED`.
 
 This protocol preserves the original experiment. It does not create Freeze v2
 because no scientific definition changes: it schedules only frozen run IDs that
@@ -14,7 +15,14 @@ is a later, independently attributable attempt.
 | --- | --- |
 | Original freeze | `experiment-freeze-v1`, SHA-256 `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532`, tested commit `a569a166093c626c5a99a7a33042e0aa7ddb7e74` |
-| Supplement execution plan | [`phase06b-openviking-missing-runs-v1.json`](../../experiments/supplements/phase06b-openviking-missing-runs-v1.json); future new attempt ID required |
+| Supplement execution plan | [`phase06b-openviking-missing-runs-v1.json`](../../experiments/supplements/phase06b-openviking-missing-runs-v1.json), SHA-256 `2db182047dd2b1bfddcaddaad40ace58385f8bdcf0bb114354d9724ee5d6626a`; future new attempt ID required |
+
+The dedicated implementation is
+`scripts/jetstream/phase06b_supplement.py` →
+`phase06b_supplement_remote.sh` → `phase06b_supplement_remote.py`. It has no
+run-ID injection option. The local pre-live gate is
+`scripts/validate_phase06b_supplement.py`; it performs no cloud or provider
+operation.
 
 ## Scientific rules
 
@@ -101,14 +109,14 @@ change models, clear state, or repair the provider.
 
 ## Code-change classification
 
-Existing evidence proves no harness/controller bug. A future executable
-supplement needs:
+Existing evidence proves no harness/controller bug. The executable supplement
+now has:
 
 - selection code that consumes the validated ten-ID plan rather than the full
   42-run plan; and
 - the observability-only capture above.
 
-These are **OBSERVABILITY/EXECUTION-SCOPING ONLY** changes. No provider or
+These are **OBSERVABILITY_ONLY** changes, including execution scoping. No provider or
 experimental-behavior fix is justified. Any change to provider configuration,
 scenario semantics, payload, lifecycle behavior, timeouts, quiescence, model,
 or frozen outcome rules is an **EXPERIMENTAL-BEHAVIOR CHANGE**, requires new

@@ -171,6 +171,45 @@ def test_phase06b_entrypoint_uses_one_attempt_scoped_namespace(
     assert remote_calls[0]["attempt_id"] == attempt_id
 
 
+def test_phase06b_supplement_entrypoint_uses_separate_attempt_namespace(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    attempt_id = "20261001T230000Z-123456abcdef"
+    authorization_calls: list[bool] = []
+    remote_calls: list[dict[str, object]] = []
+    fake_supplement = types.ModuleType("phase06b_supplement")
+    fake_supplement.require_live_authorization = lambda: authorization_calls.append(True)
+    fake_supplement.new_attempt_id = lambda: attempt_id
+    fake_supplement.run_remote_validation = lambda **kwargs: remote_calls.append(kwargs) or {
+        "status": "SUPPLEMENT_COMPLETE"
+    }
+    monkeypatch.setitem(sys.modules, "phase06b_supplement", fake_supplement)
+    monkeypatch.setattr(
+        jetstreamctl, "PHASE06B_SUPPLEMENT_SESSION_ROOT", tmp_path / "supplements"
+    )
+    monkeypatch.setattr(
+        jetstreamctl,
+        "run_command",
+        lambda *args, **kwargs: subprocess.CompletedProcess(args, 0, "a" * 40 + "\n", ""),
+    )
+    captured: dict[str, object] = {}
+
+    def fake_managed_session(credentials, **kwargs):
+        captured.update(kwargs)
+        kwargs["remote_work"]("address", {"repo_head": "b" * 40})
+        return {"status": "SUPPLEMENT_COMPLETE"}
+
+    monkeypatch.setattr(jetstreamctl, "run_managed_session", fake_managed_session)
+    result = jetstreamctl.run_phase06b_supplement({"credential": "not-used"})
+    assert result["status"] == "SUPPLEMENT_COMPLETE"
+    assert authorization_calls == [True]
+    assert captured["phase"] == "06B-S"
+    assert captured["attempt_id"] == attempt_id
+    assert captured["manifest_path"] == tmp_path / "supplements" / f"{attempt_id}.json"
+    assert remote_calls[0]["attempt_id"] == attempt_id
+
+
 def test_external_network_selection_requires_unambiguous_result() -> None:
     assert jetstreamctl.select_external_network(
         [{"ID": "network-1", "Name": "public"}]

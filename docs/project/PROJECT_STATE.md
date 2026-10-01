@@ -16,7 +16,8 @@ documents and manifests.
 | 06A — calibration/freeze | PASS | `ca2fd9fd7ea91623888722a7afa656ec3dc37797` tested; `f11a57b` phase HEAD | Mem0 calibration and immutable [Freeze v1](../experiments/EXPERIMENT_FREEZE_V1.md) | Protocol changes require freeze change control. |
 | 06B — storage batch | PARTIAL | `a569a166093c626c5a99a7a33042e0aa7ddb7e74` tested | 32/42 runs; OpenViking S0 r2 `ERROR` ([phase doc](../phases/PHASE_06B_STORAGE_LIFECYCLE_BATCH.md)) | Never rerun executed IDs or majority-vote. |
 | 06B-C — provenance repair | PASS | `f1221564c0c83cc67df9c8487c735bce3c42fc85`; `f88efd1e71a66c39ff4f702baf4231e01e75aa46` | Derived raw adds only `attempt_id` ([diagnostic](../phases/PHASE_06B_C_PROVENANCE_REPAIR_AND_DIAGNOSIS.md)) | Crash cause remains unknown. |
-| Phase 06B-S0 — supplement design | IN PROGRESS, LOCAL ONLY | baseline `f88efd1e...` | Ten-run plan, validation, handoff system | No live supplement or RQ3 authorization. |
+| Phase 06B-S0 — supplement design | PASS, LOCAL ONLY | `0f75d2b`; `478d226` tests | Ten-run plan, validation, handoff system | No live supplement or RQ3 authorization. |
+| Phase 06B-S1 — supplement implementation | PASS, LOCAL ONLY | current local phase | Dedicated plan-derived runner, attempt isolation, provenance, bounded diagnostics, stop policy, combined-view derivation, pre-live gate | Zero supplement runs executed; explicit future live authorization still required. |
 
 Current branch: `phase-06b-storage-batch`. Jetstream default/end state:
 `SHELVED`.

@@ -86,3 +86,45 @@ def test_same_lifecycle_retry_is_rejected(validator, tmp_path: Path) -> None:
     )
     errors = validator.validate_supplement_plan(path, repo_root=REPO_ROOT)
     assert any("same-lifecycle retry" in error for error in errors)
+
+
+@pytest.mark.parametrize(
+    ("replacement", "expected"),
+    [
+        ("freeze-v1__mem0__S0__r1", "non-OpenViking"),
+        ("freeze-v1__hindsight__S0__r1", "non-OpenViking"),
+        ("freeze-v1__openviking__S0__r4", "r4"),
+    ],
+)
+def test_forbidden_provider_or_r4_injection_fails(
+    validator, tmp_path: Path, replacement: str, expected: str
+) -> None:
+    path = _mutated_plan(
+        tmp_path,
+        lambda payload: payload["eligible_run_ids"].__setitem__(-1, replacement),
+    )
+    errors = validator.validate_supplement_plan(path, repo_root=REPO_ROOT)
+    assert any(expected in error for error in errors)
+
+
+def test_eleventh_run_injection_fails(validator, tmp_path: Path) -> None:
+    path = _mutated_plan(
+        tmp_path,
+        lambda payload: payload["eligible_run_ids"].append(
+            "freeze-v1__openviking__S0__r1"
+        ),
+    )
+    errors = validator.validate_supplement_plan(path, repo_root=REPO_ROOT)
+    assert any("exactly 10" in error for error in errors)
+    assert any("already executed" in error for error in errors)
+
+
+def test_duplicate_eligible_id_fails(validator, tmp_path: Path) -> None:
+    path = _mutated_plan(
+        tmp_path,
+        lambda payload: payload["eligible_run_ids"].__setitem__(
+            -1, payload["eligible_run_ids"][0]
+        ),
+    )
+    errors = validator.validate_supplement_plan(path, repo_root=REPO_ROOT)
+    assert any("duplicate eligible run ID" in error for error in errors)

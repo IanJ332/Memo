@@ -62,6 +62,20 @@ Only these IDs may appear in a later supplement:
 Forbidden: every Mem0 and Hindsight run, OpenViking S0 r1/r2, any r4, and any
 replacement. See the [supplement protocol](../experiments/PHASE_06B_OPENVIKING_SUPPLEMENT_PROTOCOL.md).
 
+## Phase 06B-S1 implementation (local only)
+
+- Dedicated supplement selection/execution path: implemented and locally
+  validated; it accepts no caller-supplied run IDs.
+- Supplement plan SHA-256:
+  `2db182047dd2b1bfddcaddaad40ace58385f8bdcf0bb114354d9724ee5d6626a`.
+- Change classification: `OBSERVABILITY_ONLY`; frozen payloads, provider
+  configuration, models, timeouts, lifecycle semantics, and repetitions are
+  unchanged.
+- Attempt isolation: future remote and local artifacts use
+  `phase06b/supplements/attempts/{attempt_id}` with exclusive creation.
+- Live supplement observations executed: **0**. RQ3 calls: **0**.
+- Jetstream remained `SHELVED`; live execution remains unauthorized.
+
 ## Combined analysis rule
 
 Canonical source artifacts remain unchanged. Any combined view is derived and

@@ -32,7 +32,7 @@ the main storage-lifecycle experiment.
 | --- | --- |
 | Branch | `phase-06b-storage-batch` |
 | Phase baseline and origin HEAD | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
-| Current phase | Phase 06B-S0, local supplement design and handoff consolidation |
+| Current phase | Phase 06B-S1 local supplement implementation complete; live execution unauthorized |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` |
@@ -62,15 +62,17 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ## Next authorized action
 
-Only local Phase 06B-S0 work is authorized: validate and review the ten-run
-supplement design in
-[`PHASE_06B_OPENVIKING_SUPPLEMENT_PROTOCOL.md`](../experiments/PHASE_06B_OPENVIKING_SUPPLEMENT_PROTOCOL.md).
-Do not start Jetstream, execute the supplement, execute RQ3, probe the remote
-root cause, change Freeze v1, or rerun any completed repetition.
+Phase 06B-S1 is implemented and locally validated. No live action is currently
+authorized. A later prompt may explicitly authorize the exact ten-run
+OpenViking supplement after the local pre-live gate passes. Until then, do not
+start Jetstream, execute any supplement run, execute RQ3, probe the remote root
+cause, change Freeze v1, or rerun any completed repetition.
 
-The only eligible future runs are OpenViking S0 r3 and S2/S3/S4 r1–r3. A later
-supplement must use a new attempt ID, record `execution_origin`, preserve the
-S0 r2 error, and stop without retry if provider integrity is lost.
+The dedicated runner derives only OpenViking S0 r3 and S2/S3/S4 r1–r3 from the
+validated plan. It uses a new attempt ID, emits
+`execution_origin=SUPPLEMENT`, preserves the S0 r2 error, captures bounded
+observability-only diagnostics, and stops without retry if provider integrity
+is lost. Combined analysis is derived and retains both source attempts.
 
 ## Safe continuation checklist
 

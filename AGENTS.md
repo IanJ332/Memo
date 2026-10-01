@@ -15,9 +15,11 @@ Authoritative**.
    needed.
 
 The active line is `phase-06b-storage-batch`. Phase 06B is partial; Phase
-06B-C passed; the next phase is local-only Phase 06B-S0 supplement design.
-Jetstream is **SHELVED** by default and must not be started without explicit
-authorization.
+06B-C passed; local-only Phase 06B-S1 supplement implementation is complete.
+The dedicated path can select only the exact ten never-executed OpenViking
+runs and adds observability without changing experiment behavior. Live
+supplement execution is **not authorized**. Jetstream is **SHELVED** by default
+and must not be started without explicit authorization.
 
 ## Non-negotiable invariants
 

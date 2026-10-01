@@ -37,8 +37,12 @@ def test_cold_agent_can_answer_required_bootstrap_questions() -> None:
     assert "phase-06b-storage-batch" in handoff
     assert "42 planned; 32 executed; 31 success; 1 error; 10 never executed" in handoff
     assert "SHELVED" in handoff and "live execution is not authorized" in handoff
-    assert "Next authorized action" in handoff and "local Phase 06B-S0" in handoff
-    assert "Phase 06B-S0" in state
+    assert "Next authorized action" in handoff and "No live action is currently" in handoff
+    assert "Phase 06B-S1" in state and "PASS, LOCAL ONLY" in state
+    assert "dedicated runner" in handoff
+    assert "OpenViking S0 r3 and S2/S3/S4 r1–r3" in handoff
+    assert "observability-only diagnostics" in handoff
+    assert "stops without retry" in handoff
     assert "experiment-freeze-v1" in ledger
     assert "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b" in ledger
     assert "freeze-v1__openviking__S0__r2" in ledger
