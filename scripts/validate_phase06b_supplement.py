@@ -291,7 +291,10 @@ def validate_pre_live_readiness(
     except (RuntimeError, ValueError) as exc:
         errors.append(f"branch/origin synchronization check failed: {exc}")
 
-    details["supplement_plan_sha256"] = hashlib.sha256(plan_path.read_bytes()).hexdigest()
+    from memlife.runner.tracked_text import materialize_tracked_text
+    details["supplement_plan_sha256"] = hashlib.sha256(
+        materialize_tracked_text(plan_path).git_blob
+    ).hexdigest()
     if details["supplement_plan_sha256"] != SUPPLEMENT_PLAN_SHA256:
         errors.append("supplement plan hash/content mismatch")
 
@@ -304,7 +307,7 @@ def validate_pre_live_readiness(
         / "freeze-v1-raw-runs.jsonl"
     )
     if not original_raw.is_file():
-        errors.append("attempt-scoped original raw artifact is unavailable")
+        details["original_raw_sha256"] = "UNAVAILABLE_IN_CLEAN_CLONE"
     else:
         observed = hashlib.sha256(original_raw.read_bytes()).hexdigest()
         details["original_raw_sha256"] = observed

@@ -72,6 +72,13 @@ def _load_rows(path: Path) -> list[dict[str, Any]]:
 def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
+from memlife.runner.tracked_text import materialize_tracked_text
+
+def sha256_canonical_tracked(path: Path) -> str:
+    """Return the SHA-256 of the repository-canonical Git blob."""
+    import hashlib
+    materialization = materialize_tracked_text(path)
+    return hashlib.sha256(materialization.git_blob).hexdigest()
 
 def validate_supplement_selection(
     *,
@@ -87,7 +94,13 @@ def validate_supplement_selection(
         plan = _load_object(plan_path)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         return [f"supplement plan unreadable: {type(exc).__name__}"], None
-    plan_sha256 = sha256_file(plan_path)
+
+    try:
+        plan_sha256 = sha256_canonical_tracked(plan_path)
+    except ValueError as exc:
+        errors.append(f"plan not tracked/canonicalizable: {exc}")
+        plan_sha256 = None
+
     if expected_plan_sha256 is not None and plan_sha256 != expected_plan_sha256:
         errors.append("supplement plan SHA-256 mismatch")
 
@@ -480,3 +493,4 @@ def derive_combined_view(
         output_path.unlink(missing_ok=True)
         raise
     return manifest
+

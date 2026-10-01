@@ -421,10 +421,18 @@ def _write_jsonl_exclusive(path: Path, rows: list[Mapping[str, Any]]) -> None:
             )
 
 
+from memlife.runner.tracked_text import materialize_tracked_text
+import hashlib
+
 def _authorized_plan_snapshot() -> tuple[bytes, list[dict[str, Any]]]:
     """Return the exact authorized plan bytes and frozen run specifications."""
 
-    plan_bytes = PLAN_PATH.read_bytes()
+    try:
+        plan_materialization = materialize_tracked_text(PLAN_PATH)
+    except ValueError as exc:
+        raise RuntimeError(f"supplement plan not tracked/canonicalizable: {exc}")
+
+    plan_bytes = plan_materialization.git_blob
     if hashlib.sha256(plan_bytes).hexdigest() != SUPPLEMENT_PLAN_SHA256:
         raise RuntimeError("supplement plan SHA-256 mismatch before snapshot")
     plan = json.loads(plan_bytes.decode("utf-8"))
@@ -709,3 +717,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

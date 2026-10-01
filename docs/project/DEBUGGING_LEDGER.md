@@ -188,3 +188,12 @@ each regression. It is not generic troubleshooting advice.
   authorized run, delete it afterward, and never broadly delete cloud resources.
 - Hindsight and OpenViking can call provider-internal `gpt-oss-120b`. These are
   not downstream RQ3 decision-model calls. Phase 06B RQ3 calls remain zero.
+
+## Supplement plan checkout dependence (Phase 06B-S2R)
+
+- **Symptom:** Phase 06B-S2 preflight blocked on a clean checkout because the expected phase06b-openviking-missing-runs-v1.json SHA-256 did not match path.read_bytes() due to Windows EOL materialization (CRLF vs LF).
+- **Root cause:** The plan validation relied on working-tree byte hashing instead of the canonical tracked-text infrastructure.
+- **Wrong / insufficient:** Change the official LF Git-blob SHA, accept multiple hashes, or rewrite the established artifact contract.
+- **Correct fix:** Use materialize_tracked_text(plan_path).git_blob to read the repository-canonical source bytes regardless of working-tree line endings.
+- **Regression invariant:** No tracked text artifact used as scientific/protocol identity may depend on working-tree EOL representation.
+- **Protection:** src/memlife/runner/phase06b_supplement.py, scripts/validate_phase06b_supplement.py, 	ests/unit/test_phase06b_supplement_plan_eol.py.

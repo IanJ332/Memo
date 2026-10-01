@@ -31,7 +31,8 @@ the main storage-lifecycle experiment.
 | Item | State |
 | --- | --- |
 | Branch | `phase-06b-storage-batch` |
-| Phase baseline and origin HEAD | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
+| Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
+| Origin HEAD | `2224704e9bc8223a686a18c91e0eb879cb0a54d7` |
 | Current phase | Phase 06B-S2R local repair/validation passed; publication pending; S2 remains blocked with 0/10 executed |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
