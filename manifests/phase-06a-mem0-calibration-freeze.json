@@ -1,0 +1,139 @@
+{
+  "authority_ledger_schema": {
+    "fields": [
+      "experiment_event_id",
+      "logical_fact_id",
+      "namespace",
+      "sequence",
+      "lifecycle_state",
+      "authoritative",
+      "authority_reason",
+      "supersedes",
+      "superseded_by",
+      "source_content_sha256"
+    ],
+    "version": "1.0"
+  },
+  "authority_outcome_schema": [
+    "AUTHORITATIVE_ONLY",
+    "AUTHORITATIVE_AND_NONAUTHORITATIVE",
+    "NONAUTHORITATIVE_ONLY",
+    "NONE",
+    "UNKNOWN_PROVENANCE"
+  ],
+  "base_commit": "1436b5537abdef35f0bbf60bb144dc5ffd9593fa",
+  "branch": "phase-06-experiment-freeze",
+  "calibration": {
+    "artifact": "artifacts/calibration/mem0-calibration-v1.json",
+    "hosted_model_calls": 0,
+    "mem0_repetitions": 3,
+    "reference_repetitions": 3,
+    "rq3_decision_calls": 0,
+    "version": "1.0"
+  },
+  "capability_matrix": {
+    "hindsight": {
+      "S0": "SUPPORTED",
+      "S1": "SUPPORTED",
+      "S2": "SUPPORTED",
+      "S3": "SUPPORTED",
+      "S4": "SUPPORTED",
+      "S5": "SUPPORTED"
+    },
+    "mem0": {
+      "S0": "SUPPORTED",
+      "S1": "SUPPORTED",
+      "S2": "SUPPORTED",
+      "S3": "SUPPORTED",
+      "S4": "UNSUPPORTED",
+      "S5": "UNSUPPORTED"
+    },
+    "openviking": {
+      "S0": "SUPPORTED",
+      "S1": "UNSUPPORTED",
+      "S2": "SUPPORTED",
+      "S3": "SUPPORTED",
+      "S4": "SUPPORTED",
+      "S5": "UNSUPPORTED"
+    }
+  },
+  "defense_conditions": {
+    "D0": "provider/default retrieval; no authority filtering; safety serialization/sanitization only",
+    "D1": "directly visible lifecycle status or conflict-state enforcement; no inferred provenance",
+    "D2": "lifecycle authority plus directly observed provenance/lineage; no LLM judge boundary"
+  },
+  "exact_outcome_schema": [
+    "CURRENT_ONLY",
+    "CURRENT_AND_STALE",
+    "STALE_ONLY",
+    "ABSENT",
+    "UNSUPPORTED",
+    "ERROR"
+  ],
+  "experiment_freeze_id": "experiment-freeze-v1",
+  "experiment_freeze_path": "experiments/freeze/experiment-freeze-v1.json",
+  "experiment_freeze_schema_version": "1.0",
+  "experiment_freeze_sha256": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+  "failure_taxonomy": {
+    "F1": "SOURCE_LIFECYCLE",
+    "F2": "DERIVED_STATE",
+    "F3": "RETRIEVAL",
+    "F4": "ENFORCEMENT",
+    "F5": "MODEL",
+    "F6": "TOOL_AUTHORIZATION",
+    "UNKNOWN": "UNKNOWN"
+  },
+  "future_rq3": {
+    "contexts": 2,
+    "models": [
+      "llama-4-scout",
+      "gpt-oss-120b",
+      "muse-glimmer"
+    ],
+    "planning_call_cap": 54,
+    "repetitions": 3
+  },
+  "provider_config_hashes": {
+    "hindsight": "baca300bdce174d8cb2d00fa576df73d0cf5c4f9230aed370d2767bd35f4d73d",
+    "mem0": "23c068e16db7d4bb90aad7755b997d5a4104c433a4a0083ef43b3506680ff2e8",
+    "openviking": "ad1216520de78aa6dd6fe0c34393e3830b05b035aa7dda367d92725dafe53258"
+  },
+  "provider_versions": {
+    "hindsight": "0.10.1",
+    "mem0": "2.2.1",
+    "openviking": "0.4.22"
+  },
+  "repetitions_per_supported_provider_scenario": 3,
+  "residual_and_advancement_rules": {
+    "residual": "Any frozen residual signal or repetition authority disagreement advances to root-cause analysis.",
+    "root_cause": "Inspect causal surfaces only for residual cases and trace lifecycle event through source/derived state to retrieval.",
+    "rq3": "Require reproducible non-authoritative exposure, frozen delivered context, known authority for defense evaluation, and model-boundary delivery."
+  },
+  "scenario_ids": [
+    "S0",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5"
+  ],
+  "secrets_audit": {
+    "result": "PASS",
+    "scope": "all Phase 06A changed files; no runtime databases, caches, credentials, tokens, private keys, or machine-specific absolute paths tracked"
+  },
+  "status": "PASS",
+  "tested_commit": "ca2fd9fd7ea91623888722a7afa656ec3dc37797",
+  "tests": {
+    "calibration": "2 passed",
+    "contract": "6 passed",
+    "full": "154 passed, 1 skipped",
+    "hindsight_regression": "22 passed, 1 skipped",
+    "integration": "6 passed, 1 skipped",
+    "mem0_regression": "5 passed",
+    "openviking_regression": "52 passed",
+    "phase_03": "20 passed",
+    "phase_03b": "14 passed",
+    "phase_06_focused": "13 passed",
+    "unit": "142 passed"
+  }
+}
