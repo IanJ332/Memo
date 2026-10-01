@@ -1,0 +1,22 @@
+{
+  "attempt_id": "20261001T205742Z-67a4ab301c67",
+  "blocked_not_executed_count": 10,
+  "blocker": "supplement selection invalid: provenance-repaired original raw SHA-256 mismatch",
+  "blocker_type": "RuntimeError",
+  "diagnostic_event_count": 0,
+  "downstream_decision_model_calls": 0,
+  "eligible_count": 10,
+  "error_count": 0,
+  "executed_count": 0,
+  "execution_origin": "SUPPLEMENT",
+  "freeze_id": "experiment-freeze-v1",
+  "freeze_sha256": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+  "git_commit_tested": "2224704e9bc8223a686a18c91e0eb879cb0a54d7",
+  "remote_os": "Linux-7.0.0-31-generic-x86_64-with-glibc2.39",
+  "rq3_calls": 0,
+  "same_lifecycle_retries": 0,
+  "service": "NOT_STARTED",
+  "status": "SUPPLEMENT_BLOCKED",
+  "success_status_count": 0,
+  "supplement_plan_sha256": "2db182047dd2b1bfddcaddaad40ace58385f8bdcf0bb114354d9724ee5d6626a"
+}

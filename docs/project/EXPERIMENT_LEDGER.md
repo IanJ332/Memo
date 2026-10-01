@@ -76,6 +76,28 @@ replacement. See the [supplement protocol](../experiments/PHASE_06B_OPENVIKING_S
 - Live supplement observations executed: **0**. RQ3 calls: **0**.
 - Jetstream remained `SHELVED`; live execution remains unauthorized.
 
+## Phase 06B-S2 blocked supplement attempt
+
+- Attempt ID: `20261001T205742Z-67a4ab301c67`.
+- Tested commit: `2224704e9bc8223a686a18c91e0eb879cb0a54d7`.
+- Status: **SUPPLEMENT_BLOCKED**; planned/executed/success/error/not executed:
+  **10 / 0 / 0 / 0 / 10**.
+- Blocker: remote preflight read the provenance-repaired artifact from the
+  Linux checkout as LF bytes (SHA-256
+  `84f0ac4e0b96730a0b59999573fce2c3e00b5e568bc831b6171e29544fbe2b7c`),
+  while the asserted SHA-256
+  `80b82f177adf4a15659bc583df61c78dafaa034ac931b5592e22a47d01f67a9f`
+  is the Windows CRLF working-tree form. CRLF materialization of the Git blob
+  reproduces the asserted SHA exactly.
+- Provider service: **not started**. Supplement raw rows: **0**. RQ3 calls and
+  downstream decision calls: **0**.
+- Lifecycle: exactly one; run-owned floating IP deleted; final VM independently
+  verified `SHELVED` with no external address; no retry attempted.
+- Original coverage remains **42 / 32 / 31 / 1 / 10** and OpenViking S0 r2
+  remains the frozen `ERROR`.
+- Evidence: [supplement result](../../artifacts/phase06b/supplements/attempts/20261001T205742Z-67a4ab301c67/supplement-result.json)
+  and [manifest](../../manifests/phase-06b-s2-openviking-supplement.json).
+
 ## Combined analysis rule
 
 Canonical source artifacts remain unchanged. Any combined view is derived and

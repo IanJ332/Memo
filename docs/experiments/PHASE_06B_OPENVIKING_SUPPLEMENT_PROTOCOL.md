@@ -3,8 +3,10 @@
 ## Status and boundary
 
 **Design status:** validated. **Implementation status:** Phase 06B-S1 local
-implementation complete. **Execution status:** not authorized. Jetstream must
-remain `SHELVED`.
+implementation complete. **Execution status:** Phase 06B-S2 attempt
+`20261001T205742Z-67a4ab301c67` blocked in remote preflight with 0/10 runs
+executed. Exactly one lifecycle was used, cleaned up, and independently verified
+`SHELVED`; no second live retry is authorized.
 
 This protocol preserves the original experiment. It does not create Freeze v2
 because no scientific definition changes: it schedules only frozen run IDs that
@@ -16,6 +18,14 @@ is a later, independently attributable attempt.
 | Original freeze | `experiment-freeze-v1`, SHA-256 `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532`, tested commit `a569a166093c626c5a99a7a33042e0aa7ddb7e74` |
 | Supplement execution plan | [`phase06b-openviking-missing-runs-v1.json`](../../experiments/supplements/phase06b-openviking-missing-runs-v1.json), SHA-256 `2db182047dd2b1bfddcaddaad40ace58385f8bdcf0bb114354d9724ee5d6626a`; future new attempt ID required |
+
+The S2 blocker was checkout-EOL-dependent validation of the
+provenance-repaired original artifact: its Windows CRLF form has the asserted
+SHA-256 `80b82f177adf4a15659bc583df61c78dafaa034ac931b5592e22a47d01f67a9f`,
+but the Git blob/Linux LF form hashes to
+`84f0ac4e0b96730a0b59999573fce2c3e00b5e568bc831b6171e29544fbe2b7c`.
+The provider service never started, no frozen run ID was invoked, and the
+original 32 rows remain unchanged.
 
 The dedicated implementation is
 `scripts/jetstream/phase06b_supplement.py` →

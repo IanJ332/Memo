@@ -1,0 +1,63 @@
+{
+  "attempt_id": "20261001T205742Z-67a4ab301c67",
+  "blocked_not_executed_count": 10,
+  "blocker": "provenance-repaired original raw SHA-256 mismatch caused by checkout CRLF/LF conversion",
+  "branch": "phase-06b-storage-batch",
+  "combined_dataset_generated": false,
+  "downstream_decision_model_calls": 0,
+  "eligible_count": 10,
+  "executed_count": 0,
+  "execution_origin": "SUPPLEMENT",
+  "external_address_after_cleanup": false,
+  "final_vm_state": "SHELVED",
+  "floating_ip_created_by_this_run": true,
+  "floating_ip_deleted_after_run": true,
+  "freeze_id": "experiment-freeze-v1",
+  "freeze_modified": false,
+  "freeze_sha256": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+  "initial_remote_head": "a569a166093c626c5a99a7a33042e0aa7ddb7e74",
+  "jetstream_lifecycles_used": 1,
+  "original_derived_crlf_sha256": "80b82f177adf4a15659bc583df61c78dafaa034ac931b5592e22a47d01f67a9f",
+  "original_derived_git_blob_lf_sha256": "84f0ac4e0b96730a0b59999573fce2c3e00b5e568bc831b6171e29544fbe2b7c",
+  "original_raw_sha256": "fe6f8cca390fa30b714e7635b9e7e56b987bd8303611f625c3258e90eaea2ef4",
+  "provider_service_started": false,
+  "post_run_validation": {
+    "evidence_gaps": [
+      "attempt directory has no supplement plan snapshot",
+      "attempt directory has no aggregate artifact",
+      "execution ledger has empty planned_run_ids and blocked_not_executed despite blocked_not_executed_count=10",
+      "exact root and volume free-byte samples were not serialized",
+      "selected harness sys.prefix was not serialized"
+    ],
+    "exact_eligible_set_valid": true,
+    "original_artifacts_unchanged": true,
+    "raw_jsonl_valid": true,
+    "result_json_valid": true,
+    "status": "PASS_WITH_RECORDED_EVIDENCE_GAPS"
+  },
+  "rq3_calls": 0,
+  "second_retry_attempted": false,
+  "status": "SUPPLEMENT_BLOCKED",
+  "supplement_artifacts": {
+    "diagnostics": {
+      "path": "artifacts/phase06b/supplements/attempts/20261001T205742Z-67a4ab301c67/supplement-diagnostics.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "execution_ledger": {
+      "path": "artifacts/phase06b/supplements/attempts/20261001T205742Z-67a4ab301c67/supplement-execution-ledger.json",
+      "sha256": "dd9e60ca027fa8ae85d8ea88b6c72ec49984a7371ff567e330e0e8e57d58587f"
+    },
+    "raw": {
+      "object_count": 0,
+      "path": "artifacts/phase06b/supplements/attempts/20261001T205742Z-67a4ab301c67/supplement-raw-runs.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "result": {
+      "path": "artifacts/phase06b/supplements/attempts/20261001T205742Z-67a4ab301c67/supplement-result.json",
+      "sha256": "b8b8e3786896d92b4560940e08664f78ae019cdfb43b2e5193a02e3fce6ff2f8"
+    }
+  },
+  "supplement_plan_sha256": "2db182047dd2b1bfddcaddaad40ace58385f8bdcf0bb114354d9724ee5d6626a",
+  "synced_remote_head": "2224704e9bc8223a686a18c91e0eb879cb0a54d7",
+  "tested_commit": "2224704e9bc8223a686a18c91e0eb879cb0a54d7"
+}

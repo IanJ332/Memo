@@ -32,18 +32,19 @@ the main storage-lifecycle experiment.
 | --- | --- |
 | Branch | `phase-06b-storage-batch` |
 | Phase baseline and origin HEAD | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
-| Current phase | Phase 06B-S1 local supplement implementation complete; live execution unauthorized |
+| Current phase | Phase 06B-S2 supplement attempt blocked in remote preflight; 0/10 executed |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` |
 | Tested experiment commit | `a569a166093c626c5a99a7a33042e0aa7ddb7e74` |
+| Blocked supplement attempt | `20261001T205742Z-67a4ab301c67`, tested commit `2224704e9bc8223a686a18c91e0eb879cb0a54d7` |
 | Phase 06B coverage | 42 planned; 32 executed; 31 success; 1 error; 10 never executed |
 | Provider coverage | Mem0 12/12; Hindsight 18/18; OpenViking 2/12 |
 | Frozen error | OpenViking S0 r2: `RemoteDisconnected`, then `ServiceExitedBeforeReady` |
 | Error root cause | `UNKNOWN`; classified only as provider process crash |
 | Residual cells | Mem0 S1; Hindsight S1; Hindsight S4 |
 | RQ3 calls | 0 |
-| Jetstream | `SHELVED`; live execution is not authorized |
+| Jetstream | Independently verified `SHELVED`, no external address; live execution is not authorized |
 
 The baseline HEAD above is the scientific handoff point. Local documentation
 commits may make `git rev-parse HEAD` newer without changing the original
@@ -56,17 +57,24 @@ experiment or origin state.
 - Phase 06B: partial storage/lifecycle data, preserved without replacement.
 - Phase 06B-C: provenance repair passed. The original raw artifact remains
   immutable; the derived artifact adds only the original attempt ID.
+- Phase 06B-S2: one authorized managed lifecycle was used. Remote preflight
+  blocked before provider startup because the tracked provenance-repaired
+  artifact has LF bytes on Linux but its expected SHA-256 is over CRLF bytes.
+  Zero supplement runs executed, no service started, RQ3 remained zero, the
+  owned floating IP was deleted, and Jetstream returned to `SHELVED`.
 
 See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 [`EXPERIMENT_LEDGER.md`](EXPERIMENT_LEDGER.md) for canonical provenance.
 
 ## Next authorized action
 
-Phase 06B-S1 is implemented and locally validated. No live action is currently
-authorized. A later prompt may explicitly authorize the exact ten-run
-OpenViking supplement after the local pre-live gate passes. Until then, do not
-start Jetstream, execute any supplement run, execute RQ3, probe the remote root
-cause, change Freeze v1, or rerun any completed repetition.
+No live action is currently authorized. The next safe work is local-only:
+remove checkout-EOL dependence from provenance-repaired artifact validation,
+cover Linux Git-blob bytes in tests, and normalize supplement completion
+statuses at the generic lifecycle boundary. Any later live attempt requires
+new explicit authorization. Until then, do not start Jetstream, execute any
+supplement run, execute RQ3, probe the remote provider-crash root cause, change
+Freeze v1, or rerun any completed repetition.
 
 The dedicated runner derives only OpenViking S0 r3 and S2/S3/S4 r1–r3 from the
 validated plan. It uses a new attempt ID, emits

@@ -19,6 +19,47 @@ each regression. It is not generic troubleshooting advice.
 - **Protection:** `scripts/validate_experiment_freeze.py`,
   `tests/unit/test_phase06_freeze.py`, commit `a570b64`.
 
+## Provenance-repaired artifact CRLF/LF mismatch
+
+- **Symptom:** Phase 06B-S2 attempt `20261001T205742Z-67a4ab301c67` passed the
+  Windows local pre-live gate but remote Linux preflight blocked before provider
+  startup with `provenance-repaired original raw SHA-256 mismatch`.
+- **Root cause:** the asserted derived SHA-256
+  `80b82f177adf4a15659bc583df61c78dafaa034ac931b5592e22a47d01f67a9f`
+  hashes the 32-line CRLF working-tree form. The Git blob and Linux checkout use
+  LF and hash to
+  `84f0ac4e0b96730a0b59999573fce2c3e00b5e568bc831b6171e29544fbe2b7c`.
+- **Wrong / insufficient:** validate the ordinary checkout bytes and assume
+  the local pass is platform-independent; consume a second live lifecycle to
+  test a repair.
+- **Required fix (not yet implemented):** define and validate one canonical
+  byte representation from the Git blob or explicitly materialize the proven
+  CRLF representation in memory, with Windows and Linux regression tests.
+- **Regression invariant:** provenance evidence validation must not depend on
+  checkout EOL conversion.
+- **Protection:** pending local-only repair; the blocked attempt and manifest
+  preserve the failure. No second lifecycle is authorized.
+
+## Supplement lifecycle status vocabulary mismatch
+
+- **Symptom:** the generic managed-session wrapper accepts remote status only
+  as `PASS` or `PARTIAL`, while the supplement emits `SUPPLEMENT_COMPLETE`,
+  `SUPPLEMENT_PARTIAL`, or `SUPPLEMENT_BLOCKED`.
+- **Root cause:** the supplement-specific status vocabulary was added without
+  normalization at the generic lifecycle boundary; the entrypoint test mocks
+  the managed wrapper and therefore does not exercise this integration.
+- **Impact:** after artifact download, even a scientifically complete future
+  supplement would be labeled controller `BLOCKED`; cleanup still runs in the
+  wrapper's `finally` path. The S2 attempt was already scientifically blocked,
+  so this was not its experimental blocker.
+- **Required fix (not yet implemented):** explicitly map supplement completion
+  states to lifecycle success/partial/block semantics while preserving the
+  original supplement status in evidence, and add an integrated wrapper test.
+- **Regression invariant:** provider/phase result vocabularies must be
+  normalized explicitly at shared lifecycle boundaries.
+- **Protection:** pending local-only repair; do not work around it during a
+  frozen live execution.
+
 ## Virtualenv identity false positive
 
 - **Symptom:** the approved persistent harness was mistaken for the forbidden
