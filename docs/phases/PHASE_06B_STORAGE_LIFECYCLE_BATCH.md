@@ -2,8 +2,14 @@
 
 ## Status
 
-Phase 06B is **BLOCKED** before experimental execution. Exactly one authorized
-managed Jetstream2 lifecycle was used. No provider service started, no
+This document records the initial **BLOCKED** Phase 06B preflight lifecycle.
+It is historical, not the final execution status. A later authorized attempt
+executed 32 of 42 runs and is **PARTIAL**; see
+[`PHASE_06B_C_PROVENANCE_REPAIR_AND_DIAGNOSIS.md`](PHASE_06B_C_PROVENANCE_REPAIR_AND_DIAGNOSIS.md)
+and [`docs/project/EXPERIMENT_LEDGER.md`](../project/EXPERIMENT_LEDGER.md) for
+the authoritative current coverage and immutable evidence hashes.
+
+During the lifecycle documented below, no provider service started, no
 experimental namespace ran, and no downstream or RQ3 decision model was
 called.
 

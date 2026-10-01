@@ -1,33 +1,44 @@
-# Agent Operating Guidelines — Memo (CS 598 SAO Track 3)
+# Agent Bootstrap — Memo / MemLife-NLIP
 
-This document outlines repository conventions and environment guidelines for AI agents working in this codebase.
+MemLife-NLIP studies cross-provider lifecycle security and authority
+enforcement for agent memory systems. Its governing rule is **Retrieved !=
+Authoritative**.
 
-## Repository Conventions & Environment Isolation
+## Read first
 
-1. **Virtual Environment Isolation**: All Python dependencies are strictly installed in `.venv/`. Never install dependencies into the global or user Python environment (`sudo pip`, `pip install --user`).
-2. **Explicit Interpreter Invocation**: Always invoke commands using the virtual environment interpreter:
-   - Linux / Jetstream2 / macOS: `.venv/bin/python` and `.venv/bin/python -m pip`
-   - Windows: `.venv\Scripts\python.exe` and `.venv\Scripts\python.exe -m pip`
-3. **Secret & Credential Safety**: Never commit passwords, API keys, tokens, or SSH private keys.
-4. **Git Hygiene**: Always run `git status` before modifying files. Never force-push (`git push --force`).
+1. [`docs/project/MODEL_HANDOFF.md`](docs/project/MODEL_HANDOFF.md) — immediate
+   context and next authorized work.
+2. [`docs/project/PROJECT_STATE.md`](docs/project/PROJECT_STATE.md) — phase map.
+3. [`docs/project/DEBUGGING_LEDGER.md`](docs/project/DEBUGGING_LEDGER.md) — bugs
+   and invariants that must not regress.
+4. Read the experiment or provider documents linked from those files only when
+   needed.
 
-## Local Jetstream2 Context
+The active line is `phase-06b-storage-batch`. Phase 06B is partial; Phase
+06B-C passed; the next phase is local-only Phase 06B-S0 supplement design.
+Jetstream is **SHELVED** by default and must not be started without explicit
+authorization.
 
-Before performing Jetstream2 or remote-environment work, check for:
+## Non-negotiable invariants
 
-`.local/jetstream_context.md`
+- Preserve Experiment Freeze v1 and its canonical SHA-256
+  `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b`.
+- Never rerun or replace an executed Phase 06B repetition. In particular,
+  `freeze-v1__openviking__S0__r2` is a frozen `ERROR` observation.
+- Keep experiment attempts immutable and attempt-scoped. Never overwrite raw
+  evidence; derived views must retain attempt provenance.
+- Keep RQ3 decision calls distinct from provider-internal model calls.
+- Use only repository `.venv` interpreters. Never install globally or with
+  `--user`; never commit secrets; run `git status` before edits; never
+  force-push.
+- Preserve `/dev/sdb`; never format it. Never prune or stop Exosphere-managed
+  containers. Resolve its mount dynamically before authorized remote work.
 
-If present, treat it as the authoritative machine-local infrastructure context and avoid repeating full hardware/environment discovery unless the infrastructure may have changed.
+Machine-specific, non-secret facts live in ignored
+`.local/AGENT_RUNTIME_CONTEXT.md` and `.local/jetstream_context.md`. Treat the
+latter as authoritative infrastructure context and do not repeat broad probes
+unless infrastructure may have changed.
 
-This file is intentionally local and gitignored.
-
-## Remote Environment Rules (Jetstream2)
-
-- **Do Not Re-Probe Unchanged Infrastructure**: Do not run broad hardware/disk audits (`lscpu`, `free -h`, `lsblk`, `du -xhd1 /`, `docker system df`) unless infrastructure changes are suspected. Use targeted checks (e.g., `findmnt /dev/sdb`).
-- **Preserve Exosphere Containers**: Never execute `docker system prune`, `docker image prune`, or stop Exosphere-managed Guacamole containers.
-- **Storage Tiering**: Place source code and scripts under `/home/exouser/Memo`. Resolve the current `/dev/sdb` mountpoint with `findmnt -n -o TARGET /dev/sdb`, then direct datasets, model caches, logs, traces, and large experiment artifacts to `<mount>/memlife`. Never hardcode a historic mountpoint.
-- **Prompt Declaration**: Every execution prompt should declare `CONVERSATION`, `MODEL`, `EXECUTION TARGET`, and `JETSTREAM ACTION`.
-- **Lifecycle Default**: Treat Jetstream as `SHELVED` by default. Unshelve only for required remote execution and use `scripts/jetstream/jetstreamctl.py` after its validation.
-- **Opened-By-Run Cleanup**: If automation opened the VM, shelve it after work. Never automatically shelve a VM that was already `ACTIVE` before the run.
-- **Dynamic Networking**: Never cache or hardcode a numeric public IP. Resolve current networking from OpenStack for each lifecycle run.
-- **Local Secrets**: Keep OpenStack credentials, SSH private keys, generated local state, and caches under ignored `.local/` paths and outside Git.
+For every execution prompt, declare `CONVERSATION`, `MODEL`, `EXECUTION
+TARGET`, and `JETSTREAM ACTION`. If automation opened Jetstream, clean up and
+shelve it; never automatically shelve an instance that was already active.

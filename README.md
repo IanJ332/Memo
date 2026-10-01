@@ -8,12 +8,18 @@ This repository hosts the development environment, tooling, and artifacts for th
 
 **Current research direction:** MemLife-NLIP
 
-**Current implementation status:** Phase 03B — provenance and enforcement trace foundation
+**Current implementation status:** Phase 06B-S0 — missing-run supplement
+design; Jetstream remains shelved and live execution is not authorized.
 
 - Phase 01: **PASS** — [MemLife Bootstrap](docs/phases/PHASE_01_MEMLIFE_BOOTSTRAP.md)
 - Phase 02: **PASS** — [Provider Bring-up](docs/phases/PHASE_02_PROVIDER_BRINGUP.md)
 - Phase 03: **PASS** — [Cross-Provider Lifecycle Benchmark Harness](docs/phases/PHASE_03_LIFECYCLE_HARNESS.md)
 - Phase 03B: **PASS** — [Provenance and Enforcement Trace Foundation](docs/phases/PHASE_03B_PROVENANCE_TRACE.md)
+- Phase 04: **PASS** — [Hindsight Bring-up](docs/phases/PHASE_04_HINDSIGHT_BRINGUP.md)
+- Phase 05: **PASS** — [OpenViking Bring-up](docs/phases/PHASE_05_OPENVIKING_PREPARATION.md)
+- Phase 06A: **PASS** — [Calibration and Experiment Freeze v1](docs/phases/PHASE_06A_MEM0_CALIBRATION_AND_FREEZE.md)
+- Phase 06B: **PARTIAL**; Phase 06B-C provenance repair: **PASS** — [Current project handoff](docs/project/MODEL_HANDOFF.md)
+- Phase 06B-S0: **LOCAL DESIGN** — [OpenViking missing-run supplement protocol](docs/experiments/PHASE_06B_OPENVIKING_SUPPLEMENT_PROTOCOL.md)
 - [Mem0 OSS 2.2.1 characterization](docs/providers/MEM0_2_2_1.md)
 
 ---
