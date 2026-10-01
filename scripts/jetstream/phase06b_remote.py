@@ -270,6 +270,7 @@ def _execute_provider(
     adapter: Any,
     runs: list[dict[str, Any]],
     tested_commit: str,
+    attempt_id: str,
     health_check: Callable[[], None] | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     results: list[dict[str, Any]] = []
@@ -279,7 +280,10 @@ def _execute_provider(
             adapter=adapter,
             run=run,
             tested_git_commit=tested_commit,
+            attempt_id=attempt_id,
         )
+        if result.get("attempt_id") != attempt_id:
+            raise RuntimeError("raw row attempt ID does not match controller attempt ID")
         results.append(result)
         if result["operation_status"] == "ERROR" and health_check is not None:
             try:
@@ -366,6 +370,7 @@ def run(output_dir: Path) -> dict[str, Any]:
                 adapter=mem0,
                 runs=provider_runs,
                 tested_commit=commit,
+                attempt_id=attempt_id,
             )
             raw_runs.extend(completed)
             blocked.extend(provider_blocked)
@@ -393,6 +398,7 @@ def run(output_dir: Path) -> dict[str, Any]:
             adapter=hindsight,
             runs=provider_runs,
             tested_commit=commit,
+            attempt_id=attempt_id,
             health_check=lambda: hindsight.verify_server(),
         )
         raw_runs.extend(completed)
@@ -415,6 +421,7 @@ def run(output_dir: Path) -> dict[str, Any]:
             adapter=openviking,
             runs=provider_runs,
             tested_commit=commit,
+            attempt_id=attempt_id,
             health_check=lambda: openviking.wait_until_ready(timeout_seconds=5),
         )
         raw_runs.extend(completed)
@@ -472,6 +479,8 @@ def run(output_dir: Path) -> dict[str, Any]:
         aggregate=aggregate,
         residual=residual,
         require_complete=len(raw_runs) == 42,
+        expected_attempt_id=attempt_id,
+        expected_tested_commit=commit,
     )
     if errors:
         result["artifact_validation_errors"] = errors

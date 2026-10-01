@@ -45,6 +45,8 @@ def _parser() -> argparse.ArgumentParser:
     validate.add_argument("--raw", type=Path, required=True)
     validate.add_argument("--aggregate", type=Path, required=True)
     validate.add_argument("--residual", type=Path, required=True)
+    validate.add_argument("--attempt-id")
+    validate.add_argument("--tested-commit")
     validate.add_argument("--require-complete", action="store_true")
     return parser
 
@@ -81,6 +83,8 @@ def main(argv: list[str] | None = None) -> int:
         aggregate=aggregate,
         residual=residual,
         require_complete=args.require_complete,
+        expected_attempt_id=args.attempt_id,
+        expected_tested_commit=args.tested_commit,
     )
     if errors:
         for error in errors:

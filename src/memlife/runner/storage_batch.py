@@ -404,6 +404,7 @@ def run_repetition(
     adapter: MemoryProviderAdapter,
     run: Mapping[str, Any],
     tested_git_commit: str,
+    attempt_id: str,
 ) -> dict[str, Any]:
     """Execute one already-supported frozen repetition and preserve all evidence."""
 
@@ -722,6 +723,7 @@ def run_repetition(
         if operation_item.get("quiescence_evidence")
     ]
     result = {
+        "attempt_id": attempt_id,
         "freeze_id": "experiment-freeze-v1",
         "freeze_sha256": FREEZE_SHA256,
         "tested_git_commit": tested_git_commit,
@@ -966,6 +968,8 @@ def validate_artifacts(
     aggregate: Mapping[str, Any],
     residual: Mapping[str, Any],
     require_complete: bool,
+    expected_attempt_id: str | None = None,
+    expected_tested_commit: str | None = None,
 ) -> list[str]:
     errors: list[str] = []
     rows = tuple(raw_runs)
@@ -976,10 +980,39 @@ def validate_artifacts(
     if len(namespaces) != len(set(namespaces)):
         errors.append("duplicate raw namespaces")
     planned = {str(item["run_id"]) for item in plan["runs"]}
+    planned_by_run_id = {str(item["run_id"]): item for item in plan["runs"]}
     if not set(run_ids).issubset(planned):
         errors.append("raw results contain unplanned run IDs")
     if require_complete and set(run_ids) != planned:
         errors.append("complete artifact set does not cover all 42 planned run IDs")
+    for item in rows:
+        planned_item = planned_by_run_id.get(str(item["run_id"]))
+        if planned_item is None:
+            continue
+        for field in ("provider", "scenario", "repetition", "namespace"):
+            if item.get(field) != planned_item.get(field):
+                errors.append(f"raw result {field} does not match frozen plan")
+                break
+    if rows:
+        attempt_ids = {item.get("attempt_id") for item in rows}
+        if None in attempt_ids or "" in attempt_ids:
+            errors.append("raw result attempt ID missing")
+        if len(attempt_ids) != 1:
+            errors.append("raw result attempt ID inconsistency")
+        if expected_attempt_id is not None and attempt_ids != {expected_attempt_id}:
+            errors.append("raw result attempt ID does not match controller attempt ID")
+        tested_commits = {item.get("tested_git_commit") for item in rows}
+        if None in tested_commits or "" in tested_commits:
+            errors.append("raw result tested commit missing")
+        if len(tested_commits) != 1:
+            errors.append("raw result tested commit inconsistency")
+        if (
+            expected_tested_commit is not None
+            and tested_commits != {expected_tested_commit}
+        ):
+            errors.append("raw result tested commit does not match expected commit")
+        if any(item.get("freeze_id") != plan.get("freeze_id") for item in rows):
+            errors.append("raw result freeze ID mismatch")
     if any(item.get("freeze_sha256") != FREEZE_SHA256 for item in rows):
         errors.append("raw result freeze hash mismatch")
     if any(item.get("downstream_decision_model_calls") != 0 for item in rows):

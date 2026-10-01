@@ -19,6 +19,7 @@ from memlife.runner.storage_batch import (
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FREEZE = REPO_ROOT / "experiments" / "freeze" / "experiment-freeze-v1.json"
+ATTEMPT_ID = "20261001T183940Z-1fc4c4929532"
 
 
 class FrozenMem0Fake(ReferenceMemoryAdapter):
@@ -66,7 +67,9 @@ def test_supported_repetition_records_independent_metrics_and_zero_calls() -> No
         adapter=FrozenMem0Fake(),
         run=_run_spec(plan, "mem0", "S1"),
         tested_git_commit="a" * 40,
+        attempt_id=ATTEMPT_ID,
     )
+    assert result["attempt_id"] == ATTEMPT_ID
     assert result["run_id"] == "freeze-v1__mem0__S1__r1"
     assert result["downstream_decision_model_calls"] == 0
     assert result["rq3_calls"] == 0
@@ -86,6 +89,7 @@ def test_aggregate_preserves_inconsistency_and_residual_queue() -> None:
             adapter=FrozenMem0Fake(),
             run=_run_spec(plan, "mem0", "S0", repetition),
             tested_git_commit="a" * 40,
+            attempt_id=ATTEMPT_ID,
         )
         rows.append(row)
     rows[1] = {
@@ -143,3 +147,25 @@ def test_sanitization_removes_secret_keys_and_artifact_validation_recomputes() -
         require_complete=False,
     ) == []
     assert json.loads(json.dumps(plan))["expected_executable_count"] == 42
+
+
+def test_artifact_validation_fails_closed_on_attempt_id_mismatch() -> None:
+    plan = generate_run_plan(FREEZE)
+    row = run_repetition(
+        adapter=FrozenMem0Fake(),
+        run=_run_spec(plan, "mem0", "S0"),
+        tested_git_commit="a" * 40,
+        attempt_id=ATTEMPT_ID,
+    )
+    aggregate = aggregate_runs(plan, [row])
+    residual = residual_index(plan, [row], aggregate)
+    errors = validate_artifacts(
+        plan=plan,
+        raw_runs=[row],
+        aggregate=aggregate,
+        residual=residual,
+        require_complete=False,
+        expected_attempt_id="20261001T190000Z-aaaaaaaaaaaa",
+        expected_tested_commit="a" * 40,
+    )
+    assert errors == ["raw result attempt ID does not match controller attempt ID"]
