@@ -1,0 +1,562 @@
+{
+  "authority_schema_version": "1.0",
+  "calibration_version": "1.0",
+  "hosted_model_calls": 0,
+  "repetitions_per_provider": 3,
+  "repo_base_commit": "1436b5537abdef35f0bbf60bb144dc5ffd9593fa",
+  "rq3_decision_calls": 0,
+  "runs": [
+    {
+      "authority_exposure_outcome": "AUTHORITATIVE_ONLY",
+      "authority_ledger": {
+        "authority_schema_version": "1.0",
+        "entries": [
+          {
+            "authoritative": false,
+            "authority_reason": "experiment authority transition replaced v1 with v2",
+            "experiment_event_id": "freeze-v1__calibration__reference__r1__write-v1",
+            "lifecycle_state": "superseded",
+            "logical_fact_id": "freeze-v1__calibration__reference__r1__alder-v1",
+            "namespace": "memlife-freeze-v1-calibration-reference-r1",
+            "sequence": 1,
+            "source_content_sha256": "d2adb98450de1e8e9257d915779f9ee79c489d17c5d1e4ccea012a7c1f4153a4",
+            "superseded_by": "freeze-v1__calibration__reference__r1__alder-v2",
+            "supersedes": null
+          },
+          {
+            "authoritative": true,
+            "authority_reason": "v2 is the current experiment-defined authority",
+            "experiment_event_id": "freeze-v1__calibration__reference__r1__update-v2",
+            "lifecycle_state": "active",
+            "logical_fact_id": "freeze-v1__calibration__reference__r1__alder-v2",
+            "namespace": "memlife-freeze-v1-calibration-reference-r1",
+            "sequence": 2,
+            "source_content_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+            "superseded_by": null,
+            "supersedes": "freeze-v1__calibration__reference__r1__alder-v1"
+          }
+        ]
+      },
+      "authority_transitions": [
+        {
+          "from_authoritative": true,
+          "logical_fact_id": "freeze-v1__calibration__reference__r1__alder-v1",
+          "reason": "superseded by v2",
+          "to_authoritative": false
+        },
+        {
+          "from_authoritative": false,
+          "logical_fact_id": "freeze-v1__calibration__reference__r1__alder-v2",
+          "reason": "current replacement",
+          "to_authoritative": true
+        }
+      ],
+      "calibration_version": "1.0",
+      "error": null,
+      "exact_visibility_outcome": "CURRENT_ONLY",
+      "latency_ms": 0.054,
+      "lifecycle_status": [
+        "active"
+      ],
+      "logical_fact_ids": [
+        "freeze-v1__calibration__reference__r1__alder-v1",
+        "freeze-v1__calibration__reference__r1__alder-v2"
+      ],
+      "namespace": "memlife-freeze-v1-calibration-reference-r1",
+      "native_provider_operations": [
+        {
+          "intended_event": "WRITE",
+          "native_operation": "reference.create_record",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "memory-0001"
+        },
+        {
+          "intended_event": "UPDATE",
+          "native_operation": "reference.create_successor_record",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "memory-0002"
+        }
+      ],
+      "operation_status": "SUCCESS",
+      "provenance_status": "KNOWN",
+      "provider": "reference",
+      "provider_version": "0.1",
+      "repetition": 1,
+      "retrieved_content_sha256": [
+        "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+      ],
+      "retrieved_provider_ids": [
+        "memory-0002"
+      ],
+      "retrieved_source_event_ids": [
+        "freeze-v1__calibration__reference__r1__update-v2"
+      ],
+      "rq3_decision_calls": 0,
+      "run_id": "freeze-v1__calibration__reference__r1",
+      "source_event_ids": [
+        "freeze-v1__calibration__reference__r1__write-v1",
+        "freeze-v1__calibration__reference__r1__update-v2"
+      ]
+    },
+    {
+      "authority_exposure_outcome": "AUTHORITATIVE_ONLY",
+      "authority_ledger": {
+        "authority_schema_version": "1.0",
+        "entries": [
+          {
+            "authoritative": false,
+            "authority_reason": "experiment authority transition replaced v1 with v2",
+            "experiment_event_id": "freeze-v1__calibration__reference__r2__write-v1",
+            "lifecycle_state": "superseded",
+            "logical_fact_id": "freeze-v1__calibration__reference__r2__alder-v1",
+            "namespace": "memlife-freeze-v1-calibration-reference-r2",
+            "sequence": 1,
+            "source_content_sha256": "d2adb98450de1e8e9257d915779f9ee79c489d17c5d1e4ccea012a7c1f4153a4",
+            "superseded_by": "freeze-v1__calibration__reference__r2__alder-v2",
+            "supersedes": null
+          },
+          {
+            "authoritative": true,
+            "authority_reason": "v2 is the current experiment-defined authority",
+            "experiment_event_id": "freeze-v1__calibration__reference__r2__update-v2",
+            "lifecycle_state": "active",
+            "logical_fact_id": "freeze-v1__calibration__reference__r2__alder-v2",
+            "namespace": "memlife-freeze-v1-calibration-reference-r2",
+            "sequence": 2,
+            "source_content_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+            "superseded_by": null,
+            "supersedes": "freeze-v1__calibration__reference__r2__alder-v1"
+          }
+        ]
+      },
+      "authority_transitions": [
+        {
+          "from_authoritative": true,
+          "logical_fact_id": "freeze-v1__calibration__reference__r2__alder-v1",
+          "reason": "superseded by v2",
+          "to_authoritative": false
+        },
+        {
+          "from_authoritative": false,
+          "logical_fact_id": "freeze-v1__calibration__reference__r2__alder-v2",
+          "reason": "current replacement",
+          "to_authoritative": true
+        }
+      ],
+      "calibration_version": "1.0",
+      "error": null,
+      "exact_visibility_outcome": "CURRENT_ONLY",
+      "latency_ms": 0.031,
+      "lifecycle_status": [
+        "active"
+      ],
+      "logical_fact_ids": [
+        "freeze-v1__calibration__reference__r2__alder-v1",
+        "freeze-v1__calibration__reference__r2__alder-v2"
+      ],
+      "namespace": "memlife-freeze-v1-calibration-reference-r2",
+      "native_provider_operations": [
+        {
+          "intended_event": "WRITE",
+          "native_operation": "reference.create_record",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "memory-0001"
+        },
+        {
+          "intended_event": "UPDATE",
+          "native_operation": "reference.create_successor_record",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "memory-0002"
+        }
+      ],
+      "operation_status": "SUCCESS",
+      "provenance_status": "KNOWN",
+      "provider": "reference",
+      "provider_version": "0.1",
+      "repetition": 2,
+      "retrieved_content_sha256": [
+        "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+      ],
+      "retrieved_provider_ids": [
+        "memory-0002"
+      ],
+      "retrieved_source_event_ids": [
+        "freeze-v1__calibration__reference__r2__update-v2"
+      ],
+      "rq3_decision_calls": 0,
+      "run_id": "freeze-v1__calibration__reference__r2",
+      "source_event_ids": [
+        "freeze-v1__calibration__reference__r2__write-v1",
+        "freeze-v1__calibration__reference__r2__update-v2"
+      ]
+    },
+    {
+      "authority_exposure_outcome": "AUTHORITATIVE_ONLY",
+      "authority_ledger": {
+        "authority_schema_version": "1.0",
+        "entries": [
+          {
+            "authoritative": false,
+            "authority_reason": "experiment authority transition replaced v1 with v2",
+            "experiment_event_id": "freeze-v1__calibration__reference__r3__write-v1",
+            "lifecycle_state": "superseded",
+            "logical_fact_id": "freeze-v1__calibration__reference__r3__alder-v1",
+            "namespace": "memlife-freeze-v1-calibration-reference-r3",
+            "sequence": 1,
+            "source_content_sha256": "d2adb98450de1e8e9257d915779f9ee79c489d17c5d1e4ccea012a7c1f4153a4",
+            "superseded_by": "freeze-v1__calibration__reference__r3__alder-v2",
+            "supersedes": null
+          },
+          {
+            "authoritative": true,
+            "authority_reason": "v2 is the current experiment-defined authority",
+            "experiment_event_id": "freeze-v1__calibration__reference__r3__update-v2",
+            "lifecycle_state": "active",
+            "logical_fact_id": "freeze-v1__calibration__reference__r3__alder-v2",
+            "namespace": "memlife-freeze-v1-calibration-reference-r3",
+            "sequence": 2,
+            "source_content_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+            "superseded_by": null,
+            "supersedes": "freeze-v1__calibration__reference__r3__alder-v1"
+          }
+        ]
+      },
+      "authority_transitions": [
+        {
+          "from_authoritative": true,
+          "logical_fact_id": "freeze-v1__calibration__reference__r3__alder-v1",
+          "reason": "superseded by v2",
+          "to_authoritative": false
+        },
+        {
+          "from_authoritative": false,
+          "logical_fact_id": "freeze-v1__calibration__reference__r3__alder-v2",
+          "reason": "current replacement",
+          "to_authoritative": true
+        }
+      ],
+      "calibration_version": "1.0",
+      "error": null,
+      "exact_visibility_outcome": "CURRENT_ONLY",
+      "latency_ms": 0.02,
+      "lifecycle_status": [
+        "active"
+      ],
+      "logical_fact_ids": [
+        "freeze-v1__calibration__reference__r3__alder-v1",
+        "freeze-v1__calibration__reference__r3__alder-v2"
+      ],
+      "namespace": "memlife-freeze-v1-calibration-reference-r3",
+      "native_provider_operations": [
+        {
+          "intended_event": "WRITE",
+          "native_operation": "reference.create_record",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "memory-0001"
+        },
+        {
+          "intended_event": "UPDATE",
+          "native_operation": "reference.create_successor_record",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "memory-0002"
+        }
+      ],
+      "operation_status": "SUCCESS",
+      "provenance_status": "KNOWN",
+      "provider": "reference",
+      "provider_version": "0.1",
+      "repetition": 3,
+      "retrieved_content_sha256": [
+        "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+      ],
+      "retrieved_provider_ids": [
+        "memory-0002"
+      ],
+      "retrieved_source_event_ids": [
+        "freeze-v1__calibration__reference__r3__update-v2"
+      ],
+      "rq3_decision_calls": 0,
+      "run_id": "freeze-v1__calibration__reference__r3",
+      "source_event_ids": [
+        "freeze-v1__calibration__reference__r3__write-v1",
+        "freeze-v1__calibration__reference__r3__update-v2"
+      ]
+    },
+    {
+      "authority_exposure_outcome": "AUTHORITATIVE_ONLY",
+      "authority_ledger": {
+        "authority_schema_version": "1.0",
+        "entries": [
+          {
+            "authoritative": false,
+            "authority_reason": "experiment authority transition replaced v1 with v2",
+            "experiment_event_id": "freeze-v1__calibration__mem0__r1__write-v1",
+            "lifecycle_state": "superseded",
+            "logical_fact_id": "freeze-v1__calibration__mem0__r1__alder-v1",
+            "namespace": "memlife-freeze-v1-calibration-mem0-r1",
+            "sequence": 1,
+            "source_content_sha256": "d2adb98450de1e8e9257d915779f9ee79c489d17c5d1e4ccea012a7c1f4153a4",
+            "superseded_by": "freeze-v1__calibration__mem0__r1__alder-v2",
+            "supersedes": null
+          },
+          {
+            "authoritative": true,
+            "authority_reason": "v2 is the current experiment-defined authority",
+            "experiment_event_id": "freeze-v1__calibration__mem0__r1__update-v2",
+            "lifecycle_state": "active",
+            "logical_fact_id": "freeze-v1__calibration__mem0__r1__alder-v2",
+            "namespace": "memlife-freeze-v1-calibration-mem0-r1",
+            "sequence": 2,
+            "source_content_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+            "superseded_by": null,
+            "supersedes": "freeze-v1__calibration__mem0__r1__alder-v1"
+          }
+        ]
+      },
+      "authority_transitions": [
+        {
+          "from_authoritative": true,
+          "logical_fact_id": "freeze-v1__calibration__mem0__r1__alder-v1",
+          "reason": "superseded by v2",
+          "to_authoritative": false
+        },
+        {
+          "from_authoritative": false,
+          "logical_fact_id": "freeze-v1__calibration__mem0__r1__alder-v2",
+          "reason": "current replacement",
+          "to_authoritative": true
+        }
+      ],
+      "calibration_version": "1.0",
+      "error": null,
+      "exact_visibility_outcome": "CURRENT_ONLY",
+      "latency_ms": 95.039,
+      "lifecycle_status": [
+        "active"
+      ],
+      "logical_fact_ids": [
+        "freeze-v1__calibration__mem0__r1__alder-v1",
+        "freeze-v1__calibration__mem0__r1__alder-v2"
+      ],
+      "namespace": "memlife-freeze-v1-calibration-mem0-r1",
+      "native_provider_operations": [
+        {
+          "intended_event": "WRITE",
+          "native_operation": "Memory.add(infer=False)",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "28ef8482-cb56-472b-81fd-42fa73d1c41d"
+        },
+        {
+          "intended_event": "UPDATE",
+          "native_operation": "Memory.update(same UUID)",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "28ef8482-cb56-472b-81fd-42fa73d1c41d"
+        }
+      ],
+      "operation_status": "SUCCESS",
+      "provenance_status": "KNOWN",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 1,
+      "retrieved_content_sha256": [
+        "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+      ],
+      "retrieved_provider_ids": [
+        "28ef8482-cb56-472b-81fd-42fa73d1c41d"
+      ],
+      "retrieved_source_event_ids": [
+        "freeze-v1__calibration__mem0__r1__update-v2"
+      ],
+      "rq3_decision_calls": 0,
+      "run_id": "freeze-v1__calibration__mem0__r1",
+      "source_event_ids": [
+        "freeze-v1__calibration__mem0__r1__write-v1",
+        "freeze-v1__calibration__mem0__r1__update-v2"
+      ]
+    },
+    {
+      "authority_exposure_outcome": "AUTHORITATIVE_ONLY",
+      "authority_ledger": {
+        "authority_schema_version": "1.0",
+        "entries": [
+          {
+            "authoritative": false,
+            "authority_reason": "experiment authority transition replaced v1 with v2",
+            "experiment_event_id": "freeze-v1__calibration__mem0__r2__write-v1",
+            "lifecycle_state": "superseded",
+            "logical_fact_id": "freeze-v1__calibration__mem0__r2__alder-v1",
+            "namespace": "memlife-freeze-v1-calibration-mem0-r2",
+            "sequence": 1,
+            "source_content_sha256": "d2adb98450de1e8e9257d915779f9ee79c489d17c5d1e4ccea012a7c1f4153a4",
+            "superseded_by": "freeze-v1__calibration__mem0__r2__alder-v2",
+            "supersedes": null
+          },
+          {
+            "authoritative": true,
+            "authority_reason": "v2 is the current experiment-defined authority",
+            "experiment_event_id": "freeze-v1__calibration__mem0__r2__update-v2",
+            "lifecycle_state": "active",
+            "logical_fact_id": "freeze-v1__calibration__mem0__r2__alder-v2",
+            "namespace": "memlife-freeze-v1-calibration-mem0-r2",
+            "sequence": 2,
+            "source_content_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+            "superseded_by": null,
+            "supersedes": "freeze-v1__calibration__mem0__r2__alder-v1"
+          }
+        ]
+      },
+      "authority_transitions": [
+        {
+          "from_authoritative": true,
+          "logical_fact_id": "freeze-v1__calibration__mem0__r2__alder-v1",
+          "reason": "superseded by v2",
+          "to_authoritative": false
+        },
+        {
+          "from_authoritative": false,
+          "logical_fact_id": "freeze-v1__calibration__mem0__r2__alder-v2",
+          "reason": "current replacement",
+          "to_authoritative": true
+        }
+      ],
+      "calibration_version": "1.0",
+      "error": null,
+      "exact_visibility_outcome": "CURRENT_ONLY",
+      "latency_ms": 47.767,
+      "lifecycle_status": [
+        "active"
+      ],
+      "logical_fact_ids": [
+        "freeze-v1__calibration__mem0__r2__alder-v1",
+        "freeze-v1__calibration__mem0__r2__alder-v2"
+      ],
+      "namespace": "memlife-freeze-v1-calibration-mem0-r2",
+      "native_provider_operations": [
+        {
+          "intended_event": "WRITE",
+          "native_operation": "Memory.add(infer=False)",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "0627a26a-8621-41d2-ba9d-3f9184adf1e2"
+        },
+        {
+          "intended_event": "UPDATE",
+          "native_operation": "Memory.update(same UUID)",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "0627a26a-8621-41d2-ba9d-3f9184adf1e2"
+        }
+      ],
+      "operation_status": "SUCCESS",
+      "provenance_status": "KNOWN",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 2,
+      "retrieved_content_sha256": [
+        "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+      ],
+      "retrieved_provider_ids": [
+        "0627a26a-8621-41d2-ba9d-3f9184adf1e2"
+      ],
+      "retrieved_source_event_ids": [
+        "freeze-v1__calibration__mem0__r2__update-v2"
+      ],
+      "rq3_decision_calls": 0,
+      "run_id": "freeze-v1__calibration__mem0__r2",
+      "source_event_ids": [
+        "freeze-v1__calibration__mem0__r2__write-v1",
+        "freeze-v1__calibration__mem0__r2__update-v2"
+      ]
+    },
+    {
+      "authority_exposure_outcome": "AUTHORITATIVE_ONLY",
+      "authority_ledger": {
+        "authority_schema_version": "1.0",
+        "entries": [
+          {
+            "authoritative": false,
+            "authority_reason": "experiment authority transition replaced v1 with v2",
+            "experiment_event_id": "freeze-v1__calibration__mem0__r3__write-v1",
+            "lifecycle_state": "superseded",
+            "logical_fact_id": "freeze-v1__calibration__mem0__r3__alder-v1",
+            "namespace": "memlife-freeze-v1-calibration-mem0-r3",
+            "sequence": 1,
+            "source_content_sha256": "d2adb98450de1e8e9257d915779f9ee79c489d17c5d1e4ccea012a7c1f4153a4",
+            "superseded_by": "freeze-v1__calibration__mem0__r3__alder-v2",
+            "supersedes": null
+          },
+          {
+            "authoritative": true,
+            "authority_reason": "v2 is the current experiment-defined authority",
+            "experiment_event_id": "freeze-v1__calibration__mem0__r3__update-v2",
+            "lifecycle_state": "active",
+            "logical_fact_id": "freeze-v1__calibration__mem0__r3__alder-v2",
+            "namespace": "memlife-freeze-v1-calibration-mem0-r3",
+            "sequence": 2,
+            "source_content_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+            "superseded_by": null,
+            "supersedes": "freeze-v1__calibration__mem0__r3__alder-v1"
+          }
+        ]
+      },
+      "authority_transitions": [
+        {
+          "from_authoritative": true,
+          "logical_fact_id": "freeze-v1__calibration__mem0__r3__alder-v1",
+          "reason": "superseded by v2",
+          "to_authoritative": false
+        },
+        {
+          "from_authoritative": false,
+          "logical_fact_id": "freeze-v1__calibration__mem0__r3__alder-v2",
+          "reason": "current replacement",
+          "to_authoritative": true
+        }
+      ],
+      "calibration_version": "1.0",
+      "error": null,
+      "exact_visibility_outcome": "CURRENT_ONLY",
+      "latency_ms": 46.081,
+      "lifecycle_status": [
+        "active"
+      ],
+      "logical_fact_ids": [
+        "freeze-v1__calibration__mem0__r3__alder-v1",
+        "freeze-v1__calibration__mem0__r3__alder-v2"
+      ],
+      "namespace": "memlife-freeze-v1-calibration-mem0-r3",
+      "native_provider_operations": [
+        {
+          "intended_event": "WRITE",
+          "native_operation": "Memory.add(infer=False)",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "888a9db1-5aa1-4212-8ca3-34e58e19d01f"
+        },
+        {
+          "intended_event": "UPDATE",
+          "native_operation": "Memory.update(same UUID)",
+          "operation_status": "SUCCESS",
+          "provider_memory_id": "888a9db1-5aa1-4212-8ca3-34e58e19d01f"
+        }
+      ],
+      "operation_status": "SUCCESS",
+      "provenance_status": "KNOWN",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 3,
+      "retrieved_content_sha256": [
+        "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+      ],
+      "retrieved_provider_ids": [
+        "888a9db1-5aa1-4212-8ca3-34e58e19d01f"
+      ],
+      "retrieved_source_event_ids": [
+        "freeze-v1__calibration__mem0__r3__update-v2"
+      ],
+      "rq3_decision_calls": 0,
+      "run_id": "freeze-v1__calibration__mem0__r3",
+      "source_event_ids": [
+        "freeze-v1__calibration__mem0__r3__write-v1",
+        "freeze-v1__calibration__mem0__r3__update-v2"
+      ]
+    }
+  ]
+}
