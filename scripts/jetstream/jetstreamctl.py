@@ -26,6 +26,7 @@ CONFIG_FILE = REPO_ROOT / "configs" / "jetstream.json"
 ACCEPTANCE_FILE = REPO_ROOT / "manifests" / "jetstream-automation-acceptance.json"
 PHASE02B_SESSION_FILE = LOCAL_ROOT / "jetstream" / "phase-02b-session.json"
 PHASE04_SESSION_FILE = LOCAL_ROOT / "jetstream" / "phase-04-session.json"
+PHASE06B_SESSION_FILE = LOCAL_ROOT / "jetstream" / "phase-06b-session.json"
 OPENSTACK = LOCAL_ROOT / "jetstream" / "cli-venv" / "Scripts" / "openstack.exe"
 
 EXPECTED_NAME = "jisheng3"
@@ -811,7 +812,7 @@ def run_managed_session(
             result["failure_stage"] = "REMOTE_WORK"
             remote_payload = dict(remote_work(address, facts))
             result["remote_work"] = remote_payload
-            if remote_payload.get("status") not in {None, "PASS"}:
+            if remote_payload.get("status") not in {None, "PASS", "PARTIAL"}:
                 detail = str(
                     remote_payload.get("blocker")
                     or remote_payload.get("error_message")
@@ -930,9 +931,30 @@ def run_phase05(credentials: Mapping[str, str]) -> dict[str, Any]:
     )
 
 
+def run_phase06b(credentials: Mapping[str, str]) -> dict[str, Any]:
+    """Run the explicitly authorized frozen batch in one managed lifecycle."""
+
+    from phase06b import require_live_authorization, run_remote_validation
+
+    require_live_authorization()
+    expected_commit = run_command(["git", "rev-parse", "HEAD"]).stdout.strip()
+    return run_managed_session(
+        credentials,
+        phase="06B",
+        manifest_path=PHASE06B_SESSION_FILE,
+        remote_work=lambda address, facts: run_remote_validation(
+            address=address,
+            facts=facts,
+            expected_commit=expected_commit,
+            ssh_builder=ssh_command,
+            runner=run_command,
+        ),
+    )
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("doctor", "status", "unshelve", "address", "ssh-check", "probe", "shelve", "acceptance", "phase02b", "phase04", "phase05"))
+    parser.add_argument("command", choices=("doctor", "status", "unshelve", "address", "ssh-check", "probe", "shelve", "acceptance", "phase02b", "phase04", "phase05", "phase06b"))
     args = parser.parse_args(argv)
     try:
         credentials = load_credentials()
@@ -968,8 +990,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 output = run_phase02b(credentials)
             elif args.command == "phase04":
                 output = run_phase04(credentials)
-            else:
+            elif args.command == "phase05":
                 output = run_phase05(credentials)
+            else:
+                output = run_phase06b(credentials)
         print(json.dumps(output, indent=2))
         return 0
     except (JetstreamError, FileNotFoundError, subprocess.TimeoutExpired) as exc:

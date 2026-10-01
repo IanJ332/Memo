@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+printf '%s\n' 'CONVERSATION: START NEW'
+printf '%s\n' 'MODEL: GPT-5.6 Sol HIGH reasoning'
+printf '%s\n' 'EXECUTION TARGET: LOCAL + JETSTREAM2'
+printf '%s\n' 'JETSTREAM ACTION: one managed Phase 06B frozen batch lifecycle'
+
+test "${MEMLIFE_AUTHORIZE_PHASE06B_LIVE:-}" = YES
+: "${PHASE06B_EXPECTED_COMMIT:?exact prepared commit is required}"
+
+REPO=/home/exouser/Memo
+LEGACY_VENV="$REPO/.venv"
+LIVE_VOLUME_MOUNT="$(findmnt -n -o TARGET /dev/sdb)"
+LIVE_VOLUME_SOURCE="$(findmnt -n -o SOURCE /dev/sdb)"
+LIVE_VOLUME_FSTYPE="$(findmnt -n -o FSTYPE /dev/sdb)"
+test -n "$LIVE_VOLUME_MOUNT"
+test -d "$LIVE_VOLUME_MOUNT"
+test "$LIVE_VOLUME_SOURCE" = /dev/sdb
+
+MEMLIFE_DATA_ROOT="$LIVE_VOLUME_MOUNT/memlife"
+HARNESS_VENV="$MEMLIFE_DATA_ROOT/venvs/memlife-harness-phase04"
+HARNESS_PYTHON="$HARNESS_VENV/bin/python"
+HINDSIGHT_VENV="$MEMLIFE_DATA_ROOT/venvs/hindsight-0.10.1"
+HINDSIGHT_PYTHON="$HINDSIGHT_VENV/bin/python"
+HINDSIGHT_SERVICE="$HINDSIGHT_VENV/bin/hindsight-api"
+HINDSIGHT_PG0_ROOT="$MEMLIFE_DATA_ROOT/providers/hindsight/pg0"
+OPENVIKING_VENV="$MEMLIFE_DATA_ROOT/venvs/openviking-0.4.22"
+OPENVIKING_PYTHON="$OPENVIKING_VENV/bin/python"
+OPENVIKING_SERVICE="$OPENVIKING_VENV/bin/openviking-server"
+OPENVIKING_STATE="$MEMLIFE_DATA_ROOT/providers/openviking"
+OPENVIKING_CONFIG="$OPENVIKING_STATE/ov.conf"
+OPENVIKING_CACHE="$MEMLIFE_DATA_ROOT/model_cache/openviking"
+RUN_ROOT="$MEMLIFE_DATA_ROOT/runs/phase-06b-freeze-v1"
+RESULT="$RUN_ROOT/phase-06b-result.json"
+
+test "$HARNESS_VENV" != "$LEGACY_VENV"
+test -x "$HARNESS_PYTHON"
+test -x "$HINDSIGHT_PYTHON"
+test -x "$HINDSIGHT_SERVICE"
+test -x "$OPENVIKING_PYTHON"
+test -x "$OPENVIKING_SERVICE"
+test -f "$OPENVIKING_CONFIG"
+test -d "$HINDSIGHT_PG0_ROOT"
+
+ROOT_FREE_BEFORE="$(df -B1 --output=avail / | tail -n 1 | xargs)"
+VOLUME_FREE_BEFORE="$(df -B1 --output=avail "$LIVE_VOLUME_MOUNT" | tail -n 1 | xargs)"
+test "$ROOT_FREE_BEFORE" -ge 1073741824
+test "$VOLUME_FREE_BEFORE" -ge 8589934592
+mkdir -p "$RUN_ROOT" "$RUN_ROOT/openviking" "$MEMLIFE_DATA_ROOT/model_cache/hindsight"
+
+LIVE_CONFIG="$REPO/.local/phase05_openviking.env"
+test -f "$LIVE_CONFIG"
+case "$(stat -c %a "$LIVE_CONFIG")" in
+    400|600) ;;
+    *) printf '%s\n' 'protected OpenViking config must have mode 400 or 600' >&2; exit 42 ;;
+esac
+set -a
+. "$LIVE_CONFIG"
+set +a
+
+export MEMLIFE_AUTHORIZE_PHASE06B_LIVE=YES
+export PHASE06B_EXPECTED_COMMIT
+export MEMLIFE_DATA_ROOT
+export PHASE06B_LIVE_VOLUME_MOUNT="$LIVE_VOLUME_MOUNT"
+export PHASE06B_LIVE_VOLUME_SOURCE="$LIVE_VOLUME_SOURCE"
+export PHASE06B_LIVE_VOLUME_FSTYPE="$LIVE_VOLUME_FSTYPE"
+export PHASE06B_RUN_ROOT="$RUN_ROOT"
+export PHASE06B_HINDSIGHT_PYTHON="$HINDSIGHT_PYTHON"
+export PHASE06B_HINDSIGHT_SERVICE="$HINDSIGHT_SERVICE"
+export PHASE06B_HINDSIGHT_PG0_ROOT="$HINDSIGHT_PG0_ROOT"
+export PHASE06B_OPENVIKING_PYTHON="$OPENVIKING_PYTHON"
+export MEMLIFE_MEM0_PROVIDER_INSTANCE=phase-06b-freeze-v1
+export PIP_CACHE_DIR="$MEMLIFE_DATA_ROOT/model_cache/pip"
+export HF_HOME="$MEMLIFE_DATA_ROOT/model_cache/huggingface"
+export SENTENCE_TRANSFORMERS_HOME="$MEMLIFE_DATA_ROOT/model_cache/huggingface"
+export TORCH_HOME="$MEMLIFE_DATA_ROOT/model_cache/torch"
+export MEM0_TELEMETRY=false
+export TOKENIZERS_PARALLELISM=false
+
+export MEMLIFE_HINDSIGHT_BASE_URL=http://127.0.0.1:8888
+export HINDSIGHT_API_DATABASE_URL=pg0://memlife-phase04
+export HINDSIGHT_API_HOST=127.0.0.1
+export HINDSIGHT_API_PORT=8888
+export HINDSIGHT_API_LLM_PROVIDER=openai
+export HINDSIGHT_API_LLM_BASE_URL=https://llm.jetstream-cloud.org/gpt-oss-120b/v1/
+export HINDSIGHT_API_LLM_API_KEY=empty
+export HINDSIGHT_API_LLM_MODEL=gpt-oss-120b
+export HINDSIGHT_API_EMBEDDINGS_PROVIDER=onnx
+export HINDSIGHT_API_EMBEDDINGS_ONNX_MODEL_ID=intfloat/multilingual-e5-small
+export HINDSIGHT_API_EMBEDDINGS_ONNX_DIMENSIONS=384
+export HINDSIGHT_API_EMBEDDINGS_ONNX_QUERY_PREFIX='query: '
+export HINDSIGHT_API_EMBEDDINGS_ONNX_PASSAGE_PREFIX='passage: '
+export HINDSIGHT_API_RERANKER_PROVIDER=rrf
+export HINDSIGHT_API_WORKERS=1
+export HINDSIGHT_API_WORKER_MAX_SLOTS=2
+export HINDSIGHT_API_WORKER_CONSOLIDATION_RESERVED_SLOTS=1
+export HINDSIGHT_API_WORKER_GRAPH_MAINTENANCE_RESERVED_SLOTS=1
+export HINDSIGHT_API_RETAIN_BATCH_ENABLED=false
+
+export MEMLIFE_OPENVIKING_BASE_URL=http://127.0.0.1:1933
+export PHASE05_OPENVIKING_SERVICE="$OPENVIKING_SERVICE"
+export PHASE05_OPENVIKING_CONFIG="$OPENVIKING_CONFIG"
+export PHASE05_PROVIDER_STATE="$OPENVIKING_STATE"
+export PHASE05_MODEL_CACHE="$OPENVIKING_CACHE"
+export PHASE05_RUN_ROOT="$RUN_ROOT/openviking"
+
+cd "$REPO"
+"$HARNESS_PYTHON" scripts/jetstream/phase06b_remote.py \
+    --output-dir "$RUN_ROOT" \
+    --result "$RESULT"
+test -s "$RESULT"
+printf 'PHASE06B_RESULT_B64=%s\n' "$(base64 -w0 "$RESULT")"

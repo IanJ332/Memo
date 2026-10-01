@@ -1,0 +1,428 @@
+{
+  "downstream_decision_model_calls": 0,
+  "expected_executable_count": 42,
+  "freeze_id": "experiment-freeze-v1",
+  "freeze_sha256": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+  "ordering": "provider -> scenario -> repetition",
+  "provider_order": [
+    "mem0",
+    "hindsight",
+    "openviking"
+  ],
+  "repetitions_per_supported_cell": 3,
+  "runs": [
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S0-r1",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 1,
+      "run_id": "freeze-v1__mem0__S0__r1",
+      "scenario": "S0"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S0-r2",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 2,
+      "run_id": "freeze-v1__mem0__S0__r2",
+      "scenario": "S0"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S0-r3",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 3,
+      "run_id": "freeze-v1__mem0__S0__r3",
+      "scenario": "S0"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S1-r1",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 1,
+      "run_id": "freeze-v1__mem0__S1__r1",
+      "scenario": "S1"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S1-r2",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 2,
+      "run_id": "freeze-v1__mem0__S1__r2",
+      "scenario": "S1"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S1-r3",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 3,
+      "run_id": "freeze-v1__mem0__S1__r3",
+      "scenario": "S1"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S2-r1",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 1,
+      "run_id": "freeze-v1__mem0__S2__r1",
+      "scenario": "S2"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S2-r2",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 2,
+      "run_id": "freeze-v1__mem0__S2__r2",
+      "scenario": "S2"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S2-r3",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 3,
+      "run_id": "freeze-v1__mem0__S2__r3",
+      "scenario": "S2"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S3-r1",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 1,
+      "run_id": "freeze-v1__mem0__S3__r1",
+      "scenario": "S3"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S3-r2",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 2,
+      "run_id": "freeze-v1__mem0__S3__r2",
+      "scenario": "S3"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-mem0-S3-r3",
+      "provider": "mem0",
+      "provider_version": "2.2.1",
+      "repetition": 3,
+      "run_id": "freeze-v1__mem0__S3__r3",
+      "scenario": "S3"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S0-r1",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 1,
+      "run_id": "freeze-v1__hindsight__S0__r1",
+      "scenario": "S0"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S0-r2",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 2,
+      "run_id": "freeze-v1__hindsight__S0__r2",
+      "scenario": "S0"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S0-r3",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 3,
+      "run_id": "freeze-v1__hindsight__S0__r3",
+      "scenario": "S0"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S1-r1",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 1,
+      "run_id": "freeze-v1__hindsight__S1__r1",
+      "scenario": "S1"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S1-r2",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 2,
+      "run_id": "freeze-v1__hindsight__S1__r2",
+      "scenario": "S1"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S1-r3",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 3,
+      "run_id": "freeze-v1__hindsight__S1__r3",
+      "scenario": "S1"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S2-r1",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 1,
+      "run_id": "freeze-v1__hindsight__S2__r1",
+      "scenario": "S2"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S2-r2",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 2,
+      "run_id": "freeze-v1__hindsight__S2__r2",
+      "scenario": "S2"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S2-r3",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 3,
+      "run_id": "freeze-v1__hindsight__S2__r3",
+      "scenario": "S2"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S3-r1",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 1,
+      "run_id": "freeze-v1__hindsight__S3__r1",
+      "scenario": "S3"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S3-r2",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 2,
+      "run_id": "freeze-v1__hindsight__S3__r2",
+      "scenario": "S3"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S3-r3",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 3,
+      "run_id": "freeze-v1__hindsight__S3__r3",
+      "scenario": "S3"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S4-r1",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 1,
+      "run_id": "freeze-v1__hindsight__S4__r1",
+      "scenario": "S4"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S4-r2",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 2,
+      "run_id": "freeze-v1__hindsight__S4__r2",
+      "scenario": "S4"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S4-r3",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 3,
+      "run_id": "freeze-v1__hindsight__S4__r3",
+      "scenario": "S4"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S5-r1",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 1,
+      "run_id": "freeze-v1__hindsight__S5__r1",
+      "scenario": "S5"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S5-r2",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 2,
+      "run_id": "freeze-v1__hindsight__S5__r2",
+      "scenario": "S5"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-hindsight-S5-r3",
+      "provider": "hindsight",
+      "provider_version": "0.10.1",
+      "repetition": 3,
+      "run_id": "freeze-v1__hindsight__S5__r3",
+      "scenario": "S5"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S0-r1",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 1,
+      "run_id": "freeze-v1__openviking__S0__r1",
+      "scenario": "S0"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S0-r2",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 2,
+      "run_id": "freeze-v1__openviking__S0__r2",
+      "scenario": "S0"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S0-r3",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 3,
+      "run_id": "freeze-v1__openviking__S0__r3",
+      "scenario": "S0"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S2-r1",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 1,
+      "run_id": "freeze-v1__openviking__S2__r1",
+      "scenario": "S2"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S2-r2",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 2,
+      "run_id": "freeze-v1__openviking__S2__r2",
+      "scenario": "S2"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S2-r3",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 3,
+      "run_id": "freeze-v1__openviking__S2__r3",
+      "scenario": "S2"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S3-r1",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 1,
+      "run_id": "freeze-v1__openviking__S3__r1",
+      "scenario": "S3"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S3-r2",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 2,
+      "run_id": "freeze-v1__openviking__S3__r2",
+      "scenario": "S3"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S3-r3",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 3,
+      "run_id": "freeze-v1__openviking__S3__r3",
+      "scenario": "S3"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S4-r1",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 1,
+      "run_id": "freeze-v1__openviking__S4__r1",
+      "scenario": "S4"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S4-r2",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 2,
+      "run_id": "freeze-v1__openviking__S4__r2",
+      "scenario": "S4"
+    },
+    {
+      "capability": "SUPPORTED",
+      "namespace": "memlife-freeze-v1-openviking-S4-r3",
+      "provider": "openviking",
+      "provider_version": "0.4.22",
+      "repetition": 3,
+      "run_id": "freeze-v1__openviking__S4__r3",
+      "scenario": "S4"
+    }
+  ],
+  "scenario_order": [
+    "S0",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5"
+  ],
+  "unsupported_cell_count": 4,
+  "unsupported_cells": [
+    {
+      "capability": "UNSUPPORTED",
+      "executed_repetitions": 0,
+      "provider": "mem0",
+      "scenario": "S4"
+    },
+    {
+      "capability": "UNSUPPORTED",
+      "executed_repetitions": 0,
+      "provider": "mem0",
+      "scenario": "S5"
+    },
+    {
+      "capability": "UNSUPPORTED",
+      "executed_repetitions": 0,
+      "provider": "openviking",
+      "scenario": "S1"
+    },
+    {
+      "capability": "UNSUPPORTED",
+      "executed_repetitions": 0,
+      "provider": "openviking",
+      "scenario": "S5"
+    }
+  ]
+}
