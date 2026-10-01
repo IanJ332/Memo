@@ -8,6 +8,11 @@ printf '%s\n' 'JETSTREAM ACTION: one managed Phase 06B frozen batch lifecycle'
 
 test "${MEMLIFE_AUTHORIZE_PHASE06B_LIVE:-}" = YES
 : "${PHASE06B_EXPECTED_COMMIT:?exact prepared commit is required}"
+: "${PHASE06B_ATTEMPT_ID:?unique experiment attempt ID is required}"
+case "$PHASE06B_ATTEMPT_ID" in
+    [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]T[0-9][0-9][0-9][0-9][0-9][0-9]Z-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]) ;;
+    *) printf '%s\n' 'invalid Phase 06B attempt ID' >&2; exit 43 ;;
+esac
 
 REPO=/home/exouser/Memo
 LEGACY_VENV="$REPO/.venv"
@@ -41,7 +46,8 @@ OPENVIKING_SERVICE="$OPENVIKING_VENV/bin/openviking-server"
 OPENVIKING_STATE="$MEMLIFE_DATA_ROOT/providers/openviking"
 OPENVIKING_CONFIG="$OPENVIKING_STATE/ov.conf"
 OPENVIKING_CACHE="$MEMLIFE_DATA_ROOT/model_cache/openviking"
-RUN_ROOT="$MEMLIFE_DATA_ROOT/runs/phase-06b-freeze-v1"
+RUN_PARENT="$MEMLIFE_DATA_ROOT/runs/phase06b/attempts"
+RUN_ROOT="$RUN_PARENT/$PHASE06B_ATTEMPT_ID"
 RESULT="$RUN_ROOT/phase-06b-result.json"
 
 test "$HARNESS_VENV" != "$LEGACY_VENV"
@@ -56,7 +62,9 @@ ROOT_FREE_BEFORE="$(df -B1 --output=avail / | tail -n 1 | xargs)"
 VOLUME_FREE_BEFORE="$(df -B1 --output=avail "$LIVE_VOLUME_MOUNT" | tail -n 1 | xargs)"
 test "$ROOT_FREE_BEFORE" -ge 1073741824
 test "$VOLUME_FREE_BEFORE" -ge 8589934592
-mkdir -p "$RUN_ROOT" "$RUN_ROOT/openviking" "$MEMLIFE_DATA_ROOT/model_cache/hindsight"
+mkdir -p "$RUN_PARENT" "$MEMLIFE_DATA_ROOT/model_cache/hindsight"
+mkdir "$RUN_ROOT"
+mkdir "$RUN_ROOT/openviking"
 
 LIVE_CONFIG="$REPO/.local/phase05_openviking.env"
 test -f "$LIVE_CONFIG"

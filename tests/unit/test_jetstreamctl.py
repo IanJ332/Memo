@@ -135,6 +135,42 @@ def test_phase05_entrypoint_uses_repository_manifest_without_root_monkeypatch(
     )
 
 
+def test_phase06b_entrypoint_uses_one_attempt_scoped_namespace(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    attempt_id = "20260930T120000Z-abcdef123456"
+    authorization_calls: list[bool] = []
+    remote_calls: list[dict[str, object]] = []
+    fake_phase06b = types.ModuleType("phase06b")
+    fake_phase06b.require_live_authorization = lambda: authorization_calls.append(True)
+    fake_phase06b.new_attempt_id = lambda: attempt_id
+    fake_phase06b.run_remote_validation = lambda **kwargs: remote_calls.append(kwargs) or {
+        "status": "PASS"
+    }
+    monkeypatch.setitem(sys.modules, "phase06b", fake_phase06b)
+    monkeypatch.setattr(jetstreamctl, "PHASE06B_SESSION_ROOT", tmp_path / "attempts")
+    monkeypatch.setattr(
+        jetstreamctl,
+        "run_command",
+        lambda *args, **kwargs: subprocess.CompletedProcess(args, 0, "a" * 40 + "\n", ""),
+    )
+    captured: dict[str, object] = {}
+
+    def fake_managed_session(credentials, **kwargs):
+        captured.update(kwargs)
+        kwargs["remote_work"]("address", {"repo_head": "b" * 40})
+        return {"status": "PASS"}
+
+    monkeypatch.setattr(jetstreamctl, "run_managed_session", fake_managed_session)
+    result = jetstreamctl.run_phase06b({"credential": "not-used"})
+    assert result["status"] == "PASS"
+    assert authorization_calls == [True]
+    assert captured["attempt_id"] == attempt_id
+    assert captured["manifest_path"] == tmp_path / "attempts" / f"{attempt_id}.json"
+    assert remote_calls[0]["attempt_id"] == attempt_id
+
+
 def test_external_network_selection_requires_unambiguous_result() -> None:
     assert jetstreamctl.select_external_network(
         [{"ID": "network-1", "Name": "public"}]

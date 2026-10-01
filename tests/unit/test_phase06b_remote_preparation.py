@@ -20,6 +20,8 @@ ROOT = Path(__file__).resolve().parents[2]
 CONTROLLER = ROOT / "scripts" / "jetstream" / "phase06b.py"
 REMOTE_SHELL = ROOT / "scripts" / "jetstream" / "phase06b_remote.sh"
 HARNESS_SELECTOR = ROOT / "scripts" / "jetstream" / "phase06b_harness.py"
+ATTEMPT_ONE = "20260930T120000Z-abcdef123456"
+ATTEMPT_TWO = "20260930T120001Z-123456abcdef"
 
 
 def _controller_module():
@@ -76,9 +78,10 @@ def test_explicit_harness_environment_is_forwarded_to_remote_launch(
         "PHASE06B_HARNESS_VENV",
         "/media/volume/jisheng3_volume/memlife/venvs/phase 06b explicit",
     )
-    command = module._remote_batch_command("a" * 40)
+    command = module._remote_batch_command("a" * 40, ATTEMPT_ONE)
     assert "PHASE06B_HARNESS_VENV='/media/volume/" in command
     assert "phase 06b explicit'" in command
+    assert f"PHASE06B_ATTEMPT_ID={ATTEMPT_ONE}" in command
 
 
 def test_remote_shell_reuses_retained_environments_without_install_or_broad_kill() -> None:
@@ -89,6 +92,8 @@ def test_remote_shell_reuses_retained_environments_without_install_or_broad_kill
     assert "memlife-harness-phase04" in selector_text
     assert "phase06b_harness.py" in text
     assert 'export PHASE06B_HARNESS_VENV="$HARNESS_VENV"' in text
+    assert 'RUN_ROOT="$RUN_PARENT/$PHASE06B_ATTEMPT_ID"' in text
+    assert 'mkdir "$RUN_ROOT"' in text
     assert "hindsight-0.10.1" in text
     assert "openviking-0.4.22" in text
     assert "pip install" not in text
@@ -191,6 +196,7 @@ def test_remote_result_records_initial_synced_and_tested_commits(
     initial = "b" * 40
     payload = {
         "status": "PASS",
+        "attempt_id": ATTEMPT_ONE,
         "git_commit_tested": expected,
         "freeze_sha256": (
             "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b"
@@ -209,18 +215,106 @@ def test_remote_result_records_initial_synced_and_tested_commits(
         return subprocess.CompletedProcess(command, 0, next(outputs), "")
 
     monkeypatch.setenv("MEMLIFE_AUTHORIZE_PHASE06B_LIVE", "YES")
-    monkeypatch.setattr(module, "LOCAL_RESULT", tmp_path / "result.json")
+    monkeypatch.setattr(module, "LOCAL_RESULT_ROOT", tmp_path / "results")
     monkeypatch.setattr(module, "_download_artifacts", lambda **kwargs: None)
     result = module.run_remote_validation(
         address="192.0.2.1",
         facts={"repo_head": initial, "resolved_volume_mount": "/volume"},
         expected_commit=expected,
+        attempt_id=ATTEMPT_ONE,
         ssh_builder=lambda address, command: [address, command],
         runner=runner,
     )
     assert result["initial_remote_head"] == initial
     assert result["synced_remote_head"] == expected
     assert result["tested_commit"] == expected
+
+
+def _artifact_runner(module: object, marker: bytes):
+    def runner(command: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        joined = " ".join(str(part) for part in command)
+        name = next(name for name in module.ARTIFACT_NAMES if name in joined)
+        encoded = base64.b64encode(marker + b":" + name.encode("utf-8")).decode("ascii")
+        return subprocess.CompletedProcess(command, 0, encoded, "")
+
+    return runner
+
+
+def _download_attempt(module: object, attempt_id: str, marker: bytes) -> Path:
+    return module._download_artifacts(
+        address="192.0.2.1",
+        mount="/volume",
+        attempt_id=attempt_id,
+        ssh_builder=lambda address, command: [address, command],
+        runner=_artifact_runner(module, marker),
+    )
+
+
+def test_second_execution_cannot_overwrite_first_attempt(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _controller_module()
+    monkeypatch.setattr(module, "LOCAL_ARTIFACT_ROOT", tmp_path / "attempts")
+    first = _download_attempt(module, ATTEMPT_ONE, b"first")
+    before = {
+        path.name: path.read_bytes()
+        for path in first.iterdir()
+    }
+    with pytest.raises(FileExistsError):
+        _download_attempt(module, ATTEMPT_ONE, b"second")
+    assert {path.name: path.read_bytes() for path in first.iterdir()} == before
+
+
+def test_existing_attempt_artifact_collision_fails_closed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _controller_module()
+    root = tmp_path / "attempts"
+    collision = root / ATTEMPT_ONE
+    collision.mkdir(parents=True)
+    existing = collision / "execution-ledger.json"
+    existing.write_bytes(b"preserve-me")
+    monkeypatch.setattr(module, "LOCAL_ARTIFACT_ROOT", root)
+    with pytest.raises(FileExistsError):
+        _download_attempt(module, ATTEMPT_ONE, b"replacement")
+    assert existing.read_bytes() == b"preserve-me"
+
+
+def test_unique_attempt_ids_produce_isolated_outputs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _controller_module()
+    monkeypatch.setattr(module, "LOCAL_ARTIFACT_ROOT", tmp_path / "attempts")
+    first = _download_attempt(module, ATTEMPT_ONE, b"first")
+    second = _download_attempt(module, ATTEMPT_TWO, b"second")
+    assert first != second
+    assert (first / "execution-ledger.json").read_bytes().startswith(b"first:")
+    assert (second / "execution-ledger.json").read_bytes().startswith(b"second:")
+
+
+def test_failed_lifecycle_artifacts_remain_readable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _controller_module()
+    phase_root = tmp_path / "artifacts" / "phase06b"
+    attempts_root = phase_root / "attempts"
+    legacy = {
+        name: f"failed-lifecycle:{name}".encode("utf-8")
+        for name in module.ARTIFACT_NAMES
+    }
+    phase_root.mkdir(parents=True)
+    for name, content in legacy.items():
+        (phase_root / name).write_bytes(content)
+    monkeypatch.setattr(module, "LOCAL_ARTIFACT_ROOT", attempts_root)
+    _download_attempt(module, ATTEMPT_ONE, b"new-attempt")
+    assert {
+        name: (phase_root / name).read_bytes()
+        for name in module.ARTIFACT_NAMES
+    } == legacy
 
 
 def test_frozen_hash_semantics_match_mem0_and_openviking_evidence() -> None:

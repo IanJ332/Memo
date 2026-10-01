@@ -49,6 +49,7 @@ from phase04_runtime import (  # noqa: E402
 )
 from phase05_openviking import OpenVikingServiceController  # noqa: E402
 from phase06b_harness import select_approved_harness  # noqa: E402
+from phase06b import validate_attempt_id  # noqa: E402
 
 LIVE_AUTH_ENV = "MEMLIFE_AUTHORIZE_PHASE06B_LIVE"
 FREEZE_PATH = REPO_ROOT / "experiments" / "freeze" / "experiment-freeze-v1.json"
@@ -296,6 +297,7 @@ def _execute_provider(
 
 
 def run(output_dir: Path) -> dict[str, Any]:
+    attempt_id = validate_attempt_id(os.environ["PHASE06B_ATTEMPT_ID"])
     plan = generate_run_plan(FREEZE_PATH)
     commit = _git_commit()
     data_root = Path(os.environ["MEMLIFE_DATA_ROOT"])
@@ -314,6 +316,7 @@ def run(output_dir: Path) -> dict[str, Any]:
         "status": "BLOCKED",
         "cleanup_independent_experimental_status": "BLOCKED",
         "freeze_id": plan["freeze_id"],
+        "attempt_id": attempt_id,
         "freeze_sha256": FREEZE_SHA256,
         "git_commit_tested": commit,
         "planned_supported_count": 42,

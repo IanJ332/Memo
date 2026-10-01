@@ -26,7 +26,7 @@ CONFIG_FILE = REPO_ROOT / "configs" / "jetstream.json"
 ACCEPTANCE_FILE = REPO_ROOT / "manifests" / "jetstream-automation-acceptance.json"
 PHASE02B_SESSION_FILE = LOCAL_ROOT / "jetstream" / "phase-02b-session.json"
 PHASE04_SESSION_FILE = LOCAL_ROOT / "jetstream" / "phase-04-session.json"
-PHASE06B_SESSION_FILE = LOCAL_ROOT / "jetstream" / "phase-06b-session.json"
+PHASE06B_SESSION_ROOT = LOCAL_ROOT / "jetstream" / "phase-06b" / "attempts"
 OPENSTACK = LOCAL_ROOT / "jetstream" / "cli-venv" / "Scripts" / "openstack.exe"
 
 EXPECTED_NAME = "jisheng3"
@@ -682,6 +682,7 @@ def run_managed_session(
     phase: str,
     manifest_path: Path,
     remote_work: Callable[[str, Mapping[str, str]], Mapping[str, Any]] | None = None,
+    attempt_id: str | None = None,
 ) -> dict[str, Any]:
     """Run one owned VM/FIP session and guarantee best-effort cleanup."""
 
@@ -714,6 +715,8 @@ def run_managed_session(
         "opened_by_this_run": opened, "auto_shelve_success": False,
         "numeric_address_persisted": False,
     }
+    if attempt_id is not None:
+        result["attempt_id"] = attempt_id
     failure: BaseException | None = None
     cleanup_errors: list[str] = []
     transient_address: str | None = None
@@ -942,18 +945,28 @@ def run_phase05(credentials: Mapping[str, str]) -> dict[str, Any]:
 def run_phase06b(credentials: Mapping[str, str]) -> dict[str, Any]:
     """Run the explicitly authorized frozen batch in one managed lifecycle."""
 
-    from phase06b import require_live_authorization, run_remote_validation
+    from phase06b import (
+        new_attempt_id,
+        require_live_authorization,
+        run_remote_validation,
+    )
 
     require_live_authorization()
     expected_commit = run_command(["git", "rev-parse", "HEAD"]).stdout.strip()
+    attempt_id = new_attempt_id()
+    manifest_path = PHASE06B_SESSION_ROOT / f"{attempt_id}.json"
+    if manifest_path.exists():
+        raise JetstreamError("Phase 06B lifecycle attempt manifest already exists")
     return run_managed_session(
         credentials,
         phase="06B",
-        manifest_path=PHASE06B_SESSION_FILE,
+        manifest_path=manifest_path,
+        attempt_id=attempt_id,
         remote_work=lambda address, facts: run_remote_validation(
             address=address,
             facts=facts,
             expected_commit=expected_commit,
+            attempt_id=attempt_id,
             ssh_builder=ssh_command,
             runner=run_command,
         ),
