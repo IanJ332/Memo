@@ -1,6 +1,14 @@
 """Shared memory and lifecycle data models."""
 
 from memlife.models.lifecycle import LifecycleState
+from memlife.models.authority import (
+    AUTHORITY_SCHEMA_VERSION,
+    AuthorityExposureOutcome,
+    AuthorityLedger,
+    AuthorityLedgerEntry,
+    content_sha256,
+    normalize_authority_exposure,
+)
 from memlife.models.memory import (
     DeleteCommand,
     MemoryRecord,
@@ -27,6 +35,10 @@ from memlife.models.provenance import (
 )
 
 __all__ = [
+    "AUTHORITY_SCHEMA_VERSION",
+    "AuthorityExposureOutcome",
+    "AuthorityLedger",
+    "AuthorityLedgerEntry",
     "DeleteCommand",
     "DownstreamExecutionStatus",
     "EnforcementAction",
@@ -48,4 +60,6 @@ __all__ = [
     "TRACE_SCHEMA_VERSION",
     "ToolActionRecord",
     "WriteCommand",
+    "content_sha256",
+    "normalize_authority_exposure",
 ]
