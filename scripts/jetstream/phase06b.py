@@ -6,6 +6,7 @@ import base64
 import json
 import os
 import re
+import shlex
 import subprocess
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
@@ -14,6 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 REMOTE_REPO = "/home/exouser/Memo"
 BRANCH = "phase-06b-storage-batch"
 LIVE_AUTH_ENV = "MEMLIFE_AUTHORIZE_PHASE06B_LIVE"
+HARNESS_ENV = "PHASE06B_HARNESS_VENV"
 RESULT_PREFIX = "PHASE06B_RESULT_B64="
 LOCAL_RESULT = REPO_ROOT / "runtime_reports" / "phase06b" / "remote-result.json"
 LOCAL_ARTIFACT_ROOT = REPO_ROOT / "artifacts" / "phase06b"
@@ -76,6 +78,32 @@ def _contains_sensitive_key(value: object) -> bool:
     return False
 
 
+def _synced_remote_head(sync_output: str) -> str:
+    heads = [
+        line.removeprefix("remote_head=")
+        for line in sync_output.splitlines()
+        if line.startswith("remote_head=")
+    ]
+    if len(heads) != 1 or not re.fullmatch(r"[0-9a-f]{40}", heads[0]):
+        raise RuntimeError("remote sync did not report exactly one valid Git head")
+    return heads[0]
+
+
+def _remote_batch_command(expected_commit: str) -> str:
+    if not re.fullmatch(r"[0-9a-f]{40}", expected_commit):
+        raise ValueError("expected commit must be a full lowercase Git object ID")
+    assignments = [
+        f"{LIVE_AUTH_ENV}=YES",
+        f"PHASE06B_EXPECTED_COMMIT={expected_commit}",
+    ]
+    explicit_harness = os.environ.get(HARNESS_ENV)
+    if explicit_harness:
+        assignments.append(f"{HARNESS_ENV}={shlex.quote(explicit_harness)}")
+    return " ".join(
+        [*assignments, "bash", f"{REMOTE_REPO}/scripts/jetstream/phase06b_remote.sh"]
+    )
+
+
 def _download_artifacts(
     *,
     address: str,
@@ -106,13 +134,13 @@ def run_remote_validation(
 ) -> Mapping[str, Any]:
     require_live_authorization()
     sync = runner(ssh_builder(address, _sync_command(expected_commit)), timeout=240)
+    synced_remote_head = _synced_remote_head(sync.stdout)
+    if synced_remote_head != expected_commit:
+        raise RuntimeError("synchronized remote head did not match prepared live commit")
     validation = runner(
         ssh_builder(
             address,
-            (
-                f"{LIVE_AUTH_ENV}=YES PHASE06B_EXPECTED_COMMIT={expected_commit} "
-                f"bash {REMOTE_REPO}/scripts/jetstream/phase06b_remote.sh"
-            ),
+            _remote_batch_command(expected_commit),
         ),
         timeout=28800,
     )
@@ -137,6 +165,9 @@ def run_remote_validation(
         raise RuntimeError("remote result freeze hash mismatch")
     if payload.get("downstream_decision_model_calls") != 0:
         raise RuntimeError("remote result violated the downstream-call hard-zero gate")
+    payload["initial_remote_head"] = facts.get("repo_head")
+    payload["synced_remote_head"] = synced_remote_head
+    payload["tested_commit"] = payload["git_commit_tested"]
     _download_artifacts(
         address=address,
         mount=str(facts["resolved_volume_mount"]),

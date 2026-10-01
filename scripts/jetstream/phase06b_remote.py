@@ -48,6 +48,7 @@ from phase04_runtime import (  # noqa: E402
     wait_hindsight_ready,
 )
 from phase05_openviking import OpenVikingServiceController  # noqa: E402
+from phase06b_harness import select_approved_harness  # noqa: E402
 
 LIVE_AUTH_ENV = "MEMLIFE_AUTHORIZE_PHASE06B_LIVE"
 FREEZE_PATH = REPO_ROOT / "experiments" / "freeze" / "experiment-freeze-v1.json"
@@ -158,10 +159,14 @@ def validate_pre_experiment_environment() -> dict[str, Any]:
     if FREEZE_SHA256 not in freeze_output:
         raise RuntimeError("remote freeze validator did not emit the frozen SHA-256")
 
-    harness_python = Path(sys.executable).resolve()
-    legacy = (REPO_ROOT / ".venv" / "bin" / "python").resolve()
-    if harness_python == legacy:
-        raise RuntimeError("legacy repository .venv is forbidden for Phase 06B")
+    selected_harness = select_approved_harness(
+        repo=REPO_ROOT,
+        data_root=Path(os.environ["MEMLIFE_DATA_ROOT"]),
+        explicit_venv=Path(os.environ["PHASE06B_HARNESS_VENV"]),
+    )
+    if Path(sys.prefix).resolve() != selected_harness.venv:
+        raise RuntimeError("Phase 06B did not start from the selected approved harness")
+    harness_python = selected_harness.python
     if version("mem0ai") != "2.2.1" or version("sentence-transformers") != "6.1.0":
         raise RuntimeError("Mem0 frozen distribution version mismatch")
     _pip_check(harness_python)
@@ -227,6 +232,12 @@ def validate_pre_experiment_environment() -> dict[str, Any]:
         "freeze_validator": "PASS",
         "freeze_sha256": FREEZE_SHA256,
         "git_commit": actual_commit,
+        "harness": {
+            "venv": str(selected_harness.venv),
+            "python": str(selected_harness.python),
+            "selection_source": os.environ["PHASE06B_HARNESS_SELECTION_SOURCE"],
+            "runtime_prefix": str(Path(sys.prefix).resolve()),
+        },
         "providers": {
             "mem0": {
                 "version": "2.2.1",

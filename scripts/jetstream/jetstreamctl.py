@@ -804,6 +804,7 @@ def run_managed_session(
             remote_repo="/home/exouser/Memo",
             remote_repo_branch=facts.get("repo_branch"),
             remote_repo_head=facts.get("repo_head"),
+            initial_remote_head=facts.get("repo_head"),
             remote_repo_clean=not bool(facts.get("repo_status_b64")),
             remote_python=facts.get("python"),
             derived_memlife_root=facts["resolved_volume_mount"].rstrip("/") + "/memlife",
@@ -812,6 +813,13 @@ def run_managed_session(
             result["failure_stage"] = "REMOTE_WORK"
             remote_payload = dict(remote_work(address, facts))
             result["remote_work"] = remote_payload
+            for evidence_key in (
+                "initial_remote_head",
+                "synced_remote_head",
+                "tested_commit",
+            ):
+                if evidence_key in remote_payload:
+                    result[evidence_key] = remote_payload[evidence_key]
             if remote_payload.get("status") not in {None, "PASS", "PARTIAL"}:
                 detail = str(
                     remote_payload.get("blocker")
