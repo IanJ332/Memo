@@ -33,6 +33,15 @@ A repository-scoped `.gitattributes` rule now requests CRLF checkout only for
 the frozen JSON. The freeze file itself was not modified. This repair has not
 been live-tested because a second Jetstream lifecycle was not authorized.
 
+Local repair validation used four isolated no-local clones. At the prepared
+commit, `core.autocrlf=true` produced the required CRLF hash while
+`core.autocrlf=false` with `core.eol=lf` reproduced the remote LF hash. At the
+repaired commit, both configurations produced 15,274-byte files with 413 CRLF
+line endings and the required `0e02a8...49b` SHA-256. The repository's local
+and global settings are unset; Windows Git's system-level `core.autocrlf=true`
+explains the original local conversion. The exact remote Git setting was not
+captured, but its checkout behavior was unambiguously no-CRLF conversion.
+
 ## Planned coverage
 
 The plan was generated only from Freeze v1 and is tracked at

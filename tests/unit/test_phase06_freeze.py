@@ -3,6 +3,7 @@
 import hashlib
 import importlib.util
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -36,6 +37,32 @@ def test_freeze_is_canonical_and_hash_stable() -> None:
     assert FREEZE_PATH.read_text(encoding="utf-8") == canonical
     assert hashlib.sha256(FREEZE_PATH.read_bytes()).hexdigest() == (
         "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b"
+    )
+
+
+def test_freeze_checkout_policy_forces_authoritative_crlf_bytes() -> None:
+    relative = "experiments/freeze/experiment-freeze-v1.json"
+    attributes = subprocess.run(
+        ["git", "check-attr", "text", "eol", "--", relative],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    assert f"{relative}: text: set" in attributes
+    assert f"{relative}: eol: crlf" in attributes
+
+    working_bytes = FREEZE_PATH.read_bytes()
+    blob_bytes = subprocess.run(
+        ["git", "cat-file", "blob", f"HEAD:{relative}"],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout
+    assert b"\r\n" in working_bytes
+    assert b"\r\n" not in blob_bytes
+    assert hashlib.sha256(blob_bytes).hexdigest() == (
+        "6b41176154070dd8c58db24a5c5adfe5365e39d0c31408c033019e7d6108b3c9"
     )
 
 
