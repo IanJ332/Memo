@@ -24,6 +24,66 @@ def test_state_normalization_and_opened_rule() -> None:
     assert jetstreamctl.was_opened_by_run("ACTIVE") is False
 
 
+def test_managed_wrapper_maps_historical_supplement_completion(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    server = {
+        "id": jetstreamctl.EXPECTED_SERVER_UUID,
+        "name": jetstreamctl.EXPECTED_NAME,
+        "status": "ACTIVE",
+        "addresses": {
+            "public": [{"addr": "8.8.8.8", "OS-EXT-IPS:type": "floating"}]
+        },
+    }
+    monkeypatch.setattr(jetstreamctl, "resolve_server", lambda credentials: (server, {}))
+    monkeypatch.setattr(
+        jetstreamctl, "discover_external_network", lambda credentials: {"id": "public"}
+    )
+    monkeypatch.setattr(
+        jetstreamctl, "list_server_ports", lambda credentials, server_id: [{"ID": "port"}]
+    )
+    monkeypatch.setattr(
+        jetstreamctl,
+        "list_floating_ips",
+        lambda credentials: [
+            {"ID": "fip", "Floating IP Address": "8.8.8.8", "Port": "port"}
+        ],
+    )
+    monkeypatch.setattr(
+        jetstreamctl, "wait_for_floating_ip_association", lambda *args, **kwargs: server
+    )
+    monkeypatch.setattr(jetstreamctl.socket, "gethostbyname", lambda host: "8.8.8.8")
+    monkeypatch.setattr(jetstreamctl, "wait_for_tcp_22", lambda address: 0.01)
+    monkeypatch.setattr(jetstreamctl, "verify_ssh", lambda address: None)
+    monkeypatch.setattr(
+        jetstreamctl,
+        "probe",
+        lambda address: {
+            "remote_user": "exouser",
+            "remote_hostname": "jisheng3",
+            "resolved_volume_mount": "/volume",
+            "repo_head": "a" * 40,
+        },
+    )
+    monkeypatch.setattr(
+        jetstreamctl, "cleanup_owned_floating_ip", lambda *args, **kwargs: []
+    )
+    monkeypatch.setattr(
+        jetstreamctl,
+        "run_command",
+        lambda *args, **kwargs: subprocess.CompletedProcess(args, 0, "test\n", ""),
+    )
+    result = jetstreamctl.run_managed_session(
+        {},
+        phase="06B-S",
+        manifest_path=tmp_path / "session.json",
+        remote_work=lambda address, facts: {"status": "SUPPLEMENT_COMPLETE"},
+    )
+    assert result["status"] == "PASS"
+    assert result["remote_lifecycle_status"] == "PASS"
+    assert result["remote_work"]["status"] == "SUPPLEMENT_COMPLETE"
+
+
 def test_identity_accepts_only_expected_target() -> None:
     server = {
         "id": jetstreamctl.EXPECTED_SERVER_UUID,

@@ -26,12 +26,15 @@ from memlife.adapters.openviking import (  # noqa: E402
     phase05a_manifest_configuration,
 )
 from memlife.runner.manifest import hash_configuration  # noqa: E402
+from memlife.runner.lifecycle_status import normalize_lifecycle_status  # noqa: E402
+from memlife.runner.tracked_text import materialize_tracked_jsonl  # noqa: E402
 from memlife.runner.phase06b_supplement import (  # noqa: E402
     DERIVED_RAW_SHA256,
     EXECUTION_ORIGIN,
     FREEZE_ID,
     FREEZE_SHA256,
     ORIGINAL_ATTEMPT_ID,
+    ORIGINAL_RAW_SHA256,
     SUPPLEMENT_PLAN_SHA256,
     blocked_supplement_records,
     execute_supplement_runs,
@@ -41,6 +44,7 @@ from memlife.runner.phase06b_supplement import (  # noqa: E402
 from memlife.runner.storage_batch import (  # noqa: E402
     EXPECTED_CONFIGURATION_HASHES,
     canonical_json,
+    generate_run_plan,
     run_repetition,
     sanitize_value,
 )
@@ -71,6 +75,14 @@ ORIGINAL_ROWS_PATH = (
     / "derived"
     / "20261001T183940Z-1fc4c4929532"
     / "freeze-v1-raw-runs.provenance-repaired.jsonl"
+)
+ORIGINAL_RAW_PATH = (
+    REPO_ROOT
+    / "artifacts"
+    / "phase06b"
+    / "attempts"
+    / ORIGINAL_ATTEMPT_ID
+    / "freeze-v1-raw-runs.jsonl"
 )
 
 
@@ -314,25 +326,36 @@ def _diagnostic_event(
     }
 
 
-def validate_pre_experiment_environment() -> Mapping[str, Any]:
+def validate_pre_experiment_environment(
+    evidence: dict[str, Any] | None = None,
+) -> Mapping[str, Any]:
+    evidence = {} if evidence is None else evidence
     expected_commit = os.environ["PHASE06B_EXPECTED_COMMIT"]
     if _git_commit() != expected_commit:
         raise RuntimeError("remote tested commit mismatch")
+    evidence["tested_commit"] = expected_commit
+    evidence["git_commit_gate"] = "PASS"
     if os.environ.get(LIVE_AUTH_ENV) != "YES":
         raise RuntimeError("supplement live authorization is absent")
+    evidence["explicit_live_authorization_gate"] = "PASS"
     freeze_output = _command(
         [sys.executable, str(REPO_ROOT / "scripts" / "validate_experiment_freeze.py")]
     )
     if FREEZE_SHA256 not in freeze_output:
         raise RuntimeError("freeze validator did not emit the canonical SHA-256")
+    evidence["freeze_gate"] = "PASS"
     harness = select_approved_harness(
         repo=REPO_ROOT,
         data_root=Path(os.environ["MEMLIFE_DATA_ROOT"]),
         explicit_venv=Path(os.environ["PHASE06B_HARNESS_VENV"]),
     )
+    evidence["harness_selected_path"] = str(harness.venv)
+    evidence["harness_python_path"] = str(harness.python)
+    evidence["sys_prefix"] = str(Path(sys.prefix).resolve())
     if Path(sys.prefix).resolve() != harness.venv:
         raise RuntimeError("supplement did not start from the approved harness")
     _pip_check(harness.python)
+    evidence["harness_gate"] = "PASS"
     openviking_python = Path(os.environ["PHASE06B_OPENVIKING_PYTHON"])
     openviking_version = _distribution_version(openviking_python, "openviking")
     if openviking_version != "0.4.22":
@@ -351,6 +374,14 @@ def validate_pre_experiment_environment() -> Mapping[str, Any]:
     ):
         raise RuntimeError("OpenViking frozen configuration hash mismatch")
     _validate_openviking_runtime_config(Path(os.environ["PHASE05_OPENVIKING_CONFIG"]))
+    evidence["openviking_runtime_gate"] = "PASS"
+    if not ORIGINAL_RAW_PATH.is_file():
+        raise RuntimeError("original Phase 06B raw artifact is unavailable")
+    original_raw_sha256 = hashlib.sha256(ORIGINAL_RAW_PATH.read_bytes()).hexdigest()
+    evidence["original_raw_sha256"] = original_raw_sha256
+    if original_raw_sha256 != ORIGINAL_RAW_SHA256:
+        raise RuntimeError("original Phase 06B raw SHA-256 mismatch")
+    evidence["original_raw_gate"] = "PASS"
     errors, selection = validate_supplement_selection(
         plan_path=PLAN_PATH,
         freeze_path=FREEZE_PATH,
@@ -358,6 +389,13 @@ def validate_pre_experiment_environment() -> Mapping[str, Any]:
     )
     if errors or selection is None:
         raise RuntimeError("supplement selection invalid: " + "; ".join(errors))
+    derived_materialization = materialize_tracked_jsonl(ORIGINAL_ROWS_PATH)
+    evidence["derived_original_canonical_sha256"] = derived_materialization.sha256
+    evidence["derived_original_git_blob_sha256"] = hashlib.sha256(
+        derived_materialization.git_blob
+    ).hexdigest()
+    evidence["derived_original_validation_source"] = "GIT_BLOB_CANONICAL_CRLF"
+    evidence["supplement_selection_gate"] = "PASS"
     return {
         "freeze_validator": "PASS",
         "freeze_id": FREEZE_ID,
@@ -383,6 +421,25 @@ def _write_jsonl_exclusive(path: Path, rows: list[Mapping[str, Any]]) -> None:
             )
 
 
+def _authorized_plan_snapshot() -> tuple[bytes, list[dict[str, Any]]]:
+    """Return the exact authorized plan bytes and frozen run specifications."""
+
+    plan_bytes = PLAN_PATH.read_bytes()
+    if hashlib.sha256(plan_bytes).hexdigest() != SUPPLEMENT_PLAN_SHA256:
+        raise RuntimeError("supplement plan SHA-256 mismatch before snapshot")
+    plan = json.loads(plan_bytes.decode("utf-8"))
+    eligible = plan.get("eligible_run_ids")
+    if not isinstance(eligible, list) or len(eligible) != 10:
+        raise RuntimeError("supplement plan does not contain exactly ten run IDs")
+    frozen = generate_run_plan(FREEZE_PATH)
+    by_id = {str(run["run_id"]): dict(run) for run in frozen["runs"]}
+    try:
+        runs = [by_id[str(run_id)] for run_id in eligible]
+    except KeyError as exc:
+        raise RuntimeError("supplement plan contains a non-frozen run ID") from exc
+    return plan_bytes, runs
+
+
 def run(output_dir: Path) -> dict[str, Any]:
     attempt_id = validate_attempt_id(os.environ["PHASE06B_SUPPLEMENT_ATTEMPT_ID"])
     if attempt_id == ORIGINAL_ATTEMPT_ID:
@@ -392,8 +449,12 @@ def run(output_dir: Path) -> dict[str, Any]:
     raw_path = output_dir / "supplement-raw-runs.jsonl"
     ledger_path = output_dir / "supplement-execution-ledger.json"
     diagnostics_path = output_dir / "supplement-diagnostics.jsonl"
+    plan_snapshot_path = output_dir / "supplement-plan.json"
+    aggregate_path = output_dir / "supplement-aggregate.json"
+    preflight_path = output_dir / "supplement-preflight.json"
     result: dict[str, Any] = {
-        "status": "SUPPLEMENT_BLOCKED",
+        "status": "BLOCKED",
+        "supplement_status": "SUPPLEMENT_BLOCKED",
         "attempt_id": attempt_id,
         "execution_origin": EXECUTION_ORIGIN,
         "freeze_id": FREEZE_ID,
@@ -412,10 +473,33 @@ def run(output_dir: Path) -> dict[str, Any]:
     diagnostics: list[dict[str, Any]] = []
     rows: list[dict[str, Any]] = []
     blocked: list[dict[str, Any]] = []
+    authorized_runs: list[dict[str, Any]] = []
     selection = None
     observability: Observability | None = None
+    preflight_evidence: dict[str, Any] = {
+        "artifact_kind": "ORIGINAL_ATTEMPT_CAPTURE",
+        "attempt_id": attempt_id,
+        "status": "IN_PROGRESS",
+        "lifecycle_status_vocabulary": "PASS|PARTIAL|BLOCKED",
+        "harness_selected_path": str(
+            Path(os.environ["PHASE06B_HARNESS_VENV"]).resolve()
+        ),
+        "sys_prefix": str(Path(sys.prefix).resolve()),
+        "root_free_bytes": _disk_free(Path("/")),
+        "persistent_volume_free_bytes": _disk_free(volume_mount),
+        "supplement_plan_path": str(PLAN_PATH.relative_to(REPO_ROOT).as_posix()),
+        "supplement_plan_sha256": SUPPLEMENT_PLAN_SHA256,
+        "authorized_run_ids": [],
+    }
     try:
-        preflight = validate_pre_experiment_environment()
+        plan_bytes, authorized_runs = _authorized_plan_snapshot()
+        with plan_snapshot_path.open("xb") as stream:
+            stream.write(plan_bytes)
+        preflight_evidence["authorized_run_ids"] = [
+            str(run["run_id"]) for run in authorized_runs
+        ]
+        preflight_evidence["plan_snapshot_status"] = "PASS"
+        preflight = validate_pre_experiment_environment(preflight_evidence)
         result["pre_experiment_gate"] = preflight
         errors, selection = validate_supplement_selection(
             plan_path=PLAN_PATH,
@@ -479,7 +563,8 @@ def run(output_dir: Path) -> dict[str, Any]:
         rows.extend(execution.rows)
         blocked.extend(execution.blocked)
         diagnostics.extend(execution.diagnostics)
-        result["status"] = execution.completion
+        result["supplement_status"] = execution.completion
+        result["status"] = normalize_lifecycle_status(execution.completion)
     except Exception as exc:
         result["blocker_type"] = type(exc).__name__
         result["blocker"] = str(sanitize_value(str(exc)))
@@ -505,9 +590,10 @@ def run(output_dir: Path) -> dict[str, Any]:
                         "payload": "UNAVAILABLE",
                     }
                 )
-        if selection is not None:
+        evidence_runs = selection.runs if selection is not None else authorized_runs
+        if evidence_runs:
             completed = {str(row["run_id"]) for row in rows}
-            remaining = [run for run in selection.runs if str(run["run_id"]) not in completed]
+            remaining = [run for run in evidence_runs if str(run["run_id"]) not in completed]
             blocked.extend(
                 blocked_supplement_records(
                     remaining,
@@ -515,7 +601,10 @@ def run(output_dir: Path) -> dict[str, Any]:
                     reason=f"systemic supplement blocker: {type(exc).__name__}",
                 )
             )
-        result["status"] = "SUPPLEMENT_PARTIAL" if rows else "SUPPLEMENT_BLOCKED"
+        result["supplement_status"] = (
+            "SUPPLEMENT_PARTIAL" if rows else "SUPPLEMENT_BLOCKED"
+        )
+        result["status"] = normalize_lifecycle_status(result["supplement_status"])
     finally:
         if controller is not None and controller.process is not None:
             owned_process = controller.process
@@ -549,26 +638,57 @@ def run(output_dir: Path) -> dict[str, Any]:
         )
         if errors:
             raise RuntimeError("supplement artifact validation failed: " + "; ".join(errors))
+    planned_runs = selection.runs if selection is not None else tuple(authorized_runs)
     ledger = {
         "attempt_id": attempt_id,
         "execution_origin": EXECUTION_ORIGIN,
-        "planned_run_ids": [] if selection is None else list(selection.run_ids),
+        "planned_run_ids": [str(run["run_id"]) for run in planned_runs],
         "completed_run_ids": [row["run_id"] for row in rows],
         "error_run_ids": [
             row["run_id"] for row in rows if row.get("operation_status") == "ERROR"
         ],
         "blocked_not_executed": blocked,
+        "run_statuses": [
+            {
+                "run_id": row["run_id"],
+                "status": row.get("operation_status", "ERROR"),
+            }
+            for row in rows
+        ]
+        + [
+            {"run_id": item["run_id"], "status": "BLOCKED_NOT_EXECUTED"}
+            for item in blocked
+        ],
         "same_lifecycle_retries": 0,
     }
+    aggregate = {
+        "artifact_kind": "OPERATIONAL_COVERAGE_METADATA",
+        "attempt_id": attempt_id,
+        "planned": len(planned_runs),
+        "executed": len(rows),
+        "success": sum(row.get("operation_status") == "SUCCESS" for row in rows),
+        "error": sum(row.get("operation_status") == "ERROR" for row in rows),
+        "blocked_not_executed": len(blocked),
+        "scientific_observation": False,
+    }
+    preflight_evidence["status"] = (
+        "PASS"
+        if preflight_evidence.get("supplement_selection_gate") == "PASS"
+        else "BLOCKED"
+    )
     _write_jsonl_exclusive(raw_path, rows)
     _write_jsonl_exclusive(diagnostics_path, diagnostics)
     with ledger_path.open("x", encoding="utf-8", newline="\n") as stream:
         stream.write(canonical_json(ledger))
+    with aggregate_path.open("x", encoding="utf-8", newline="\n") as stream:
+        stream.write(canonical_json(aggregate))
+    with preflight_path.open("x", encoding="utf-8", newline="\n") as stream:
+        stream.write(canonical_json(preflight_evidence))
     result.update(
         executed_count=len(rows),
         success_status_count=sum(row.get("operation_status") == "SUCCESS" for row in rows),
         error_count=sum(row.get("operation_status") == "ERROR" for row in rows),
-        blocked_not_executed_count=10 - len(rows),
+        blocked_not_executed_count=len(blocked),
         diagnostic_event_count=len(diagnostics),
         same_lifecycle_retries=0,
     )

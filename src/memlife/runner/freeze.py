@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import hashlib
 import json
-import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+from memlife.runner.tracked_text import read_git_blob
 
 FREEZE_GIT_PATH = "experiments/freeze/experiment-freeze-v1.json"
 FREEZE_SHA256 = "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b"
@@ -57,21 +58,6 @@ def canonical_freeze_bytes(git_blob: bytes) -> tuple[dict[str, Any], bytes]:
     return payload, canonical_bytes
 
 
-def _repository_root(freeze_path: Path) -> Path:
-    probe = freeze_path.resolve().parent
-    result = subprocess.run(
-        ["git", "rev-parse", "--show-toplevel"],
-        cwd=probe,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    if result.returncode:
-        detail = (result.stderr or result.stdout).strip()
-        raise ValueError(f"freeze path is not in a Git repository: {detail}")
-    return Path(result.stdout.strip()).resolve()
-
-
 def load_freeze_from_git(
     freeze_path: Path,
     *,
@@ -79,28 +65,15 @@ def load_freeze_from_git(
 ) -> FreezeMaterialization:
     """Load Freeze v1 from ``git show``, never from working-tree bytes."""
 
-    repo_root = _repository_root(freeze_path)
-    try:
-        git_path = freeze_path.resolve().relative_to(repo_root).as_posix()
-    except ValueError as exc:
-        raise ValueError("freeze path is outside its Git repository") from exc
+    repo_root, git_path, git_blob = read_git_blob(freeze_path, revision=revision)
     if git_path != FREEZE_GIT_PATH:
         raise ValueError(
             f"freeze must use the repository path {FREEZE_GIT_PATH!r}, got {git_path!r}"
         )
-    result = subprocess.run(
-        ["git", "show", f"{revision}:{FREEZE_GIT_PATH}"],
-        cwd=repo_root,
-        check=False,
-        capture_output=True,
-    )
-    if result.returncode:
-        detail = result.stderr.decode("utf-8", errors="replace").strip()
-        raise ValueError(f"unable to read freeze Git blob: {detail}")
-    payload, canonical_bytes = canonical_freeze_bytes(result.stdout)
+    payload, canonical_bytes = canonical_freeze_bytes(git_blob)
     return FreezeMaterialization(
         payload=payload,
-        git_blob=result.stdout,
+        git_blob=git_blob,
         canonical_bytes=canonical_bytes,
         sha256=hashlib.sha256(canonical_bytes).hexdigest(),
     )

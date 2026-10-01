@@ -18,6 +18,7 @@ from memlife.runner.phase06b_supplement import (
     validate_supplement_selection,
 )
 from memlife.runner.storage_batch import run_repetition
+from memlife.runner.tracked_text import canonical_crlf_bytes
 
 ROOT = Path(__file__).resolve().parents[2]
 PLAN = ROOT / "experiments" / "supplements" / "phase06b-openviking-missing-runs-v1.json"
@@ -182,7 +183,9 @@ def test_combined_view_is_derived_and_retains_source_provenance(tmp_path: Path) 
         manifest_path=manifest_path,
     )
     assert ORIGINAL.read_bytes() == original_before
-    assert hashlib.sha256(original_before).hexdigest() == DERIVED_RAW_SHA256
+    assert hashlib.sha256(canonical_crlf_bytes(original_before)).hexdigest() == (
+        DERIVED_RAW_SHA256
+    )
     assert manifest["artifact_kind"] == "DERIVED_ONLY"
     assert manifest["row_count"] == 33
     assert manifest["sources"][0]["attempt_ids"] == [ORIGINAL_ATTEMPT_ID]

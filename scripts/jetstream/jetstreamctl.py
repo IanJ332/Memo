@@ -18,6 +18,12 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from memlife.runner.lifecycle_status import normalize_lifecycle_status  # noqa: E402
+
 LOCAL_ROOT = REPO_ROOT / ".local"
 CREDENTIAL_FILE = LOCAL_ROOT / "credentials" / "CIS261698_IU-openrc.ps1"
 SSH_KEY = LOCAL_ROOT / "ssh" / "id_ed25519_jisheng3"
@@ -826,7 +832,16 @@ def run_managed_session(
             ):
                 if evidence_key in remote_payload:
                     result[evidence_key] = remote_payload[evidence_key]
-            if remote_payload.get("status") not in {None, "PASS", "PARTIAL"}:
+            raw_remote_status = remote_payload.get("status")
+            if raw_remote_status is None:
+                remote_status = "PASS"
+            else:
+                try:
+                    remote_status = normalize_lifecycle_status(raw_remote_status)
+                except ValueError as exc:
+                    raise JetstreamError(str(exc)) from exc
+            result["remote_lifecycle_status"] = remote_status
+            if remote_status == "BLOCKED":
                 detail = str(
                     remote_payload.get("blocker")
                     or remote_payload.get("error_message")

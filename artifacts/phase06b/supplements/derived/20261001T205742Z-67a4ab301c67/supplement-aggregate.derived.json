@@ -1,0 +1,13 @@
+{
+  "artifact_kind": "POST_RUN_DERIVED_RECONSTRUCTION",
+  "attempt_id": "20261001T205742Z-67a4ab301c67",
+  "blocked_not_executed": 10,
+  "derivation_source": "blocked preflight + validated supplement plan",
+  "error": 0,
+  "executed": 0,
+  "planned": 10,
+  "provider_started": false,
+  "reason": "PLATFORM_DEPENDENT_PREFLIGHT_VALIDATION_DEFECT",
+  "scientific_observation": false,
+  "success": 0
+}

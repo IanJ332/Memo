@@ -21,6 +21,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from memlife.runner.storage_batch import generate_run_plan  # noqa: E402
+from memlife.runner.tracked_text import materialize_tracked_jsonl  # noqa: E402
 from memlife.runner.phase06b_supplement import (  # noqa: E402
     ORIGINAL_RAW_SHA256,
     SUPPLEMENT_PLAN_SHA256,
@@ -126,14 +127,19 @@ def validate_supplement_plan(
     if original.get("id") != ORIGINAL_ATTEMPT_ID:
         errors.append("original attempt ID mismatch")
     raw_path = repo_root / str(original.get("derived_raw_path", ""))
-    if not raw_path.is_file():
-        errors.append("tracked provenance-repaired original raw artifact is missing")
+    try:
+        materialization = materialize_tracked_jsonl(raw_path)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        errors.append(
+            "tracked provenance-repaired original raw artifact is unreadable: "
+            f"{type(exc).__name__}"
+        )
         rows: list[dict[str, Any]] = []
     else:
-        digest = hashlib.sha256(raw_path.read_bytes()).hexdigest()
+        digest = materialization.sha256
         if digest != DERIVED_RAW_SHA256 or digest != original.get("derived_raw_sha256"):
-            errors.append("provenance-repaired original raw SHA-256 mismatch")
-        rows = _load_jsonl(raw_path)
+            errors.append("provenance-repaired original raw canonical SHA-256 mismatch")
+        rows = list(materialization.rows)
 
     executed_ids = [str(row.get("run_id")) for row in rows]
     if len(rows) != 32 or len(set(executed_ids)) != 32:
@@ -312,14 +318,22 @@ def validate_pre_live_readiness(
         / ORIGINAL_ATTEMPT_ID
         / "freeze-v1-raw-runs.provenance-repaired.jsonl"
     )
-    if not derived.is_file():
-        errors.append("derived provenance-repaired artifact is unavailable")
+    try:
+        derived_materialization = materialize_tracked_jsonl(derived)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        errors.append(
+            f"derived provenance-repaired artifact is unavailable: {type(exc).__name__}"
+        )
     else:
-        observed = hashlib.sha256(derived.read_bytes()).hexdigest()
+        observed = derived_materialization.sha256
         details["derived_raw_sha256"] = observed
+        details["derived_raw_git_blob_sha256"] = hashlib.sha256(
+            derived_materialization.git_blob
+        ).hexdigest()
+        details["derived_raw_validation_source"] = "GIT_BLOB_CANONICAL_CRLF"
         if observed != DERIVED_RAW_SHA256:
-            errors.append("derived provenance-repaired SHA-256 changed")
-        rows = _load_jsonl(derived)
+            errors.append("derived provenance-repaired canonical SHA-256 changed")
+        rows = list(derived_materialization.rows)
         if any(
             row.get("downstream_decision_model_calls") != 0
             or row.get("rq3_calls") != 0
@@ -359,6 +373,9 @@ def validate_pre_live_readiness(
             "validate_supplement_selection",
             "execute_supplement_runs",
             "execution_origin=EXECUTION_ORIGIN",
+            "supplement-plan.json",
+            "supplement-preflight.json",
+            "supplement-aggregate.json",
             "supplement-diagnostics.jsonl",
             "same_lifecycle_retries=0",
             "blocked_supplement_records",

@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from memlife.runner.storage_batch import FREEZE_SHA256, generate_run_plan
+from memlife.runner.tracked_text import materialize_tracked_jsonl
 
 FREEZE_ID = "experiment-freeze-v1"
 ORIGINAL_ATTEMPT_ID = "20261001T183940Z-1fc4c4929532"
@@ -116,17 +117,15 @@ def validate_supplement_selection(
         errors.append("original raw SHA-256 declaration mismatch")
     if original.get("derived_raw_sha256") != DERIVED_RAW_SHA256:
         errors.append("derived raw SHA-256 declaration mismatch")
-    if not original_rows_path.is_file():
-        errors.append("tracked provenance-repaired original raw artifact is missing")
+    try:
+        derived_materialization = materialize_tracked_jsonl(original_rows_path)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        errors.append(f"tracked provenance-repaired original raw unreadable: {type(exc).__name__}")
         original_rows: list[dict[str, Any]] = []
     else:
-        if sha256_file(original_rows_path) != DERIVED_RAW_SHA256:
-            errors.append("provenance-repaired original raw SHA-256 mismatch")
-        try:
-            original_rows = _load_rows(original_rows_path)
-        except (OSError, ValueError, json.JSONDecodeError) as exc:
-            errors.append(f"original rows unreadable: {type(exc).__name__}")
-            original_rows = []
+        if derived_materialization.sha256 != DERIVED_RAW_SHA256:
+            errors.append("provenance-repaired original raw canonical SHA-256 mismatch")
+        original_rows = list(derived_materialization.rows)
 
     executed_ids = [str(row.get("run_id")) for row in original_rows]
     if len(original_rows) != 32 or len(set(executed_ids)) != 32:
@@ -407,9 +406,10 @@ def derive_combined_view(
 ) -> dict[str, Any]:
     """Exclusively create a derived two-attempt view and provenance manifest."""
 
-    if sha256_file(original_path) != DERIVED_RAW_SHA256:
+    original_materialization = materialize_tracked_jsonl(original_path)
+    if original_materialization.sha256 != DERIVED_RAW_SHA256:
         raise ValueError("original derived artifact SHA-256 mismatch")
-    original = _load_rows(original_path)
+    original = list(original_materialization.rows)
     supplement = _load_rows(supplement_path)
     combined: list[dict[str, Any]] = []
     for row in original:

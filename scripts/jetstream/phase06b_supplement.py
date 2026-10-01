@@ -25,8 +25,11 @@ ORIGINAL_ATTEMPT_ID = "20261001T183940Z-1fc4c4929532"
 LOCAL_RESULT_ROOT = REPO_ROOT / "runtime_reports" / "phase06b" / "supplements" / "attempts"
 LOCAL_ARTIFACT_ROOT = REPO_ROOT / "artifacts" / "phase06b" / "supplements" / "attempts"
 ARTIFACT_NAMES = (
+    "supplement-plan.json",
+    "supplement-preflight.json",
     "supplement-raw-runs.jsonl",
     "supplement-execution-ledger.json",
+    "supplement-aggregate.json",
     "supplement-diagnostics.jsonl",
     "supplement-result.json",
 )

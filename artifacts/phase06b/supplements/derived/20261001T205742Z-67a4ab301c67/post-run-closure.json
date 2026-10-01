@@ -1,0 +1,38 @@
+{
+  "artifact_kind": "POST_RUN_DERIVED_RECONSTRUCTION",
+  "attempt_id": "20261001T205742Z-67a4ab301c67",
+  "authorized_run_ids": [
+    "freeze-v1__openviking__S0__r3",
+    "freeze-v1__openviking__S2__r1",
+    "freeze-v1__openviking__S2__r2",
+    "freeze-v1__openviking__S2__r3",
+    "freeze-v1__openviking__S3__r1",
+    "freeze-v1__openviking__S3__r2",
+    "freeze-v1__openviking__S3__r3",
+    "freeze-v1__openviking__S4__r1",
+    "freeze-v1__openviking__S4__r2",
+    "freeze-v1__openviking__S4__r3"
+  ],
+  "classification": "OPERATIONAL_COVERAGE_METADATA_ONLY",
+  "derivation_source": "blocked preflight + validated supplement plan",
+  "evidence_availability": {
+    "disk_free_samples": "NOT_SERIALIZED",
+    "harness_sys_prefix": "NOT_SERIALIZED",
+    "memory_samples": "UNAVAILABLE_FROM_PRESERVED_EVIDENCE",
+    "oom_evidence": "UNAVAILABLE_FROM_PRESERVED_EVIDENCE",
+    "process_id": "UNAVAILABLE_FROM_PRESERVED_EVIDENCE",
+    "provider_logs": "UNAVAILABLE_FROM_PRESERVED_EVIDENCE"
+  },
+  "original_attempt_capture": false,
+  "original_attempt_mutated": false,
+  "plan": {
+    "path": "experiments/supplements/phase06b-openviking-missing-runs-v1.json",
+    "sha256": "2db182047dd2b1bfddcaddaad40ace58385f8bdcf0bb114354d9724ee5d6626a",
+    "snapshot_existed_during_attempt": false
+  },
+  "provider_started": false,
+  "reason": "PLATFORM_DEPENDENT_PREFLIGHT_VALIDATION_DEFECT",
+  "scientific_observations_added": 0,
+  "source_attempt": "20261001T205742Z-67a4ab301c67",
+  "tested_commit": "2224704e9bc8223a686a18c91e0eb879cb0a54d7"
+}
