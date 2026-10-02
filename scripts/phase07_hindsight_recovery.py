@@ -96,6 +96,10 @@ class ProcessInspectionError(RecoveryError):
     pass
 
 
+class RecoveryCleanupError(RecoveryError):
+    pass
+
+
 class DiskCapacityError(RecoveryError):
     pass
 
@@ -497,6 +501,40 @@ def assert_original_offline(
             )
         raise OriginalSourceGuardError(
             f"original evidence contains postmaster.pid ({pid_file}); clean offline state is unproven"
+        )
+
+
+def assert_recovery_postgres_stopped(
+    copy_data_dir: Path,
+    *,
+    snapshots: Sequence[ProcessSnapshot] | None = None,
+) -> None:
+    """Independently prove that no PostgreSQL server still uses copied PGDATA."""
+
+    copy_root = _canonical_path(copy_data_dir, strict=True)
+    observed = list(snapshots) if snapshots is not None else inspect_linux_processes()
+    for snapshot in observed:
+        if not _snapshot_is_postgres(snapshot):
+            continue
+        for raw_path in _postgres_path_arguments(snapshot):
+            path = Path(raw_path)
+            if not path.is_absolute():
+                if snapshot.cwd is None:
+                    continue
+                path = Path(snapshot.cwd) / path
+            try:
+                resolved = path.resolve(strict=False)
+            except (OSError, RuntimeError) as exc:
+                raise ProcessInspectionError(
+                    f"cannot resolve path reported by PostgreSQL pid {snapshot.pid}: {exc}"
+                ) from exc
+            if _is_within(resolved, copy_root):
+                raise RecoveryCleanupError(
+                    f"PostgreSQL pid {snapshot.pid} still references copied PGDATA"
+                )
+    for pid_file in copy_root.rglob("postmaster.pid"):
+        raise RecoveryCleanupError(
+            f"copied PGDATA retains postmaster.pid at {pid_file}"
         )
 
 
@@ -1018,6 +1056,8 @@ class Pg0RecoveryRuntime:
             raise OriginalPg0MetadataError(
                 "validated original pg0 metadata does not identify the fixed original data directory"
             )
+        self.original_username = original_metadata.username
+        self.original_database = original_metadata.database
         self.instance = factory(
             name=self.instance_name,
             data_dir=str(self.data_dir),
@@ -1046,6 +1086,15 @@ class Pg0RecoveryRuntime:
             raise RecoveryError("pg0 start did not report its data_dir")
         if _canonical_path(Path(observed_data_dir), strict=True) != self.data_dir:
             raise OriginalSourceGuardError("pg0 started with a data_dir other than the copy")
+        for field_name, expected in (
+            ("username", self.original_username),
+            ("database", self.original_database),
+        ):
+            observed = getattr(info, field_name, None)
+            if observed is not None and str(observed) != expected:
+                raise OriginalPg0MetadataError(
+                    f"pg0 start reported {field_name} inconsistent with original instance metadata"
+                )
         self.uri = getattr(info, "uri", None)
         if not self.uri:
             raise RecoveryError("pg0 start did not report a connection URI")
@@ -1093,6 +1142,7 @@ def run_recovery_controller(
     disk_usage: Callable[[Path], Any] = shutil.disk_usage,
     pg0_factory: Callable[..., Any] | None = None,
     connect: Callable[[str], Any] = _connect_read_only,
+    post_stop_process_inspector: Callable[[], Sequence[ProcessSnapshot]] | None = None,
 ) -> dict[str, Any]:
     """Execute the complete copy-only controller; no network/provider API is used."""
 
@@ -1147,6 +1197,7 @@ def run_recovery_controller(
         "source_tree_sha_after": None,
         "copy_tree_sha_initial": None,
         "transaction_read_only": False,
+        "recovery_pg0_cleanup_verified": False,
         "target_success_count": 0,
         "target_required_count": len(ALLOWED_TARGETS),
         "errors": [],
@@ -1218,6 +1269,23 @@ def run_recovery_controller(
                     "pg0 cleanup failed: "
                     + _safe_exception_text(exc, sensitive_values)
                 )
+            else:
+                try:
+                    if post_stop_process_inspector is None:
+                        assert_recovery_postgres_stopped(paths.copy_data_dir)
+                    else:
+                        fresh_snapshots = post_stop_process_inspector()
+                        assert_recovery_postgres_stopped(
+                            paths.copy_data_dir,
+                            snapshots=fresh_snapshots,
+                        )
+                except Exception as exc:
+                    ledger["errors"].append(
+                        "pg0 cleanup verification failed: "
+                        + _safe_exception_text(exc, sensitive_values)
+                    )
+                else:
+                    ledger["recovery_pg0_cleanup_verified"] = True
 
     integrity_after_written = False
     try:
@@ -1244,6 +1312,7 @@ def run_recovery_controller(
         and source_after is not None
         and source_after.tree_sha256 == source_before.tree_sha256
         and ledger["transaction_read_only"] is True
+        and ledger["recovery_pg0_cleanup_verified"] is True
     )
     ledger["status"] = "PASS" if success else "FAIL_CLOSED"
     result = {

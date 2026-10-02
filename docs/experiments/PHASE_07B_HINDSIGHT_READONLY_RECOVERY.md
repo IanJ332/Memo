@@ -43,6 +43,7 @@ prove original provider/database offline
   -> validate SHA and lineage for every target
   -> roll back and close the transaction
   -> stop recovery pg0 in cleanup
+  -> independently prove copied PGDATA is stopped
   -> re-hash original evidence
   -> emit result and ledger
   -> hash mandatory artifacts and emit completion marker last
@@ -166,8 +167,14 @@ The password exists only in runtime memory and is never written to result,
 ledger, integrity, completion, documentation, stdout, or exception evidence.
 The ledger may retain only the original username, database, and pg0 version.
 
-The controller checks pg0's reported `data_dir` after startup. It uses the
-retained environment's `psycopg2` dependency, requests
+The controller checks pg0's reported `data_dir` after startup. When pg0's
+returned instance information exposes `username` or `database`, each must
+match the validated original-instance identity. A pg0/PostgreSQL version is
+not compared because the persisted pg0 metadata may represent a version
+constraint rather than the same canonical server-version string. The exact
+target queries remain the final scientific data-identity gate.
+
+The controller uses the retained environment's `psycopg2` dependency, requests
 `default_transaction_read_only=on`, and then itself executes:
 
 ```sql
@@ -178,7 +185,13 @@ SHOW transaction_read_only;
 `SHOW` must return `on` before any catalog or target query. The transaction is
 rolled back, never committed. pg0 stop is attempted in `finally` cleanup after
 startup even if connection, schema, target, hash, lineage, or artifact work
-fails. The controller never invokes pg0 drop.
+fails. A normal return from the pg0 SDK's stop method is not trusted as proof
+of shutdown because the SDK may ignore a non-zero underlying command result.
+After stop returns, the controller performs a fresh Linux `/proc` inspection
+and requires that no PostgreSQL process references copied PGDATA through its
+working directory, `PGDATA`, open paths, or data-directory arguments. Copied
+PGDATA must also contain no `postmaster.pid`. The controller does not kill a
+remaining process and never invokes pg0 drop.
 
 ### Fixed schema and targets
 
@@ -220,11 +233,15 @@ The required normalized SHA for all three targets is
 This is not described as a raw database-byte identity.
 
 Overall `PASS` requires three of three exact recoveries, three matching hashes,
-three verified parents, a controller-created read-only transaction, successful
-pg0 cleanup, and identical original before/after tree identity. Partial target
+three verified parents, a controller-created read-only transaction, independently
+verified recovery PostgreSQL shutdown, and identical original before/after tree
+identity. The ledger field `recovery_pg0_cleanup_verified` remains false unless
+both pg0 stop returns and the fresh process/PID-file proof passes. Partial target
 evidence is retained, but any partial or guard failure yields overall
-`FAIL_CLOSED`. No target is substituted, regenerated, replayed, or sent to a
-model.
+`FAIL_CLOSED`. A shutdown-verification failure is a completed failure when all
+five evidence JSON files are successfully written; missing mandatory artifact
+evidence remains `INCOMPLETE`. No target is substituted, regenerated, replayed,
+or sent to a model.
 
 The four mandatory pre-completion artifacts are
 `source-integrity-before.json`, `source-integrity-after.json`,

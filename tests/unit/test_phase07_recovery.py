@@ -86,6 +86,13 @@ def expected_text_hash(monkeypatch):
     monkeypatch.setattr(recovery, "EXPECTED_SHA", recovery.compute_sha256(RAW_TEXT.strip()))
 
 
+@pytest.fixture(autouse=True)
+def clear_fresh_cleanup_process_proof(monkeypatch):
+    """Unit tests inject a deterministic post-stop proof instead of host /proc."""
+
+    monkeypatch.setattr(recovery, "inspect_linux_processes", lambda: [])
+
+
 @pytest.fixture
 def evidence_tree(tmp_path):
     data_root = tmp_path / "memlife-data"
@@ -132,11 +139,16 @@ class FakePg0:
         return SimpleNamespace(
             data_dir=self.kwargs["data_dir"],
             uri="postgresql://postgres:postgres@127.0.0.1:54321/postgres",
+            username=self.state.get("reported_username", self.kwargs["username"]),
+            database=self.state.get("reported_database", self.kwargs["database"]),
         )
 
     def stop(self):
         self.state["stop_home"] = Path(recovery.os.environ["HOME"])
         self.state["stopped"] = True
+        callback = self.state.get("on_stop")
+        if callback:
+            callback(self)
 
 
 def fake_factory(state):
@@ -539,8 +551,131 @@ def test_controller_is_attempt_scoped_copy_only_and_atomic(
     marker = recovery.validate_recovery_completion(attempt_root)
     assert marker["status"] == "PASS"
     assert set(marker["artifacts"]) == set(recovery.MANDATORY_ARTIFACT_NAMES)
+    ledger = json.loads((attempt_root / "recovery-ledger.json").read_text(encoding="utf-8"))
+    assert ledger["recovery_pg0_cleanup_verified"] is True
     for path in attempt_root.glob("*.json"):
         assert SYNTHETIC_PASSWORD not in path.read_text(encoding="utf-8")
+
+
+def test_silent_sdk_stop_failure_is_detected_by_fresh_process_proof(
+    evidence_tree, expected_text_hash
+):
+    data_root, _ = evidence_tree
+    state = {}
+    inspections = 0
+
+    def still_running_after_normal_stop():
+        nonlocal inspections
+        inspections += 1
+        assert state["stopped"] is True
+        copy_data_dir = state["kwargs"]["data_dir"]
+        return [
+            recovery.ProcessSnapshot(
+                707,
+                "postgres",
+                ("postgres", "-D", copy_data_dir),
+                cwd=str(Path(copy_data_dir).parent),
+                pgdata=copy_data_dir,
+            )
+        ]
+
+    result = recovery.run_recovery_controller(
+        data_root=data_root,
+        attempt_id=ATTEMPT,
+        process_snapshots=[],
+        disk_usage=ample_disk,
+        pg0_factory=fake_factory(state),
+        connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
+        post_stop_process_inspector=still_running_after_normal_stop,
+    )
+    attempt_root = data_root / recovery.RECOVERY_RUN_DIRECTORY / ATTEMPT
+    ledger = json.loads((attempt_root / "recovery-ledger.json").read_text(encoding="utf-8"))
+    assert inspections == 1
+    assert result["status"] == "FAIL_CLOSED"
+    assert ledger["recovery_pg0_cleanup_verified"] is False
+    assert any("cleanup verification failed" in error for error in result["errors"])
+    assert recovery.classify_recovery_attempt(attempt_root) == "FAIL_CLOSED"
+
+
+def test_successful_stop_requires_and_passes_fresh_cleanup_proof(
+    evidence_tree, expected_text_hash
+):
+    data_root, _ = evidence_tree
+    state = {}
+    inspections = 0
+
+    def freshly_clear():
+        nonlocal inspections
+        inspections += 1
+        assert state["stopped"] is True
+        return []
+
+    result = recovery.run_recovery_controller(
+        data_root=data_root,
+        attempt_id=ATTEMPT,
+        process_snapshots=[],
+        disk_usage=ample_disk,
+        pg0_factory=fake_factory(state),
+        connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
+        post_stop_process_inspector=freshly_clear,
+    )
+    attempt_root = data_root / recovery.RECOVERY_RUN_DIRECTORY / ATTEMPT
+    ledger = json.loads((attempt_root / "recovery-ledger.json").read_text(encoding="utf-8"))
+    assert inspections == 1
+    assert result["status"] == "PASS"
+    assert ledger["recovery_pg0_cleanup_verified"] is True
+
+
+def test_postmaster_pid_remaining_after_stop_fails_closed(
+    evidence_tree, expected_text_hash
+):
+    data_root, _ = evidence_tree
+
+    def leave_postmaster_pid(instance):
+        (Path(instance.kwargs["data_dir"]) / "postmaster.pid").write_text(
+            "707\n",
+            encoding="ascii",
+        )
+
+    state = {"on_stop": leave_postmaster_pid}
+    result = recovery.run_recovery_controller(
+        data_root=data_root,
+        attempt_id=ATTEMPT,
+        process_snapshots=[],
+        disk_usage=ample_disk,
+        pg0_factory=fake_factory(state),
+        connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
+        post_stop_process_inspector=lambda: [],
+    )
+    attempt_root = data_root / recovery.RECOVERY_RUN_DIRECTORY / ATTEMPT
+    ledger = json.loads((attempt_root / "recovery-ledger.json").read_text(encoding="utf-8"))
+    assert result["status"] == "FAIL_CLOSED"
+    assert ledger["recovery_pg0_cleanup_verified"] is False
+    assert any("postmaster.pid" in error for error in result["errors"])
+    assert recovery.classify_recovery_attempt(attempt_root) == "FAIL_CLOSED"
+
+
+@pytest.mark.parametrize(
+    "state_key",
+    ["reported_username", "reported_database"],
+)
+def test_reported_recovery_instance_identity_mismatch_fails_closed(
+    evidence_tree, expected_text_hash, state_key
+):
+    data_root, _ = evidence_tree
+    state = {state_key: "wrong-recovery-identity"}
+    result = recovery.run_recovery_controller(
+        data_root=data_root,
+        attempt_id=ATTEMPT,
+        process_snapshots=[],
+        disk_usage=ample_disk,
+        pg0_factory=fake_factory(state),
+        connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
+        post_stop_process_inspector=lambda: [],
+    )
+    assert result["status"] == "FAIL_CLOSED"
+    assert state["stopped"] is True
+    assert any("inconsistent" in error for error in result["errors"])
 
 
 def test_cleanup_stop_runs_after_target_failure(evidence_tree, expected_text_hash):
