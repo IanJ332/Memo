@@ -68,7 +68,14 @@ The expected SHA `f0c061e0...` identifies the normalized `MemoryRecord.content` 
 *   **Database Mode:** Strictly restricted to an explicit `READ ONLY` transaction (`SHOW transaction_read_only` must be `on`). Followed by schema verification queries, and then a parameterized `SELECT id, bank_id, text, fact_type, source_memory_ids, document_id FROM public.memory_units WHERE id = %s::uuid AND bank_id = %s AND fact_type = 'observation';`.
 *   **Blocked Mechanisms:** HTTP recovery, semantic recall, writes, updates, deletions, and any `POST /consolidate` operations are completely forbidden and isolated from the harness.
 
-### 1.6 Output Schema
+### 1.6 Attempt-Scoped PG0 Copy & Isolation
+
+*   **Original Evidence Immutable:** `YES`. Starting PostgreSQL modifies physical evidence files (WAL/control/log) even in read-only mode. The future live recovery MUST NOT start PostgreSQL directly against the original Phase 06B Hindsight data directory.
+*   **Copy Process:** The stopped `pg0` data directory must be copied preserving filesystem metadata to an attempt-scoped root (e.g. `runs/phase07-hindsight-recovery/<attempt_id>/pg0-copy/`). The source is `<MEMLIFE_DATA_ROOT>/providers/hindsight/pg0`.
+*   **Integrity Hash:** A deterministic file tree hash (`SOURCE_TREE_SHA_BEFORE`) is computed on the source before the copy. After recovery, `SOURCE_TREE_SHA_AFTER` is computed on the source and must match exactly.
+*   **Isolation:** The pg0 HOME/metadata must also be isolated (e.g. `runs/phase07-hindsight-recovery/<attempt_id>/pg0-home/`) to avoid mutating `~/.pg0` or the original symlink.
+
+### 1.7 Output Schema
 
 ```json
 {
