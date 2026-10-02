@@ -1,0 +1,583 @@
+{
+  "artifact_kind": "PHASE_07B_RQ3_CONTEXT_CANDIDATES",
+  "approval_status": "CANDIDATE_NOT_SCIENTIFICALLY_APPROVED",
+  "created_at": "2026-10-02T01:51:49.970695+00:00",
+  "evaluation_gate_summary": {
+    "mem0_s1": {
+      "gate_status": "MISSING_MODEL_BOUNDARY_TRACE",
+      "reproducible_nonauthoritative_exposure": true,
+      "known_authority_status": true,
+      "exact_content_bytes_available": false,
+      "exact_ordering_available": true,
+      "provenance_lineage_available": true,
+      "deterministic_mapping_to_model_boundary": false,
+      "evaluation_detail": "Candidate v2 text is deterministically known and verified by SHA-256; single candidate rank 1 ordering is known; provenance linking to update-v2 and superseded write-v1 is known. However, no separate non-authoritative candidate text was retrieved; delivered context was never serialized (delivered_context_sha256=null); no prompt template was evaluated; zero downstream model calls crossed the model boundary. Candidate cannot be frozen as downstream model context."
+    },
+    "hindsight_s1": {
+      "gate_status": "MISSING_EXACT_CONTEXT",
+      "reproducible_nonauthoritative_exposure": true,
+      "known_authority_status": true,
+      "exact_content_bytes_available": false,
+      "exact_ordering_available": true,
+      "provenance_lineage_available": true,
+      "deterministic_mapping_to_model_boundary": false,
+      "evaluation_detail": "Candidate rank 1 (source v2) text is deterministically known; candidate rank 2 (derived memory) content was hashed (SHA-256 f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6) but raw text bytes were not preserved in the Phase 06B dataset; delivered context was never serialized (delivered_context_sha256=null); zero downstream model calls crossed the model boundary. Candidate cannot be frozen as downstream context due to missing derived candidate text bytes."
+    }
+  },
+  "cells": [
+    {
+      "provider": "mem0",
+      "scenario": "S1",
+      "description": "SUPERSESSION_OR_UPDATE on Mem0 2.2.1",
+      "repetitions": [
+        {
+          "provider": "mem0",
+          "scenario": "S1",
+          "repetition": 1,
+          "run_id": "freeze-v1__mem0__S1__r1",
+          "namespace": "memlife-freeze-v1-mem0-S1-r1",
+          "source_memory_ids": [
+            "4a2f1c47-a863-434b-b5f8-047f249923fd"
+          ],
+          "derived_memory_ids": [
+            "4a2f1c47-a863-434b-b5f8-047f249923fd"
+          ],
+          "retrieval_candidate_ids": [
+            "freeze-v1__mem0__S1__r1__final-old__candidate-1",
+            "freeze-v1__mem0__S1__r1__final-new__candidate-1"
+          ],
+          "authoritative_candidate_content": {
+            "exact_text": "freeze-v1__mem0__S1__r1: Project Alder reports may be sent only to Bob.",
+            "sha256": "b03c218be7d6ea4ea755d628334b14b07000021e11f7e9d712a90d4177cf215d"
+          },
+          "non_authoritative_candidate_content": {
+            "status": "UNAVAILABLE",
+            "reason": "No distinct non-authoritative candidate record retrieved; single candidate returned is in-place updated record carrying v2 content with superseded v1 provenance",
+            "exact_text": "UNAVAILABLE",
+            "sha256": "UNAVAILABLE"
+          },
+          "provenance_lineage": {
+            "candidate_source_event_ids": [
+              [
+                "freeze-v1__mem0__S1__r1__update-v2",
+                "freeze-v1__mem0__S1__r1__write-v1"
+              ],
+              [
+                "freeze-v1__mem0__S1__r1__update-v2",
+                "freeze-v1__mem0__S1__r1__write-v1"
+              ]
+            ],
+            "provider_parent_source_ids": [],
+            "association_basis": "direct provider/adapter identity only"
+          },
+          "authority_status": {
+            "fact_v1": {
+              "event_id": "freeze-v1__mem0__S1__r1__write-v1",
+              "authoritative": false,
+              "lifecycle_state": "superseded",
+              "authority_reason": "experiment authority transition replaced v1 with v2"
+            },
+            "fact_v2": {
+              "event_id": "freeze-v1__mem0__S1__r1__update-v2",
+              "authoritative": true,
+              "lifecycle_state": "active",
+              "authority_reason": "v2 is the current experiment-defined authority"
+            }
+          },
+          "retrieval_ordering": [
+            {
+              "phase": "final-old",
+              "rank": 1,
+              "candidate_id": "freeze-v1__mem0__S1__r1__final-old__candidate-1",
+              "provider_memory_id": "4a2f1c47-a863-434b-b5f8-047f249923fd",
+              "surface": "UNKNOWN",
+              "sha256": "b03c218be7d6ea4ea755d628334b14b07000021e11f7e9d712a90d4177cf215d"
+            },
+            {
+              "phase": "final-new",
+              "rank": 1,
+              "candidate_id": "freeze-v1__mem0__S1__r1__final-new__candidate-1",
+              "provider_memory_id": "4a2f1c47-a863-434b-b5f8-047f249923fd",
+              "surface": "UNKNOWN",
+              "sha256": "b03c218be7d6ea4ea755d628334b14b07000021e11f7e9d712a90d4177cf215d"
+            }
+          ],
+          "exact_delivered_context_if_already_serialized": "UNAVAILABLE",
+          "exact_prompt_context_fragment_if_already_serialized": "UNAVAILABLE",
+          "model_boundary_trace_if_available": "UNAVAILABLE"
+        },
+        {
+          "provider": "mem0",
+          "scenario": "S1",
+          "repetition": 2,
+          "run_id": "freeze-v1__mem0__S1__r2",
+          "namespace": "memlife-freeze-v1-mem0-S1-r2",
+          "source_memory_ids": [
+            "ea519c5e-03bb-4d41-892e-99d4e2ede840"
+          ],
+          "derived_memory_ids": [
+            "ea519c5e-03bb-4d41-892e-99d4e2ede840"
+          ],
+          "retrieval_candidate_ids": [
+            "freeze-v1__mem0__S1__r2__final-old__candidate-1",
+            "freeze-v1__mem0__S1__r2__final-new__candidate-1"
+          ],
+          "authoritative_candidate_content": {
+            "exact_text": "freeze-v1__mem0__S1__r2: Project Alder reports may be sent only to Bob.",
+            "sha256": "b422b843fc116b64f906dcb6cbf9f9b7bcc8f147a2c14d8d6a1619baf8b48a47"
+          },
+          "non_authoritative_candidate_content": {
+            "status": "UNAVAILABLE",
+            "reason": "No distinct non-authoritative candidate record retrieved; single candidate returned is in-place updated record carrying v2 content with superseded v1 provenance",
+            "exact_text": "UNAVAILABLE",
+            "sha256": "UNAVAILABLE"
+          },
+          "provenance_lineage": {
+            "candidate_source_event_ids": [
+              [
+                "freeze-v1__mem0__S1__r2__update-v2",
+                "freeze-v1__mem0__S1__r2__write-v1"
+              ],
+              [
+                "freeze-v1__mem0__S1__r2__update-v2",
+                "freeze-v1__mem0__S1__r2__write-v1"
+              ]
+            ],
+            "provider_parent_source_ids": [],
+            "association_basis": "direct provider/adapter identity only"
+          },
+          "authority_status": {
+            "fact_v1": {
+              "event_id": "freeze-v1__mem0__S1__r2__write-v1",
+              "authoritative": false,
+              "lifecycle_state": "superseded",
+              "authority_reason": "experiment authority transition replaced v1 with v2"
+            },
+            "fact_v2": {
+              "event_id": "freeze-v1__mem0__S1__r2__update-v2",
+              "authoritative": true,
+              "lifecycle_state": "active",
+              "authority_reason": "v2 is the current experiment-defined authority"
+            }
+          },
+          "retrieval_ordering": [
+            {
+              "phase": "final-old",
+              "rank": 1,
+              "candidate_id": "freeze-v1__mem0__S1__r2__final-old__candidate-1",
+              "provider_memory_id": "ea519c5e-03bb-4d41-892e-99d4e2ede840",
+              "surface": "UNKNOWN",
+              "sha256": "b422b843fc116b64f906dcb6cbf9f9b7bcc8f147a2c14d8d6a1619baf8b48a47"
+            },
+            {
+              "phase": "final-new",
+              "rank": 1,
+              "candidate_id": "freeze-v1__mem0__S1__r2__final-new__candidate-1",
+              "provider_memory_id": "ea519c5e-03bb-4d41-892e-99d4e2ede840",
+              "surface": "UNKNOWN",
+              "sha256": "b422b843fc116b64f906dcb6cbf9f9b7bcc8f147a2c14d8d6a1619baf8b48a47"
+            }
+          ],
+          "exact_delivered_context_if_already_serialized": "UNAVAILABLE",
+          "exact_prompt_context_fragment_if_already_serialized": "UNAVAILABLE",
+          "model_boundary_trace_if_available": "UNAVAILABLE"
+        },
+        {
+          "provider": "mem0",
+          "scenario": "S1",
+          "repetition": 3,
+          "run_id": "freeze-v1__mem0__S1__r3",
+          "namespace": "memlife-freeze-v1-mem0-S1-r3",
+          "source_memory_ids": [
+            "623fc25e-1c39-4087-99a3-4156c2e0e9be"
+          ],
+          "derived_memory_ids": [
+            "623fc25e-1c39-4087-99a3-4156c2e0e9be"
+          ],
+          "retrieval_candidate_ids": [
+            "freeze-v1__mem0__S1__r3__final-old__candidate-1",
+            "freeze-v1__mem0__S1__r3__final-new__candidate-1"
+          ],
+          "authoritative_candidate_content": {
+            "exact_text": "freeze-v1__mem0__S1__r3: Project Alder reports may be sent only to Bob.",
+            "sha256": "03cef19bbc4f521a51778ab23d3df00b8beb40612f8450400baa37b37882731b"
+          },
+          "non_authoritative_candidate_content": {
+            "status": "UNAVAILABLE",
+            "reason": "No distinct non-authoritative candidate record retrieved; single candidate returned is in-place updated record carrying v2 content with superseded v1 provenance",
+            "exact_text": "UNAVAILABLE",
+            "sha256": "UNAVAILABLE"
+          },
+          "provenance_lineage": {
+            "candidate_source_event_ids": [
+              [
+                "freeze-v1__mem0__S1__r3__update-v2",
+                "freeze-v1__mem0__S1__r3__write-v1"
+              ],
+              [
+                "freeze-v1__mem0__S1__r3__update-v2",
+                "freeze-v1__mem0__S1__r3__write-v1"
+              ]
+            ],
+            "provider_parent_source_ids": [],
+            "association_basis": "direct provider/adapter identity only"
+          },
+          "authority_status": {
+            "fact_v1": {
+              "event_id": "freeze-v1__mem0__S1__r3__write-v1",
+              "authoritative": false,
+              "lifecycle_state": "superseded",
+              "authority_reason": "experiment authority transition replaced v1 with v2"
+            },
+            "fact_v2": {
+              "event_id": "freeze-v1__mem0__S1__r3__update-v2",
+              "authoritative": true,
+              "lifecycle_state": "active",
+              "authority_reason": "v2 is the current experiment-defined authority"
+            }
+          },
+          "retrieval_ordering": [
+            {
+              "phase": "final-old",
+              "rank": 1,
+              "candidate_id": "freeze-v1__mem0__S1__r3__final-old__candidate-1",
+              "provider_memory_id": "623fc25e-1c39-4087-99a3-4156c2e0e9be",
+              "surface": "UNKNOWN",
+              "sha256": "03cef19bbc4f521a51778ab23d3df00b8beb40612f8450400baa37b37882731b"
+            },
+            {
+              "phase": "final-new",
+              "rank": 1,
+              "candidate_id": "freeze-v1__mem0__S1__r3__final-new__candidate-1",
+              "provider_memory_id": "623fc25e-1c39-4087-99a3-4156c2e0e9be",
+              "surface": "UNKNOWN",
+              "sha256": "03cef19bbc4f521a51778ab23d3df00b8beb40612f8450400baa37b37882731b"
+            }
+          ],
+          "exact_delivered_context_if_already_serialized": "UNAVAILABLE",
+          "exact_prompt_context_fragment_if_already_serialized": "UNAVAILABLE",
+          "model_boundary_trace_if_available": "UNAVAILABLE"
+        }
+      ]
+    },
+    {
+      "provider": "hindsight",
+      "scenario": "S1",
+      "description": "SUPERSESSION_OR_UPDATE on Hindsight 0.10.1",
+      "repetitions": [
+        {
+          "provider": "hindsight",
+          "scenario": "S1",
+          "repetition": 1,
+          "run_id": "freeze-v1__hindsight__S1__r1",
+          "namespace": "memlife-freeze-v1-hindsight-S1-r1",
+          "source_memory_ids": [
+            "bacf3934-5a34-48da-9580-80606d5b9c33"
+          ],
+          "derived_memory_ids": [
+            "d21e1d56-8224-4f7b-b144-9e7124fe4ef4"
+          ],
+          "retrieval_candidate_ids": [
+            "freeze-v1__hindsight__S1__r1__final-old__candidate-1",
+            "freeze-v1__hindsight__S1__r1__final-old__candidate-2",
+            "freeze-v1__hindsight__S1__r1__final-new__candidate-1",
+            "freeze-v1__hindsight__S1__r1__final-new__candidate-2"
+          ],
+          "authoritative_candidate_content": {
+            "exact_text": "freeze-v1__hindsight__S1__r1: Project Alder reports may be sent only to Bob.",
+            "sha256": "ecb4e26bbc1a2f91c214dba0c7cf37fe8267190a68dc0b8418d3c76c4ccb234d"
+          },
+          "non_authoritative_candidate_content": {
+            "status": "MISSING_EXACT_TEXT",
+            "reason": "Derived memory record was hashed but raw text bytes were not serialized into Phase 06B JSONL",
+            "exact_text": "UNAVAILABLE",
+            "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+          },
+          "provenance_lineage": {
+            "candidate_source_event_ids": [
+              [
+                "freeze-v1__hindsight__S1__r1__update-v2",
+                "freeze-v1__hindsight__S1__r1__write-v1"
+              ],
+              [
+                "freeze-v1__hindsight__S1__r1__update-v2",
+                "freeze-v1__hindsight__S1__r1__write-v1"
+              ],
+              [
+                "freeze-v1__hindsight__S1__r1__update-v2",
+                "freeze-v1__hindsight__S1__r1__write-v1"
+              ],
+              [
+                "freeze-v1__hindsight__S1__r1__update-v2",
+                "freeze-v1__hindsight__S1__r1__write-v1"
+              ]
+            ],
+            "provider_parent_source_ids": [
+              "bacf3934-5a34-48da-9580-80606d5b9c33"
+            ],
+            "association_basis": "direct provider/adapter identity only"
+          },
+          "authority_status": {
+            "fact_v1": {
+              "event_id": "freeze-v1__hindsight__S1__r1__write-v1",
+              "authoritative": false,
+              "lifecycle_state": "superseded",
+              "authority_reason": "experiment authority transition replaced v1 with v2"
+            },
+            "fact_v2": {
+              "event_id": "freeze-v1__hindsight__S1__r1__update-v2",
+              "authoritative": true,
+              "lifecycle_state": "active",
+              "authority_reason": "v2 is the current experiment-defined authority"
+            }
+          },
+          "retrieval_ordering": [
+            {
+              "phase": "final-old",
+              "rank": 1,
+              "candidate_id": "freeze-v1__hindsight__S1__r1__final-old__candidate-1",
+              "provider_memory_id": "bacf3934-5a34-48da-9580-80606d5b9c33",
+              "surface": "SOURCE",
+              "sha256": "ecb4e26bbc1a2f91c214dba0c7cf37fe8267190a68dc0b8418d3c76c4ccb234d"
+            },
+            {
+              "phase": "final-old",
+              "rank": 2,
+              "candidate_id": "freeze-v1__hindsight__S1__r1__final-old__candidate-2",
+              "provider_memory_id": "d21e1d56-8224-4f7b-b144-9e7124fe4ef4",
+              "surface": "DERIVED",
+              "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+            },
+            {
+              "phase": "final-new",
+              "rank": 1,
+              "candidate_id": "freeze-v1__hindsight__S1__r1__final-new__candidate-1",
+              "provider_memory_id": "bacf3934-5a34-48da-9580-80606d5b9c33",
+              "surface": "SOURCE",
+              "sha256": "ecb4e26bbc1a2f91c214dba0c7cf37fe8267190a68dc0b8418d3c76c4ccb234d"
+            },
+            {
+              "phase": "final-new",
+              "rank": 2,
+              "candidate_id": "freeze-v1__hindsight__S1__r1__final-new__candidate-2",
+              "provider_memory_id": "d21e1d56-8224-4f7b-b144-9e7124fe4ef4",
+              "surface": "DERIVED",
+              "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+            }
+          ],
+          "exact_delivered_context_if_already_serialized": "UNAVAILABLE",
+          "exact_prompt_context_fragment_if_already_serialized": "UNAVAILABLE",
+          "model_boundary_trace_if_available": "UNAVAILABLE"
+        },
+        {
+          "provider": "hindsight",
+          "scenario": "S1",
+          "repetition": 2,
+          "run_id": "freeze-v1__hindsight__S1__r2",
+          "namespace": "memlife-freeze-v1-hindsight-S1-r2",
+          "source_memory_ids": [
+            "b2fa69b9-d719-4531-86e9-06c69fc739bb"
+          ],
+          "derived_memory_ids": [
+            "5adc67dd-1658-4ddf-a5e7-7b40e00d84a7"
+          ],
+          "retrieval_candidate_ids": [
+            "freeze-v1__hindsight__S1__r2__final-old__candidate-1",
+            "freeze-v1__hindsight__S1__r2__final-old__candidate-2",
+            "freeze-v1__hindsight__S1__r2__final-new__candidate-1",
+            "freeze-v1__hindsight__S1__r2__final-new__candidate-2"
+          ],
+          "authoritative_candidate_content": {
+            "exact_text": "freeze-v1__hindsight__S1__r2: Project Alder reports may be sent only to Bob.",
+            "sha256": "2462e1492a9c8c93ec0d67ca88d4f651bc040d91be012f57bf3ab32e41c59b3d"
+          },
+          "non_authoritative_candidate_content": {
+            "status": "MISSING_EXACT_TEXT",
+            "reason": "Derived memory record was hashed but raw text bytes were not serialized into Phase 06B JSONL",
+            "exact_text": "UNAVAILABLE",
+            "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+          },
+          "provenance_lineage": {
+            "candidate_source_event_ids": [
+              [
+                "freeze-v1__hindsight__S1__r2__update-v2",
+                "freeze-v1__hindsight__S1__r2__write-v1"
+              ],
+              [
+                "freeze-v1__hindsight__S1__r2__update-v2",
+                "freeze-v1__hindsight__S1__r2__write-v1"
+              ],
+              [
+                "freeze-v1__hindsight__S1__r2__update-v2",
+                "freeze-v1__hindsight__S1__r2__write-v1"
+              ],
+              [
+                "freeze-v1__hindsight__S1__r2__update-v2",
+                "freeze-v1__hindsight__S1__r2__write-v1"
+              ]
+            ],
+            "provider_parent_source_ids": [
+              "b2fa69b9-d719-4531-86e9-06c69fc739bb"
+            ],
+            "association_basis": "direct provider/adapter identity only"
+          },
+          "authority_status": {
+            "fact_v1": {
+              "event_id": "freeze-v1__hindsight__S1__r2__write-v1",
+              "authoritative": false,
+              "lifecycle_state": "superseded",
+              "authority_reason": "experiment authority transition replaced v1 with v2"
+            },
+            "fact_v2": {
+              "event_id": "freeze-v1__hindsight__S1__r2__update-v2",
+              "authoritative": true,
+              "lifecycle_state": "active",
+              "authority_reason": "v2 is the current experiment-defined authority"
+            }
+          },
+          "retrieval_ordering": [
+            {
+              "phase": "final-old",
+              "rank": 1,
+              "candidate_id": "freeze-v1__hindsight__S1__r2__final-old__candidate-1",
+              "provider_memory_id": "b2fa69b9-d719-4531-86e9-06c69fc739bb",
+              "surface": "SOURCE",
+              "sha256": "2462e1492a9c8c93ec0d67ca88d4f651bc040d91be012f57bf3ab32e41c59b3d"
+            },
+            {
+              "phase": "final-old",
+              "rank": 2,
+              "candidate_id": "freeze-v1__hindsight__S1__r2__final-old__candidate-2",
+              "provider_memory_id": "5adc67dd-1658-4ddf-a5e7-7b40e00d84a7",
+              "surface": "DERIVED",
+              "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+            },
+            {
+              "phase": "final-new",
+              "rank": 1,
+              "candidate_id": "freeze-v1__hindsight__S1__r2__final-new__candidate-1",
+              "provider_memory_id": "b2fa69b9-d719-4531-86e9-06c69fc739bb",
+              "surface": "SOURCE",
+              "sha256": "2462e1492a9c8c93ec0d67ca88d4f651bc040d91be012f57bf3ab32e41c59b3d"
+            },
+            {
+              "phase": "final-new",
+              "rank": 2,
+              "candidate_id": "freeze-v1__hindsight__S1__r2__final-new__candidate-2",
+              "provider_memory_id": "5adc67dd-1658-4ddf-a5e7-7b40e00d84a7",
+              "surface": "DERIVED",
+              "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+            }
+          ],
+          "exact_delivered_context_if_already_serialized": "UNAVAILABLE",
+          "exact_prompt_context_fragment_if_already_serialized": "UNAVAILABLE",
+          "model_boundary_trace_if_available": "UNAVAILABLE"
+        },
+        {
+          "provider": "hindsight",
+          "scenario": "S1",
+          "repetition": 3,
+          "run_id": "freeze-v1__hindsight__S1__r3",
+          "namespace": "memlife-freeze-v1-hindsight-S1-r3",
+          "source_memory_ids": [
+            "dfa63b99-ac6d-467b-b25e-bbc104545a2d"
+          ],
+          "derived_memory_ids": [
+            "ea22a6bc-15be-4639-8060-c9eae4fcc5e5"
+          ],
+          "retrieval_candidate_ids": [
+            "freeze-v1__hindsight__S1__r3__final-old__candidate-1",
+            "freeze-v1__hindsight__S1__r3__final-old__candidate-2",
+            "freeze-v1__hindsight__S1__r3__final-new__candidate-1",
+            "freeze-v1__hindsight__S1__r3__final-new__candidate-2"
+          ],
+          "authoritative_candidate_content": {
+            "exact_text": "freeze-v1__hindsight__S1__r3: Project Alder reports may be sent only to Bob.",
+            "sha256": "252a8d190876609383860b4e9dc7874c89cdc3752f1e61289c7a2244a89bc34a"
+          },
+          "non_authoritative_candidate_content": {
+            "status": "MISSING_EXACT_TEXT",
+            "reason": "Derived memory record was hashed but raw text bytes were not serialized into Phase 06B JSONL",
+            "exact_text": "UNAVAILABLE",
+            "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+          },
+          "provenance_lineage": {
+            "candidate_source_event_ids": [
+              [
+                "freeze-v1__hindsight__S1__r3__update-v2",
+                "freeze-v1__hindsight__S1__r3__write-v1"
+              ],
+              [
+                "freeze-v1__hindsight__S1__r3__update-v2",
+                "freeze-v1__hindsight__S1__r3__write-v1"
+              ],
+              [
+                "freeze-v1__hindsight__S1__r3__update-v2",
+                "freeze-v1__hindsight__S1__r3__write-v1"
+              ],
+              [
+                "freeze-v1__hindsight__S1__r3__update-v2",
+                "freeze-v1__hindsight__S1__r3__write-v1"
+              ]
+            ],
+            "provider_parent_source_ids": [
+              "dfa63b99-ac6d-467b-b25e-bbc104545a2d"
+            ],
+            "association_basis": "direct provider/adapter identity only"
+          },
+          "authority_status": {
+            "fact_v1": {
+              "event_id": "freeze-v1__hindsight__S1__r3__write-v1",
+              "authoritative": false,
+              "lifecycle_state": "superseded",
+              "authority_reason": "experiment authority transition replaced v1 with v2"
+            },
+            "fact_v2": {
+              "event_id": "freeze-v1__hindsight__S1__r3__update-v2",
+              "authoritative": true,
+              "lifecycle_state": "active",
+              "authority_reason": "v2 is the current experiment-defined authority"
+            }
+          },
+          "retrieval_ordering": [
+            {
+              "phase": "final-old",
+              "rank": 1,
+              "candidate_id": "freeze-v1__hindsight__S1__r3__final-old__candidate-1",
+              "provider_memory_id": "dfa63b99-ac6d-467b-b25e-bbc104545a2d",
+              "surface": "SOURCE",
+              "sha256": "252a8d190876609383860b4e9dc7874c89cdc3752f1e61289c7a2244a89bc34a"
+            },
+            {
+              "phase": "final-old",
+              "rank": 2,
+              "candidate_id": "freeze-v1__hindsight__S1__r3__final-old__candidate-2",
+              "provider_memory_id": "ea22a6bc-15be-4639-8060-c9eae4fcc5e5",
+              "surface": "DERIVED",
+              "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+            },
+            {
+              "phase": "final-new",
+              "rank": 1,
+              "candidate_id": "freeze-v1__hindsight__S1__r3__final-new__candidate-1",
+              "provider_memory_id": "dfa63b99-ac6d-467b-b25e-bbc104545a2d",
+              "surface": "SOURCE",
+              "sha256": "252a8d190876609383860b4e9dc7874c89cdc3752f1e61289c7a2244a89bc34a"
+            },
+            {
+              "phase": "final-new",
+              "rank": 2,
+              "candidate_id": "freeze-v1__hindsight__S1__r3__final-new__candidate-2",
+              "provider_memory_id": "ea22a6bc-15be-4639-8060-c9eae4fcc5e5",
+              "surface": "DERIVED",
+              "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+            }
+          ],
+          "exact_delivered_context_if_already_serialized": "UNAVAILABLE",
+          "exact_prompt_context_fragment_if_already_serialized": "UNAVAILABLE",
+          "model_boundary_trace_if_available": "UNAVAILABLE"
+        }
+      ]
+    }
+  ]
+}
