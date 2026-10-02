@@ -20,13 +20,15 @@ def test_configuration_hash_is_stable_and_rejects_sensitive_keys() -> None:
 
 def test_manifest_records_real_environment_without_config_values(tmp_path: Path) -> None:
     data_root = DataRootConfig(tmp_path / "runtime", DataRootMode.LOCAL)
-    manifest = build_manifest(
-        phase="phase-01",
-        data_root=data_root,
-        repo_root=tmp_path,
-        configuration={"provider": "reference"},
-        package_names=("pydantic", "package-that-does-not-exist"),
-    )
+    with pytest.MonkeyPatch.context() as m:
+        m.setattr("subprocess.run", lambda *args, **kwargs: __import__("subprocess").CompletedProcess(args, 1, b"", b""))
+        manifest = build_manifest(
+            phase="phase-01",
+            data_root=data_root,
+            repo_root=tmp_path,
+            configuration={"provider": "reference"},
+            package_names=("pydantic", "package-that-does-not-exist"),
+        )
     destination = tmp_path / "manifest.json"
     write_manifest(manifest, destination)
     payload = json.loads(destination.read_text(encoding="utf-8"))
