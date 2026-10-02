@@ -29,8 +29,10 @@ The controller enforces this sequence:
 
 ```text
 prove original provider/database offline
+  -> validate original pg0 instance identity metadata
   -> hash original evidence tree
   -> prove target-filesystem capacity
+  -> prove attempt and original evidence paths are disjoint
   -> exclusively create attempt root
   -> copy only the original PostgreSQL data directory
   -> verify source unchanged and copied bytes identical
@@ -43,6 +45,7 @@ prove original provider/database offline
   -> stop recovery pg0 in cleanup
   -> re-hash original evidence
   -> emit result and ledger
+  -> hash mandatory artifacts and emit completion marker last
 ```
 
 ### Original source protection
@@ -124,7 +127,15 @@ uses exclusive creation and never overwrites an existing attempt:
   pg0-home/
   recovery-result.json
   recovery-ledger.json
+  recovery-complete.json
 ```
+
+Before creating the attempt parent or any descendant, the controller resolves
+the prospective attempt parent, attempt root, copy root, and pg0 home. Every
+one must be disjoint from the original evidence root in both directions: it
+may not equal the original root, be inside it, or contain it. This rejects
+symlink aliases into either the original pg0 root or its data directory, as
+well as an attempt parent that is an ancestor of the original evidence.
 
 The PostgreSQL data directory is copied with regular-file and directory
 metadata needed by PostgreSQL. The preceding no-symlink guard ensures only the
@@ -144,7 +155,16 @@ Recovery pg0 uses:
 - `HOME=<attempt>/pg0-home`, so pg0 installation/instance metadata stays under
   the attempt;
 - `data_dir=<attempt>/pg0-copy/actual-data-dir`;
+- the original instance's validated `username`, `password`, and `database`;
 - loopback-only listening and server-default read-only mode.
+
+The identity source is the regular, non-symlink file
+`<original-root>/instances/memlife-phase04/instance.json`. Its `data_dir` must
+resolve exactly to the fixed original data directory, while `username`,
+`database`, and `version` must be non-empty and `password` must be present.
+The password exists only in runtime memory and is never written to result,
+ledger, integrity, completion, documentation, stdout, or exception evidence.
+The ledger may retain only the original username, database, and pg0 version.
 
 The controller checks pg0's reported `data_dir` after startup. It uses the
 retained environment's `psycopg2` dependency, requests
@@ -206,6 +226,16 @@ evidence is retained, but any partial or guard failure yields overall
 `FAIL_CLOSED`. No target is substituted, regenerated, replayed, or sent to a
 model.
 
+The four mandatory pre-completion artifacts are
+`source-integrity-before.json`, `source-integrity-after.json`,
+`recovery-result.json`, and `recovery-ledger.json`. After all four have been
+successfully written, the controller hashes their exact bytes and exclusively
+writes `recovery-complete.json` last. The marker binds the attempt ID, final
+status, and each artifact SHA-256. Missing marker means `INCOMPLETE`, never a
+scientific `PASS`, even if `recovery-result.json` says `PASS`. Acceptance also
+requires recomputing every listed hash and verifying attempt-ID and status
+consistency.
+
 ## Future live action — not authorized
 
 No live command in this document is authorized by publication of the local
@@ -216,9 +246,15 @@ could an operator:
 1. verify Jetstream and persistent-volume state under the managed lifecycle;
 2. run the controller with the retained Hindsight provider interpreter and a
    new attempt ID;
-3. retrieve the complete attempt directory without rewriting it;
-4. clean up only resources owned by that authorized lifecycle; and
-5. return Jetstream to `SHELVED` if that lifecycle opened it.
+3. retrieve only `source-integrity-before.json`,
+   `source-integrity-after.json`, `recovery-result.json`,
+   `recovery-ledger.json`, and `recovery-complete.json` without rewriting
+   them;
+4. before local acceptance, verify the completion marker, every listed
+   SHA-256, and attempt-ID consistency;
+5. do not download or commit `pg0-copy/` or `pg0-home/`;
+6. clean up only resources owned by that authorized lifecycle; and
+7. return Jetstream to `SHELVED` if that lifecycle opened it.
 
 ## Explicitly not authorized
 

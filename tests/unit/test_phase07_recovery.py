@@ -15,6 +15,10 @@ import scripts.phase07_hindsight_recovery as recovery
 
 ATTEMPT = "20261002T120000Z-0123456789ab"
 RAW_TEXT = "  recovered candidate text\n"
+SYNTHETIC_USERNAME = "synthetic_phase04_user"
+SYNTHETIC_PASSWORD = "synthetic-only-password-value"
+SYNTHETIC_DATABASE = "synthetic_phase04_database"
+SYNTHETIC_VERSION = "17.6"
 
 
 class ScriptedCursor:
@@ -98,7 +102,17 @@ def evidence_tree(tmp_path):
     (data_dir / "PG_VERSION").write_text("18\n", encoding="ascii")
     (data_dir / "base" / "1").write_bytes(b"database bytes")
     (data_dir.parent / "instance.json").write_text(
-        json.dumps({"name": recovery.ORIGINAL_INSTANCE_NAME}), encoding="utf-8"
+        json.dumps(
+            {
+                "name": recovery.ORIGINAL_INSTANCE_NAME,
+                "data_dir": str(data_dir.resolve()),
+                "username": SYNTHETIC_USERNAME,
+                "password": SYNTHETIC_PASSWORD,
+                "database": SYNTHETIC_DATABASE,
+                "version": SYNTHETIC_VERSION,
+            }
+        ),
+        encoding="utf-8",
     )
     return data_root, data_dir
 
@@ -164,9 +178,15 @@ def test_unsafe_attempt_id_is_rejected(attempt_id):
 
 
 def test_attempt_directory_must_not_preexist(tmp_path):
+    original_root = tmp_path / "providers" / "hindsight" / "pg0"
+    original_root.mkdir(parents=True)
     (tmp_path / recovery.RECOVERY_RUN_DIRECTORY / ATTEMPT).mkdir(parents=True)
     with pytest.raises(FileExistsError):
-        recovery.create_attempt_paths(tmp_path, ATTEMPT)
+        recovery.create_attempt_paths(
+            tmp_path,
+            ATTEMPT,
+            original_evidence_root=original_root,
+        )
 
 
 def test_attempt_parent_symlink_escape_is_rejected(tmp_path):
@@ -174,13 +194,85 @@ def test_attempt_parent_symlink_escape_is_rejected(tmp_path):
     outside = tmp_path / "outside"
     data_root.mkdir()
     outside.mkdir()
+    original_root = data_root / "providers" / "hindsight" / "pg0"
+    original_root.mkdir(parents=True)
     try:
         (data_root / "runs").symlink_to(outside, target_is_directory=True)
     except OSError as exc:
         pytest.skip(f"symlink creation unavailable: {exc}")
     with pytest.raises(recovery.RecoveryError, match="outside MEMLIFE_DATA_ROOT"):
-        recovery.create_attempt_paths(data_root, ATTEMPT)
+        recovery.create_attempt_paths(
+            data_root,
+            ATTEMPT,
+            original_evidence_root=original_root,
+        )
     assert list(outside.iterdir()) == []
+
+
+@pytest.mark.parametrize("link_target", ["root", "data"])
+def test_attempt_parent_symlink_into_original_is_rejected_before_mutation(
+    evidence_tree, link_target
+):
+    data_root, original_data = evidence_tree
+    original_root = data_root / "providers" / "hindsight" / "pg0"
+    target = original_root if link_target == "root" else original_data
+    before = recovery.compute_tree_identity(original_root)
+    before_listing = sorted(
+        path.relative_to(original_root).as_posix() for path in original_root.rglob("*")
+    )
+    try:
+        (data_root / "runs").symlink_to(target, target_is_directory=True)
+    except OSError as exc:
+        pytest.skip(f"symlink creation unavailable: {exc}")
+
+    with pytest.raises(recovery.OriginalSourceGuardError, match="not disjoint"):
+        recovery.create_attempt_paths(
+            data_root,
+            ATTEMPT,
+            original_evidence_root=original_root,
+        )
+
+    after = recovery.compute_tree_identity(original_root)
+    after_listing = sorted(
+        path.relative_to(original_root).as_posix() for path in original_root.rglob("*")
+    )
+    assert after.tree_sha256 == before.tree_sha256
+    assert after_listing == before_listing
+
+
+def test_attempt_parent_ancestor_of_original_is_rejected_before_mutation(evidence_tree):
+    data_root, _ = evidence_tree
+    original_root = data_root / "providers" / "hindsight" / "pg0"
+    runs = data_root / "runs"
+    runs.mkdir()
+    try:
+        (runs / "phase07-hindsight-recovery").symlink_to(
+            data_root,
+            target_is_directory=True,
+        )
+    except OSError as exc:
+        pytest.skip(f"symlink creation unavailable: {exc}")
+    before = recovery.compute_tree_identity(original_root)
+    with pytest.raises(recovery.OriginalSourceGuardError, match="not disjoint"):
+        recovery.create_attempt_paths(
+            data_root,
+            ATTEMPT,
+            original_evidence_root=original_root,
+        )
+    assert recovery.compute_tree_identity(original_root).tree_sha256 == before.tree_sha256
+
+
+def test_ordinary_sibling_attempt_path_is_accepted(evidence_tree):
+    data_root, _ = evidence_tree
+    original_root = data_root / "providers" / "hindsight" / "pg0"
+    paths = recovery.create_attempt_paths(
+        data_root,
+        ATTEMPT,
+        original_evidence_root=original_root,
+    )
+    assert paths.root.parent == data_root / recovery.RECOVERY_RUN_DIRECTORY
+    assert paths.copy_root.is_dir()
+    assert paths.pg0_home.is_dir()
 
 
 def test_original_data_dir_is_rejected(evidence_tree):
@@ -426,6 +518,9 @@ def test_controller_is_attempt_scoped_copy_only_and_atomic(
     assert len(result["targets"]) == 3
     assert state["stopped"] is True
     assert state["kwargs"]["name"] != recovery.ORIGINAL_INSTANCE_NAME
+    assert state["kwargs"]["username"] == SYNTHETIC_USERNAME
+    assert state["kwargs"]["password"] == SYNTHETIC_PASSWORD
+    assert state["kwargs"]["database"] == SYNTHETIC_DATABASE
     copy_dir = Path(state["kwargs"]["data_dir"])
     assert copy_dir == attempt_root / "pg0-copy" / "actual-data-dir"
     assert copy_dir != original_data
@@ -439,7 +534,13 @@ def test_controller_is_attempt_scoped_copy_only_and_atomic(
         "pg0-home",
         "recovery-result.json",
         "recovery-ledger.json",
+        "recovery-complete.json",
     }
+    marker = recovery.validate_recovery_completion(attempt_root)
+    assert marker["status"] == "PASS"
+    assert set(marker["artifacts"]) == set(recovery.MANDATORY_ARTIFACT_NAMES)
+    for path in attempt_root.glob("*.json"):
+        assert SYNTHETIC_PASSWORD not in path.read_text(encoding="utf-8")
 
 
 def test_cleanup_stop_runs_after_target_failure(evidence_tree, expected_text_hash):
@@ -502,6 +603,8 @@ def test_cleanup_precedes_final_artifact_write_failure(
             connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
         )
     assert state["stopped"] is True
+    attempt_root = data_root / recovery.RECOVERY_RUN_DIRECTORY / ATTEMPT
+    assert not (attempt_root / "recovery-complete.json").exists()
 
 
 def test_http_and_mutating_provider_functionality_is_absent():
@@ -523,14 +626,209 @@ def test_pg0_factory_receives_only_copy_and_no_original(evidence_tree):
     copy.mkdir(parents=True)
     home.mkdir()
     state = {}
+    metadata = recovery.load_original_pg0_metadata(
+        data_root / "providers" / "hindsight" / "pg0",
+        original_data,
+    )
     runtime = recovery.Pg0RecoveryRuntime(
         attempt_id=ATTEMPT,
         home=home,
         data_dir=copy,
         original_evidence_root=data_root / "providers" / "hindsight" / "pg0",
         original_data_dir=original_data,
+        original_metadata=metadata,
         factory=fake_factory(state),
     )
     assert Path(state["kwargs"]["data_dir"]) == copy.resolve()
     assert Path(state["kwargs"]["data_dir"]) != original_data.resolve()
+    assert state["kwargs"]["username"] == SYNTHETIC_USERNAME
+    assert state["kwargs"]["password"] == SYNTHETIC_PASSWORD
+    assert state["kwargs"]["database"] == SYNTHETIC_DATABASE
     assert runtime.instance_name != recovery.ORIGINAL_INSTANCE_NAME
+
+
+def test_original_pg0_metadata_file_must_not_be_a_symlink(evidence_tree, tmp_path):
+    data_root, original_data = evidence_tree
+    original_root = data_root / "providers" / "hindsight" / "pg0"
+    metadata_path = original_data.parent / "instance.json"
+    replacement = tmp_path / "replacement-instance.json"
+    replacement.write_bytes(metadata_path.read_bytes())
+    metadata_path.unlink()
+    try:
+        metadata_path.symlink_to(replacement)
+    except OSError as exc:
+        pytest.skip(f"symlink creation unavailable: {exc}")
+    with pytest.raises(recovery.OriginalPg0MetadataError, match="non-symlink"):
+        recovery.load_original_pg0_metadata(original_root, original_data)
+
+
+def test_wrong_original_metadata_data_dir_fails_before_pg0_start(
+    evidence_tree, tmp_path
+):
+    data_root, original_data = evidence_tree
+    wrong_data = tmp_path / "wrong-data"
+    wrong_data.mkdir()
+    metadata_path = original_data.parent / "instance.json"
+    payload = json.loads(metadata_path.read_text(encoding="utf-8"))
+    payload["data_dir"] = str(wrong_data)
+    metadata_path.write_text(json.dumps(payload), encoding="utf-8")
+    state = {}
+    with pytest.raises(recovery.OriginalPg0MetadataError, match="does not match"):
+        recovery.run_recovery_controller(
+            data_root=data_root,
+            attempt_id=ATTEMPT,
+            process_snapshots=[],
+            disk_usage=ample_disk,
+            pg0_factory=fake_factory(state),
+            connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
+        )
+    assert "started" not in state
+    assert "kwargs" not in state
+
+
+@pytest.mark.parametrize("missing_field", ["username", "password", "database", "version"])
+def test_missing_original_pg0_identity_field_fails_closed_before_start(
+    evidence_tree, missing_field
+):
+    data_root, original_data = evidence_tree
+    metadata_path = original_data.parent / "instance.json"
+    payload = json.loads(metadata_path.read_text(encoding="utf-8"))
+    del payload[missing_field]
+    metadata_path.write_text(json.dumps(payload), encoding="utf-8")
+    state = {}
+    with pytest.raises(recovery.OriginalPg0MetadataError, match=missing_field):
+        recovery.run_recovery_controller(
+            data_root=data_root,
+            attempt_id=ATTEMPT,
+            process_snapshots=[],
+            disk_usage=ample_disk,
+            pg0_factory=fake_factory(state),
+            connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
+        )
+    assert "started" not in state
+    assert "kwargs" not in state
+
+
+def test_password_is_redacted_from_failure_artifacts(
+    evidence_tree, expected_text_hash
+):
+    data_root, _ = evidence_tree
+
+    def failing_factory(**_kwargs):
+        raise RuntimeError(f"synthetic factory exposed {SYNTHETIC_PASSWORD}")
+
+    result = recovery.run_recovery_controller(
+        data_root=data_root,
+        attempt_id=ATTEMPT,
+        process_snapshots=[],
+        disk_usage=ample_disk,
+        pg0_factory=failing_factory,
+        connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
+    )
+    assert result["status"] == "FAIL_CLOSED"
+    attempt_root = data_root / recovery.RECOVERY_RUN_DIRECTORY / ATTEMPT
+    assert recovery.classify_recovery_attempt(attempt_root) == "FAIL_CLOSED"
+    for path in attempt_root.glob("*.json"):
+        assert SYNTHETIC_PASSWORD not in path.read_text(encoding="utf-8")
+
+
+def test_completion_marker_is_written_last(evidence_tree, expected_text_hash, monkeypatch):
+    data_root, _ = evidence_tree
+    state = {}
+    write_order = []
+    real_write = recovery.write_json_exclusive
+
+    def recording_write(path, payload):
+        write_order.append(path.name)
+        real_write(path, payload)
+
+    monkeypatch.setattr(recovery, "write_json_exclusive", recording_write)
+    result = recovery.run_recovery_controller(
+        data_root=data_root,
+        attempt_id=ATTEMPT,
+        process_snapshots=[],
+        disk_usage=ample_disk,
+        pg0_factory=fake_factory(state),
+        connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
+    )
+    assert result["status"] == "PASS"
+    assert write_order[-1] == "recovery-complete.json"
+    assert set(recovery.MANDATORY_ARTIFACT_NAMES).issubset(write_order[:-1])
+
+
+@pytest.mark.parametrize(
+    "failure_name,raises",
+    [
+        ("source-integrity-after.json", False),
+        ("recovery-result.json", True),
+        ("recovery-ledger.json", True),
+    ],
+)
+def test_mandatory_artifact_write_failure_never_creates_completion_marker(
+    evidence_tree,
+    expected_text_hash,
+    monkeypatch,
+    failure_name,
+    raises,
+):
+    data_root, _ = evidence_tree
+    state = {}
+    real_write = recovery.write_json_exclusive
+
+    def failing_write(path, payload):
+        if path.name == failure_name:
+            raise OSError(f"simulated {failure_name} write failure")
+        real_write(path, payload)
+
+    monkeypatch.setattr(recovery, "write_json_exclusive", failing_write)
+    if raises:
+        with pytest.raises(OSError, match="simulated"):
+            recovery.run_recovery_controller(
+                data_root=data_root,
+                attempt_id=ATTEMPT,
+                process_snapshots=[],
+                disk_usage=ample_disk,
+                pg0_factory=fake_factory(state),
+                connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
+            )
+    else:
+        result = recovery.run_recovery_controller(
+            data_root=data_root,
+            attempt_id=ATTEMPT,
+            process_snapshots=[],
+            disk_usage=ample_disk,
+            pg0_factory=fake_factory(state),
+            connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
+        )
+        assert result["status"] == "FAIL_CLOSED"
+    attempt_root = data_root / recovery.RECOVERY_RUN_DIRECTORY / ATTEMPT
+    assert not (attempt_root / "recovery-complete.json").exists()
+
+
+def test_tampered_mandatory_artifact_fails_completion_validation(
+    evidence_tree, expected_text_hash
+):
+    data_root, _ = evidence_tree
+    recovery.run_recovery_controller(
+        data_root=data_root,
+        attempt_id=ATTEMPT,
+        process_snapshots=[],
+        disk_usage=ample_disk,
+        pg0_factory=fake_factory({}),
+        connect=lambda _uri: ScriptedConnection(ScriptedCursor()),
+    )
+    attempt_root = data_root / recovery.RECOVERY_RUN_DIRECTORY / ATTEMPT
+    result_path = attempt_root / "recovery-result.json"
+    result_path.write_bytes(result_path.read_bytes() + b"\n")
+    with pytest.raises(recovery.CompletionValidationError, match="hash mismatch"):
+        recovery.validate_recovery_completion(attempt_root)
+
+
+def test_pass_result_without_completion_marker_is_incomplete(tmp_path):
+    attempt_root = tmp_path / ATTEMPT
+    attempt_root.mkdir()
+    (attempt_root / "recovery-result.json").write_text(
+        json.dumps({"attempt_id": ATTEMPT, "status": "PASS"}),
+        encoding="utf-8",
+    )
+    assert recovery.classify_recovery_attempt(attempt_root) == "INCOMPLETE"

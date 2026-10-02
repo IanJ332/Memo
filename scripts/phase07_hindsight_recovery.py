@@ -19,7 +19,7 @@ import shutil
 import stat
 import sys
 import uuid
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Iterable, Literal, Mapping, Sequence
 
@@ -31,6 +31,13 @@ RECOVERY_RUN_DIRECTORY = Path("runs") / "phase07-hindsight-recovery"
 SAFETY_MARGIN_MINIMUM_BYTES = 1024**3
 SAFETY_MARGIN_PERCENT = 10
 ATTEMPT_ID_RE = re.compile(r"^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{12}$")
+COMPLETION_SCHEMA_VERSION = "memlife-phase07b-recovery-complete-v1"
+MANDATORY_ARTIFACT_NAMES = (
+    "source-integrity-before.json",
+    "source-integrity-after.json",
+    "recovery-result.json",
+    "recovery-ledger.json",
+)
 REQUIRED_COLUMNS = {
     "id",
     "bank_id",
@@ -93,6 +100,18 @@ class DiskCapacityError(RecoveryError):
     pass
 
 
+class OriginalPg0MetadataError(RecoveryError):
+    pass
+
+
+class CompletionValidationError(RecoveryError):
+    pass
+
+
+class IncompleteRecoveryAttemptError(CompletionValidationError):
+    pass
+
+
 @dataclass(frozen=True)
 class RecoveryResult:
     namespace: str
@@ -134,6 +153,15 @@ class ProcessSnapshot:
 
 
 @dataclass(frozen=True)
+class OriginalPg0Metadata:
+    data_dir: Path
+    username: str
+    password: str = field(repr=False)
+    database: str
+    version: str
+
+
+@dataclass(frozen=True)
 class AttemptPaths:
     root: Path
     integrity_before: Path
@@ -143,6 +171,7 @@ class AttemptPaths:
     pg0_home: Path
     result: Path
     ledger: Path
+    complete: Path
 
 
 def validate_target(namespace: str, memory_id: str) -> dict[str, str]:
@@ -186,6 +215,32 @@ def _is_within(candidate: Path, root: Path) -> bool:
         return True
     except ValueError:
         return False
+
+
+def _paths_are_disjoint(first: Path, second: Path) -> bool:
+    return (
+        first != second
+        and not _is_within(first, second)
+        and not _is_within(second, first)
+    )
+
+
+def guard_attempt_path_disjointness(
+    original_evidence_root: Path,
+    candidates: Mapping[str, Path],
+) -> dict[str, Path]:
+    """Resolve all future attempt paths and reject overlap in either direction."""
+
+    original_root = _canonical_path(original_evidence_root, strict=True)
+    resolved: dict[str, Path] = {}
+    for label, path in candidates.items():
+        candidate = _canonical_path(path, strict=False)
+        if not _paths_are_disjoint(candidate, original_root):
+            raise OriginalSourceGuardError(
+                f"{label} is not disjoint from the original evidence root"
+            )
+        resolved[label] = candidate
+    return resolved
 
 
 def guard_recovery_data_dir(
@@ -485,17 +540,43 @@ def attempt_filesystem_anchor(data_root: Path) -> Path:
     return _canonical_path(candidate, strict=True)
 
 
-def create_attempt_paths(data_root: Path, attempt_id: str) -> AttemptPaths:
+def create_attempt_paths(
+    data_root: Path,
+    attempt_id: str,
+    *,
+    original_evidence_root: Path,
+) -> AttemptPaths:
     validate_attempt_id(attempt_id)
     data_root = _canonical_path(data_root, strict=True)
     parent = data_root / RECOVERY_RUN_DIRECTORY
     prospective_parent = _canonical_path(parent, strict=False)
     if not _is_within(prospective_parent, data_root):
         raise RecoveryError("attempt parent resolves outside MEMLIFE_DATA_ROOT")
+    prospective_root = parent / attempt_id
+    prospective_copy_root = prospective_root / "pg0-copy"
+    prospective_pg0_home = prospective_root / "pg0-home"
+    guard_attempt_path_disjointness(
+        original_evidence_root,
+        {
+            "prospective attempt parent": parent,
+            "prospective attempt root": prospective_root,
+            "prospective copy root": prospective_copy_root,
+            "prospective pg0 home": prospective_pg0_home,
+        },
+    )
     parent.mkdir(parents=True, exist_ok=True)
     resolved_parent = _canonical_path(parent, strict=True)
     if not _is_within(resolved_parent, data_root):
         raise RecoveryError("attempt parent resolves outside MEMLIFE_DATA_ROOT")
+    guard_attempt_path_disjointness(
+        original_evidence_root,
+        {
+            "resolved attempt parent": resolved_parent,
+            "prospective attempt root": prospective_root,
+            "prospective copy root": prospective_copy_root,
+            "prospective pg0 home": prospective_pg0_home,
+        },
+    )
     root = parent / attempt_id
     root.mkdir(mode=0o700, exist_ok=False)
     copy_root = root / "pg0-copy"
@@ -511,6 +592,7 @@ def create_attempt_paths(data_root: Path, attempt_id: str) -> AttemptPaths:
         pg0_home=pg0_home,
         result=root / "recovery-result.json",
         ledger=root / "recovery-ledger.json",
+        complete=root / "recovery-complete.json",
     )
 
 
@@ -529,6 +611,184 @@ def write_json_exclusive(path: Path, payload: Mapping[str, Any]) -> None:
     with path.open("x", encoding="utf-8", newline="\n") as handle:
         json.dump(payload, handle, indent=2, sort_keys=True, ensure_ascii=False)
         handle.write("\n")
+
+
+def _read_regular_file_bytes(path: Path, *, description: str) -> bytes:
+    try:
+        mode = path.lstat().st_mode
+    except OSError as exc:
+        raise RecoveryError(f"cannot inspect {description}: {exc}") from exc
+    if stat.S_ISLNK(mode) or not stat.S_ISREG(mode):
+        raise RecoveryError(f"{description} must be a regular non-symlink file")
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        descriptor = os.open(path, flags)
+    except OSError as exc:
+        raise RecoveryError(f"cannot safely open {description}: {exc}") from exc
+    try:
+        observed = os.fstat(descriptor)
+        if not stat.S_ISREG(observed.st_mode):
+            raise RecoveryError(f"{description} changed type while opening")
+        chunks: list[bytes] = []
+        while True:
+            chunk = os.read(descriptor, 1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+        return b"".join(chunks)
+    finally:
+        os.close(descriptor)
+
+
+def load_original_pg0_metadata(
+    original_evidence_root: Path,
+    original_data_dir: Path,
+) -> OriginalPg0Metadata:
+    original_root = _canonical_path(original_evidence_root, strict=True)
+    expected_data_dir = _canonical_path(original_data_dir, strict=True)
+    metadata_path = (
+        original_root / "instances" / ORIGINAL_INSTANCE_NAME / "instance.json"
+    )
+    try:
+        raw = _read_regular_file_bytes(
+            metadata_path,
+            description="original pg0 instance metadata",
+        )
+        payload = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise OriginalPg0MetadataError(
+            "original pg0 instance metadata is not valid UTF-8 JSON"
+        ) from exc
+    except RecoveryError as exc:
+        raise OriginalPg0MetadataError(str(exc)) from exc
+    if not isinstance(payload, dict):
+        raise OriginalPg0MetadataError("original pg0 instance metadata must be an object")
+
+    for field in ("data_dir", "username", "password", "database", "version"):
+        if field not in payload:
+            raise OriginalPg0MetadataError(
+                f"original pg0 instance metadata is missing required field {field!r}"
+            )
+        if not isinstance(payload[field], str):
+            raise OriginalPg0MetadataError(
+                f"original pg0 instance metadata field {field!r} must be a string"
+            )
+    for field in ("data_dir", "username", "database", "version"):
+        if not payload[field].strip():
+            raise OriginalPg0MetadataError(
+                f"original pg0 instance metadata field {field!r} must be non-empty"
+            )
+
+    persisted_data_dir = Path(payload["data_dir"])
+    if not persisted_data_dir.is_absolute():
+        persisted_data_dir = metadata_path.parent / persisted_data_dir
+    persisted_data_dir = _canonical_path(persisted_data_dir, strict=True)
+    if persisted_data_dir != expected_data_dir:
+        raise OriginalPg0MetadataError(
+            "original pg0 instance metadata data_dir does not match the fixed original data directory"
+        )
+    return OriginalPg0Metadata(
+        data_dir=persisted_data_dir,
+        username=payload["username"],
+        password=payload["password"],
+        database=payload["database"],
+        version=payload["version"],
+    )
+
+
+def _sha256_file_bytes(path: Path, *, description: str) -> str:
+    return hashlib.sha256(
+        _read_regular_file_bytes(path, description=description)
+    ).hexdigest()
+
+
+def _read_json_artifact(path: Path, *, description: str) -> dict[str, Any]:
+    try:
+        payload = json.loads(
+            _read_regular_file_bytes(path, description=description).decode("utf-8")
+        )
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise CompletionValidationError(f"{description} is not valid UTF-8 JSON") from exc
+    except RecoveryError as exc:
+        raise CompletionValidationError(str(exc)) from exc
+    if not isinstance(payload, dict):
+        raise CompletionValidationError(f"{description} must contain a JSON object")
+    return payload
+
+
+def _mandatory_artifact_paths(attempt_root: Path) -> dict[str, Path]:
+    return {name: attempt_root / name for name in MANDATORY_ARTIFACT_NAMES}
+
+
+def write_completion_marker(
+    paths: AttemptPaths,
+    *,
+    attempt_id: str,
+    status: Literal["PASS", "FAIL_CLOSED"],
+) -> dict[str, Any]:
+    artifact_paths = _mandatory_artifact_paths(paths.root)
+    for name, path in artifact_paths.items():
+        payload = _read_json_artifact(path, description=name)
+        if payload.get("attempt_id") != attempt_id:
+            raise CompletionValidationError(f"{name} attempt_id is inconsistent")
+    marker = {
+        "schema_version": COMPLETION_SCHEMA_VERSION,
+        "attempt_id": attempt_id,
+        "status": status,
+        "artifacts": {
+            name: _sha256_file_bytes(path, description=name)
+            for name, path in artifact_paths.items()
+        },
+        "complete": True,
+    }
+    write_json_exclusive(paths.complete, marker)
+    return marker
+
+
+def validate_recovery_completion(attempt_root: Path) -> dict[str, Any]:
+    attempt_root = _canonical_path(attempt_root, strict=True)
+    marker_path = attempt_root / "recovery-complete.json"
+    if not marker_path.exists():
+        raise IncompleteRecoveryAttemptError(
+            "recovery-complete.json is absent; the recovery attempt is incomplete"
+        )
+    marker = _read_json_artifact(marker_path, description="recovery-complete.json")
+    if marker.get("schema_version") != COMPLETION_SCHEMA_VERSION:
+        raise CompletionValidationError("completion marker schema_version is invalid")
+    if marker.get("complete") is not True:
+        raise CompletionValidationError("completion marker is not complete")
+    attempt_id = marker.get("attempt_id")
+    if attempt_id != attempt_root.name or not isinstance(attempt_id, str):
+        raise CompletionValidationError("completion marker attempt_id is inconsistent")
+    status = marker.get("status")
+    if status not in {"PASS", "FAIL_CLOSED"}:
+        raise CompletionValidationError("completion marker status is invalid")
+    artifact_hashes = marker.get("artifacts")
+    if not isinstance(artifact_hashes, dict) or set(artifact_hashes) != set(
+        MANDATORY_ARTIFACT_NAMES
+    ):
+        raise CompletionValidationError("completion marker artifact set is invalid")
+    for name, path in _mandatory_artifact_paths(attempt_root).items():
+        expected = artifact_hashes[name]
+        if not isinstance(expected, str) or not re.fullmatch(r"[0-9a-f]{64}", expected):
+            raise CompletionValidationError(f"completion hash for {name} is invalid")
+        observed = _sha256_file_bytes(path, description=name)
+        if observed != expected:
+            raise CompletionValidationError(f"completion hash mismatch for {name}")
+        payload = _read_json_artifact(path, description=name)
+        if payload.get("attempt_id") != attempt_id:
+            raise CompletionValidationError(f"{name} attempt_id is inconsistent")
+    for name in ("recovery-result.json", "recovery-ledger.json"):
+        payload = _read_json_artifact(attempt_root / name, description=name)
+        if payload.get("status") != status:
+            raise CompletionValidationError(f"{name} status is inconsistent")
+    return marker
+
+
+def classify_recovery_attempt(attempt_root: Path) -> str:
+    if not (attempt_root / "recovery-complete.json").exists():
+        return "INCOMPLETE"
+    return str(validate_recovery_completion(attempt_root)["status"])
 
 
 def verify_schema(cur: Any) -> None:
@@ -741,6 +1001,7 @@ class Pg0RecoveryRuntime:
         data_dir: Path,
         original_evidence_root: Path,
         original_data_dir: Path,
+        original_metadata: OriginalPg0Metadata,
         factory: Callable[..., Any],
     ) -> None:
         suffix = validate_attempt_id(attempt_id).split("-", 1)[1]
@@ -753,9 +1014,16 @@ class Pg0RecoveryRuntime:
         self.data_dir = guard_recovery_data_dir(
             data_dir, self.original_evidence_root, self.original_data_dir
         )
+        if original_metadata.data_dir != self.original_data_dir:
+            raise OriginalPg0MetadataError(
+                "validated original pg0 metadata does not identify the fixed original data directory"
+            )
         self.instance = factory(
             name=self.instance_name,
             data_dir=str(self.data_dir),
+            username=original_metadata.username,
+            password=original_metadata.password,
+            database=original_metadata.database,
             config={
                 "listen_addresses": "127.0.0.1",
                 "default_transaction_read_only": "on",
@@ -805,6 +1073,18 @@ def _tree_payload(identity: TreeIdentity, **extra: Any) -> dict[str, Any]:
     return {**asdict(identity), **extra}
 
 
+def _redact_sensitive(value: str, sensitive_values: Iterable[str]) -> str:
+    redacted = value
+    for sensitive in sensitive_values:
+        if sensitive:
+            redacted = redacted.replace(sensitive, "[REDACTED]")
+    return redacted
+
+
+def _safe_exception_text(exc: BaseException, sensitive_values: Iterable[str]) -> str:
+    return f"{type(exc).__name__}: {_redact_sensitive(str(exc), sensitive_values)}"
+
+
 def run_recovery_controller(
     *,
     data_root: Path,
@@ -828,6 +1108,8 @@ def run_recovery_controller(
     original_data = _canonical_path(original_data, strict=True)
     if not _is_within(original_data, original_root):
         raise OriginalSourceGuardError("original data directory escapes original evidence root")
+    original_metadata = load_original_pg0_metadata(original_root, original_data)
+    sensitive_values = (original_metadata.password,)
 
     assert_original_offline(original_root, snapshots=process_snapshots)
     source_before = compute_tree_identity(original_root)
@@ -836,10 +1118,14 @@ def run_recovery_controller(
         source_before.regular_file_bytes,
         disk_usage=disk_usage,
     )
-    paths = create_attempt_paths(data_root, attempt_id)
+    paths = create_attempt_paths(
+        data_root,
+        attempt_id,
+        original_evidence_root=original_root,
+    )
     write_json_exclusive(
         paths.integrity_before,
-        _tree_payload(source_before, measured_at=_utc_now()),
+        _tree_payload(source_before, attempt_id=attempt_id, measured_at=_utc_now()),
     )
 
     ledger: dict[str, Any] = {
@@ -847,6 +1133,9 @@ def run_recovery_controller(
         "attempt_id": attempt_id,
         "status": "FAIL_CLOSED",
         "original_instance_name": ORIGINAL_INSTANCE_NAME,
+        "original_database": original_metadata.database,
+        "original_username": original_metadata.username,
+        "original_pg_version": original_metadata.version,
         "recovery_instance_name": None,
         "original_evidence_root": str(original_root),
         "original_data_dir": str(original_data),
@@ -898,6 +1187,7 @@ def run_recovery_controller(
             data_dir=paths.copy_data_dir,
             original_evidence_root=original_root,
             original_data_dir=original_data,
+            original_metadata=original_metadata,
             factory=pg0_factory,
         )
         ledger["recovery_instance_name"] = runtime.instance_name
@@ -906,12 +1196,14 @@ def run_recovery_controller(
         try:
             recovered, target_errors = recover_all_targets(connection)
             ledger["transaction_read_only"] = True
-            ledger["errors"].extend(target_errors)
+            ledger["errors"].extend(
+                _redact_sensitive(error, sensitive_values) for error in target_errors
+            )
         finally:
             connection.close()
             connection = None
     except Exception as exc:
-        ledger["errors"].append(f"{type(exc).__name__}: {exc}")
+        ledger["errors"].append(_safe_exception_text(exc, sensitive_values))
     finally:
         if connection is not None:
             try:
@@ -923,21 +1215,27 @@ def run_recovery_controller(
                 runtime.stop()
             except Exception as exc:
                 ledger["errors"].append(
-                    f"pg0 cleanup failed: {type(exc).__name__}: {exc}"
+                    "pg0 cleanup failed: "
+                    + _safe_exception_text(exc, sensitive_values)
                 )
 
+    integrity_after_written = False
     try:
         source_after = compute_tree_identity(original_root)
         ledger["source_tree_sha_after"] = source_after.tree_sha256
         write_json_exclusive(
             paths.integrity_after,
-            _tree_payload(source_after, measured_at=_utc_now()),
+            _tree_payload(source_after, attempt_id=attempt_id, measured_at=_utc_now()),
         )
+        integrity_after_written = True
         if source_after.tree_sha256 != source_before.tree_sha256:
             ledger["errors"].append("original source before/after tree identity mismatch")
     except Exception as exc:
         source_after = None
-        ledger["errors"].append(f"final source integrity failed: {type(exc).__name__}: {exc}")
+        ledger["errors"].append(
+            "final source integrity failed: "
+            + _safe_exception_text(exc, sensitive_values)
+        )
 
     ledger["target_success_count"] = len(recovered)
     success = (
@@ -958,6 +1256,12 @@ def run_recovery_controller(
     }
     write_json_exclusive(paths.result, result)
     write_json_exclusive(paths.ledger, ledger)
+    if integrity_after_written:
+        write_completion_marker(
+            paths,
+            attempt_id=attempt_id,
+            status=ledger["status"],
+        )
     return result
 
 
