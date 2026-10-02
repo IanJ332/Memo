@@ -169,14 +169,99 @@ def test_phase07_prep_artifacts_structure_and_gates() -> None:
     assert "MISSING_EXACT_CONTEXT" in text_07b
 
 
+def test_phase07_scientific_decisions_artifact_and_doc() -> None:
+    """Scientific decisions document and JSON artifact must record exact approved classifications."""
+    doc_path = DOCS_EXP / "PHASE_07_SCIENTIFIC_DECISIONS.md"
+    assert doc_path.is_file()
+    doc_text = doc_path.read_text(encoding="utf-8")
+
+    # Verify structural sections
+    assert "OBSERVED EVIDENCE" in doc_text.upper()
+    assert "MAIN-CHATGPT SCIENTIFIC INTERPRETATION" in doc_text.upper()
+    assert "UNRESOLVED QUESTIONS" in doc_text.upper()
+
+    # Verify approved classifications in doc
+    assert "PROVENANCE_LINEAGE_RESIDUAL" in doc_text
+    assert "RQ3_CANDIDATE" in doc_text
+    assert "LEGITIMATE_REDERIVATION_CANDIDATE" in doc_text
+    assert "F2_DERIVED_STATE" in doc_text
+    assert "ROOT_CAUSE_UNRESOLVED" in doc_text
+
+    # Verify Task B discrimination
+    assert "INSUFFICIENT_EVIDENCE" in doc_text
+
+    # Verify Task C recovery inventory
+    assert "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6" in doc_text
+    assert "Exact Provider-Native ID Lookup" in doc_text or "EXACT PROVIDER-NATIVE ID LOOKUP" in doc_text.upper()
+
+    # Verify Task D sizing
+    assert "PROVISIONAL_UNTIL_CONTEXT_RECOVERY" in doc_text
+    assert "27" in doc_text
+
+    # Verify machine-readable JSON artifact
+    json_path = ARTIFACTS_P07 / "scientific-decisions.json"
+    assert json_path.is_file()
+    data = json.loads(json_path.read_text(encoding="utf-8"))
+
+    assert data["schema_version"] == "memlife-phase07-scientific-decisions-v1"
+    assert data["live_execution_authorized"] is False
+    assert data["rq3_authorized"] is False
+    assert data["jetstream_status"] == "SHELVED"
+
+    decisions = data["decisions"]
+    assert decisions["mem0_s1"]["classification"] == "PROVENANCE_LINEAGE_RESIDUAL"
+    assert decisions["mem0_s1"]["rq3_eligibility"] == "NO"
+    assert "RQ1" in decisions["mem0_s1"]["relevant_rqs"]
+
+    assert decisions["hindsight_s1"]["classification"] == "RQ3_CANDIDATE"
+    assert decisions["hindsight_s1"]["rq3_eligibility"] == "YES"
+    assert decisions["hindsight_s1"]["sole_empirical_rq3_candidate"] is True
+
+    assert decisions["hindsight_s4"]["classification"] == "LEGITIMATE_REDERIVATION_CANDIDATE"
+    assert decisions["hindsight_s4"]["rq3_eligibility"] == "NO"
+
+    assert decisions["openviking_s4"]["classification"] == "F2_DERIVED_STATE"
+    assert decisions["openviking_s4"]["root_cause_status"] == "ROOT_CAUSE_UNRESOLVED"
+    assert decisions["openviking_s4"]["rq3_eligibility"] == "NO"
+
+    assert decisions["openviking_s0"]["classification"] == "EXCLUDED"
+    assert decisions["openviking_s0"]["rq3_eligibility"] == "NO"
+
+    # Task B discrimination
+    assert data["openviking_s4_root_cause_discrimination"]["discrimination_result"] == "INSUFFICIENT_EVIDENCE"
+
+    # Task C recovery inventory
+    rec = data["hindsight_s1_recovery_inventory"]
+    assert rec["expected_sha256"] == "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+    assert rec["requires_jetstream_read_only_access"] is True
+    assert len(rec["repetitions"]) == 3
+    assert len(rec["preferred_recovery_hierarchy"]) == 3
+    assert rec["preferred_recovery_hierarchy"][0]["method"] == "EXACT_PROVIDER_NATIVE_ID_LOOKUP"
+    assert rec["preferred_recovery_hierarchy"][1]["method"] == "EXACT_DATABASE_ROW_LOOKUP"
+    assert rec["preferred_recovery_hierarchy"][2]["method"] == "EXACT_CONTENT_SHA_VERIFICATION"
+    assert "semantic_search_re_query" in rec["forbidden_recovery_methods"]
+
+    # Task D sizing
+    sizing = data["rq3_experimental_size"]
+    assert sizing["status_label"] == "PROVISIONAL_UNTIL_CONTEXT_RECOVERY"
+    assert sizing["contexts"] == 1
+    assert sizing["models"] == 3
+    assert sizing["repetitions"] == 3
+    assert sizing["conditions"] == 3
+    assert sizing["maximum_calls"] == 27
+    assert sizing["executed_calls"] == 0
+
+
 def test_no_secrets_in_phase07_prep_artifacts() -> None:
     """Phase 07 artifacts must not leak any secrets or sensitive keys."""
     forbidden = ["ghp_", "sk-", "AIzaSy", "password", "BEGIN " + "PRIVATE KEY", "client_secret"]
     for path in [
         ARTIFACTS_P07 / "root-cause-evidence.json",
         ARTIFACTS_P07 / "rq3-context-candidates.json",
+        ARTIFACTS_P07 / "scientific-decisions.json",
         DOCS_EXP / "PHASE_07A_ROOT_CAUSE_EVIDENCE.md",
         DOCS_EXP / "PHASE_07B_RQ3_CONTEXT_CANDIDATES.md",
+        DOCS_EXP / "PHASE_07_SCIENTIFIC_DECISIONS.md",
     ]:
         content = path.read_text(encoding="utf-8")
         for token in forbidden:

@@ -1,0 +1,215 @@
+{
+  "schema_version": "memlife-phase07-scientific-decisions-v1",
+  "phase": "07A-DECISION-EVIDENCE",
+  "governing_principle": "Retrieved != Authoritative",
+  "live_execution_authorized": false,
+  "rq3_authorized": false,
+  "git_push_authorized": false,
+  "jetstream_status": "SHELVED",
+  "decisions": {
+    "mem0_s1": {
+      "provider": "mem0",
+      "scenario": "S1",
+      "scenario_name": "SUPERSESSION_OR_UPDATE",
+      "classification": "PROVENANCE_LINEAGE_RESIDUAL",
+      "rq3_eligibility": "NO",
+      "relevant_rqs": ["RQ1", "RQ2", "RQ4"],
+      "observed_evidence": {
+        "retrieval_candidate_count": 1,
+        "retrieval_rank": 1,
+        "candidate_text_content": "Project Alder reports may be sent only to Bob.",
+        "superseded_text_in_storage": false,
+        "authority_exposure_outcome": "AUTHORITATIVE_AND_NONAUTHORITATIVE",
+        "lineage_source_events": ["write-v1", "update-v2"]
+      },
+      "main_chatgpt_scientific_interpretation": "Mem0 S1 is NOT an RQ3 stale-content context. Retrieval contains current v2 content only. Its mixed authority classification comes from provenance/lineage linking the same updated provider object to superseded v1 and active v2.",
+      "unresolved_questions": [
+        "How should downstream lineage filters classify in-place object updates where underlying textual content is entirely authoritative but object identity retains superseded provenance edges?"
+      ]
+    },
+    "hindsight_s1": {
+      "provider": "hindsight",
+      "scenario": "S1",
+      "scenario_name": "SUPERSESSION_OR_UPDATE",
+      "classification": "RQ3_CANDIDATE",
+      "rq3_eligibility": "YES",
+      "sole_empirical_rq3_candidate": true,
+      "context_recovery_required_before_freeze": true,
+      "relevant_rqs": ["RQ1", "RQ2", "RQ3", "RQ4"],
+      "observed_evidence": {
+        "retrieval_candidate_count": 2,
+        "rank_1_surface": "SOURCE",
+        "rank_1_content": "Project Alder reports may be sent only to Bob.",
+        "rank_2_surface": "DERIVED",
+        "rank_2_fact_type": "observation",
+        "rank_2_content_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+        "rank_2_raw_text_serialized": false,
+        "authority_exposure_outcome": "AUTHORITATIVE_AND_NONAUTHORITATIVE"
+      },
+      "main_chatgpt_scientific_interpretation": "Hindsight S1 is the sole currently justified empirical RQ3 candidate. It contains a distinct non-authoritative derived retrieval candidate, but the exact candidate text was not serialized. Exact context recovery required before freeze.",
+      "unresolved_questions": [
+        "What is the exact natural-language text corresponding to hash f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6?",
+        "Does the presence of this non-authoritative derived observation induce downstream LLM decision degradation?"
+      ]
+    },
+    "hindsight_s4": {
+      "provider": "hindsight",
+      "scenario": "S4",
+      "scenario_name": "HARD_DELETE_REDERIVE",
+      "classification": "LEGITIMATE_REDERIVATION_CANDIDATE",
+      "rq3_eligibility": "NO",
+      "relevant_rqs": ["RQ2"],
+      "observed_evidence": {
+        "pre_delete_derived_sha256": "03f5c9936854bcfbcf2ec9911e3b5e40787e9cf296f86235b3be282f6f570bb5",
+        "post_rederive_derived_sha256": "3ec69194ac47bc9b00f41651852446d57398828e5d6cb3ea645f6757635a59be",
+        "exact_visibility_outcome": "ABSENT",
+        "authority_exposure_outcome": "AUTHORITATIVE_ONLY",
+        "residual_signal_reappeared_after_rederivation": true,
+        "post_rederive_source_attribution": ["write-support"]
+      },
+      "main_chatgpt_scientific_interpretation": "Hindsight S4 is not demonstrated unauthorized exposure. Current evidence is consistent with derived state being reconstructed from the surviving authoritative write-support source after v1 deletion. Do not claim deleted-v1 lineage unless evidence explicitly proves it.",
+      "unresolved_questions": [
+        "Did consolidation retain any unobserved vector cache artifacts, or was reconstruction purely driven by active write-support text?"
+      ]
+    },
+    "openviking_s4": {
+      "provider": "openviking",
+      "scenario": "S4",
+      "scenario_name": "HARD_DELETE_REDERIVE",
+      "classification": "F2_DERIVED_STATE",
+      "root_cause_status": "ROOT_CAUSE_UNRESOLVED",
+      "rq3_eligibility": "NO",
+      "relevant_rqs": ["RQ1", "RQ2"],
+      "observed_evidence": {
+        "r1_derived_state": "PRESENT (2 URIs; final retrieval: 1 candidate, AUTHORITATIVE_ONLY)",
+        "r2_derived_state": "ABSENT (0 URIs; final retrieval: 0 candidates, NONE)",
+        "r3_derived_state": "PRESENT (3 URIs; final retrieval: 1 candidate, AUTHORITATIVE_ONLY)",
+        "nonauthoritative_exposure_observed": false,
+        "authority_exposure_outcomes": ["AUTHORITATIVE_ONLY", "NONE", "AUTHORITATIVE_ONLY"]
+      },
+      "main_chatgpt_scientific_interpretation": "OpenViking S4 is not an RQ3 candidate. Observed variability is at DERIVED_STATE / retrieval production: r1 derived state present, r2 no derived state, r3 derived state present. Authority exposure is AUTHORITATIVE_ONLY or NONE. Provisionally classified as F2_DERIVED_STATE, ROOT_CAUSE_UNRESOLVED, RQ3 = NO.",
+      "unresolved_questions": [
+        "Why did observe-before-transition in r2 retrieve 0 candidates despite write-v1 completing with 2 added URIs?",
+        "Did OpenViking's vector index fail to commit or update in r2, or was extraction non-deterministic?"
+      ]
+    },
+    "openviking_s0": {
+      "provider": "openviking",
+      "scenario": "S0",
+      "scenario_name": "RETAIN_QUERY_NO_LIFECYCLE",
+      "classification": "EXCLUDED",
+      "rq3_eligibility": "NO",
+      "reason": "Historical provider crash in r2 (RemoteDisconnected / ServiceExitedBeforeReady) preserved as immutable ERROR."
+    }
+  },
+  "openviking_s4_root_cause_discrimination": {
+    "discrimination_result": "INSUFFICIENT_EVIDENCE",
+    "evaluated_hypotheses": {
+      "EXTRACTION_COMPLETED_ZERO_OUTPUT": {
+        "supported": false,
+        "evidence_rationale": "Write task diff reported 2 adds on v1 and 2 updates on write-support. Explicit HTTP response payload for /extract was not serialized; absence of derived URIs in retrieval cannot be used to infer zero extraction output."
+      },
+      "INSPECTION_BEFORE_EXTRACTION_QUIESCENCE": {
+        "supported": false,
+        "evidence_rationale": "Both write tasks reached terminal status 'completed' with verified quiescence durations before subsequent operations. /extract completed synchronously in 5.12 ms and emitted no task ID. No log evidence shows ongoing background extraction."
+      },
+      "PROVIDER_EXTRACTION_NONDETERMINISM": {
+        "supported": false,
+        "evidence_rationale": "Extraction diffs did vary (r2 write-support produced 0 adds/2 updates vs 1 add/1 update in r1 and r3), but observe-before-transition in r2 also returned 0 candidates before transition, pointing to retrieval or indexing anomalies that cannot be isolated solely to extraction."
+      },
+      "INSUFFICIENT_EVIDENCE": {
+        "supported": true,
+        "evidence_rationale": "Captured evidence lacks raw /extract HTTP response bodies, search score lists below limit, and OpenViking request trace logs (telemetry was disabled in server config). Root cause cannot be conclusively discriminated without uncaptured evidence."
+      }
+    }
+  },
+  "hindsight_s1_recovery_inventory": {
+    "target_candidate": "Hindsight S1 Rank 2 Derived Observation Memory",
+    "expected_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+    "original_attempt_id": "20261001T183940Z-1fc4c4929532",
+    "requires_jetstream_read_only_access": true,
+    "persistent_database_location_contract": {
+      "host_target": "Jetstream instance jisheng3",
+      "persistent_disk_volume": "/dev/sdb mount",
+      "database_root_path": "<MEMLIFE_DATA_ROOT>/providers/hindsight/pg0",
+      "symlink_path": "/home/exouser/.pg0",
+      "database_url": "pg0://memlife-phase04",
+      "read_only_requirement": true
+    },
+    "repetitions": {
+      "r1": {
+        "run_id": "freeze-v1__hindsight__S1__r1",
+        "namespace": "memlife-freeze-v1-hindsight-S1-r1",
+        "provider_memory_id": "d21e1d56-8224-4f7b-b144-9e7124fe4ef4",
+        "observation_id": "d21e1d56-8224-4f7b-b144-9e7124fe4ef4",
+        "parent_source_id": "bacf3934-5a34-48da-9580-80606d5b9c33",
+        "source_event_ids": ["freeze-v1__hindsight__S1__r1__write-v1", "freeze-v1__hindsight__S1__r1__update-v2"],
+        "retrieval_candidate_ids": [
+          "freeze-v1__hindsight__S1__r1__final-old__candidate-2",
+          "freeze-v1__hindsight__S1__r1__final-new__candidate-2"
+        ],
+        "rank": 2
+      },
+      "r2": {
+        "run_id": "freeze-v1__hindsight__S1__r2",
+        "namespace": "memlife-freeze-v1-hindsight-S1-r2",
+        "provider_memory_id": "5adc67dd-1658-4ddf-a5e7-7b40e00d84a7",
+        "observation_id": "5adc67dd-1658-4ddf-a5e7-7b40e00d84a7",
+        "parent_source_id": "b2fa69b9-d719-4531-86e9-06c69fc739bb",
+        "source_event_ids": ["freeze-v1__hindsight__S1__r2__write-v1", "freeze-v1__hindsight__S1__r2__update-v2"],
+        "retrieval_candidate_ids": [
+          "freeze-v1__hindsight__S1__r2__final-old__candidate-2",
+          "freeze-v1__hindsight__S1__r2__final-new__candidate-2"
+        ],
+        "rank": 2
+      },
+      "r3": {
+        "run_id": "freeze-v1__hindsight__S1__r3",
+        "namespace": "memlife-freeze-v1-hindsight-S1-r3",
+        "provider_memory_id": "ea22a6bc-15be-4639-8060-c9eae4fcc5e5",
+        "observation_id": "ea22a6bc-15be-4639-8060-c9eae4fcc5e5",
+        "parent_source_id": "dfa63b99-ac6d-467b-b25e-bbc104545a2d",
+        "source_event_ids": ["freeze-v1__hindsight__S1__r3__write-v1", "freeze-v1__hindsight__S1__r3__update-v2"],
+        "retrieval_candidate_ids": [
+          "freeze-v1__hindsight__S1__r3__final-old__candidate-2",
+          "freeze-v1__hindsight__S1__r3__final-new__candidate-2"
+        ],
+        "rank": 2
+      }
+    },
+    "preferred_recovery_hierarchy": [
+      {
+        "priority": 1,
+        "method": "EXACT_PROVIDER_NATIVE_ID_LOOKUP",
+        "operation": "GET /v1/default/banks/{namespace}/memories/{provider_memory_id}",
+        "description": "Loopback HTTP lookup by exact recorded memory UUID against running Hindsight service in read-only mode."
+      },
+      {
+        "priority": 2,
+        "method": "EXACT_DATABASE_ROW_LOOKUP",
+        "operation": "SELECT text FROM memories WHERE id = '{provider_memory_id}' AND bank_id = '{namespace}';",
+        "description": "Direct read-only SQL row query against pg0 PostgreSQL database over persistent volume /dev/sdb."
+      },
+      {
+        "priority": 3,
+        "method": "EXACT_CONTENT_SHA_VERIFICATION",
+        "operation": "assert hashlib.sha256(text.encode('utf-8')).hexdigest() == expected_sha256",
+        "description": "Strict cryptographic verification. If hash does not match f0c061e0..., fail closed."
+      }
+    ],
+    "forbidden_recovery_methods": [
+      "semantic_search_re_query"
+    ]
+  },
+  "rq3_experimental_size": {
+    "status_label": "PROVISIONAL_UNTIL_CONTEXT_RECOVERY",
+    "contexts": 1,
+    "models": 3,
+    "repetitions": 3,
+    "conditions": 3,
+    "maximum_calls": 27,
+    "candidate_contexts": ["hindsight__S1"],
+    "condition_semantics": "UNDEFINED_PENDING_CONTEXT_RECOVERY",
+    "executed_calls": 0
+  }
+}
