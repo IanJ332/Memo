@@ -125,3 +125,28 @@ is no majority voting and no replacement of errors.
   work can proceed.
 - Lifecycle status is canonically `PASS|PARTIAL|BLOCKED`; historical
   `SUPPLEMENT_*` values remain backward-compatible aliases.
+
+## Phase 06B-S OpenViking missing-run supplement attempt
+
+- Attempt ID: `20261002T000350Z-c272b34d2cc3`.
+- Tested commit: `58e154a62e1c52e6a478e8f0e2041b437023582a`.
+- Status: **PASS**; planned/executed/success/error/not executed:
+  **10 / 10 / 10 / 0 / 0**.
+- Provider service: **started successfully**. Supplement raw rows: **10**. RQ3 calls and
+  downstream decision calls: **0**.
+- Lifecycle: exactly one; run-owned floating IP deleted; final VM independently
+  verified `SHELVED` with no external address; no retry attempted.
+- Original coverage plus supplement coverage combined is **42 / 42 / 41 / 1 / 0** and OpenViking S0 r2
+  remains the frozen `ERROR`.
+- Evidence: `artifacts/phase06b/supplements/attempts/20261002T000350Z-c272b34d2cc3/supplement-result.json`.
+
+## Phase 06B Closeout — Final Storage-Batch Inventory
+
+- Phase 06B frozen storage batch: **COMPLETE**.
+- Coverage: **42 / 42** (planned 42, executed 42, success 41, error 1, never executed 0).
+- Historical ERROR: **OpenViking S0 r2** (`RemoteDisconnected`, then `ServiceExitedBeforeReady`; preserved without rerun).
+- Jetstream: **SHELVED** (no active VM or external address).
+- RQ3: **not yet executed** (0 downstream decision model calls).
+- Next scientific step: **residual-only root-cause analysis / RQ3 eligibility review**.
+
+

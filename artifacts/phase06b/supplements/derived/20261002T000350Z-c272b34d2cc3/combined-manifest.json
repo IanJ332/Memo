@@ -1,0 +1,38 @@
+{
+  "artifact_kind": "DERIVED_ONLY",
+  "created_at": "2026-10-02T00:14:18.316043+00:00",
+  "freeze_id": "experiment-freeze-v1",
+  "freeze_sha256": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+  "row_count": 42,
+  "sources": [
+    {
+      "attempt_ids": [
+        "20261001T183940Z-1fc4c4929532"
+      ],
+      "path": "C:\\Users\\ian\\Desktop\\PROJECT\\Memo\\artifacts\\phase06b\\derived\\20261001T183940Z-1fc4c4929532\\freeze-v1-raw-runs.provenance-repaired.jsonl",
+      "role": "ORIGINAL",
+      "sha256": "80b82f177adf4a15659bc583df61c78dafaa034ac931b5592e22a47d01f67a9f",
+      "tested_commits": [
+        "a569a166093c626c5a99a7a33042e0aa7ddb7e74"
+      ]
+    },
+    {
+      "attempt_ids": [
+        "20261002T000350Z-c272b34d2cc3"
+      ],
+      "path": "artifacts\\phase06b\\supplements\\attempts\\20261002T000350Z-c272b34d2cc3\\supplement-raw-runs.jsonl",
+      "role": "SUPPLEMENT",
+      "sha256": "435fd4a78b7748f3f3972fe64be811bbbf07dac30931a6034b171c2ff1d46ea4",
+      "tested_commits": [
+        "58e154a62e1c52e6a478e8f0e2041b437023582a"
+      ]
+    }
+  ],
+  "transformation_rules": [
+    "infer execution_origin=ORIGINAL only in this derived view",
+    "retain supplement execution_origin=SUPPLEMENT",
+    "preserve source attempt_id and tested_git_commit",
+    "reject duplicate run IDs and preserve S0 r2 ERROR",
+    "do not majority-vote or replace observations"
+  ]
+}

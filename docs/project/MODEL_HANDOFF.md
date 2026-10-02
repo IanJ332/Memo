@@ -33,18 +33,18 @@ the main storage-lifecycle experiment.
 | Branch | `phase-06b-storage-batch` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Origin HEAD | `2224704e9bc8223a686a18c91e0eb879cb0a54d7` |
-| Current phase | Phase 06B-S2R2 local repair/validation passed; publication pending; S2 remains blocked with 0/10 executed |
+| Current phase | Phase 06B frozen storage batch: COMPLETE |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
-| Original attempt | `20261001T183940Z-1fc4c4929532` |
-| Tested experiment commit | `a569a166093c626c5a99a7a33042e0aa7ddb7e74` |
-| Blocked supplement attempt | `20261001T205742Z-67a4ab301c67`, tested commit `2224704e9bc8223a686a18c91e0eb879cb0a54d7` |
-| Phase 06B coverage | 42 planned; 32 executed; 31 success; 1 error; 10 never executed |
-| Provider coverage | Mem0 12/12; Hindsight 18/18; OpenViking 2/12 |
-| Frozen error | OpenViking S0 r2: `RemoteDisconnected`, then `ServiceExitedBeforeReady` |
+| Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
+| Tested experiment commit | `58e154a62e1c52e6a478e8f0e2041b437023582a` |
+| Successful supplement attempt | `20261002T000350Z-c272b34d2cc3`, tested commit `58e154a62e1c52e6a478e8f0e2041b437023582a` |
+| Phase 06B coverage | 42 / 42 (42 planned; 42 executed; 41 success; 1 error; 0 never executed combined) |
+| Provider coverage | Mem0 12/12; Hindsight 18/18; OpenViking 12/12 |
+| Frozen error | OpenViking S0 r2: historical ERROR (`RemoteDisconnected`, then `ServiceExitedBeforeReady`) |
 | Error root cause | `UNKNOWN`; classified only as provider process crash |
-| Residual cells | Mem0 S1; Hindsight S1; Hindsight S4 |
-| RQ3 calls | 0 |
+| Residual cells | Mem0 S1; Hindsight S1; Hindsight S4; OpenViking S4 (OpenViking S0 indexed by repetition disagreement) |
+| RQ3 calls | not yet executed (0 calls) |
 | Jetstream | Independently verified `SHELVED`, no external address; live execution is not authorized |
 
 The baseline HEAD above is the scientific handoff point. Local documentation
@@ -69,19 +69,14 @@ experiment or origin state.
   evidence serialization is complete, and lifecycle vocabulary is normalized.
   No scientific row or canonical source artifact changed.
 - Phase 06B-S2R2: local repair/validation passed; path-resolution bug (original raw artifact was bound to repo instead of MEMLIFE_DATA_ROOT) and SSH artifact-transfer timeout fragility identified. Published code at 88364966 was live-tested; Jetstream is shelved and provider never started. 10 frozen runs remain never executed. Local repair and validation of the path fix and bounded transfer retries passed; publication pending. No new live retry is authorized.
+- Phase 06B-S: 10 runs of OpenViking successfully executed under attempt `20261002T000350Z-c272b34d2cc3`. Combined view derived with 42/42 runs. Jetstream shelved.
 
 See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 [`EXPERIMENT_LEDGER.md`](EXPERIMENT_LEDGER.md) for canonical provenance.
 
 ## Next authorized action
 
-No live action is currently authorized. The next safe work remains **LOCAL
-REPAIR / VALIDATION**: review and publish/synchronize the S2R commits, then
-repeat the local gates from the published checkout. Publication does not
-authorize execution. Any later live attempt requires new explicit
-authorization. Until then, do not start Jetstream, execute any supplement run,
-execute RQ3, probe the remote provider-crash root cause, change Freeze v1, or
-rerun any completed repetition.
+No live action is currently authorized. Phase 06B frozen storage batch is COMPLETE with coverage 42 / 42. Historical ERROR OpenViking S0 r2 is preserved. Jetstream is SHELVED. RQ3 is not yet executed. The next scientific step is residual-only root-cause analysis / RQ3 eligibility review. Publication does not authorize new execution. Until then, do not start Jetstream, execute any supplement run, execute RQ3, probe the remote provider-crash root cause, change Freeze v1, or rerun any completed repetition.
 
 The dedicated runner derives only OpenViking S0 r3 and S2/S3/S4 r1–r3 from the
 validated plan. It uses a new attempt ID, emits

@@ -1,0 +1,116 @@
+{
+  "authorization": {
+    "jetstream_action": "KEEP_SHELVED",
+    "live_execution_authorized": false,
+    "rq3_authorized": false
+  },
+  "change_classification": {
+    "actual_bug_fix_required": false,
+    "experimental_behavior_change_authorized": false,
+    "required_change": "OBSERVABILITY_AND_EXECUTION_SCOPING_ONLY"
+  },
+  "eligible_run_ids": [
+    "freeze-v1__openviking__S0__r3",
+    "freeze-v1__openviking__S2__r1",
+    "freeze-v1__openviking__S2__r2",
+    "freeze-v1__openviking__S2__r3",
+    "freeze-v1__openviking__S3__r1",
+    "freeze-v1__openviking__S3__r2",
+    "freeze-v1__openviking__S3__r3",
+    "freeze-v1__openviking__S4__r1",
+    "freeze-v1__openviking__S4__r2",
+    "freeze-v1__openviking__S4__r3"
+  ],
+  "forbidden": {
+    "additional_repetitions": true,
+    "executed_run_ids": true,
+    "majority_voting": true,
+    "replacement_observations": true,
+    "retry_in_same_lifecycle": true,
+    "run_id_patterns": [
+      "freeze-v1__mem0__*",
+      "freeze-v1__hindsight__*",
+      "freeze-v1__openviking__S0__r1",
+      "freeze-v1__openviking__S0__r2",
+      "*__r4"
+    ]
+  },
+  "instrumentation": {
+    "classification": "OBSERVABILITY_ONLY",
+    "required_fields": [
+      "process_pid",
+      "process_exit_code",
+      "process_start_timestamp",
+      "process_stop_timestamp",
+      "process_alive",
+      "stdout_stderr_tail_sanitized",
+      "service_log_sha256",
+      "system_memory_before_launch",
+      "system_memory_before_each_run",
+      "system_memory_after_each_run",
+      "process_memory_before_each_run",
+      "process_memory_after_each_run",
+      "kernel_or_cgroup_oom_evidence",
+      "service_port_status",
+      "readiness_probe_result",
+      "http_error_details",
+      "task_or_extraction_status",
+      "root_free_bytes",
+      "volume_free_bytes"
+    ],
+    "must_not_change_experiment_semantics": true
+  },
+  "original_attempt": {
+    "derived_raw_path": "artifacts/phase06b/derived/20261001T183940Z-1fc4c4929532/freeze-v1-raw-runs.provenance-repaired.jsonl",
+    "derived_raw_sha256": "80b82f177adf4a15659bc583df61c78dafaa034ac931b5592e22a47d01f67a9f",
+    "error_run_ids": [
+      "freeze-v1__openviking__S0__r2"
+    ],
+    "executed_count": 32,
+    "id": "20261001T183940Z-1fc4c4929532",
+    "original_raw_sha256": "fe6f8cca390fa30b714e7635b9e7e56b987bd8303611f625c3258e90eaea2ef4",
+    "success_count": 31,
+    "tested_commit": "a569a166093c626c5a99a7a33042e0aa7ddb7e74"
+  },
+  "original_freeze": {
+    "id": "experiment-freeze-v1",
+    "modified": false,
+    "path": "experiments/freeze/experiment-freeze-v1.json",
+    "sha256": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b"
+  },
+  "plan_id": "phase06b-openviking-missing-runs-v1",
+  "plan_schema_version": "1.0",
+  "provenance": {
+    "combined_artifact_kind": "DERIVED_ONLY",
+    "execution_origin_values": [
+      "ORIGINAL",
+      "SUPPLEMENT"
+    ],
+    "original_rows_rewritten": false,
+    "required_row_fields": [
+      "attempt_id",
+      "execution_origin"
+    ]
+  },
+  "supplement_attempt": {
+    "artifact_creation": "EXCLUSIVE_IMMUTABLE_ATTEMPT_SCOPED",
+    "attempt_id": null,
+    "attempt_id_must_differ_from_original": true,
+    "intervening_changes_manifest_required": true,
+    "local_artifact_path_template": "artifacts/phase06b/supplements/attempts/{attempt_id}/",
+    "provider": "openviking",
+    "provider_configuration_sha256": "ad1216520de78aa6dd6fe0c34393e3830b05b035aa7dda367d92725dafe53258",
+    "provider_version": "0.4.22",
+    "remote_artifact_path_template": "<live-mount>/memlife/runs/phase06b/supplements/attempts/{attempt_id}/",
+    "repetitions_added": 0,
+    "run_count": 10,
+    "tested_commit_required": true
+  },
+  "stop_rule": {
+    "cleanup_owned_resources": true,
+    "preserve_current_result_and_diagnostics": true,
+    "retry_same_lifecycle": false,
+    "shelve_if_opened_by_run": true,
+    "stop_remaining_runs_on_service_integrity_loss": true
+  }
+}

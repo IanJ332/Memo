@@ -1,0 +1,10 @@
+{
+  "artifact_kind": "OPERATIONAL_COVERAGE_METADATA",
+  "attempt_id": "20261002T000350Z-c272b34d2cc3",
+  "blocked_not_executed": 0,
+  "error": 0,
+  "executed": 10,
+  "planned": 10,
+  "scientific_observation": false,
+  "success": 10
+}

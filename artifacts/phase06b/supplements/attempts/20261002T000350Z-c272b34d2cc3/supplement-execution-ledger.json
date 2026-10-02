@@ -1,0 +1,73 @@
+{
+  "attempt_id": "20261002T000350Z-c272b34d2cc3",
+  "blocked_not_executed": [],
+  "completed_run_ids": [
+    "freeze-v1__openviking__S0__r3",
+    "freeze-v1__openviking__S2__r1",
+    "freeze-v1__openviking__S2__r2",
+    "freeze-v1__openviking__S2__r3",
+    "freeze-v1__openviking__S3__r1",
+    "freeze-v1__openviking__S3__r2",
+    "freeze-v1__openviking__S3__r3",
+    "freeze-v1__openviking__S4__r1",
+    "freeze-v1__openviking__S4__r2",
+    "freeze-v1__openviking__S4__r3"
+  ],
+  "error_run_ids": [],
+  "execution_origin": "SUPPLEMENT",
+  "planned_run_ids": [
+    "freeze-v1__openviking__S0__r3",
+    "freeze-v1__openviking__S2__r1",
+    "freeze-v1__openviking__S2__r2",
+    "freeze-v1__openviking__S2__r3",
+    "freeze-v1__openviking__S3__r1",
+    "freeze-v1__openviking__S3__r2",
+    "freeze-v1__openviking__S3__r3",
+    "freeze-v1__openviking__S4__r1",
+    "freeze-v1__openviking__S4__r2",
+    "freeze-v1__openviking__S4__r3"
+  ],
+  "run_statuses": [
+    {
+      "run_id": "freeze-v1__openviking__S0__r3",
+      "status": "SUCCESS"
+    },
+    {
+      "run_id": "freeze-v1__openviking__S2__r1",
+      "status": "SUCCESS"
+    },
+    {
+      "run_id": "freeze-v1__openviking__S2__r2",
+      "status": "SUCCESS"
+    },
+    {
+      "run_id": "freeze-v1__openviking__S2__r3",
+      "status": "SUCCESS"
+    },
+    {
+      "run_id": "freeze-v1__openviking__S3__r1",
+      "status": "SUCCESS"
+    },
+    {
+      "run_id": "freeze-v1__openviking__S3__r2",
+      "status": "SUCCESS"
+    },
+    {
+      "run_id": "freeze-v1__openviking__S3__r3",
+      "status": "SUCCESS"
+    },
+    {
+      "run_id": "freeze-v1__openviking__S4__r1",
+      "status": "SUCCESS"
+    },
+    {
+      "run_id": "freeze-v1__openviking__S4__r2",
+      "status": "SUCCESS"
+    },
+    {
+      "run_id": "freeze-v1__openviking__S4__r3",
+      "status": "SUCCESS"
+    }
+  ],
+  "same_lifecycle_retries": 0
+}
