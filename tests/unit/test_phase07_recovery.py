@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import inspect
 import json
+import sys
+import uuid
 from pathlib import Path
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
 from unittest.mock import MagicMock
 
 import pytest
@@ -432,6 +434,76 @@ def test_schema_missing_required_column_fails():
     cursor = ScriptedCursor(columns=sorted(recovery.REQUIRED_COLUMNS - {"text"}))
     with pytest.raises(recovery.SchemaVerificationError, match="text"):
         recovery.verify_schema(cursor)
+
+
+def test_native_uuid_array_normalizes_to_string_ids():
+    parents = [
+        uuid.UUID("bacf3934-5a34-48da-9580-80606d5b9c33"),
+        uuid.UUID("b2fa69b9-d719-4531-86e9-06c69fc739bb"),
+    ]
+    assert recovery._normalize_source_ids(parents) == [str(item) for item in parents]
+
+
+def test_connect_registers_uuid_typecaster_before_controller_queries(monkeypatch):
+    events = []
+
+    class OrderingCursor:
+        def __init__(self):
+            self._one = None
+
+        def execute(self, query, params=None):
+            events.append(("query", query, params))
+            if query == "SHOW transaction_read_only;":
+                self._one = ("on",)
+
+        def fetchone(self):
+            return self._one
+
+    class OrderingConnection:
+        def __init__(self):
+            self.autocommit = True
+            self._cursor = OrderingCursor()
+
+        def cursor(self):
+            return self._cursor
+
+    connection = OrderingConnection()
+    psycopg2 = ModuleType("psycopg2")
+    extras = ModuleType("psycopg2.extras")
+
+    def connect(uri, *, options):
+        events.append(("connect", uri, options))
+        return connection
+
+    def register_uuid(*, conn_or_curs):
+        events.append(("register_uuid", conn_or_curs))
+
+    psycopg2.connect = connect
+    extras.register_uuid = register_uuid
+    monkeypatch.setitem(sys.modules, "psycopg2", psycopg2)
+    monkeypatch.setitem(sys.modules, "psycopg2.extras", extras)
+
+    returned = recovery._connect_read_only("postgresql://synthetic")
+    recovery.begin_read_only_transaction(returned)
+
+    assert returned is connection
+    assert connection.autocommit is False
+    assert events == [
+        (
+            "connect",
+            "postgresql://synthetic",
+            "-c default_transaction_read_only=on",
+        ),
+        ("register_uuid", connection),
+        ("query", "BEGIN TRANSACTION READ ONLY;", None),
+        ("query", "SHOW transaction_read_only;", None),
+    ]
+
+
+def test_postgresql_uuid_array_literal_is_not_manually_parsed():
+    raw_array = "{bacf3934-5a34-48da-9580-80606d5b9c33}"
+    with pytest.raises(recovery.TargetError, match="not valid JSON"):
+        recovery._normalize_source_ids(raw_array)
 
 
 def test_all_three_exact_select_parameter_pairs(expected_text_hash):

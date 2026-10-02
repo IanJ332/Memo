@@ -2,7 +2,7 @@
 
 > **Implementation:** `IMPLEMENTED LOCALLY`
 > **Future live action:** `NOT AUTHORIZED`
-> **Live recovery:** `NOT EXECUTED`
+> **Live recovery:** `ATTEMPT 1 FAIL_CLOSED; AUTHORIZED LIFECYCLE CONSUMED`
 > **RQ3 calls:** `0`
 > **Jetstream:** `SHELVED`
 > **Governing principle:** *Retrieved != Authoritative*
@@ -20,8 +20,8 @@ attempt artifact emission.
 
 Those lifecycle controls are now implemented locally in
 `scripts/phase07_hindsight_recovery.py` and covered by
-`tests/unit/test_phase07_recovery.py`. This local implementation does not
-authorize or perform recovery.
+`tests/unit/test_phase07_recovery.py`. Local implementation and correction do
+not authorize another recovery lifecycle.
 
 ## Implemented locally
 
@@ -193,6 +193,13 @@ working directory, `PGDATA`, open paths, or data-directory arguments. Copied
 PGDATA must also contain no `postmaster.pid`. The controller does not kill a
 remaining process and never invokes pg0 drop.
 
+Immediately after opening the psycopg2 connection and before any recovery
+query, the controller registers psycopg2's standard UUID typecaster on that
+same connection. PostgreSQL `UUID` and `UUID[]` values therefore enter the
+existing native `uuid.UUID` / sequence normalization path. PostgreSQL array
+literal text is not manually parsed; absence or failure of driver type
+adaptation remains fail-closed.
+
 ### Fixed schema and targets
 
 Only `public.memory_units` is accepted. Required columns are `id`, `bank_id`,
@@ -253,12 +260,40 @@ scientific `PASS`, even if `recovery-result.json` says `PASS`. Acceptance also
 requires recomputing every listed hash and verifying attempt-ID and status
 consistency.
 
+## Live attempt 1 — completed failure
+
+The single authorized Phase 07B recovery lifecycle produced the following safe
+attempt metadata:
+
+| Field | Value |
+| --- | --- |
+| Attempt ID | `20261002T230932Z-e018c8b90793` |
+| Classification | `FAIL_CLOSED` |
+| Cause | Controller `UUID[]` driver-type adaptation defect |
+| Original source SHA before | `fce438625dcf9c6775b8172e482bd1e535ed66502bb808a7c4d27501e53a2d0d` |
+| Original source SHA after copy | `fce438625dcf9c6775b8172e482bd1e535ed66502bb808a7c4d27501e53a2d0d` |
+| Original source final SHA | `fce438625dcf9c6775b8172e482bd1e535ed66502bb808a7c4d27501e53a2d0d` |
+| Original evidence unchanged | `YES` |
+| Completion marker | `VALID / FAIL_CLOSED` |
+| Recovery pg0 cleanup | `VERIFIED` |
+| Hindsight API calls | `0` |
+| Provider model calls | `0` |
+| RQ3 calls | `0` |
+| Phase 06B reruns | `0` |
+| Jetstream final state | `SHELVED` |
+
+The attempt is **not interpreted as provider behavior** because target lineage
+normalization failed in the recovery harness. It is not a Hindsight lifecycle
+result, a missing residual, a lineage mismatch, or an RQ3 result. No password,
+connection URI, floating IP, secret, or raw recovered memory text is recorded
+here.
+
 ## Future live action — not authorized
 
-No live command in this document is authorized by publication of the local
-controller. A separate execution prompt would have to authorize a managed
-Jetstream lifecycle and identify the exact published commit to test. Only then
-could an operator:
+The single authorized live recovery lifecycle has been consumed. No command in
+this document authorizes another recovery attempt. A separate future execution
+prompt would have to authorize a new managed Jetstream lifecycle and identify
+the exact published commit to test. Only then could an operator:
 
 1. verify Jetstream and persistent-volume state under the managed lifecycle;
 2. run the controller with the retained Hindsight provider interpreter and a
@@ -284,6 +319,6 @@ could an operator:
 - Rerunning or replacing any Phase 06B repetition.
 - Pushing the local implementation commit.
 
-As of this document update, live recovery has not run, no recovery artifact
-contains empirical target text, Jetstream remains shelved, and RQ3 calls remain
-zero.
+As of this document update, attempt 1 is a completed `FAIL_CLOSED` harness
+failure, Jetstream remains shelved, no further recovery is authorized, and RQ3
+calls remain zero.

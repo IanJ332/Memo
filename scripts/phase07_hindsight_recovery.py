@@ -1109,11 +1109,13 @@ class Pg0RecoveryRuntime:
 
 def _connect_read_only(uri: str) -> Any:
     import psycopg2
+    from psycopg2.extras import register_uuid
 
     connection = psycopg2.connect(
         uri,
         options="-c default_transaction_read_only=on",
     )
+    register_uuid(conn_or_curs=connection)
     connection.autocommit = False
     return connection
 
