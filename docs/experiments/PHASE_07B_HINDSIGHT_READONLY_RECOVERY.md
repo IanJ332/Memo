@@ -1,8 +1,8 @@
 # Phase 07B — Hindsight Read-Only Recovery
 
-> **Implementation:** `IMPLEMENTED LOCALLY`
+> **Implementation:** `PUBLISHED / EXECUTED`
 > **Future live action:** `NOT AUTHORIZED`
-> **Live recovery:** `ATTEMPT 1 FAIL_CLOSED; AUTHORIZED LIFECYCLE CONSUMED`
+> **Live recovery:** `ATTEMPT 1 FAIL_CLOSED; ATTEMPT 2 PASS; SCIENTIFIC CLOSURE REACHED`
 > **RQ3 calls:** `0`
 > **Jetstream:** `SHELVED`
 > **Governing principle:** *Retrieved != Authoritative*
@@ -288,37 +288,68 @@ result, a missing residual, a lineage mismatch, or an RQ3 result. No password,
 connection URI, floating IP, secret, or raw recovered memory text is recorded
 here.
 
+## Live attempt 2 — completed success
+
+The authorized corrective Phase 07B recovery lifecycle produced the following verified attempt metadata:
+
+| Field | Value |
+| --- | --- |
+| Attempt ID | `20261003T003809Z-7a3425bf2f4c` |
+| Status | `PASS` |
+| Completion marker | `VALID / PASS` |
+| Read-only transaction | `transaction_read_only = true` (`SHOW transaction_read_only` returned `on`) |
+| Recovery pg0 cleanup | `VERIFIED` (`recovery_pg0_cleanup_verified = true`) |
+| Errors | `[]` (0 errors) |
+| Target success count | `3 / 3` |
+| Original source SHA before | `fce438625dcf9c6775b8172e482bd1e535ed66502bb808a7c4d27501e53a2d0d` |
+| Original source SHA after copy | `fce438625dcf9c6775b8172e482bd1e535ed66502bb808a7c4d27501e53a2d0d` |
+| Original source final SHA | `fce438625dcf9c6775b8172e482bd1e535ed66502bb808a7c4d27501e53a2d0d` |
+| Original evidence unchanged | `YES` (`before == after-copy == after`) |
+| Hindsight API calls | `0` |
+| Provider model calls | `0` |
+| RQ3 calls | `0` |
+| Phase 06B reruns | `0` |
+| Jetstream final state | `SHELVED` |
+
+### Mandatory Evidence Hashes
+
+| Artifact | Byte SHA-256 |
+| --- | --- |
+| `recovery-ledger.json` | `4e88e54bcd0a2b00d3b7895adc5fb505f829ad28b04094da2fa7b876b82107ab` |
+| `recovery-result.json` | `9505e4b16f9c2c32b43d6a88b56b101636f219d19ab05f5bc3c74f57ff04b89a` |
+| `source-integrity-after.json` | `6197e54a663753593e35c9a947f83564edfe10e474223ba0559716e1cc4b1e88` |
+| `source-integrity-before.json` | `2048a865f51afba7ee27de36e6d76b50082a409da7fbca7e7bef4a562c71231c` |
+
+### Exact Target Recoveries
+
+| Target Repetition | Provider Memory ID | Expected Parent ID | Parent Match | Recovered Candidate Text | Recovered UTF-8 SHA-256 | raw == norm |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `r1` | `d21e1d56-8224-4f7b-b144-9e7124fe4ef4` | `bacf3934-5a34-48da-9580-80606d5b9c33` | **YES** | `Project Alder reports may be sent only to Bob.` | `f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6` | **YES** |
+| `r2` | `5adc67dd-1658-4ddf-a5e7-7b40e00d84a7` | `b2fa69b9-d719-4531-86e9-06c69fc739bb` | **YES** | `Project Alder reports may be sent only to Bob.` | `f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6` | **YES** |
+| `r3` | `ea22a6bc-15be-4639-8060-c9eae4fcc5e5` | `dfa63b99-ac6d-467b-b25e-bbc104545a2d` | **YES** | `Project Alder reports may be sent only to Bob.` | `f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6` | **YES** |
+
+### Content Identity and Scientific Closure
+
+- **Canonical Facts in Repository:**
+  - `ALDER_V1`: `Project Alder reports may be sent to Alice.` (`SHA-256: d2adb98450de1e8e9257d915779f9ee79c489d17c5d1e4ccea012a7c1f4153a4`)
+- **Content Identity Result:** The recovered derived observation proposition across all three repetitions **exactly matches the canonical ALDER_V2 proposition body** ("...only to Bob.") and **does not match the stale ALDER_V1 proposition** ("...to Alice.").
+  - *Record Byte Identity vs Proposition Identity:* The recovered derived bytes (`Project Alder reports may be sent only to Bob.`, SHA-256 `f0c061e0...`) are **NOT byte-identical** to the per-run authoritative source records (`freeze-v1__hindsight__S1__r{N}: Project Alder reports may be sent only to Bob.`) because each source record includes the run-specific prefix. However, because the proposition itself expresses the current v2/Bob policy rather than stale v1/Alice, this distinction does not affect RQ3 exclusion: there is no stale proposition exposure.
+- **Scientific Reclassification:** Hindsight S1 is reclassified as `PROVENANCE_LINEAGE_RESIDUAL_CURRENT_CONTENT` with `rq3_eligibility = NO`.
+- **RQ3 Status:** Empirical eligible RQ3 contexts count = `0`. Executed RQ3 calls = `0`. RQ3 status is `NOT ACTIVATED`. Provisional 27-call plan is retired.
+- **RQ4 Implication:** Hindsight S1 serves as a vital negative control for authority mediation (suppressing records with superseded ancestry would suppress current valid v2 content).
+
 ## Future live action — not authorized
 
-The single authorized live recovery lifecycle has been consumed. No command in
-this document authorizes another recovery attempt. A separate future execution
-prompt would have to authorize a new managed Jetstream lifecycle and identify
-the exact published commit to test. Only then could an operator:
-
-1. verify Jetstream and persistent-volume state under the managed lifecycle;
-2. run the controller with the retained Hindsight provider interpreter and a
-   new attempt ID;
-3. retrieve only `source-integrity-before.json`,
-   `source-integrity-after.json`, `recovery-result.json`,
-   `recovery-ledger.json`, and `recovery-complete.json` without rewriting
-   them;
-4. before local acceptance, verify the completion marker, every listed
-   SHA-256, and attempt-ID consistency;
-5. do not download or commit `pg0-copy/` or `pg0-home/`;
-6. clean up only resources owned by that authorized lifecycle; and
-7. return Jetstream to `SHELVED` if that lifecycle opened it.
+Recovery is complete and scientific closure has been recorded. No further live recovery is authorized or needed. Jetstream remains `SHELVED`.
 
 ## Explicitly not authorized
 
 - Contacting, unshelving, probing, or changing Jetstream.
 - Starting the original `memlife-phase04` data directory.
 - Starting `hindsight-api` or initializing Hindsight application code.
-- HTTP recovery, semantic recall, consolidation, MemoryEngine, migrations, or
-  any write/replay path.
+- HTTP recovery, semantic recall, consolidation, MemoryEngine, migrations, or any write/replay path.
 - RQ3 decision-model calls.
 - Rerunning or replacing any Phase 06B repetition.
-- Pushing the local implementation commit.
+- Pushing any new Phase07 scientific-closure changes without separate user authorization.
 
-As of this document update, attempt 1 is a completed `FAIL_CLOSED` harness
-failure, Jetstream remains shelved, no further recovery is authorized, and RQ3
-calls remain zero.
+As of this document update, attempt 2 is a completed `PASS` recovery, Jetstream remains shelved, no further recovery is authorized, and RQ3 calls remain zero.

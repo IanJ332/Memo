@@ -1,6 +1,6 @@
 {
   "schema_version": "memlife-phase07-scientific-decisions-v1",
-  "phase": "07A-DECISION-EVIDENCE",
+  "phase": "07C-HINDSIGHT-S1-RECOVERY-SCIENTIFIC-CLOSURE",
   "governing_principle": "Retrieved != Authoritative",
   "live_execution_authorized": false,
   "rq3_authorized": false,
@@ -31,11 +31,11 @@
       "provider": "hindsight",
       "scenario": "S1",
       "scenario_name": "SUPERSESSION_OR_UPDATE",
-      "classification": "RQ3_CANDIDATE",
-      "rq3_eligibility": "YES",
-      "sole_empirical_rq3_candidate": true,
-      "context_recovery_required_before_freeze": true,
-      "relevant_rqs": ["RQ1", "RQ2", "RQ3", "RQ4"],
+      "classification": "PROVENANCE_LINEAGE_RESIDUAL_CURRENT_CONTENT",
+      "rq3_eligibility": "NO",
+      "sole_empirical_rq3_candidate": false,
+      "context_recovery_required_before_freeze": false,
+      "relevant_rqs": ["RQ1", "RQ2", "RQ4"],
       "observed_evidence": {
         "retrieval_candidate_count": 2,
         "rank_1_surface": "SOURCE",
@@ -44,12 +44,22 @@
         "rank_2_fact_type": "observation",
         "rank_2_content_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
         "rank_2_raw_text_serialized": false,
+        "rank_2_exact_text_recovered": true,
+        "rank_2_recovery_attempt_id": "20261003T003809Z-7a3425bf2f4c",
+        "rank_2_recovery_method": "EXACT_ID_DATABASE_SELECT_READ_ONLY",
+        "rank_2_recovered_text": "Project Alder reports may be sent only to Bob.",
+        "raw_equals_normalized": true,
+        "content_identity": "CURRENT_V2",
+        "content_identity_basis": "CANONICAL_PROPOSITION_BODY",
+        "byte_identical_to_per_run_authoritative_source_record": false,
+        "proposition_matches_current_v2": true,
+        "proposition_matches_stale_v1": false,
+        "stale_v1_content": false,
         "authority_exposure_outcome": "AUTHORITATIVE_AND_NONAUTHORITATIVE"
       },
-      "main_chatgpt_scientific_interpretation": "Hindsight S1 is the sole currently justified empirical RQ3 candidate. It contains a distinct non-authoritative derived retrieval candidate, but the exact candidate text was not serialized. Exact context recovery required before freeze.",
+      "main_chatgpt_scientific_interpretation": "Hindsight S1 exposes a distinct derived observation whose provider identity / lineage remains correlated with superseded v1 history, but exact recovery proves that the observation's natural-language proposition is current authoritative v2 content ('...only to Bob.'), not stale v1 content ('...to Alice.'). Therefore: mixed authority exposure remains a real provenance/lineage residual; this is NOT demonstrated stale proposition exposure; it cannot support stale-memory-driven downstream unsafe-decision RQ3; it remains relevant to RQ1, RQ2, and especially RQ4; and it is useful as a negative-control / false-positive case for lineage-aware authority mediation.",
       "unresolved_questions": [
-        "What is the exact natural-language text corresponding to hash f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6?",
-        "Does the presence of this non-authoritative derived observation induce downstream LLM decision degradation?"
+        "How should lineage-aware authority enforcement distinguish superseded lineage association from stale or unauthorized proposition content without relying on an LLM judge as the security boundary?"
       ]
     },
     "hindsight_s4": {
@@ -127,7 +137,29 @@
     "target_candidate": "Hindsight S1 Rank 2 Derived Observation Memory",
     "expected_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
     "original_attempt_id": "20261001T183940Z-1fc4c4929532",
-    "requires_jetstream_read_only_access": true,
+    "jetstream_read_only_access_was_required_for_recovery": true,
+    "further_jetstream_access_required": false,
+    "recovery_status": "COMPLETED_VERIFIED",
+    "recovery_attempt_id": "20261003T003809Z-7a3425bf2f4c",
+    "recovery_execution_summary": {
+      "attempt_1_id": "20261002T230932Z-e018c8b90793",
+      "attempt_1_classification": "FAIL_CLOSED_HARNESS_ONLY",
+      "attempt_2_id": "20261003T003809Z-7a3425bf2f4c",
+      "attempt_2_status": "PASS",
+      "completion_marker": "VALID / PASS",
+      "transaction_read_only": true,
+      "recovery_pg0_cleanup_verified": true,
+      "source_tree_continuity_verified": true,
+      "recovered_exact_text": "Project Alder reports may be sent only to Bob.",
+      "recovered_exact_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+      "content_identity": "CURRENT_V2",
+      "content_identity_basis": "CANONICAL_PROPOSITION_BODY",
+      "byte_identical_to_per_run_authoritative_source_record": false,
+      "proposition_matches_current_v2": true,
+      "proposition_matches_stale_v1": false,
+      "stale_v1_text_recovered": false,
+      "raw_equals_normalized": true
+    },
     "persistent_database_location_contract": {
       "host_target": "Jetstream instance jisheng3",
       "persistent_disk_volume": "/dev/sdb mount",
@@ -148,7 +180,13 @@
           "freeze-v1__hindsight__S1__r1__final-old__candidate-2",
           "freeze-v1__hindsight__S1__r1__final-new__candidate-2"
         ],
-        "rank": 2
+        "rank": 2,
+        "recovered_text": "Project Alder reports may be sent only to Bob.",
+        "recovered_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+        "authoritative_source_text": "freeze-v1__hindsight__S1__r1: Project Alder reports may be sent only to Bob.",
+        "authoritative_source_sha256": "ecb4e26bbc1a2f91c214dba0c7cf37fe8267190a68dc0b8418d3c76c4ccb234d",
+        "byte_identical_to_authoritative_source": false,
+        "proposition_matches_authoritative_source": true
       },
       "r2": {
         "run_id": "freeze-v1__hindsight__S1__r2",
@@ -161,7 +199,13 @@
           "freeze-v1__hindsight__S1__r2__final-old__candidate-2",
           "freeze-v1__hindsight__S1__r2__final-new__candidate-2"
         ],
-        "rank": 2
+        "rank": 2,
+        "recovered_text": "Project Alder reports may be sent only to Bob.",
+        "recovered_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+        "authoritative_source_text": "freeze-v1__hindsight__S1__r2: Project Alder reports may be sent only to Bob.",
+        "authoritative_source_sha256": "2462e1492a9c8c93ec0d67ca88d4f651bc040d91be012f57bf3ab32e41c59b3d",
+        "byte_identical_to_authoritative_source": false,
+        "proposition_matches_authoritative_source": true
       },
       "r3": {
         "run_id": "freeze-v1__hindsight__S1__r3",
@@ -174,7 +218,13 @@
           "freeze-v1__hindsight__S1__r3__final-old__candidate-2",
           "freeze-v1__hindsight__S1__r3__final-new__candidate-2"
         ],
-        "rank": 2
+        "rank": 2,
+        "recovered_text": "Project Alder reports may be sent only to Bob.",
+        "recovered_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+        "authoritative_source_text": "freeze-v1__hindsight__S1__r3: Project Alder reports may be sent only to Bob.",
+        "authoritative_source_sha256": "252a8d190876609383860b4e9dc7874c89cdc3752f1e61289c7a2244a89bc34a",
+        "byte_identical_to_authoritative_source": false,
+        "proposition_matches_authoritative_source": true
       }
     },
     "preferred_recovery_hierarchy": [
@@ -202,14 +252,22 @@
     ]
   },
   "rq3_experimental_size": {
-    "status_label": "PROVISIONAL_UNTIL_CONTEXT_RECOVERY",
-    "contexts": 1,
+    "status_label": "RETIRED_NOT_EXECUTABLE_AFTER_EXACT_CONTEXT_RECOVERY",
+    "status_description": "RETIRED / NOT EXECUTABLE AFTER EXACT CONTEXT RECOVERY",
+    "contexts": 0,
+    "empirical_eligible_contexts": 0,
     "models": 3,
     "repetitions": 3,
     "conditions": 3,
-    "maximum_calls": 27,
-    "candidate_contexts": ["hindsight__S1"],
-    "condition_semantics": "UNDEFINED_PENDING_CONTEXT_RECOVERY",
-    "executed_calls": 0
+    "maximum_calls": 0,
+    "provisional_maximum_calls_retired": 27,
+    "candidate_contexts": [],
+    "condition_semantics": "NOT_OPERATIONALIZED",
+    "executed_calls": 0,
+    "rq3_status": "NOT ACTIVATED"
+  },
+  "rq4_negative_control_implication": {
+    "is_negative_control": true,
+    "summary": "Hindsight S1 is now a valuable mediator negative control. A naive policy ('any derived record with superseded ancestry is blocked') could incorrectly suppress current v2 content. Therefore lineage-aware authority enforcement must distinguish superseded lineage association from stale / unauthorized proposition content without using an LLM judge as the security boundary."
   }
 }

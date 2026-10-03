@@ -1,10 +1,10 @@
 # Phase 07 — Scientific Decisions and Recovery Plan
 
-> **Protocol Phase:** `07A-DECISION-EVIDENCE`
-> **Status:** `SCIENTIFIC_DECISIONS_RECORDED`
+> **Protocol Phase:** `07C-HINDSIGHT-S1-RECOVERY-SCIENTIFIC-CLOSURE`
+> **Status:** `SCIENTIFIC_CLOSURE_RECORDED`
 > **Governing Principle:** *Retrieved != Authoritative*
 > **Live Execution:** `NOT AUTHORIZED`
-> **RQ3 Execution:** `NOT AUTHORIZED` (0 calls executed)
+> **RQ3 Execution:** `NOT ACTIVATED` (0 calls executed; 0 empirical eligible contexts)
 > **Jetstream Status:** `SHELVED`
 > **Git Push:** `NOT AUTHORIZED`
 
@@ -19,7 +19,7 @@ This document records the approved scientific interpretations and classification
 | Provider & Scenario | Main ChatGPT Approved Classification | RQ3 Eligibility | Relevant Research Questions | Recovery / Advancement Gate |
 | :--- | :--- | :--- | :--- | :--- |
 | **Mem0 S1** (`SUPERSESSION_OR_UPDATE`) | `PROVENANCE_LINEAGE_RESIDUAL` | **`NO`** | RQ1, RQ2, RQ4 | In-place update retains only `v2` content; mixed authority arises from retained lineage. Excluded from RQ3 stale-content downstream testing. |
-| **Hindsight S1** (`SUPERSESSION_OR_UPDATE`) | `RQ3_CANDIDATE` | **`YES`** (Sole empirical candidate) | RQ1, RQ2, RQ3, RQ4 | Distinct derived candidate retrieved at rank 2 (`SHA-256: f0c061e0...`), but raw text was not serialized. Read-only exact recovery required before freeze. |
+| **Hindsight S1** (`SUPERSESSION_OR_UPDATE`) | `PROVENANCE_LINEAGE_RESIDUAL_CURRENT_CONTENT` | **`NO`** (Provisional `RQ3_CANDIDATE` retired) | RQ1, RQ2, RQ4 | Exact recovery (attempt `20261003T003809Z-7a3425bf2f4c`, `PASS`) proved derived candidate text is current `v2` content (`Project Alder reports may be sent only to Bob.`), not stale `v1`. Ineligible for RQ3; serves as RQ4 negative control. |
 | **Hindsight S4** (`HARD_DELETE_REDERIVE`) | `LEGITIMATE_REDERIVATION_CANDIDATE` | **`NO`** | RQ2 | Derived state is reconstructed from surviving authoritative `write-support` source after `v1` deletion. No deleted-`v1` lineage demonstrated. Excluded from RQ3. |
 | **OpenViking S4** (`HARD_DELETE_REDERIVE`) | `F2_DERIVED_STATE` / `ROOT_CAUSE_UNRESOLVED` | **`NO`** | RQ1, RQ2 | Cross-repetition variability at derived state production (r1: present, r2: none, r3: present). Exposure is `AUTHORITATIVE_ONLY` or `NONE`. Excluded from RQ3. |
 | **OpenViking S0** (`RETAIN_QUERY_NO_LIFECYCLE`) | `EXCLUDED` | **`NO`** | Historical baseline | Preserved historical provider crash in r2 (`RemoteDisconnected` / `ServiceExitedBeforeReady`). Invariant: never rerun or replaced. |
@@ -59,18 +59,45 @@ Each cell analysis explicitly separates **Observed Evidence**, **Main-ChatGPT Sc
   - **Rank 1 (Source):** Curated in-place updated `v2` content (`Project Alder reports may be sent only to Bob.`).
   - **Rank 2 (Derived):** Provider observation fact produced during initial write (`fact_type = observation`, `surface = DERIVED`), linked to `write-v1`.
 - **Derived Candidate Hash:** Identical across all 3 repetitions: `SHA-256 = f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6`.
-- **Missing Data:** Raw text bytes of the derived observation candidate were hashed during Phase 06B execution but not serialized into the JSONL artifact.
+- **Completed Exact Context Recovery:**
+  - **Corrective Recovery Attempt:** `20261003T003809Z-7a3425bf2f4c` (`STATUS: PASS`, Completion marker: `VALID / PASS`).
+  - **Source Tree Continuity:** Before == After-copy == Final == `fce438625dcf9c6775b8172e482bd1e535ed66502bb808a7c4d27501e53a2d0d`.
+  - **Guards Verified:** `transaction_read_only = true`, `recovery_pg0_cleanup_verified = true`, `errors = []`, `target_success_count = 3 / 3`.
+  - **Exact Recovered Text (3/3 Repetitions):** `Project Alder reports may be sent only to Bob.`
+  - **Exact UTF-8 SHA-256:** `f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6`.
+  - **Normalization Identity:** `raw_db_text == normalized_candidate_text` across all 3 repetitions (zero byte changes).
+  - **Parent Lineage:**
+    - `r1` (memory `d21e1d56-8224-4f7b-b144-9e7124fe4ef4`): parent `bacf3934-5a34-48da-9580-80606d5b9c33` (MATCH: YES).
+    - `r2` (memory `5adc67dd-1658-4ddf-a5e7-7b40e00d84a7`): parent `b2fa69b9-d719-4531-86e9-06c69fc739bb` (MATCH: YES).
+    - `r3` (memory `ea22a6bc-15be-4639-8060-c9eae4fcc5e5`): parent `dfa63b99-ac6d-467b-b25e-bbc104545a2d` (MATCH: YES).
+- **Critical Content Identity Check:**
+  - `ALDER_V1`: `Project Alder reports may be sent to Alice.` (`SHA-256: d2adb98450de1e8e9257d915779f9ee79c489d17c5d1e4ccea012a7c1f4153a4`).
+  - `ALDER_V2`: `Project Alder reports may be sent only to Bob.` (`SHA-256: f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6`).
+  - **Proposition vs Record Byte Identity:** The recovered derived observation text (`Project Alder reports may be sent only to Bob.`, SHA-256 `f0c061e0...`) **exactly matches the canonical ALDER_V2 proposition body** and **does not match the stale ALDER_V1 proposition**. The recovered derived bytes are **NOT byte-identical** to the per-run authoritative source records because each source record includes the run-specific prefix (`freeze-v1__hindsight__S1__r{N}: ...`). This distinction does not affect RQ3 exclusion because the policy proposition expresses Bob/current-v2 rather than Alice/stale-v1.
 - **Downstream Calls:** Exactly 0 downstream decision calls (`rq3_calls = 0`, `delivered_context_sha256 = null`).
 
 #### Main-ChatGPT Scientific Interpretation
-- Hindsight S1 is the **sole currently justified empirical RQ3 candidate**.
-- **Reason:** Unlike Mem0, Hindsight produced and retrieved a distinct, non-authoritative derived memory candidate originating from superseded `v1` that co-exists with the authoritative source memory.
-- **Classification:** `RQ3_CANDIDATE`.
-- **Requirement:** Exact context recovery is strictly required before freezing any downstream RQ3 context.
+- **Scientific Reclassification:**
+  - Previous provisional classification: `RQ3_CANDIDATE` (sole empirical candidate provisional pending exact recovery).
+  - New approved classification: **`PROVENANCE_LINEAGE_RESIDUAL_CURRENT_CONTENT`**.
+  - RQ3 Eligibility: **`NO`**.
+  - Sole empirical RQ3 candidate: **`false`**.
+- **Scientific Interpretation:**
+  Hindsight S1 exposes a distinct derived observation whose provider identity / lineage remains correlated with superseded `v1` history, but exact recovery proves that the observation's natural-language proposition is current authoritative `v2` content (`"...only to Bob."`), not stale `v1` content (`"...to Alice."`).
+  Therefore:
+  - mixed authority exposure remains a real provenance/lineage residual;
+  - this is **NOT demonstrated stale proposition exposure**;
+  - it cannot support stale-memory-driven downstream unsafe-decision RQ3;
+  - it remains relevant to RQ1, RQ2, and especially RQ4;
+  - it is useful as a negative-control / false-positive case for lineage-aware authority mediation.
+- **Explicit Disclaimers and Invariants:**
+  - Do NOT claim stale Alice text was recovered.
+  - Do NOT claim the derived observation is an unsafe stale context.
+  - Do NOT claim provider behavior caused an unsafe downstream decision.
+  - Do NOT claim RQ3 has any empirical eligible context under Freeze v1.
 
 #### Unresolved Questions
-- What is the exact natural-language text of the derived insight that hashes to `f0c061e0...`?
-- When presented alongside authoritative `v2` text, does the presence of this derived candidate induce downstream decision divergence in target LLMs?
+- How should lineage-aware authority enforcement distinguish superseded lineage association from stale or unauthorized proposition content without relying on an LLM judge as the security boundary?
 
 ---
 
@@ -234,19 +261,47 @@ Step 3: Exact Content SHA Verification (Mandatory Validation Gate)
 
 ---
 
-## 5. Downstream Decision Experiment (RQ3) Sizing Update
+## 5. Downstream Decision Experiment (RQ3) Status and Sizing Retirement
 
-### 5.1 Experimental Sizing Calculation
+### 5.1 RQ3 Status After Exact Recovery
+Following the verified read-only exact recovery of Hindsight S1 (attempt `20261003T003809Z-7a3425bf2f4c`), the recovered derived proposition was proven to exactly match the canonical current-v2 proposition body (`Project Alder reports may be sent only to Bob.`), not the stale v1 proposition (`Project Alder reports may be sent to Alice.`). While the recovered derived bytes are not byte-identical to the per-run authoritative source records due to run-specific prefixes, the proposition expresses current v2 authority.
 
-With Mem0 S1, Hindsight S4, OpenViking S4, and OpenViking S0 excluded from RQ3 eligibility, the downstream experiment is sized strictly around the sole validated empirical candidate (Hindsight S1):
+Consequently:
+- **Eligible Empirical RQ3 Contexts Under Freeze v1:** `0`
+- **Executed RQ3 Calls:** `0`
+- **RQ3 Status:** **`NOT ACTIVATED`**
 
-- **Candidate Contexts:** 1 (`hindsight__S1`)
-- **Downstream Decision Models:** 3 (e.g., GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro)
-- **Repetitions per Condition:** 3
-- **Experimental Conditions:** 3 (e.g., baseline, baseline + non-authoritative context, defended context)
-- **Total Maximum Calls:** $1 \times 3 \times 3 \times 3 = 27\text{ calls}$
+### 5.2 Retirement of Provisional 27-Call Plan
+The previous provisional sizing:
+$$1\text{ context} \times 3\text{ models} \times 3\text{ repetitions} \times 3\text{ conditions} = 27\text{ calls}$$
+is formally marked:
+> **`RETIRED / NOT EXECUTABLE AFTER EXACT CONTEXT RECOVERY`**
 
-### 5.2 Status Label and Policy
-- **Official Sizing Label:** `PROVISIONAL_UNTIL_CONTEXT_RECOVERY`.
-- **Condition Semantics:** Defense conditions ($D_0, D_1, D_2$) semantics are **NOT DEFINED** in this phase and remain deferred until exact context text is successfully recovered and validated.
-- **Current Execution State:** Exactly 0 RQ3 calls authorized or executed.
+### 5.3 Methodological Invariants
+1. **Freeze v1 Immutability:** `experiments/freeze/experiment-freeze-v1.json` is **NOT ALTERED**. Its historical planning fields remain immutable.
+2. **Defense Conditions Deferred:** Per-context defense conditions ($D_0, D_1, D_2$) are **NOT OPERATIONALIZED**.
+3. **Synthetic Context Prohibition:** We do **NOT** construct a synthetic Alice stale context and label it empirical RQ3.
+4. **Future Synthetic Stress Tests:** If a future synthetic stale-context stress test is desired:
+   - it would be an entirely new synthetic experiment,
+   - not provider-observed Hindsight S1 empirical evidence,
+   - and would require separate Main ChatGPT scientific design and an explicit Freeze v2.
+
+---
+
+## 6. RQ4 Implication — Lineage vs Content Authority Mediation
+
+The empirical resolution of Hindsight S1 establishes a critical finding for authority mediation (RQ4):
+
+> **Hindsight S1 is now a valuable mediator negative control.**
+
+A naive lineage filtering policy:
+$$\text{“Any derived record with superseded ancestry is blocked”}$$
+would incorrectly suppress legitimate, current authoritative `v2` content when applied to Hindsight S1.
+
+Therefore, lineage-aware authority enforcement must rigorously distinguish:
+1. **Superseded lineage association** (historical provenance correlation), from
+2. **Stale / unauthorized proposition content** (actual semantic invalidity),
+
+**without relying on an LLM judge as the security boundary.**
+
+*(Note: In accordance with protocol governance, the mediator is NOT designed or executed in this phase; only this scientific implication is recorded).*

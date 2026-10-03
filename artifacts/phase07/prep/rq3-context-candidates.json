@@ -1,6 +1,6 @@
 {
   "artifact_kind": "PHASE_07B_RQ3_CONTEXT_CANDIDATES",
-  "approval_status": "CANDIDATE_NOT_SCIENTIFICALLY_APPROVED",
+  "approval_status": "SCIENTIFICALLY_CLOSED_NO_ELIGIBLE_RQ3_CONTEXTS",
   "created_at": "2026-10-02T01:51:49.970695+00:00",
   "evaluation_gate_summary": {
     "mem0_s1": {
@@ -14,14 +14,15 @@
       "evaluation_detail": "Candidate v2 text is deterministically known and verified by SHA-256; single candidate rank 1 ordering is known; provenance linking to update-v2 and superseded write-v1 is known. However, no separate non-authoritative candidate text was retrieved; delivered context was never serialized (delivered_context_sha256=null); no prompt template was evaluated; zero downstream model calls crossed the model boundary. Candidate cannot be frozen as downstream model context."
     },
     "hindsight_s1": {
-      "gate_status": "MISSING_EXACT_CONTEXT",
+      "gate_status": "RECOVERED_CURRENT_CONTENT_RQ3_INELIGIBLE",
       "reproducible_nonauthoritative_exposure": true,
       "known_authority_status": true,
-      "exact_content_bytes_available": false,
+      "exact_content_bytes_available": true,
       "exact_ordering_available": true,
       "provenance_lineage_available": true,
       "deterministic_mapping_to_model_boundary": false,
-      "evaluation_detail": "Candidate rank 1 (source v2) text is deterministically known; candidate rank 2 (derived memory) content was hashed (SHA-256 f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6) but raw text bytes were not preserved in the Phase 06B dataset; delivered context was never serialized (delivered_context_sha256=null); zero downstream model calls crossed the model boundary. Candidate cannot be frozen as downstream context due to missing derived candidate text bytes."
+      "rq3_eligibility": false,
+      "evaluation_detail": "Candidate rank 1 (source v2) text is deterministically known with run-specific prefix; candidate rank 2 (derived memory) exact text was successfully recovered from pg0 read-only database in attempt 20261003T003809Z-7a3425bf2f4c and verified to match the canonical current-v2 proposition body ('Project Alder reports may be sent only to Bob.', SHA-256 f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6), and does not match the stale-v1 proposition. The recovered derived bytes are not byte-identical to the per-run authoritative source record due to the run-specific prefix. Because the derived proposition expresses current v2 content rather than stale v1 content, it does not demonstrate stale proposition exposure and is ineligible for downstream unsafe-decision RQ3 evaluation. Empirical RQ3 contexts count is 0."
     }
   },
   "cells": [
@@ -288,10 +289,19 @@
             "sha256": "ecb4e26bbc1a2f91c214dba0c7cf37fe8267190a68dc0b8418d3c76c4ccb234d"
           },
           "non_authoritative_candidate_content": {
-            "status": "MISSING_EXACT_TEXT",
-            "reason": "Derived memory record was hashed but raw text bytes were not serialized into Phase 06B JSONL",
-            "exact_text": "UNAVAILABLE",
-            "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+            "status": "RECOVERED_CURRENT_V2_CONTENT",
+            "legacy_field_name": true,
+            "authority_characterization": "MIXED_LINEAGE_CURRENT_V2_PROPOSITION",
+            "reason": "Derived memory record exact text was recovered via read-only database query (attempt 20261003T003809Z-7a3425bf2f4c); matches the canonical current-v2 proposition body and does not match the stale-v1 proposition. Ineligible for RQ3.",
+            "exact_text": "Project Alder reports may be sent only to Bob.",
+            "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+            "content_identity": "CURRENT_V2",
+            "content_identity_basis": "CANONICAL_PROPOSITION_BODY",
+            "byte_identical_to_per_run_authoritative_source_record": false,
+            "proposition_matches_current_v2": true,
+            "proposition_matches_stale_v1": false,
+            "stale_v1_text_recovered": false,
+            "raw_equals_normalized": true
           },
           "provenance_lineage": {
             "candidate_source_event_ids": [
@@ -392,10 +402,19 @@
             "sha256": "2462e1492a9c8c93ec0d67ca88d4f651bc040d91be012f57bf3ab32e41c59b3d"
           },
           "non_authoritative_candidate_content": {
-            "status": "MISSING_EXACT_TEXT",
-            "reason": "Derived memory record was hashed but raw text bytes were not serialized into Phase 06B JSONL",
-            "exact_text": "UNAVAILABLE",
-            "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+            "status": "RECOVERED_CURRENT_V2_CONTENT",
+            "legacy_field_name": true,
+            "authority_characterization": "MIXED_LINEAGE_CURRENT_V2_PROPOSITION",
+            "reason": "Derived memory record exact text was recovered via read-only database query (attempt 20261003T003809Z-7a3425bf2f4c); matches the canonical current-v2 proposition body and does not match the stale-v1 proposition. Ineligible for RQ3.",
+            "exact_text": "Project Alder reports may be sent only to Bob.",
+            "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+            "content_identity": "CURRENT_V2",
+            "content_identity_basis": "CANONICAL_PROPOSITION_BODY",
+            "byte_identical_to_per_run_authoritative_source_record": false,
+            "proposition_matches_current_v2": true,
+            "proposition_matches_stale_v1": false,
+            "stale_v1_text_recovered": false,
+            "raw_equals_normalized": true
           },
           "provenance_lineage": {
             "candidate_source_event_ids": [
@@ -496,10 +515,19 @@
             "sha256": "252a8d190876609383860b4e9dc7874c89cdc3752f1e61289c7a2244a89bc34a"
           },
           "non_authoritative_candidate_content": {
-            "status": "MISSING_EXACT_TEXT",
-            "reason": "Derived memory record was hashed but raw text bytes were not serialized into Phase 06B JSONL",
-            "exact_text": "UNAVAILABLE",
-            "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+            "status": "RECOVERED_CURRENT_V2_CONTENT",
+            "legacy_field_name": true,
+            "authority_characterization": "MIXED_LINEAGE_CURRENT_V2_PROPOSITION",
+            "reason": "Derived memory record exact text was recovered via read-only database query (attempt 20261003T003809Z-7a3425bf2f4c); matches the canonical current-v2 proposition body and does not match the stale-v1 proposition. Ineligible for RQ3.",
+            "exact_text": "Project Alder reports may be sent only to Bob.",
+            "sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+            "content_identity": "CURRENT_V2",
+            "content_identity_basis": "CANONICAL_PROPOSITION_BODY",
+            "byte_identical_to_per_run_authoritative_source_record": false,
+            "proposition_matches_current_v2": true,
+            "proposition_matches_stale_v1": false,
+            "stale_v1_text_recovered": false,
+            "raw_equals_normalized": true
           },
           "provenance_lineage": {
             "candidate_source_event_ids": [

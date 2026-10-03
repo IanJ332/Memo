@@ -141,13 +141,24 @@ def test_phase07_prep_artifacts_structure_and_gates() -> None:
     rq3_json = ARTIFACTS_P07 / "rq3-context-candidates.json"
     assert rq3_json.is_file()
     rq3_data = json.loads(rq3_json.read_text(encoding="utf-8"))
-    assert rq3_data["approval_status"] == "CANDIDATE_NOT_SCIENTIFICALLY_APPROVED"
+    assert rq3_data["approval_status"] == "SCIENTIFICALLY_CLOSED_NO_ELIGIBLE_RQ3_CONTEXTS"
 
     gate = rq3_data["evaluation_gate_summary"]
     assert gate["mem0_s1"]["gate_status"] == "MISSING_MODEL_BOUNDARY_TRACE"
-    assert gate["hindsight_s1"]["gate_status"] == "MISSING_EXACT_CONTEXT"
+    assert gate["hindsight_s1"]["gate_status"] == "RECOVERED_CURRENT_CONTENT_RQ3_INELIGIBLE"
     assert gate["mem0_s1"]["deterministic_mapping_to_model_boundary"] is False
-    assert gate["hindsight_s1"]["exact_content_bytes_available"] is False
+    assert gate["hindsight_s1"]["exact_content_bytes_available"] is True
+    assert gate["hindsight_s1"]["rq3_eligibility"] is False
+
+    hs1_cell = next(c for c in rq3_data["cells"] if c["provider"] == "hindsight" and c["scenario"] == "S1")
+    for rep in hs1_cell["repetitions"]:
+        non_auth = rep["non_authoritative_candidate_content"]
+        assert non_auth["legacy_field_name"] is True
+        assert non_auth["authority_characterization"] == "MIXED_LINEAGE_CURRENT_V2_PROPOSITION"
+        assert non_auth["content_identity_basis"] == "CANONICAL_PROPOSITION_BODY"
+        assert non_auth["byte_identical_to_per_run_authoritative_source_record"] is False
+        assert non_auth["proposition_matches_current_v2"] is True
+        assert non_auth["proposition_matches_stale_v1"] is False
 
     # Check documentation artifacts exist and contain required headers
     doc_07a = DOCS_EXP / "PHASE_07A_ROOT_CAUSE_EVIDENCE.md"
@@ -164,9 +175,8 @@ def test_phase07_prep_artifacts_structure_and_gates() -> None:
     doc_07b = DOCS_EXP / "PHASE_07B_RQ3_CONTEXT_CANDIDATES.md"
     assert doc_07b.is_file()
     text_07b = doc_07b.read_text(encoding="utf-8")
-    assert "CANDIDATE_NOT_SCIENTIFICALLY_APPROVED" in text_07b
     assert "MISSING_MODEL_BOUNDARY_TRACE" in text_07b
-    assert "MISSING_EXACT_CONTEXT" in text_07b
+    assert "RECOVERED_CURRENT_CONTENT_RQ3_INELIGIBLE" in text_07b
 
 
 def test_phase07_scientific_decisions_artifact_and_doc() -> None:
@@ -182,7 +192,7 @@ def test_phase07_scientific_decisions_artifact_and_doc() -> None:
 
     # Verify approved classifications in doc
     assert "PROVENANCE_LINEAGE_RESIDUAL" in doc_text
-    assert "RQ3_CANDIDATE" in doc_text
+    assert "PROVENANCE_LINEAGE_RESIDUAL_CURRENT_CONTENT" in doc_text
     assert "LEGITIMATE_REDERIVATION_CANDIDATE" in doc_text
     assert "F2_DERIVED_STATE" in doc_text
     assert "ROOT_CAUSE_UNRESOLVED" in doc_text
@@ -194,8 +204,8 @@ def test_phase07_scientific_decisions_artifact_and_doc() -> None:
     assert "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6" in doc_text
     assert "Exact Provider-Native ID Lookup" in doc_text or "EXACT PROVIDER-NATIVE ID LOOKUP" in doc_text.upper()
 
-    # Verify Task D sizing
-    assert "PROVISIONAL_UNTIL_CONTEXT_RECOVERY" in doc_text
+    # Verify Task D sizing / retirement
+    assert "RETIRED / NOT EXECUTABLE AFTER EXACT CONTEXT RECOVERY" in doc_text
     assert "27" in doc_text
 
     # Verify machine-readable JSON artifact
@@ -213,9 +223,22 @@ def test_phase07_scientific_decisions_artifact_and_doc() -> None:
     assert decisions["mem0_s1"]["rq3_eligibility"] == "NO"
     assert "RQ1" in decisions["mem0_s1"]["relevant_rqs"]
 
-    assert decisions["hindsight_s1"]["classification"] == "RQ3_CANDIDATE"
-    assert decisions["hindsight_s1"]["rq3_eligibility"] == "YES"
-    assert decisions["hindsight_s1"]["sole_empirical_rq3_candidate"] is True
+    assert decisions["hindsight_s1"]["classification"] == "PROVENANCE_LINEAGE_RESIDUAL_CURRENT_CONTENT"
+    assert decisions["hindsight_s1"]["rq3_eligibility"] == "NO"
+    assert decisions["hindsight_s1"]["sole_empirical_rq3_candidate"] is False
+    hs1_obs = decisions["hindsight_s1"]["observed_evidence"]
+    assert hs1_obs["rank_2_raw_text_serialized"] is False
+    assert hs1_obs["rank_2_exact_text_recovered"] is True
+    assert hs1_obs["rank_2_recovery_attempt_id"] == "20261003T003809Z-7a3425bf2f4c"
+    assert hs1_obs["rank_2_recovery_method"] == "EXACT_ID_DATABASE_SELECT_READ_ONLY"
+    assert hs1_obs["rank_2_recovered_text"] == "Project Alder reports may be sent only to Bob."
+    assert hs1_obs["raw_equals_normalized"] is True
+    assert hs1_obs["content_identity"] == "CURRENT_V2"
+    assert hs1_obs["content_identity_basis"] == "CANONICAL_PROPOSITION_BODY"
+    assert hs1_obs["byte_identical_to_per_run_authoritative_source_record"] is False
+    assert hs1_obs["proposition_matches_current_v2"] is True
+    assert hs1_obs["proposition_matches_stale_v1"] is False
+    assert hs1_obs["stale_v1_content"] is False
 
     assert decisions["hindsight_s4"]["classification"] == "LEGITIMATE_REDERIVATION_CANDIDATE"
     assert decisions["hindsight_s4"]["rq3_eligibility"] == "NO"
@@ -233,23 +256,146 @@ def test_phase07_scientific_decisions_artifact_and_doc() -> None:
     # Task C recovery inventory
     rec = data["hindsight_s1_recovery_inventory"]
     assert rec["expected_sha256"] == "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
-    assert rec["requires_jetstream_read_only_access"] is True
+    assert rec["jetstream_read_only_access_was_required_for_recovery"] is True
+    assert rec["further_jetstream_access_required"] is False
+    assert rec["recovery_status"] == "COMPLETED_VERIFIED"
+    assert rec["recovery_attempt_id"] == "20261003T003809Z-7a3425bf2f4c"
     assert len(rec["repetitions"]) == 3
+    assert rec["repetitions"]["r1"]["authoritative_source_sha256"] == "ecb4e26bbc1a2f91c214dba0c7cf37fe8267190a68dc0b8418d3c76c4ccb234d"
+    assert rec["repetitions"]["r2"]["authoritative_source_sha256"] == "2462e1492a9c8c93ec0d67ca88d4f651bc040d91be012f57bf3ab32e41c59b3d"
+    assert rec["repetitions"]["r3"]["authoritative_source_sha256"] == "252a8d190876609383860b4e9dc7874c89cdc3752f1e61289c7a2244a89bc34a"
     assert len(rec["preferred_recovery_hierarchy"]) == 3
     assert rec["preferred_recovery_hierarchy"][0]["method"] == "EXACT_PROVIDER_NATIVE_ID_LOOKUP"
     assert rec["preferred_recovery_hierarchy"][1]["method"] == "EXACT_DATABASE_ROW_LOOKUP"
     assert rec["preferred_recovery_hierarchy"][2]["method"] == "EXACT_CONTENT_SHA_VERIFICATION"
     assert "semantic_search_re_query" in rec["forbidden_recovery_methods"]
 
-    # Task D sizing
+    # Task D sizing retirement
     sizing = data["rq3_experimental_size"]
-    assert sizing["status_label"] == "PROVISIONAL_UNTIL_CONTEXT_RECOVERY"
-    assert sizing["contexts"] == 1
+    assert sizing["status_label"] == "RETIRED_NOT_EXECUTABLE_AFTER_EXACT_CONTEXT_RECOVERY"
+    assert sizing["empirical_eligible_contexts"] == 0
+    assert sizing["contexts"] == 0
     assert sizing["models"] == 3
     assert sizing["repetitions"] == 3
     assert sizing["conditions"] == 3
-    assert sizing["maximum_calls"] == 27
+    assert sizing["maximum_calls"] == 0
     assert sizing["executed_calls"] == 0
+
+
+def test_hindsight_s1_recovery_review_and_scientific_closure() -> None:
+    """Validate Hindsight S1 exact recovery review, content identity, and scientific closure."""
+    review_path = REPO_ROOT / "artifacts" / "phase07" / "hindsight-s1-recovery-review.json"
+    assert review_path.is_file()
+    review = json.loads(review_path.read_text(encoding="utf-8"))
+
+    # Schema and Phase
+    assert review["schema_version"] == "memlife-phase07-hindsight-s1-recovery-review-v1"
+    assert review["phase"] == "07C-HINDSIGHT-S1-RECOVERY-SCIENTIFIC-CLOSURE"
+    assert review["governing_principle"] == "Retrieved != Authoritative"
+
+    # Attempts
+    attempts = review["recovery_attempts"]
+    assert attempts["attempt_1"]["attempt_id"] == "20261002T230932Z-e018c8b90793"
+    assert attempts["attempt_1"]["classification"] == "FAIL_CLOSED_HARNESS_ONLY"
+    assert attempts["attempt_1"]["provider_behavior_impact"] is False
+
+    att2 = attempts["attempt_2"]
+    assert att2["attempt_id"] == "20261003T003809Z-7a3425bf2f4c"
+    assert att2["status"] == "PASS"
+    assert att2["completion_marker"] == "VALID / PASS"
+    assert att2["transaction_read_only"] is True
+    assert att2["recovery_pg0_cleanup_verified"] is True
+    assert att2["errors"] == []
+    assert att2["target_success_count"] == "3 / 3"
+
+    # Mandatory artifact hashes
+    mandatory = att2["mandatory_evidence_byte_sha256"]
+    assert mandatory["recovery-ledger.json"] == "4e88e54bcd0a2b00d3b7895adc5fb505f829ad28b04094da2fa7b876b82107ab"
+    assert mandatory["recovery-result.json"] == "9505e4b16f9c2c32b43d6a88b56b101636f219d19ab05f5bc3c74f57ff04b89a"
+    assert mandatory["source-integrity-after.json"] == "6197e54a663753593e35c9a947f83564edfe10e474223ba0559716e1cc4b1e88"
+    assert mandatory["source-integrity-before.json"] == "2048a865f51afba7ee27de36e6d76b50082a409da7fbca7e7bef4a562c71231c"
+
+    # Source tree continuity
+    expected_tree_sha = "fce438625dcf9c6775b8172e482bd1e535ed66502bb808a7c4d27501e53a2d0d"
+    continuity = att2["source_tree_continuity"]
+    assert continuity["source_tree_sha_before"] == expected_tree_sha
+    assert continuity["source_tree_sha_after_copy"] == expected_tree_sha
+    assert continuity["source_tree_sha_after_final"] == expected_tree_sha
+    assert continuity["continuity_verified"] is True
+
+    # Targets & Parents
+    targets = review["exact_recovery_targets"]
+    assert targets["r1"]["provider_memory_id"] == "d21e1d56-8224-4f7b-b144-9e7124fe4ef4"
+    assert targets["r1"]["expected_parent_source_id"] == "bacf3934-5a34-48da-9580-80606d5b9c33"
+    assert targets["r1"]["parent_match"] is True
+    assert targets["r1"]["raw_equals_normalized"] is True
+
+    assert targets["r2"]["provider_memory_id"] == "5adc67dd-1658-4ddf-a5e7-7b40e00d84a7"
+    assert targets["r2"]["expected_parent_source_id"] == "b2fa69b9-d719-4531-86e9-06c69fc739bb"
+    assert targets["r2"]["parent_match"] is True
+    assert targets["r2"]["raw_equals_normalized"] is True
+
+    assert targets["r3"]["provider_memory_id"] == "ea22a6bc-15be-4639-8060-c9eae4fcc5e5"
+    assert targets["r3"]["expected_parent_source_id"] == "dfa63b99-ac6d-467b-b25e-bbc104545a2d"
+    assert targets["r3"]["parent_match"] is True
+    assert targets["r3"]["raw_equals_normalized"] is True
+
+    # Exact Content & SHA Verification
+    expected_v2_text = "Project Alder reports may be sent only to Bob."
+    expected_v2_sha = "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6"
+    stale_v1_text = "Project Alder reports may be sent to Alice."
+    stale_v1_sha = "d2adb98450de1e8e9257d915779f9ee79c489d17c5d1e4ccea012a7c1f4153a4"
+
+    # Cryptographic validation of constants
+    assert hashlib.sha256(expected_v2_text.encode("utf-8")).hexdigest() == expected_v2_sha
+    assert hashlib.sha256(stale_v1_text.encode("utf-8")).hexdigest() == stale_v1_sha
+
+    # Recovery content identity check
+    ident = review["content_identity_verification"]
+    assert ident["recovered_exact_text"] == expected_v2_text
+    assert ident["recovered_exact_sha256"] == expected_v2_sha
+    assert ident["content_identity"] == "CURRENT_V2"
+    assert ident["content_identity_basis"] == "CANONICAL_PROPOSITION_BODY"
+    assert ident["byte_identical_to_per_run_authoritative_source_record"] is False
+    assert ident["proposition_matches_current_v2"] is True
+    assert ident["proposition_matches_stale_v1"] is False
+    assert ident["corresponds_to_alder_v2"] is True
+    assert ident["corresponds_to_alder_v1"] is False
+    assert ident["stale_v1_text_recovered"] is False
+
+    # Authoritative source records SHA validation
+    sources = ident["per_run_authoritative_source_records"]
+    assert sources["r1"]["sha256"] == "ecb4e26bbc1a2f91c214dba0c7cf37fe8267190a68dc0b8418d3c76c4ccb234d"
+    assert sources["r2"]["sha256"] == "2462e1492a9c8c93ec0d67ca88d4f651bc040d91be012f57bf3ab32e41c59b3d"
+    assert sources["r3"]["sha256"] == "252a8d190876609383860b4e9dc7874c89cdc3752f1e61289c7a2244a89bc34a"
+    assert hashlib.sha256("freeze-v1__hindsight__S1__r1: Project Alder reports may be sent only to Bob.".encode("utf-8")).hexdigest() == "ecb4e26bbc1a2f91c214dba0c7cf37fe8267190a68dc0b8418d3c76c4ccb234d"
+    assert hashlib.sha256("freeze-v1__hindsight__S1__r2: Project Alder reports may be sent only to Bob.".encode("utf-8")).hexdigest() == "2462e1492a9c8c93ec0d67ca88d4f651bc040d91be012f57bf3ab32e41c59b3d"
+    assert hashlib.sha256("freeze-v1__hindsight__S1__r3: Project Alder reports may be sent only to Bob.".encode("utf-8")).hexdigest() == "252a8d190876609383860b4e9dc7874c89cdc3752f1e61289c7a2244a89bc34a"
+
+    # Target hashes correspond to ALDER_V2 and NOT ALDER_V1
+    for r in ("r1", "r2", "r3"):
+        assert targets[r]["raw_db_text"] == expected_v2_text
+        assert targets[r]["recovered_sha256"] == expected_v2_sha
+        assert targets[r]["recovered_sha256"] != stale_v1_sha
+
+    # Scientific Reclassification & RQ3 Eligibility
+    reclass = review["scientific_reclassification"]
+    assert reclass["target"] == "hindsight_s1"
+    assert reclass["new_classification"] == "PROVENANCE_LINEAGE_RESIDUAL_CURRENT_CONTENT"
+    assert reclass["rq3_eligibility"] == "NO"
+    assert reclass["sole_empirical_rq3_candidate"] is False
+
+    # RQ3 Experimental Status
+    rq3_stat = review["rq3_status"]
+    assert rq3_stat["eligible_empirical_rq3_contexts"] == 0
+    assert rq3_stat["executed_rq3_calls"] == 0
+    assert rq3_stat["rq3_status"] == "NOT ACTIVATED"
+    assert "RETIRED" in rq3_stat["provisional_27_call_plan_status"]
+
+    # RQ4 Mediator Negative Control Implication
+    rq4 = review["rq4_negative_control_implication"]
+    assert rq4["is_valuable_mediator_negative_control"] is True
+    assert "distinguish superseded lineage association from stale / unauthorized proposition content" in rq4["implication_summary"]
 
 
 def test_no_secrets_in_phase07_prep_artifacts() -> None:
@@ -259,6 +405,7 @@ def test_no_secrets_in_phase07_prep_artifacts() -> None:
         ARTIFACTS_P07 / "root-cause-evidence.json",
         ARTIFACTS_P07 / "rq3-context-candidates.json",
         ARTIFACTS_P07 / "scientific-decisions.json",
+        REPO_ROOT / "artifacts" / "phase07" / "hindsight-s1-recovery-review.json",
         DOCS_EXP / "PHASE_07A_ROOT_CAUSE_EVIDENCE.md",
         DOCS_EXP / "PHASE_07B_RQ3_CONTEXT_CANDIDATES.md",
         DOCS_EXP / "PHASE_07_SCIENTIFIC_DECISIONS.md",
