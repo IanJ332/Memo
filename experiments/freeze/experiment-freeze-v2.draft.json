@@ -1,0 +1,389 @@
+{
+  "artifact_kind": "EXPERIMENT_FREEZE_DESIGN_DRAFT",
+  "change_control": {
+    "completed_capability_matrix_definition": "All provider/scenario classifications used by the final schedule are evidence-bound and internally consistent with native capability evidence.",
+    "finalization_requires": [
+      "separate scientific approval",
+      "completed live acceptance evidence for Honcho and selected Provider 5",
+      "provider version and configuration pins",
+      "completed capability matrix",
+      "environment manifest contract approval"
+    ],
+    "immutable_after_finalization": true,
+    "semantic_changes_require_new_draft_revision": true
+  },
+  "draft_schema_version": "2.0-draft.1",
+  "draft_status": "NON_FINAL_DESIGN_ONLY",
+  "evidence_classes": {
+    "PROVIDER_OBSERVED": "Evidence captured from a provider during an authorized run.",
+    "SYNTHETIC_RQ4_CHALLENGE": "Synthetic mediator stress input; never an empirical provider failure."
+  },
+  "execution_authorization": {
+    "hosted_model_calls": false,
+    "jetstream": false,
+    "provider_calibration": false,
+    "provider_experiment": false,
+    "rq3": false
+  },
+  "freeze_id": "experiment-freeze-v2-draft",
+  "graphiti_acceptance_gate": {
+    "acceptance_result": "NOT_ELIGIBLE",
+    "eligibility_condition": "RETAINDB_NO_GO",
+    "go_requires_all": [
+      "create_write",
+      "retrieval",
+      "exact_provider_native_ids",
+      "exact_raw_response_capture",
+      "provider_configuration_pinning",
+      "provider_version_commit_pinning",
+      "deterministic_or_recorded_ordering",
+      "provenance_relationship_edges",
+      "quiescence_async_completion_proof",
+      "source_version_transitions",
+      "temporal_validity",
+      "restart_persistence"
+    ],
+    "provider": "graphiti"
+  },
+  "honcho_acceptance_gate": {
+    "acceptance_result": "PENDING_LIVE_ACCEPTANCE",
+    "go_requires_all": [
+      "create_write",
+      "retrieval",
+      "exact_provider_native_ids",
+      "exact_raw_response_capture",
+      "provider_configuration_pinning",
+      "provider_version_commit_pinning",
+      "deterministic_or_recorded_ordering",
+      "provenance_relationship_edges",
+      "quiescence_async_completion_proof"
+    ],
+    "provider": "honcho",
+    "scenario_specific_unsupported_operations_shrink_matrix": true
+  },
+  "identity_model": {
+    "authorization_primitives_prohibited": [
+      "LLM semantic equivalence",
+      "embedding similarity"
+    ],
+    "canonical_proposition_identity_condition": "Populated only by deterministic fixture-defined canonicalization.",
+    "identities": [
+      "exact_provider_record_bytes",
+      "deterministic_canonical_proposition_body",
+      "logical_fact_and_version"
+    ],
+    "indeterminate_identity_outcome": "QUARANTINE",
+    "must_remain_distinct": true
+  },
+  "is_final_freeze": false,
+  "prior_evidence": {
+    "freeze_id": "experiment-freeze-v1",
+    "freeze_sha256": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+    "immutable": true,
+    "published_base_commit": "481f9d698e7e48fe9d3d84868a303ec10aa676ea",
+    "provider_run_count": 42,
+    "providers": [
+      "mem0",
+      "hindsight",
+      "openviking"
+    ],
+    "rerun_existing_provider_runs": false
+  },
+  "provider_acceptance_contract": {
+    "capabilities": [
+      "create_write",
+      "update_supersede",
+      "hard_delete",
+      "restart_reconstruction",
+      "native_rederivation_consolidation",
+      "revoke_invalidate",
+      "raw_inspection",
+      "retrieval",
+      "exact_provider_native_ids",
+      "source_version_transitions",
+      "temporal_validity",
+      "provenance_relationship_edges",
+      "restart_persistence",
+      "quiescence_async_completion_proof",
+      "deterministic_or_recorded_ordering",
+      "exact_raw_response_capture",
+      "provider_configuration_pinning",
+      "provider_version_commit_pinning"
+    ],
+    "classification_enum": [
+      "SUPPORTED",
+      "UNSUPPORTED",
+      "UNKNOWN",
+      "BLOCKED"
+    ],
+    "documentation_claims_are_evidence": false,
+    "live_values": "MUST_BE_POPULATED_FROM_OBSERVED_EVIDENCE",
+    "required_entry_capabilities": {
+      "graphiti": [
+        "create_write",
+        "deterministic_or_recorded_ordering",
+        "exact_provider_native_ids",
+        "exact_raw_response_capture",
+        "provenance_relationship_edges",
+        "provider_configuration_pinning",
+        "provider_version_commit_pinning",
+        "quiescence_async_completion_proof",
+        "restart_persistence",
+        "retrieval",
+        "source_version_transitions",
+        "temporal_validity"
+      ],
+      "honcho": [
+        "create_write",
+        "deterministic_or_recorded_ordering",
+        "exact_provider_native_ids",
+        "exact_raw_response_capture",
+        "provenance_relationship_edges",
+        "provider_configuration_pinning",
+        "provider_version_commit_pinning",
+        "quiescence_async_completion_proof",
+        "retrieval"
+      ],
+      "retaindb-server": [
+        "create_write",
+        "deterministic_or_recorded_ordering",
+        "exact_provider_native_ids",
+        "exact_raw_response_capture",
+        "provenance_relationship_edges",
+        "provider_configuration_pinning",
+        "provider_version_commit_pinning",
+        "restart_persistence",
+        "retrieval",
+        "source_version_transitions",
+        "temporal_validity"
+      ]
+    },
+    "required_for_entry": "Sufficient deterministic evidence for CandidateEnvelope construction and scenario classification."
+  },
+  "provider_capability_matrix_placeholder": {
+    "graphiti": {
+      "S0": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S1": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S2": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S3": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S4": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S5": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null}
+    },
+    "honcho": {
+      "S0": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S1": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S2": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S3": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S4": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S5": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null}
+    },
+    "retaindb-server": {
+      "S0": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S1": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S2": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S3": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S4": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "S5": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null}
+    }
+  },
+  "provider_native_capability_matrix_placeholder": {
+    "graphiti": {
+      "create_write": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "update_supersede": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "hard_delete": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "restart_reconstruction": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "native_rederivation_consolidation": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "revoke_invalidate": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "raw_inspection": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "retrieval": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "exact_provider_native_ids": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "source_version_transitions": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "temporal_validity": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "provenance_relationship_edges": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "restart_persistence": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "quiescence_async_completion_proof": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "deterministic_or_recorded_ordering": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "exact_raw_response_capture": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "provider_configuration_pinning": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "provider_version_commit_pinning": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null}
+    },
+    "honcho": {
+      "create_write": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "update_supersede": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "hard_delete": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "restart_reconstruction": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "native_rederivation_consolidation": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "revoke_invalidate": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "raw_inspection": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "retrieval": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "exact_provider_native_ids": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "source_version_transitions": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "temporal_validity": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "provenance_relationship_edges": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "restart_persistence": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "quiescence_async_completion_proof": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "deterministic_or_recorded_ordering": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "exact_raw_response_capture": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "provider_configuration_pinning": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "provider_version_commit_pinning": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null}
+    },
+    "retaindb-server": {
+      "create_write": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "update_supersede": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "hard_delete": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "restart_reconstruction": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "native_rederivation_consolidation": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "revoke_invalidate": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "raw_inspection": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "retrieval": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "exact_provider_native_ids": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "source_version_transitions": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "temporal_validity": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "provenance_relationship_edges": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "restart_persistence": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "quiescence_async_completion_proof": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "deterministic_or_recorded_ordering": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "exact_raw_response_capture": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "provider_configuration_pinning": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null},
+      "provider_version_commit_pinning": {"classification": "UNKNOWN", "evidence_class": null, "evidence_artifact": null, "evidence_sha256": null, "notes": null}
+    }
+  },
+  "provider_extension": {
+    "existing_providers": [
+      "mem0",
+      "hindsight",
+      "openviking"
+    ],
+    "provider_4": {
+      "acceptance_decision": "PENDING_LIVE_ACCEPTANCE",
+      "id": "honcho",
+      "name": "Honcho",
+      "status": "PROPOSED_NOT_LIVE_CALIBRATED"
+    },
+    "provider_5": {
+      "active_provider": null,
+      "fallback": {
+        "acceptance_decision": "NOT_ELIGIBLE",
+        "activation_condition": "RetainDB Server receives NO_GO, after which Graphiti becomes eligible for its own live acceptance gate.",
+        "id": "graphiti",
+        "name": "Graphiti",
+        "status": "FALLBACK_ONLY"
+      },
+      "mutually_exclusive": true,
+      "primary": {
+        "acceptance_decision": "PENDING_LIVE_ACCEPTANCE",
+        "id": "retaindb-server",
+        "name": "RetainDB Server",
+        "status": "PENDING_LIVE_ACCEPTANCE"
+      },
+      "valid_state_transitions": [
+        "RETAINDB_PENDING__GRAPHITI_NOT_ELIGIBLE__ACTIVE_NONE",
+        "RETAINDB_GO__GRAPHITI_NOT_ELIGIBLE__ACTIVE_RETAINDB",
+        "RETAINDB_NO_GO__GRAPHITI_PENDING__ACTIVE_NONE",
+        "RETAINDB_NO_GO__GRAPHITI_GO__ACTIVE_GRAPHITI",
+        "RETAINDB_NO_GO__GRAPHITI_NO_GO__ACTIVE_NONE"
+      ]
+    }
+  },
+  "provider_pinning": {
+    "environment_manifest_required": true,
+    "provider_configuration_pin_required": true,
+    "provider_version_or_commit_pin_required": true
+  },
+  "retaindb_acceptance_gate": {
+    "acceptance_result": "PENDING_LIVE_ACCEPTANCE",
+    "fallback_on_no_go": "graphiti",
+    "fallback_requires_independent_acceptance": true,
+    "go_requires_all": [
+      "create_write",
+      "exact_raw_response_capture",
+      "deterministic_or_recorded_ordering",
+      "exact_provider_native_ids",
+      "source_version_transitions",
+      "temporal_validity",
+      "retrieval",
+      "restart_persistence",
+      "provenance_relationship_edges",
+      "provider_configuration_pinning",
+      "provider_version_commit_pinning"
+    ],
+    "provider": "retaindb-server",
+    "unavailable_or_unstable_required_field_result": "NO_GO"
+  },
+  "rq3": {
+    "activation_gate": [
+      "stale_or_revoked_proposition_is_PROVIDER_OBSERVED",
+      "authority_is_independently_known",
+      "proposition_identity_is_exactly_verified",
+      "stale_lineage_alone_is_insufficient",
+      "exposure_reproduces_under_declared_repetition_policy",
+      "exact_delivered_pre_llm_context_bytes_are_frozen",
+      "exact_model_boundary_serialization_sha256_is_captured",
+      "D0_D1_D2_semantics_are_already_frozen",
+      "provider_and_model_configuration_is_unchanged_after_observation",
+      "separate_user_authorization_for_downstream_model_calls"
+    ],
+    "downstream_model_execution_authorized": false,
+    "enabled": false,
+    "synthetic_challenges_can_activate_empirical_rq3": false
+  },
+  "rq4": {
+    "design_only": true,
+    "full_d2_algorithm_frozen": false,
+    "invariants_for_future_policy": [
+      "stale_only_lineage_and_stale_proposition_to_DENY",
+      "mixed_lineage_and_current_proposition_to_ALLOW",
+      "mixed_lineage_and_stale_proposition_to_DENY",
+      "unresolved_claimed_source_to_QUARANTINE",
+      "revoked_direct_source_to_DENY",
+      "identical_input_bundle_hash_to_identical_deterministic_decision"
+    ],
+    "outputs": [
+      "ALLOW",
+      "DENY",
+      "QUARANTINE"
+    ],
+    "position": "AFTER_PROVIDER_RETRIEVAL_BEFORE_CONTEXT_SERIALIZATION_AND_MODEL_BOUNDARY",
+    "role": "AUTHORITY_FIREWALL_NOT_RETRIEVER"
+  },
+  "run_artifact_contract": {
+    "conditionally_required": {
+      "model-boundary.json": "ONLY_WHEN_DOWNSTREAM_MODEL_CALL_SEPARATELY_AUTHORIZED"
+    },
+    "required": [
+      "environment-manifest.json",
+      "provider-config.json",
+      "authority-ledger.jsonl",
+      "provider-raw-response.json",
+      "retrieval-candidates.json",
+      "lineage.json",
+      "mediator-input.json",
+      "mediator-decision.json",
+      "latency.jsonl",
+      "run-ledger.json",
+      "completion.json"
+    ],
+    "separate_raw_and_canonical_identity": true
+  },
+  "run_contract": {
+    "maximum_new_runs_if_both_new_providers_support_all_scenarios": 36,
+    "new_provider_repetitions_per_natively_supported_cell": 3,
+    "no_synthetic_substitute_for_unsupported": true,
+    "scheduled_runs": [],
+    "scope": "NEW_PROVIDERS_ONLY",
+    "unsupported_cell_outcome": "UNSUPPORTED"
+  },
+  "scenario_reuse": {
+    "S0": "BASELINE",
+    "S1": "SUPERSESSION_OR_UPDATE",
+    "S2": "HARD_DELETE",
+    "S3": "HARD_DELETE_RESTART_OR_RECONSTRUCTION",
+    "S4": "HARD_DELETE_NATIVE_REDERIVATION",
+    "S5": "NATIVE_REVOKE_INVALIDATE"
+  },
+  "synthetic_evidence_policy": {
+    "allowed_scope": "RQ4_STRESS_TESTING_ONLY",
+    "counts_as_empirical_provider_failure": false,
+    "may_activate_rq3": false
+  }
+}

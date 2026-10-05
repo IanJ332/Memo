@@ -1,0 +1,52 @@
+{
+  "base_commit": "481f9d698e7e48fe9d3d84868a303ec10aa676ea",
+  "branch": "phase-08-expansion-freeze-v2",
+  "freeze_v1": {
+    "modified": false,
+    "sha256": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+    "validator": "PASS"
+  },
+  "freeze_v2": {
+    "draft_path": "experiments/freeze/experiment-freeze-v2.draft.json",
+    "finalized": false,
+    "validator": "PASS"
+  },
+  "hosted_model_calls": 0,
+  "jetstream_state": "SHELVED",
+  "jetstream_used": false,
+  "phase": "08A",
+  "provider_execution": false,
+  "providers": {
+    "provider_4": {
+      "id": "honcho",
+      "status": "PROPOSED_NOT_LIVE_CALIBRATED"
+    },
+    "provider_5_fallback": {
+      "id": "graphiti",
+      "status": "FALLBACK_ONLY"
+    },
+    "provider_5_primary": {
+      "acceptance": "PENDING_LIVE_ACCEPTANCE",
+      "id": "retaindb-server"
+    }
+  },
+  "purpose": "Architecture and experiment-contract foundation for incremental five-provider lifecycle research and the RQ4 authority mediator.",
+  "rq3": {
+    "activated": false,
+    "calls": 0,
+    "empirical_contexts": 0
+  },
+  "status": "PASS",
+  "tests": {
+    "phase08a_targeted": {
+      "command": ".venv/Scripts/python.exe -m pytest tests/unit/test_phase08a_models.py tests/unit/test_phase08a_draft.py -q",
+      "passed": 85,
+      "status": "PASS"
+    },
+    "unit": {
+      "command": ".venv/Scripts/python.exe -m pytest tests/unit/ -q",
+      "passed": 383,
+      "status": "PASS"
+    }
+  }
+}

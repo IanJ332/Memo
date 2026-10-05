@@ -23,6 +23,8 @@ documents and manifests.
 | Phase 06B-S2R2 — path/transfer hardening | PASS, LOCAL ONLY; PUBLICATION PENDING | current local phase | Persistent artifact resolution validation; SSH transfer bounded retry; Bug A and Bug B root cause analysis | No live execution occurred. Live retry remains unauthorized. |
 | Phase 06B-S — supplement execution | PASS | `58e154a62e1c52e6a478e8f0e2041b437023582a` tested | Attempt `20261002T000350Z-c272b34d2cc3`; 10/10 runs executed; combined derived view created | Jetstream shelved. |
 | Phase 06B closeout — final storage batch | COMPLETE | `58e154a62e1c52e6a478e8f0e2041b437023582a` tested | Coverage 42 / 42; historical ERROR OpenViking S0 r2 preserved; Jetstream SHELVED; RQ3 not yet executed | Next scientific step: residual-only root-cause analysis / RQ3 eligibility review. |
+| Phase 07 — residual analysis and RQ3 closure | PASS, PUBLISHED | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` | Hindsight S1 recovered as current-v2 proposition with superseded lineage; empirical RQ3 contexts 0; RQ3 calls 0 ([decisions](../experiments/PHASE_07_SCIENTIFIC_DECISIONS.md)) | Stale lineage is not stale proposition content; preserve as an RQ4 negative control. |
+| Phase 08A — expansion/Freeze-v2 draft foundation | PASS, LOCAL ONLY | current local phase | Non-final Freeze-v2 draft, provider acceptance gate, strict mediator types, deterministic validators/tests ([design](../experiments/PHASE_08A_EXPANSION_FREEZE_V2_DRAFT.md)) | No live calibration or experiment is authorized; Freeze v1 remains immutable. |
 
-Current branch: `phase-06b-storage-batch`. Jetstream default/end state:
+Current branch: `phase-08-expansion-freeze-v2`. Jetstream default/end state:
 `SHELVED`.

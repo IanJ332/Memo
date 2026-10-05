@@ -30,10 +30,10 @@ the main storage-lifecycle experiment.
 
 | Item | State |
 | --- | --- |
-| Branch | `phase-06b-storage-batch` |
+| Branch | `phase-08-expansion-freeze-v2` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
-| Origin HEAD | `2224704e9bc8223a686a18c91e0eb879cb0a54d7` |
-| Current phase | Phase 06B frozen storage batch: COMPLETE |
+| Published Phase 07 base | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` |
+| Current phase | Phase 08A expansion/Freeze-v2 draft foundation: LOCAL COMPLETE |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
@@ -44,7 +44,8 @@ the main storage-lifecycle experiment.
 | Frozen error | OpenViking S0 r2: historical ERROR (`RemoteDisconnected`, then `ServiceExitedBeforeReady`) |
 | Error root cause | `UNKNOWN`; classified only as provider process crash |
 | Residual cells | Mem0 S1; Hindsight S1; Hindsight S4; OpenViking S4 (OpenViking S0 indexed by repetition disagreement) |
-| RQ3 calls | not yet executed (0 calls) |
+| Phase 07 RQ3 result | NOT ACTIVATED; 0 eligible empirical contexts; 0 calls |
+| Freeze v2 | Non-final design draft only; no live provider accepted |
 | Jetstream | Independently verified `SHELVED`, no external address; live execution is not authorized |
 
 The baseline HEAD above is the scientific handoff point. Local documentation
@@ -70,19 +71,25 @@ experiment or origin state.
   No scientific row or canonical source artifact changed.
 - Phase 06B-S2R2: local repair/validation passed; path-resolution bug (original raw artifact was bound to repo instead of MEMLIFE_DATA_ROOT) and SSH artifact-transfer timeout fragility identified. Published code at 88364966 was live-tested; Jetstream is shelved and provider never started. 10 frozen runs remain never executed. Local repair and validation of the path fix and bounded transfer retries passed; publication pending. No new live retry is authorized.
 - Phase 06B-S: 10 runs of OpenViking successfully executed under attempt `20261002T000350Z-c272b34d2cc3`. Combined view derived with 42/42 runs. Jetstream shelved.
+- Phase 07: exact Hindsight S1 recovery proved current-v2 proposition content
+  with superseded lineage. RQ3 has zero eligible empirical contexts and remains
+  unexecuted. The published closure commit is `481f9d698e7e48fe9d3d84868a303ec10aa676ea`.
+- Phase 08A: local-only contract work defines a non-final Freeze-v2 draft,
+  future Honcho and RetainDB/Graphiti acceptance gates, strict normalized RQ4
+  evidence models, deterministic validation, and regression coverage. No
+  provider, Jetstream, or model execution occurred.
 
 See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 [`EXPERIMENT_LEDGER.md`](EXPERIMENT_LEDGER.md) for canonical provenance.
 
 ## Next authorized action
 
-No live action is currently authorized. Phase 06B frozen storage batch is COMPLETE with coverage 42 / 42. Historical ERROR OpenViking S0 r2 is preserved. Jetstream is SHELVED. RQ3 is not yet executed. The next scientific step is residual-only root-cause analysis / RQ3 eligibility review. Publication does not authorize new execution. Until then, do not start Jetstream, execute any supplement run, execute RQ3, probe the remote provider-crash root cause, change Freeze v1, or rerun any completed repetition.
-
-The dedicated runner derives only OpenViking S0 r3 and S2/S3/S4 r1–r3 from the
-validated plan. It uses a new attempt ID, emits
-`execution_origin=SUPPLEMENT`, preserves the S0 r2 error, captures bounded
-observability-only diagnostics, and stops without retry if provider integrity
-is lost. Combined analysis is derived and retains both source attempts.
+No live action is currently authorized. The next step is scientific review of
+the Phase 08A draft and acceptance contract. Honcho is proposed but not
+live-calibrated. RetainDB Server remains `PENDING_LIVE_ACCEPTANCE`; Graphiti is
+fallback only. Do not start Jetstream, install or contact any proposed provider,
+execute RQ3, call a hosted model, finalize Freeze v2, change Freeze v1, or rerun
+any of the 42 historical repetitions without separate authorization.
 
 ## Safe continuation checklist
 
