@@ -11,6 +11,11 @@ from memlife.adapters.base import (
 )
 from memlife.adapters.reference import ReferenceMemoryAdapter
 from memlife.adapters.hindsight import HindsightMemoryAdapter
+from memlife.adapters.honcho import (
+    HonchoAdapterConfig,
+    HonchoAdapterSkeleton,
+    LiveProviderExecutionNotAuthorized,
+)
 from memlife.adapters.openviking import OpenVikingMemoryAdapter
 
 __all__ = [
@@ -20,6 +25,9 @@ __all__ = [
     "MemoryNotFoundError",
     "MemoryProviderAdapter",
     "HindsightMemoryAdapter",
+    "HonchoAdapterConfig",
+    "HonchoAdapterSkeleton",
+    "LiveProviderExecutionNotAuthorized",
     "OpenVikingMemoryAdapter",
     "ProviderCapability",
     "ReferenceMemoryAdapter",

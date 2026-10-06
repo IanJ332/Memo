@@ -30,10 +30,11 @@ the main storage-lifecycle experiment.
 
 | Item | State |
 | --- | --- |
-| Branch | `phase-08-expansion-freeze-v2` |
+| Branch | `phase-08b-honcho-acceptance` |
+| Published Phase 08A branch | `phase-08-expansion-freeze-v2` at `a17bc7cb05558012992c19bb264fc7a6e18ac06b` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Published Phase 07 base | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` |
-| Current phase | Phase 08A expansion/Freeze-v2 draft foundation: LOCAL COMPLETE |
+| Current phase | Phase 08B-0 Honcho acceptance preflight: PASS, REVIEWED; PUBLICATION PENDING |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
@@ -74,22 +75,50 @@ experiment or origin state.
 - Phase 07: exact Hindsight S1 recovery proved current-v2 proposition content
   with superseded lineage. RQ3 has zero eligible empirical contexts and remains
   unexecuted. The published closure commit is `481f9d698e7e48fe9d3d84868a303ec10aa676ea`.
-- Phase 08A: local-only contract work defines a non-final Freeze-v2 draft,
-  future Honcho and RetainDB/Graphiti acceptance gates, strict normalized RQ4
-  evidence models, deterministic validation, and regression coverage. No
-  provider, Jetstream, or model execution occurred.
+- Phase 08A: published on `phase-08-expansion-freeze-v2` at
+  `a17bc7cb05558012992c19bb264fc7a6e18ac06b`. It defines a non-final Freeze-v2
+  draft, future Honcho and RetainDB/Graphiti acceptance gates, strict normalized
+  RQ4 evidence models, deterministic validation, and regression coverage. No
+  provider, Jetstream, or model execution occurred; Freeze v2 remains draft
+  and is not finalized.
+- Phase 08B-0: final review passed, but publication is still pending. The
+  local-only Honcho preflight adds a fail-closed adapter skeleton,
+  complete capability and S0-S5 probe plans, raw-evidence and quiescence
+  contracts, a future non-executable Phase 08B-1 manifest, and deterministic
+  validation. Honcho was not installed or contacted; all capability and
+  scenario outcomes remain `UNKNOWN`; model calls of every kind were zero.
+  Any future Honcho provider-internal model inference is provider behavior,
+  remains separately unauthorized, must be configuration-pinned and counted,
+  and cannot act as an authority/security judge or activate RQ3.
 
 See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 [`EXPERIMENT_LEDGER.md`](EXPERIMENT_LEDGER.md) for canonical provenance.
 
 ## Next authorized action
 
-No live action is currently authorized. The next step is scientific review of
-the Phase 08A draft and acceptance contract. Honcho is proposed but not
-live-calibrated. RetainDB Server remains `PENDING_LIVE_ACCEPTANCE`; Graphiti is
-fallback only. Do not start Jetstream, install or contact any proposed provider,
-execute RQ3, call a hosted model, finalize Freeze v2, change Freeze v1, or rerun
-any of the 42 historical repetitions without separate authorization.
+Phase 08B-0 final review has passed, but publication is still pending.
+No live action is currently authorized. The reviewed commit must be published
+before any Phase08B-1 authorization can be considered. The next operational
+sequence is:
+
+1. Publish the reviewed Phase08B-0 commit.
+2. Verify the exact remote SHA.
+3. Obtain separate user authorization for Phase08B-1 live execution.
+4. Only then run Honcho live acceptance on Jetstream.
+
+Until that sequence completes, Jetstream remains `SHELVED`, Honcho has not
+been contacted, Honcho acceptance is `NOT YET EVALUATED`, and every Honcho
+capability outcome remains `UNKNOWN`. Freeze v2 remains a draft and is not
+finalized. RQ3 remains disabled with zero calls, and downstream model execution
+remains unauthorized with zero calls. Any future Honcho provider-internal model
+execution requires separate Phase08B-1 authorization, configuration pinning,
+and separate accounting; it cannot act as an authority/security judge or
+activate RQ3. The prepared Phase08B-1 manifest remains non-executable.
+
+RetainDB Server remains `PENDING_LIVE_ACCEPTANCE`; Graphiti is fallback only.
+Do not start Jetstream, install or contact any proposed provider, change
+Freeze v1, or rerun any of the 42 historical repetitions without separate
+authorization.
 
 ## Safe continuation checklist
 
