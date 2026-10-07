@@ -30,11 +30,11 @@ the main storage-lifecycle experiment.
 
 | Item | State |
 | --- | --- |
-| Branch | `phase-08b-honcho-acceptance` |
+| Branch | `main` after Phase 08B-0 integration |
 | Published Phase 08A branch | `phase-08-expansion-freeze-v2` at `a17bc7cb05558012992c19bb264fc7a6e18ac06b` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Published Phase 07 base | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` |
-| Current phase | Phase 08B-0 Honcho acceptance preflight: PASS, REVIEWED; PUBLICATION PENDING |
+| Current phase | Phase 08B-0 Honcho acceptance preflight: PASS, REVIEWED, PUBLISHED at `7bf35a849987a255252954ac3ea907ee3cad7822`; Phase 08B-1 is the separate next phase |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
@@ -47,7 +47,7 @@ the main storage-lifecycle experiment.
 | Residual cells | Mem0 S1; Hindsight S1; Hindsight S4; OpenViking S4 (OpenViking S0 indexed by repetition disagreement) |
 | Phase 07 RQ3 result | NOT ACTIVATED; 0 eligible empirical contexts; 0 calls |
 | Freeze v2 | Non-final design draft only; no live provider accepted |
-| Jetstream | Independently verified `SHELVED`, no external address; live execution is not authorized |
+| Jetstream | `SHELVED`; not used by this governance remediation; Phase 08B-1 requires separate authorization |
 
 The baseline HEAD above is the scientific handoff point. Local documentation
 commits may make `git rev-parse HEAD` newer without changing the original
@@ -81,8 +81,9 @@ experiment or origin state.
   RQ4 evidence models, deterministic validation, and regression coverage. No
   provider, Jetstream, or model execution occurred; Freeze v2 remains draft
   and is not finalized.
-- Phase 08B-0: final review passed, but publication is still pending. The
-  local-only Honcho preflight adds a fail-closed adapter skeleton,
+- Phase 08B-0: final review passed and the accepted preflight commit
+  `7bf35a849987a255252954ac3ea907ee3cad7822` is published. The local-only
+  Honcho preflight adds a fail-closed adapter skeleton,
   complete capability and S0-S5 probe plans, raw-evidence and quiescence
   contracts, a future non-executable Phase 08B-1 manifest, and deterministic
   validation. Honcho was not installed or contacted; all capability and
@@ -96,15 +97,15 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ## Next authorized action
 
-Phase 08B-0 final review has passed, but publication is still pending.
-No live action is currently authorized. The reviewed commit must be published
-before any Phase08B-1 authorization can be considered. The next operational
-sequence is:
+Phase 08B-0 is published on `main` through its accepted commit
+`7bf35a849987a255252954ac3ea907ee3cad7822`. Honcho live acceptance was not
+part of Phase 08B-0. Phase 08B-1 is a separate next phase and must begin from
+a branch created from this updated `main`; no live action is authorized by this
+closeout. The next operational sequence is:
 
-1. Publish the reviewed Phase08B-0 commit.
-2. Verify the exact remote SHA.
-3. Obtain separate user authorization for Phase08B-1 live execution.
-4. Only then run Honcho live acceptance on Jetstream.
+1. Create the dedicated Phase 08B-1 branch from updated `main`.
+2. Obtain separate user authorization for Phase 08B-1 live execution.
+3. Only then run Honcho live acceptance on Jetstream.
 
 Until that sequence completes, Jetstream remains `SHELVED`, Honcho has not
 been contacted, Honcho acceptance is `NOT YET EVALUATED`, and every Honcho
