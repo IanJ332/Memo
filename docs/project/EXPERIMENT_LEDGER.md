@@ -187,8 +187,10 @@ is no majority voting and no replacement of errors.
 - Interpretation: no security exploit was demonstrated. Freeze v1 is unchanged;
   Freeze v2 remains a non-final draft.
 - Scientific record: [closeout](../experiments/PHASE_08B1_HONCHO_SCIENTIFIC_CLOSEOUT.md).
-- Git publication: branch `phase-08b1-candidate10-publication` is published at
-  `54c1f7847af582cffc078fbc99aecfaab6b12dc2`; merge to `main` remains pending.
-  The raw evidence ZIP remains local and unpublished.
+- Git publication: the original scientific closeout commit on
+  `phase-08b1-candidate10-publication` is
+  `54c1f7847af582cffc078fbc99aecfaab6b12dc2`. The latest published portability
+  closure is `3c126216f4f5b7ac4f842e344598324c8d6a4097`; merge to `main` remains
+  pending. The raw evidence ZIP remains local and unpublished.
 
 

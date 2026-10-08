@@ -14,11 +14,12 @@ Authoritative**.
 4. Read the experiment or provider documents linked from those files only when
    needed.
 
-The active line is `phase-08b1-candidate10-publication`. The branch is published
-at `54c1f7847af582cffc078fbc99aecfaab6b12dc2`; scientific closeout is accepted,
-and merge to `main` is pending pre-merge reproducibility review. Candidate10
-attempt `20261007T165110Z-19d0ccd6b106` is scientifically complete and its
-frozen Honcho provider decision is **NO_GO**. The result preserves 10
+The active line is `phase-08b1-candidate10-publication`. The original Candidate10
+publication commit is `54c1f7847af582cffc078fbc99aecfaab6b12dc2`; the published
+portability closure is `3c126216f4f5b7ac4f842e344598324c8d6a4097`. Scientific
+closeout is accepted and merge to `main` remains pending final review. Candidate10
+attempt `20261007T165110Z-19d0ccd6b106` is scientifically complete and its frozen
+Honcho provider decision is **NO_GO**. The result preserves 10
 `SUPPORTED`, 4 `UNSUPPORTED`, and 4 `UNKNOWN` capabilities; only S0 was
 directly executed.
 S1 remains `UNKNOWN`, S2-S5 are capability-derived `UNSUPPORTED`, and native
