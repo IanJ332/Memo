@@ -36,8 +36,8 @@ def test_cold_agent_can_answer_required_bootstrap_questions() -> None:
     assert "Retrieved != Authoritative" in handoff
     assert "phase-08-expansion-freeze-v2" in handoff
     assert "42 planned; 32 executed; 31 success; 1 error; 10 never executed" in handoff
-    assert "SHELVED" in handoff and "live execution is not authorized" in handoff
-    assert "Next authorized action" in handoff and "No live action is currently" in handoff
+    assert "SHELVED" in handoff and "Phase 08B-1 requires separate authorization" in handoff
+    assert "Next authorized action" in handoff and "no live action is authorized" in handoff
     assert "Phase 06B-S1" in state and "PASS, LOCAL ONLY" in state
     assert "Phase 07" in state and "PASS, PUBLISHED" in state
     assert "Phase 08A" in state and "PASS, LOCAL ONLY" in state

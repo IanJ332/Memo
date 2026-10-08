@@ -215,3 +215,26 @@ each regression. It is not generic troubleshooting advice.
 - **Correct fix:** Implement bounded retry solely on the base64 SSH read command, preserving already downloaded files and failing clearly after retries.
 - **Regression invariant:** Transport retry may retry evidence retrieval only, never scientific execution.
 - **Protection:** `scripts/jetstream/phase06b_supplement.py` bounded retry and `tests/unit/test_phase06b_supplement_retrieval.py`.
+
+## Phase 08B-1 remote completion separated from SSH transport
+
+- **Symptom:** Candidate10 wrote authoritative remote completion at
+  `2026-10-07T17:00:30.443178+00:00`, but the local controller remained inside
+  its primary SSH subprocess until the 5,400-second timeout and therefore did
+  not reach result parsing or copyback.
+- **Root cause:** **UNKNOWN**. The supported failure locus is the controller's
+  SSH transport after remote scientific completion; no evidence identifies an
+  inherited handle, blocked remote-Python exit path, or specific SSH defect.
+- **Wrong / insufficient:** convert transport `BLOCKED` into provider failure,
+  infer a transport mechanism without evidence, increase the timeout as a
+  substitute for diagnosis, or rerun Candidate10 to recover evidence.
+- **Correct handling:** recover completion and evidence read-only, verify exact
+  attempt-scoped hashes, keep scientific and controller statuses separate, and
+  retry only bounded status/copy operations—never scientific execution.
+- **Regression invariant:** remote scientific completion, provider decision,
+  controller transport outcome, and lifecycle cleanup are independent fields.
+  A transport timeout never authorizes or implies a scientific rerun.
+- **Protection:**
+  [`PHASE_08B1_CONTROLLER_HARDENING_RECOMMENDATIONS.md`](../infrastructure/PHASE_08B1_CONTROLLER_HARDENING_RECOMMENDATIONS.md),
+  the immutable Candidate10 attempt, and the independently verified completion
+  and evidence manifests.

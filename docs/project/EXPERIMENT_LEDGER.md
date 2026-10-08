@@ -149,4 +149,43 @@ is no majority voting and no replacement of errors.
 - RQ3: **not yet executed** (0 downstream decision model calls).
 - Next scientific step: **residual-only root-cause analysis / RQ3 eligibility review**.
 
+## Phase 08B-1 Candidate10 Honcho acceptance
+
+- Attempt ID: `20261007T165110Z-19d0ccd6b106`.
+- Experiment base commit: `cb44f639642442b8277bc3cb2f6afb4b96d81307`.
+- Provider: Honcho 3.2.1 at commit
+  `79cb31645f4efdef626d1bd9316a648adb5da89b`, Git tree
+  `80e5aaa7104b3566aa88d55954340c4593cf9cd7`.
+- Scientific status: **COMPLETE**. Frozen provider decision: **NO_GO**.
+- Capability classifications: **10 SUPPORTED / 4 UNSUPPORTED / 4 UNKNOWN**.
+- Scenarios: S0 directly executed and `SUPPORTED`; S1 `UNKNOWN`; S2-S5
+  capability-derived `UNSUPPORTED` and not directly executed.
+- Quiescence: normal deriver `SUPPORTED`; native Dream `UNKNOWN` under the
+  frozen new-work-then-stable-empty criterion.
+- Model accounting: 21 provider-internal calls (12 hosted text-generation,
+  9 local embedding); downstream calls **0**; RQ3 calls **0**.
+- Required completion evidence: **23 / 23** present with exact SHA-256 and
+  byte-count matches. Authoritative completion SHA-256:
+  `ca636f62ec87bfad5aa3e456a3584ed65f48bdb585d4747afce34bcbe1700f23`.
+- Indexed primary evidence: **95 / 95** paths present and SHA-256 verified;
+  all 88 recorded byte expectations match. See the
+  [verification manifest](../../manifests/phase-08b1-candidate10-evidence-verification.json)
+  and [provenance/gaps report](../experiments/PHASE_08B1_EVIDENCE_PROVENANCE_AND_GAPS.md).
+- Accepted review bundle SHA-256:
+  `43e63ce4632735ba30582a649a942f9dd98a31e33b241045c01d906120a4d5d9`.
+- Raw appendix identity: SHA-256
+  `3eae5e4c07552c562aaff56bd5f1de2eb5ca61648d6a99d29ff2ac159d6b91df`,
+  60,291 bytes. It remains preserved locally and is **not published** in the
+  repository; see the [appendix reference](../experiments/PHASE_08B1_PRIMARY_RAW_EVIDENCE_APPENDIX.md).
+- Controller outcome: remote scientific completion preceded a local primary
+  SSH timeout. The transport root cause remains `UNKNOWN`; the operational
+  `BLOCKED` controller record does not negate or explain the frozen scientific
+  `NO_GO` result.
+- Lifecycle: exactly one authorized Candidate10 execution; instance returned
+  to `SHELVED`; owned floating IP removed. Candidate10 must not be rerun or
+  replaced.
+- Interpretation: no security exploit was demonstrated. Freeze v1 is unchanged;
+  Freeze v2 remains a non-final draft.
+- Scientific record: [closeout](../experiments/PHASE_08B1_HONCHO_SCIENTIFIC_CLOSEOUT.md).
+
 

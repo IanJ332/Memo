@@ -1,0 +1,2099 @@
+{
+  "accepted_review_bundle_sha256": "43e63ce4632735ba30582a649a942f9dd98a31e33b241045c01d906120a4d5d9",
+  "archive_scope": {
+    "excluded": [
+      {
+        "evidence_gap": false,
+        "reason": "Protected database dump; not indexed primary evidence; excluded without reading or privilege bypass.",
+        "relative_path": "provider-state/redis/dump.rdb"
+      },
+      {
+        "evidence_gap": false,
+        "reason": "Configuration artifact outside indexed primary-evidence scope; conservatively excluded from raw appendix.",
+        "relative_path": "effective-config/api.json"
+      },
+      {
+        "evidence_gap": false,
+        "reason": "Configuration artifact outside indexed primary-evidence scope; conservatively excluded from raw appendix.",
+        "relative_path": "effective-config/deriver.json"
+      },
+      {
+        "evidence_gap": false,
+        "reason": "Sensitive runtime configuration; cleaned remotely per runtime-file-lifecycle.json and never archived.",
+        "relative_path": ".env"
+      }
+    ],
+    "included": "All deduplicated primary paths referenced by provider-raw-response.json and provider-evidence-index.json, plus exact copies of both index roots.",
+    "safety_assessment": "No unredacted credentials, secrets, private keys, protected dumps, or private database contents were identified in the 95 indexed primary paths. provider-config.json is an exact original whose sensitive values were already redacted at source; no derivative replaces it."
+  },
+  "archive_verification": {
+    "all_primary_entries_reopen_and_match_source": true,
+    "index_roots_reopen_and_match_source": true,
+    "verification_manifest_entry_matches_external_manifest": true
+  },
+  "artifacts": [
+    {
+      "actual_bytes": 4016,
+      "actual_sha256": "9485c95c9d087fcf1529a5757f82608312cbc9f84e84ffc6d1f9bc8d2dacada8",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "capability_evidence",
+        "completion_required_artifact"
+      ],
+      "expected_bytes": 4016,
+      "expected_sha256": "9485c95c9d087fcf1529a5757f82608312cbc9f84e84ffc6d1f9bc8d2dacada8",
+      "present": true,
+      "reference_sources": [
+        "completion.json:artifacts.lineage.json",
+        "provider-evidence-index.json:capability_evidence.native_rederivation_consolidation",
+        "provider-evidence-index.json:capability_evidence.provenance_relationship_edges"
+      ],
+      "relative_path": "lineage.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 633,
+      "actual_sha256": "6874951df3179171ee375516e94e1cb8d0e9c763c01a1f75b2a726be44143a61",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": null,
+      "byte_expectation_recorded": false,
+      "categories": [
+        "capability_evidence"
+      ],
+      "expected_bytes": null,
+      "expected_sha256": "6874951df3179171ee375516e94e1cb8d0e9c763c01a1f75b2a726be44143a61",
+      "present": true,
+      "reference_sources": [
+        "provider-evidence-index.json:capability_evidence.create_write"
+      ],
+      "relative_path": "probes/create-write/evidence.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 519,
+      "actual_sha256": "a1797856121dd05102a5d95717be7da3dfb6d2fd2490b01582ed9e8d65da5716",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": null,
+      "byte_expectation_recorded": false,
+      "categories": [
+        "capability_evidence"
+      ],
+      "expected_bytes": null,
+      "expected_sha256": "a1797856121dd05102a5d95717be7da3dfb6d2fd2490b01582ed9e8d65da5716",
+      "present": true,
+      "reference_sources": [
+        "provider-evidence-index.json:capability_evidence.exact_provider_native_ids"
+      ],
+      "relative_path": "probes/exact-native-ids/identity-map.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 349,
+      "actual_sha256": "ff143581721ee9fa53ff941de94d1623fa793450f4d639d9c7ea0fcd94a0420a",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "adapter_raw_capture"
+      ],
+      "expected_bytes": 349,
+      "expected_sha256": "ff143581721ee9fa53ff941de94d1623fa793450f4d639d9c7ea0fcd94a0420a",
+      "present": true,
+      "reference_sources": [
+        "provider-evidence-index.json:adapter_raw_captures[1]",
+        "provider-raw-response.json:adapter_raw_captures[1]"
+      ],
+      "relative_path": "probes/honcho_capability_create_write_v1/provider-raw-response.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 399,
+      "actual_sha256": "2fe803288a2be6b6bb7282bcc47564efdb1747efb6e1fc9024d4bfcb83805f6f",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "adapter_raw_capture"
+      ],
+      "expected_bytes": 399,
+      "expected_sha256": "2fe803288a2be6b6bb7282bcc47564efdb1747efb6e1fc9024d4bfcb83805f6f",
+      "present": true,
+      "reference_sources": [
+        "provider-evidence-index.json:adapter_raw_captures[2]",
+        "provider-raw-response.json:adapter_raw_captures[2]"
+      ],
+      "relative_path": "probes/honcho_capability_raw_inspection_v1/provider-raw-response.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 349,
+      "actual_sha256": "ff143581721ee9fa53ff941de94d1623fa793450f4d639d9c7ea0fcd94a0420a",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "adapter_raw_capture"
+      ],
+      "expected_bytes": 349,
+      "expected_sha256": "ff143581721ee9fa53ff941de94d1623fa793450f4d639d9c7ea0fcd94a0420a",
+      "present": true,
+      "reference_sources": [
+        "provider-evidence-index.json:adapter_raw_captures[3]",
+        "provider-raw-response.json:adapter_raw_captures[3]"
+      ],
+      "relative_path": "probes/honcho_capability_retrieval_v1/provider-raw-response.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 819,
+      "actual_sha256": "eb94815576353e1cac6c3eadcc0fab3da99e0376e4e7a1e03b69544ad9373db7",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": null,
+      "byte_expectation_recorded": false,
+      "categories": [
+        "capability_evidence"
+      ],
+      "expected_bytes": null,
+      "expected_sha256": "eb94815576353e1cac6c3eadcc0fab3da99e0376e4e7a1e03b69544ad9373db7",
+      "present": true,
+      "reference_sources": [
+        "provider-evidence-index.json:capability_evidence.exact_raw_response_capture"
+      ],
+      "relative_path": "probes/raw-capture/raw-response-identity.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 624,
+      "actual_sha256": "4f1717545c8e8a429e1f1e2b71fa405a53850be51885ec6d1e06c14009bfe271",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": null,
+      "byte_expectation_recorded": false,
+      "categories": [
+        "capability_evidence"
+      ],
+      "expected_bytes": null,
+      "expected_sha256": "4f1717545c8e8a429e1f1e2b71fa405a53850be51885ec6d1e06c14009bfe271",
+      "present": true,
+      "reference_sources": [
+        "provider-evidence-index.json:capability_evidence.raw_inspection"
+      ],
+      "relative_path": "probes/raw-inspection/evidence.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 1435,
+      "actual_sha256": "da6b4294b6938214c6d2091f911c83ae7afae4ec2b62785c0d4d2ae8ac292897",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": null,
+      "byte_expectation_recorded": false,
+      "categories": [
+        "capability_evidence"
+      ],
+      "expected_bytes": null,
+      "expected_sha256": "da6b4294b6938214c6d2091f911c83ae7afae4ec2b62785c0d4d2ae8ac292897",
+      "present": true,
+      "reference_sources": [
+        "provider-evidence-index.json:capability_evidence.restart_persistence"
+      ],
+      "relative_path": "probes/restart-persistence/evidence.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 790,
+      "actual_sha256": "7c3850b2cf249e1116cf597edcedf3d9b2f1e4fbac4228be538190bb8563d9e0",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": null,
+      "byte_expectation_recorded": false,
+      "categories": [
+        "capability_evidence"
+      ],
+      "expected_bytes": null,
+      "expected_sha256": "7c3850b2cf249e1116cf597edcedf3d9b2f1e4fbac4228be538190bb8563d9e0",
+      "present": true,
+      "reference_sources": [
+        "provider-evidence-index.json:capability_evidence.deterministic_or_recorded_ordering"
+      ],
+      "relative_path": "probes/retrieval-ordering/evidence.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 1339,
+      "actual_sha256": "74e5f75ee10f45c7d6ef3211a45b8dcafb2d9c62c07d5a19c45fdb72a08cd8af",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": null,
+      "byte_expectation_recorded": false,
+      "categories": [
+        "capability_evidence"
+      ],
+      "expected_bytes": null,
+      "expected_sha256": "74e5f75ee10f45c7d6ef3211a45b8dcafb2d9c62c07d5a19c45fdb72a08cd8af",
+      "present": true,
+      "reference_sources": [
+        "provider-evidence-index.json:capability_evidence.retrieval"
+      ],
+      "relative_path": "probes/retrieval/evidence.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 5873,
+      "actual_sha256": "b01000eabb1c5061069350b0a76fb507d36de37fe19f8fba67c020b5a9b0eef6",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "capability_evidence",
+        "completion_required_artifact"
+      ],
+      "expected_bytes": 5873,
+      "expected_sha256": "b01000eabb1c5061069350b0a76fb507d36de37fe19f8fba67c020b5a9b0eef6",
+      "present": true,
+      "reference_sources": [
+        "completion.json:artifacts.provider-config.json",
+        "provider-evidence-index.json:capability_evidence.provider_configuration_pinning"
+      ],
+      "relative_path": "provider-config.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_REDACTED_AT_SOURCE",
+      "shareability_note": "Original indexed artifact already contains <REDACTED> placeholders; no sanitized derivative was needed or substituted."
+    },
+    {
+      "actual_bytes": 15,
+      "actual_sha256": "a29ee2b15c494311c52521766e44af56a3ad2248e7a8ab465e5206463c13d288",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 15,
+      "expected_sha256": "a29ee2b15c494311c52521766e44af56a3ad2248e7a8ab465e5206463c13d288",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[1]"
+      ],
+      "relative_path": "provider-raw-responses/001-health.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 117568,
+      "actual_sha256": "88da8ff04ef7a96846e3173cad93b767c141b2c9a5fd7570cb8d3a0fd0c670bb",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 117568,
+      "expected_sha256": "88da8ff04ef7a96846e3173cad93b767c141b2c9a5fd7570cb8d3a0fd0c670bb",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[2]"
+      ],
+      "relative_path": "provider-raw-responses/002-openapi.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_SCHEMA_DOCUMENT",
+      "shareability_note": "OpenAPI schema contains security-related field names but no observed credential values."
+    },
+    {
+      "actual_bytes": 103,
+      "actual_sha256": "40777485dff6b1802ae25560b348ce0af7b511d5ce6bb3a5e2b5f040095642fe",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 103,
+      "expected_sha256": "40777485dff6b1802ae25560b348ce0af7b511d5ce6bb3a5e2b5f040095642fe",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[3]"
+      ],
+      "relative_path": "provider-raw-responses/003-workspace-create.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 144,
+      "actual_sha256": "94910da41c4b95fa84af8de02e33dbe8558fa503a69fb8601c233db831bba5a1",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 144,
+      "expected_sha256": "94910da41c4b95fa84af8de02e33dbe8558fa503a69fb8601c233db831bba5a1",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[4]"
+      ],
+      "relative_path": "provider-raw-responses/004-peer-create.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 164,
+      "actual_sha256": "cbb498e73feac226c81b25741c69c0966a8e2be5411941de6f8fd2b48a5b6020",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 164,
+      "expected_sha256": "cbb498e73feac226c81b25741c69c0966a8e2be5411941de6f8fd2b48a5b6020",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[5]"
+      ],
+      "relative_path": "provider-raw-responses/005-session-create.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "b6a1376f6c84d8c3738b80ae2bb1c36efb50e1c4097eb5fb4d441488abe8a6eb",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "b6a1376f6c84d8c3738b80ae2bb1c36efb50e1c4097eb5fb4d441488abe8a6eb",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[6]"
+      ],
+      "relative_path": "provider-raw-responses/006-explicit-queue-baseline.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "daab586eb6e04ca1e5c3b1581a6577c7da6d5ca76e7d57fae0d13cef30e4f548",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "daab586eb6e04ca1e5c3b1581a6577c7da6d5ca76e7d57fae0d13cef30e4f548",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[7]"
+      ],
+      "relative_path": "provider-raw-responses/007-explicit-queue-01.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "daab586eb6e04ca1e5c3b1581a6577c7da6d5ca76e7d57fae0d13cef30e4f548",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "daab586eb6e04ca1e5c3b1581a6577c7da6d5ca76e7d57fae0d13cef30e4f548",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[8]"
+      ],
+      "relative_path": "provider-raw-responses/008-explicit-queue-02.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "daab586eb6e04ca1e5c3b1581a6577c7da6d5ca76e7d57fae0d13cef30e4f548",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "daab586eb6e04ca1e5c3b1581a6577c7da6d5ca76e7d57fae0d13cef30e4f548",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[9]"
+      ],
+      "relative_path": "provider-raw-responses/009-explicit-queue-03.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "4afa7e1a18daf1d09050985922f87dffb7c2abc749768c209d076868d194c698",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "4afa7e1a18daf1d09050985922f87dffb7c2abc749768c209d076868d194c698",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[10]"
+      ],
+      "relative_path": "provider-raw-responses/010-explicit-queue-04.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[11]"
+      ],
+      "relative_path": "provider-raw-responses/011-explicit-queue-05.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[12]"
+      ],
+      "relative_path": "provider-raw-responses/012-explicit-queue-06.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 435,
+      "actual_sha256": "e0e91e839ee7ef587b898e04d8fff7851672f3da9f67c219c63e6060337d5a83",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 435,
+      "expected_sha256": "e0e91e839ee7ef587b898e04d8fff7851672f3da9f67c219c63e6060337d5a83",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[13]"
+      ],
+      "relative_path": "provider-raw-responses/013-explicit-conclusions-list.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[14]"
+      ],
+      "relative_path": "provider-raw-responses/014-dream-queue-baseline.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 0,
+      "actual_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 0,
+      "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[15]"
+      ],
+      "relative_path": "provider-raw-responses/015-schedule-dream-1.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[16]"
+      ],
+      "relative_path": "provider-raw-responses/016-dream-queue-01.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[17]"
+      ],
+      "relative_path": "provider-raw-responses/017-dream-queue-02.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[18]"
+      ],
+      "relative_path": "provider-raw-responses/018-dream-queue-03.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[19]"
+      ],
+      "relative_path": "provider-raw-responses/019-dream-queue-04.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[20]"
+      ],
+      "relative_path": "provider-raw-responses/020-dream-queue-05.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[21]"
+      ],
+      "relative_path": "provider-raw-responses/021-dream-queue-06.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[22]"
+      ],
+      "relative_path": "provider-raw-responses/022-dream-queue-07.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[23]"
+      ],
+      "relative_path": "provider-raw-responses/023-dream-queue-08.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[24]"
+      ],
+      "relative_path": "provider-raw-responses/024-dream-queue-09.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[25]"
+      ],
+      "relative_path": "provider-raw-responses/025-dream-queue-10.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[26]"
+      ],
+      "relative_path": "provider-raw-responses/026-dream-queue-11.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[27]"
+      ],
+      "relative_path": "provider-raw-responses/027-dream-queue-12.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[28]"
+      ],
+      "relative_path": "provider-raw-responses/028-dream-queue-13.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[29]"
+      ],
+      "relative_path": "provider-raw-responses/029-dream-queue-14.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[30]"
+      ],
+      "relative_path": "provider-raw-responses/030-dream-queue-15.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[31]"
+      ],
+      "relative_path": "provider-raw-responses/031-dream-queue-16.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[32]"
+      ],
+      "relative_path": "provider-raw-responses/032-dream-queue-17.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[33]"
+      ],
+      "relative_path": "provider-raw-responses/033-dream-queue-18.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[34]"
+      ],
+      "relative_path": "provider-raw-responses/034-dream-queue-19.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[35]"
+      ],
+      "relative_path": "provider-raw-responses/035-dream-queue-20.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[36]"
+      ],
+      "relative_path": "provider-raw-responses/036-dream-queue-21.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[37]"
+      ],
+      "relative_path": "provider-raw-responses/037-dream-queue-22.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[38]"
+      ],
+      "relative_path": "provider-raw-responses/038-dream-queue-23.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[39]"
+      ],
+      "relative_path": "provider-raw-responses/039-dream-queue-24.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[40]"
+      ],
+      "relative_path": "provider-raw-responses/040-dream-queue-25.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[41]"
+      ],
+      "relative_path": "provider-raw-responses/041-dream-queue-26.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[42]"
+      ],
+      "relative_path": "provider-raw-responses/042-dream-queue-27.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[43]"
+      ],
+      "relative_path": "provider-raw-responses/043-dream-queue-28.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[44]"
+      ],
+      "relative_path": "provider-raw-responses/044-dream-queue-29.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[45]"
+      ],
+      "relative_path": "provider-raw-responses/045-dream-queue-30.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[46]"
+      ],
+      "relative_path": "provider-raw-responses/046-dream-queue-31.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[47]"
+      ],
+      "relative_path": "provider-raw-responses/047-dream-queue-32.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[48]"
+      ],
+      "relative_path": "provider-raw-responses/048-dream-queue-33.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[49]"
+      ],
+      "relative_path": "provider-raw-responses/049-dream-queue-34.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[50]"
+      ],
+      "relative_path": "provider-raw-responses/050-dream-queue-35.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[51]"
+      ],
+      "relative_path": "provider-raw-responses/051-dream-queue-36.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[52]"
+      ],
+      "relative_path": "provider-raw-responses/052-dream-queue-37.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[53]"
+      ],
+      "relative_path": "provider-raw-responses/053-dream-queue-38.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[54]"
+      ],
+      "relative_path": "provider-raw-responses/054-dream-queue-39.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[55]"
+      ],
+      "relative_path": "provider-raw-responses/055-dream-queue-40.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[56]"
+      ],
+      "relative_path": "provider-raw-responses/056-dream-queue-41.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[57]"
+      ],
+      "relative_path": "provider-raw-responses/057-dream-queue-42.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[58]"
+      ],
+      "relative_path": "provider-raw-responses/058-dream-queue-43.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[59]"
+      ],
+      "relative_path": "provider-raw-responses/059-dream-queue-44.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[60]"
+      ],
+      "relative_path": "provider-raw-responses/060-dream-queue-45.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[61]"
+      ],
+      "relative_path": "provider-raw-responses/061-dream-queue-46.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[62]"
+      ],
+      "relative_path": "provider-raw-responses/062-dream-queue-47.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[63]"
+      ],
+      "relative_path": "provider-raw-responses/063-dream-queue-48.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[64]"
+      ],
+      "relative_path": "provider-raw-responses/064-dream-queue-49.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[65]"
+      ],
+      "relative_path": "provider-raw-responses/065-dream-queue-50.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[66]"
+      ],
+      "relative_path": "provider-raw-responses/066-dream-queue-51.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[67]"
+      ],
+      "relative_path": "provider-raw-responses/067-dream-queue-52.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[68]"
+      ],
+      "relative_path": "provider-raw-responses/068-dream-queue-53.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[69]"
+      ],
+      "relative_path": "provider-raw-responses/069-dream-queue-54.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[70]"
+      ],
+      "relative_path": "provider-raw-responses/070-dream-queue-55.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[71]"
+      ],
+      "relative_path": "provider-raw-responses/071-dream-queue-56.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[72]"
+      ],
+      "relative_path": "provider-raw-responses/072-dream-queue-57.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[73]"
+      ],
+      "relative_path": "provider-raw-responses/073-dream-queue-58.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[74]"
+      ],
+      "relative_path": "provider-raw-responses/074-dream-queue-59.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 113,
+      "actual_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 113,
+      "expected_sha256": "d27a8d2ca4dc27079800078ae7a8ac7d37cde9c207f37ac263424072c8e66d79",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[75]"
+      ],
+      "relative_path": "provider-raw-responses/075-dream-queue-60.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 1450,
+      "actual_sha256": "692e0279a414bacc27bf804f057a2dd62044db57d1d3a92e1296357ed19547fd",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 1450,
+      "expected_sha256": "692e0279a414bacc27bf804f057a2dd62044db57d1d3a92e1296357ed19547fd",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[76]"
+      ],
+      "relative_path": "provider-raw-responses/076-post-dream-conclusions-list.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 383,
+      "actual_sha256": "b2716d4cf1ac45a19d521ef58728f4edc1fa4ed22a8cb0f9b06b7b80fcb2ce57",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 383,
+      "expected_sha256": "b2716d4cf1ac45a19d521ef58728f4edc1fa4ed22a8cb0f9b06b7b80fcb2ce57",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[77]"
+      ],
+      "relative_path": "provider-raw-responses/077-conclusion-source-ejyOkx4SZI_7vMSHDv773.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 399,
+      "actual_sha256": "2fe803288a2be6b6bb7282bcc47564efdb1747efb6e1fc9024d4bfcb83805f6f",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 399,
+      "expected_sha256": "2fe803288a2be6b6bb7282bcc47564efdb1747efb6e1fc9024d4bfcb83805f6f",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[78]"
+      ],
+      "relative_path": "provider-raw-responses/078-pre-restart-messages.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 15,
+      "actual_sha256": "a29ee2b15c494311c52521766e44af56a3ad2248e7a8ab465e5206463c13d288",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 15,
+      "expected_sha256": "a29ee2b15c494311c52521766e44af56a3ad2248e7a8ab465e5206463c13d288",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[79]"
+      ],
+      "relative_path": "provider-raw-responses/079-health.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 399,
+      "actual_sha256": "2fe803288a2be6b6bb7282bcc47564efdb1747efb6e1fc9024d4bfcb83805f6f",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "provider_raw_response"
+      ],
+      "expected_bytes": 399,
+      "expected_sha256": "2fe803288a2be6b6bb7282bcc47564efdb1747efb6e1fc9024d4bfcb83805f6f",
+      "present": true,
+      "reference_sources": [
+        "provider-raw-response.json:responses[80]"
+      ],
+      "relative_path": "provider-raw-responses/080-post-restart-messages.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 4097,
+      "actual_sha256": "20a6256ce4ab54aa05c925d149275df03a832653f7e82e0f1bb2e448991678b0",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "capability_evidence",
+        "completion_required_artifact"
+      ],
+      "expected_bytes": 4097,
+      "expected_sha256": "20a6256ce4ab54aa05c925d149275df03a832653f7e82e0f1bb2e448991678b0",
+      "present": true,
+      "reference_sources": [
+        "completion.json:artifacts.provider-surface-inventory.json",
+        "provider-evidence-index.json:capability_evidence.hard_delete",
+        "provider-evidence-index.json:capability_evidence.revoke_invalidate",
+        "provider-evidence-index.json:capability_evidence.source_version_transitions",
+        "provider-evidence-index.json:capability_evidence.temporal_validity"
+      ],
+      "relative_path": "provider-surface-inventory.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 2521,
+      "actual_sha256": "910e0a8c6460716ab495a73e6808d87e9da15a373efc2415219a8e3a39681e42",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "capability_evidence",
+        "completion_required_artifact"
+      ],
+      "expected_bytes": 2521,
+      "expected_sha256": "910e0a8c6460716ab495a73e6808d87e9da15a373efc2415219a8e3a39681e42",
+      "present": true,
+      "reference_sources": [
+        "completion.json:artifacts.provider-version.json",
+        "provider-evidence-index.json:capability_evidence.provider_version_commit_pinning"
+      ],
+      "relative_path": "provider-version.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    },
+    {
+      "actual_bytes": 1263,
+      "actual_sha256": "90360683745eed92b5cbef0e3962c357fbcd52726bfb786e98277fb9e1bdf1bb",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "byte_count_match": true,
+      "byte_expectation_recorded": true,
+      "categories": [
+        "completion_required_artifact",
+        "scenario_evidence"
+      ],
+      "expected_bytes": 1263,
+      "expected_sha256": "90360683745eed92b5cbef0e3962c357fbcd52726bfb786e98277fb9e1bdf1bb",
+      "present": true,
+      "reference_sources": [
+        "completion.json:artifacts.scenarios/S0/evidence.json",
+        "provider-evidence-index.json:scenario_evidence.S0"
+      ],
+      "relative_path": "scenarios/S0/evidence.json",
+      "sanitized_derivative": false,
+      "sha256_match": true,
+      "shareability": "SAFE_PRIMARY_EVIDENCE",
+      "shareability_note": "Exact original bytes contain benchmark/provider observations and no identified secret material."
+    }
+  ],
+  "attempt_id": "20261007T165110Z-19d0ccd6b106",
+  "authoritative_completion_sha256": "ca636f62ec87bfad5aa3e456a3584ed65f48bdb585d4747afce34bcbe1700f23",
+  "generated_at": "2026-10-08T03:11:34.753388+00:00",
+  "index_roots": [
+    {
+      "actual_bytes": 36562,
+      "actual_sha256": "6ede3759c570aa1f676301c798c5a5b1923cdc3e019a771f82f104db0e5ce17f",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "relative_path": "provider-raw-response.json"
+    },
+    {
+      "actual_bytes": 6871,
+      "actual_sha256": "c93aec450280f9f563bdaee5b830f41a0c061b521404a60780f9aac5f822af00",
+      "archival_representation": "EXACT_ORIGINAL_BYTES",
+      "relative_path": "provider-evidence-index.json"
+    }
+  ],
+  "missing_or_unverifiable": [],
+  "phase": "08B-1 Candidate10 scientific closeout",
+  "report_kind": "DERIVED_LOCAL_ONLY_ARCHIVAL_VERIFICATION",
+  "schema_version": "phase08b1-candidate10-indexed-evidence-verification-v1",
+  "source_attempt_mutated": false,
+  "summary": {
+    "adapter_raw_capture_entries": 3,
+    "byte_count_mismatches": 0,
+    "capability_evidence_entries": 15,
+    "deduplicated_index_reference_paths": 95,
+    "files_found_locally": 95,
+    "files_missing": 0,
+    "files_sha256_verified": 95,
+    "files_with_recorded_byte_expectation": 88,
+    "files_with_recorded_byte_expectation_verified": 88,
+    "files_without_recorded_byte_expectation": 7,
+    "hash_mismatches": 0,
+    "raw_response_entries": 80,
+    "safe_primary_originals_archived": 95,
+    "sanitized_derivatives_created": 0,
+    "scenario_evidence_entries": 1,
+    "unique_adapter_raw_capture_paths": 3,
+    "unique_capability_evidence_paths": 11,
+    "unique_provider_raw_response_paths": 80,
+    "unique_scenario_evidence_paths": 1
+  },
+  "verification_policy": {
+    "archive_bytes": "EXACT_LOCAL_ORIGINAL_BYTES",
+    "byte_count": "VERIFIED_WHERE_RECORDED_BY_AN_INDEX_OR_COMPLETION",
+    "missing_artifacts": "FAIL_CLOSED_AND_REPORT; NEVER_FABRICATE",
+    "path_deduplication": "POSIX_NORMALIZED_ATTEMPT_RELATIVE_PATH",
+    "sensitive_material": "EXCLUDE; USE_LABELED_SANITIZED_DERIVATIVE_ONLY_IF_NEEDED",
+    "sha256": "REQUIRED_FOR_EVERY_INDEXED_PATH"
+  }
+}

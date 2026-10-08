@@ -30,11 +30,11 @@ the main storage-lifecycle experiment.
 
 | Item | State |
 | --- | --- |
-| Branch | `main` after Phase 08B-0 integration |
+| Branch | `phase-08b1-candidate10-publication` (local publication candidate; not pushed or merged) |
 | Published Phase 08A branch | `phase-08-expansion-freeze-v2` at `a17bc7cb05558012992c19bb264fc7a6e18ac06b` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Published Phase 07 base | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` |
-| Current phase | Phase 08B-0 Honcho acceptance preflight: PASS, REVIEWED, PUBLISHED at `7bf35a849987a255252954ac3ea907ee3cad7822`; Phase 08B-1 is the separate next phase |
+| Current phase | Phase 08B-1 Candidate10: scientific closeout ACCEPTED; frozen provider decision `NO_GO`; local publication preparation pending main review |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
@@ -47,7 +47,7 @@ the main storage-lifecycle experiment.
 | Residual cells | Mem0 S1; Hindsight S1; Hindsight S4; OpenViking S4 (OpenViking S0 indexed by repetition disagreement) |
 | Phase 07 RQ3 result | NOT ACTIVATED; 0 eligible empirical contexts; 0 calls |
 | Freeze v2 | Non-final design draft only; no live provider accepted |
-| Jetstream | `SHELVED`; not used by this governance remediation; Phase 08B-1 requires separate authorization |
+| Jetstream | `SHELVED`; Candidate10 used one separately authorized lifecycle, which is complete and cleaned up; no new live action is authorized |
 
 The baseline HEAD above is the scientific handoff point. Local documentation
 commits may make `git rev-parse HEAD` newer without changing the original
@@ -91,30 +91,38 @@ experiment or origin state.
   Any future Honcho provider-internal model inference is provider behavior,
   remains separately unauthorized, must be configuration-pinned and counted,
   and cannot act as an authority/security judge or activate RQ3.
+- Phase 08B-1 Candidate10: scientific closeout is accepted for attempt
+  `20261007T165110Z-19d0ccd6b106`, with the deterministic provider decision
+  frozen at `NO_GO`. The 18 capability classifications are 10 `SUPPORTED`,
+  4 `UNSUPPORTED`, and 4 `UNKNOWN`. S0 was directly executed; S1 is `UNKNOWN`;
+  S2-S5 are capability-derived `UNSUPPORTED`, not direct scenario executions.
+  Native Dream quiescence is `UNKNOWN`. The provider made 21 internal calls
+  (12 hosted text-generation and 9 local embedding); downstream and RQ3 calls
+  were both zero. All 23 completion artifacts and all 95 indexed primary
+  evidence files were independently verified. The raw appendix remains local
+  and unpublished. The controller's SSH transport failure is distinct from
+  scientific completion, and its root cause remains `UNKNOWN`. No security
+  exploit was demonstrated. Freeze v1 is unchanged and Freeze v2 remains a
+  non-final draft.
 
 See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 [`EXPERIMENT_LEDGER.md`](EXPERIMENT_LEDGER.md) for canonical provenance.
 
 ## Next authorized action
 
-Phase 08B-0 is published on `main` through its accepted commit
-`7bf35a849987a255252954ac3ea907ee3cad7822`. Honcho live acceptance was not
-part of Phase 08B-0. Phase 08B-1 is a separate next phase and must begin from
-a branch created from this updated `main`; no live action is authorized by this
-closeout. The next operational sequence is:
+Phase 08B-1 Candidate10 scientific closeout has been accepted. The immediate
+authorized action is local Git publication preparation and main review of this
+candidate. Do not push or merge without separate authorization. The governing
+preflight rule was that Phase 08B-1 requires separate authorization; Candidate10
+received that authorization, completed once, and must not be rerun or replaced.
+At present, no live action is authorized, including Candidate11.
 
-1. Create the dedicated Phase 08B-1 branch from updated `main`.
-2. Obtain separate user authorization for Phase 08B-1 live execution.
-3. Only then run Honcho live acceptance on Jetstream.
-
-Until that sequence completes, Jetstream remains `SHELVED`, Honcho has not
-been contacted, Honcho acceptance is `NOT YET EVALUATED`, and every Honcho
-capability outcome remains `UNKNOWN`. Freeze v2 remains a draft and is not
-finalized. RQ3 remains disabled with zero calls, and downstream model execution
-remains unauthorized with zero calls. Any future Honcho provider-internal model
-execution requires separate Phase08B-1 authorization, configuration pinning,
-and separate accounting; it cannot act as an authority/security judge or
-activate RQ3. The prepared Phase08B-1 manifest remains non-executable.
+Jetstream remains `SHELVED`. Honcho is not accepted for Freeze-v2 entry because
+the frozen gate returned `NO_GO`. Freeze v2 remains a draft and is not
+finalized. RQ3 was not activated and downstream model calls remain zero. The
+provider-internal calls are separately accounted provider behavior and cannot
+act as an authority/security judge or activate RQ3. The raw evidence appendix
+is preserved locally but is not published with the repository.
 
 RetainDB Server remains `PENDING_LIVE_ACCEPTANCE`; Graphiti is fallback only.
 Do not start Jetstream, install or contact any proposed provider, change

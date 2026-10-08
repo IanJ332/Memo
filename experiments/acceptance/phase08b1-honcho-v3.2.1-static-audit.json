@@ -1,0 +1,437 @@
+{
+  "schema_version": "phase08b1-honcho-v3.2.1-static-audit-v4",
+  "provider": "honcho",
+  "upstream": {
+    "version": "3.2.1",
+    "tag": "v3.2.1",
+    "commit": "79cb31645f4efdef626d1bd9316a648adb5da89b",
+    "source_root": ".local/review/honcho-upstream-v3.2.1"
+  },
+  "compose_contract": {
+    "source": "docker-compose.yml.example",
+    "service_names": [
+      "api",
+      "deriver",
+      "database",
+      "redis"
+    ],
+    "restart_service_names": [
+      "api",
+      "deriver"
+    ]
+  },
+  "configuration_contract": {
+    "text_generation": {
+      "environment_prefix": "DERIVER_MODEL_CONFIG__",
+      "transport_environment": "DERIVER_MODEL_CONFIG__TRANSPORT",
+      "model_environment": "DERIVER_MODEL_CONFIG__MODEL",
+      "base_url_environment": "DERIVER_MODEL_CONFIG__OVERRIDES__BASE_URL",
+      "required_feature": "OpenAI-compatible chat completions with structured JSON output for PromptRepresentation",
+      "source_basis": "src/config.py:DeriverSettings; src/deriver/deriver.py:process_representation_tasks_batch"
+    },
+    "openai_request_contract": {
+      "pinned_sdk": "openai==2.36.0",
+      "deriver_transport": "openai",
+      "deriver_model": "gpt-oss-120b",
+      "deriver_temperature": null,
+      "deriver_max_tokens": 2500,
+      "deriver_structured_output_mode": "json_schema",
+      "deriver_strict_json_schema": true,
+      "dream_transport": "openai",
+      "dream_model": "gpt-oss-120b",
+      "dream_temperature": 0,
+      "dream_reasoning_effort_field": "reasoning_effort",
+      "requested_reasoning_effort": "minimal",
+      "effective_reasoning_effort": "low",
+      "compatibility_resolution": "MINIMAL_TO_LOW",
+      "compatibility_reason": "Jetstream hosted chat endpoint accepts only low, medium, or high",
+      "dream_max_tokens": 8192,
+      "dream_tools_required": true,
+      "source_basis": "uv.lock:openai 2.36.0; src/deriver/deriver.py; src/llm/backends/openai.py:_build_params and complete; src/dreamer/specialists.py"
+    },
+    "embedding": {
+      "assessment": "LOCAL_CACHE_ONLY_EMBEDDING_PREFLIGHT_REQUIRED",
+      "mandatory_for_required_path": true,
+      "natively_disableable_for_required_create_derive_conclusion_path": false,
+      "supported_transports": [
+        "openai",
+        "gemini"
+      ],
+      "openai_compatible_path": "/embeddings",
+      "default_vector_dimensions": 1536,
+      "phase08b1_acceptance_configuration": {
+        "backend": "local_cpu_sentence_transformer",
+        "package": "sentence-transformers",
+        "package_version": "6.1.0",
+        "model": "sentence-transformers/paraphrase-MiniLM-L3-v2",
+        "vector_dimensions": 384,
+        "offline_cache_only": true,
+        "hosted_embedding_forwarding": false
+      },
+      "non_default_pgvector_bootstrap": {
+        "upstream_default_dimensions": 1536,
+        "acceptance_dimensions": 384,
+        "migration_command": "alembic upgrade head",
+        "configuration_script": "scripts/configure_embeddings.py",
+        "requires_empty_embedding_columns": true,
+        "api_deriver_start_after_verified_bootstrap_only": true,
+        "source_basis": "scripts/configure_embeddings.py; docs/v3/contributing/configuration.mdx"
+      },
+      "response_dimension_must_equal_configured_dimension": true,
+      "environment_prefix": "EMBEDDING_MODEL_CONFIG__",
+      "transport_environment": "EMBEDDING_MODEL_CONFIG__TRANSPORT",
+      "model_environment": "EMBEDDING_MODEL_CONFIG__MODEL",
+      "base_url_environment": "EMBEDDING_MODEL_CONFIG__OVERRIDES__BASE_URL",
+      "dimension_environment": "EMBEDDING_VECTOR_DIMENSIONS",
+      "source_basis": "src/config.py:EmbeddingSettings; src/embedding_client.py:_EmbeddingClient; src/crud/document.py:create_observations"
+    },
+    "deriver_batching": {
+      "default_work_unit_target_tokens": 512,
+      "default_batch_input_tokens": 1024,
+      "default_max_age_seconds": 1800,
+      "native_immediate_processing_environment": "DERIVER_FLUSH_ENABLED",
+      "current_fixture_reaches_default_threshold": false,
+      "issue": "One short benchmark message is pending below the 512-token claim threshold until the 1800-second age gate.",
+      "acceptance_flush_enabled": true,
+      "authorized_acceptance_only_change": "DERIVER_FLUSH_ENABLED=true",
+      "authorization_scope": "Phase08B-1 Honcho acceptance probes only",
+      "source_basis": "src/config.py:DeriverSettings; src/deriver/queue_manager.py:claim eligibility"
+    },
+    "dream": {
+      "current_enabled": true,
+      "enabled_types": [
+        "omni"
+      ],
+      "assessment": "AUTHORIZED_NATIVE_DREAM_LINEAGE_PROBE_PENDING_LIVE_OBSERVATION",
+      "operation_budget": 1,
+      "purpose": "PROVENANCE_RELATIONSHIP_EDGES",
+      "automatic_retry_permitted": false,
+      "derived_levels": [
+        "deductive",
+        "inductive",
+        "contradiction"
+      ],
+      "explicit_source_ids_semantics": "empty",
+      "derived_source_ids_semantics": "native conclusion IDs used as premises, supporting sources, or conflicting conclusions",
+      "deduction_model": {
+        "transport": "openai",
+        "model": "gpt-oss-120b",
+        "base_url": "http://host.docker.internal:18081/v1/",
+        "temperature": 0,
+        "thinking_effort": "minimal"
+      },
+      "induction_model": {
+        "transport": "openai",
+        "model": "gpt-oss-120b",
+        "base_url": "http://host.docker.internal:18081/v1/",
+        "temperature": 0,
+        "thinking_effort": "minimal"
+      },
+      "authorized_environment": {
+        "DREAM_ENABLED": "true",
+        "DREAM_ENABLED_TYPES": "[\"omni\"]",
+        "DREAM_DEDUCTION_MODEL_CONFIG__TRANSPORT": "openai",
+        "DREAM_DEDUCTION_MODEL_CONFIG__MODEL": "gpt-oss-120b",
+        "DREAM_DEDUCTION_MODEL_CONFIG__OVERRIDES__BASE_URL": "http://host.docker.internal:18081/v1/",
+        "DREAM_DEDUCTION_MODEL_CONFIG__TEMPERATURE": "0",
+        "DREAM_DEDUCTION_MODEL_CONFIG__THINKING_EFFORT": "minimal",
+        "DREAM_INDUCTION_MODEL_CONFIG__TRANSPORT": "openai",
+        "DREAM_INDUCTION_MODEL_CONFIG__MODEL": "gpt-oss-120b",
+        "DREAM_INDUCTION_MODEL_CONFIG__OVERRIDES__BASE_URL": "http://host.docker.internal:18081/v1/",
+        "DREAM_INDUCTION_MODEL_CONFIG__TEMPERATURE": "0",
+        "DREAM_INDUCTION_MODEL_CONFIG__THINKING_EFFORT": "minimal"
+      },
+      "authorized_change_materialized": true,
+      "source_basis": "src/config.py:DreamSettings; src/schemas/api.py:Conclusion; src/schemas/internal.py:ObservationInput; src/dreamer/specialists.py"
+    }
+  },
+  "fixture_contract": {
+    "one_peer_self_observation_supported": true,
+    "current_one_short_message_sufficient_under_current_config": true,
+    "workspace_shape": "one attempt-isolated workspace, one session, one self-observing peer",
+    "messages": [
+      {
+        "content": "Fictional benchmark subject Rowan keeps the amber notebook in cabinet seven.",
+        "metadata": {
+          "benchmark": "phase08b1",
+          "fictional": true
+        }
+      }
+    ],
+    "reason": "DERIVER_FLUSH_ENABLED=true bypasses the 512-token claim threshold; one fictional message exercises the normal explicit path before one bounded omni Dream exercises native lineage.",
+    "scientific_scenario_semantics_changed": false,
+    "source_basis": "src/deriver/enqueue.py:generate_queue_records"
+  },
+  "lineage_contract": {
+    "explicit_conclusions_are_lineage_edges": false,
+    "supported_requires_derived_level": true,
+    "supported_requires_nonempty_source_ids": true,
+    "supported_requires_each_source_resolve": true,
+    "resolver": "GET /v3/workspaces/{workspace_id}/conclusions/{conclusion_id}",
+    "text_matching_fallback_allowed": false,
+    "times_derived_semantics": "Starts at 1 and is incremented when an independently derived semantic/exact duplicate reinforces the stored conclusion; it is not itself a parent edge.",
+    "raw_id_semantics": "Message.id and Conclusion.id are provider-native public IDs. Conclusion.source_ids contains provider-native Conclusion.id values, never message IDs.",
+    "source_basis": "src/schemas/api.py:Conclusion; src/models.py:Document; src/crud/document.py deduplication and source-link persistence"
+  },
+  "endpoints": [
+    {
+      "id": "health",
+      "available": true,
+      "method": "GET",
+      "path": "/health",
+      "request_body": null,
+      "response_status": [
+        200
+      ],
+      "response_shape": {
+        "status": "ok"
+      },
+      "source_basis": "src/main.py:health_check"
+    },
+    {
+      "id": "workspace_create",
+      "available": true,
+      "method": "POST",
+      "path": "/v3/workspaces",
+      "request_body": {
+        "id": "<workspace_id>"
+      },
+      "response_status": [
+        200,
+        201
+      ],
+      "response_shape": {
+        "id": "string",
+        "metadata": "object",
+        "configuration": "object",
+        "created_at": "datetime"
+      },
+      "source_basis": "src/routers/workspaces.py:get_or_create_workspace; src/schemas/api.py:WorkspaceCreate,Workspace"
+    },
+    {
+      "id": "peer_create",
+      "available": true,
+      "method": "POST",
+      "path": "/v3/workspaces/{workspace_id}/peers",
+      "request_body": {
+        "id": "<peer_id>"
+      },
+      "response_status": [
+        200,
+        201
+      ],
+      "response_shape": {
+        "id": "string",
+        "workspace_id": "string",
+        "metadata": "object",
+        "configuration": "object",
+        "created_at": "datetime"
+      },
+      "source_basis": "src/routers/peers.py:get_or_create_peer; src/schemas/api.py:PeerCreate,Peer"
+    },
+    {
+      "id": "session_create_with_peer_membership",
+      "available": true,
+      "method": "POST",
+      "path": "/v3/workspaces/{workspace_id}/sessions",
+      "request_body": {
+        "id": "<session_id>",
+        "peers": {
+          "<peer_id>": {}
+        }
+      },
+      "response_status": [
+        200,
+        201
+      ],
+      "response_shape": {
+        "id": "string",
+        "workspace_id": "string",
+        "is_active": "boolean",
+        "metadata": "object",
+        "configuration": "object",
+        "created_at": "datetime"
+      },
+      "source_basis": "src/routers/sessions.py:get_or_create_session; src/schemas/api.py:SessionCreate,Session"
+    },
+    {
+      "id": "message_write",
+      "available": true,
+      "method": "POST",
+      "path": "/v3/workspaces/{workspace_id}/sessions/{session_id}/messages",
+      "request_body": {
+        "messages": [
+          {
+            "content": "<fictional_content>",
+            "peer_id": "<peer_id>",
+            "metadata": "<optional_object>"
+          }
+        ]
+      },
+      "response_status": [
+        201
+      ],
+      "response_shape": [
+        {
+          "id": "string",
+          "content": "string",
+          "peer_id": "string",
+          "session_id": "string",
+          "workspace_id": "string",
+          "metadata": "object",
+          "created_at": "datetime",
+          "token_count": "integer"
+        }
+      ],
+      "source_basis": "src/routers/messages.py:create_messages_for_session; src/schemas/api.py:MessageBatchCreate,Message"
+    },
+    {
+      "id": "message_list",
+      "available": true,
+      "method": "POST",
+      "path": "/v3/workspaces/{workspace_id}/sessions/{session_id}/messages/list?page={page}&size={size}",
+      "request_body": {
+        "filters": {}
+      },
+      "response_status": [
+        200
+      ],
+      "response_shape": {
+        "items": "Message[]",
+        "total": "integer",
+        "page": "integer",
+        "size": "integer",
+        "pages": "integer"
+      },
+      "source_basis": "src/routers/messages.py:get_messages"
+    },
+    {
+      "id": "workspace_message_search",
+      "available": true,
+      "method": "POST",
+      "path": "/v3/workspaces/{workspace_id}/search",
+      "request_schema": "WorkspaceMessageSearchOptions",
+      "request_body": {
+        "query": "<deterministic_fictional_query>",
+        "filters": {
+          "session_id": "<isolated_session_id>"
+        },
+        "limit": "integer[1,100]"
+      },
+      "response_status": [
+        200
+      ],
+      "response_shape": "list[Message]",
+      "session_scoping": "filters.session_id",
+      "source_basis": "src/routers/workspaces.py:search_workspace; src/schemas/api.py:WorkspaceMessageSearchOptions,Message"
+    },
+    {
+      "id": "message_delete",
+      "available": false,
+      "method": null,
+      "path": null,
+      "request_body": null,
+      "response_status": [],
+      "response_shape": null,
+      "candidate_mismatch": "DELETE /v3/workspaces/{workspace_id}/sessions/{session_id}/messages/{message_id} is not implemented in v3.2.1.",
+      "source_basis": "src/routers/messages.py contains POST/GET/PUT routes and no DELETE route"
+    },
+    {
+      "id": "queue_status",
+      "available": true,
+      "method": "GET",
+      "path": "/v3/workspaces/{workspace_id}/queue/status?session_id={session_id}",
+      "request_body": null,
+      "response_status": [
+        200
+      ],
+      "response_shape": {
+        "total_work_units": "integer",
+        "completed_work_units": "integer",
+        "in_progress_work_units": "integer",
+        "pending_work_units": "integer",
+        "sessions": "object|null"
+      },
+      "session_id_filter_supported": true,
+      "source_basis": "src/routers/workspaces.py:get_queue_status; src/schemas/api.py:QueueStatus"
+    },
+    {
+      "id": "conclusions_list",
+      "available": true,
+      "method": "POST",
+      "path": "/v3/workspaces/{workspace_id}/conclusions/list?page={page}&size={size}",
+      "request_body": {
+        "filters": {
+          "session_id": "<session_id>"
+        }
+      },
+      "response_status": [
+        200
+      ],
+      "response_shape": {
+        "items": "Conclusion[]",
+        "total": "integer",
+        "page": "integer",
+        "size": "integer",
+        "pages": "integer"
+      },
+      "source_basis": "src/routers/conclusions.py:list_conclusions"
+    },
+    {
+      "id": "conclusion_get",
+      "available": true,
+      "method": "GET",
+      "path": "/v3/workspaces/{workspace_id}/conclusions/{conclusion_id}",
+      "request_body": null,
+      "response_status": [
+        200
+      ],
+      "response_shape": {
+        "id": "string",
+        "content": "string",
+        "observer_id": "string",
+        "observed_id": "string",
+        "session_id": "string|null",
+        "level": "explicit|deductive|inductive|contradiction",
+        "source_ids": "string[]",
+        "times_derived": "integer",
+        "created_at": "datetime"
+      },
+      "source_basis": "src/routers/conclusions.py:get_conclusion; src/schemas/api.py:Conclusion"
+    },
+    {
+      "id": "schedule_dream",
+      "available": true,
+      "method": "POST",
+      "path": "/v3/workspaces/{workspace_id}/schedule_dream",
+      "request_body": {
+        "observer": "<peer_id>",
+        "observed": "<peer_id>",
+        "dream_type": "omni",
+        "session_id": "<session_id>",
+        "rebuild": false
+      },
+      "response_status": [
+        204
+      ],
+      "response_shape": null,
+      "requires_dream_enabled": true,
+      "source_basis": "src/routers/workspaces.py:schedule_dream; src/schemas/api.py:ScheduleDreamRequest"
+    }
+  ],
+  "version_observability": {
+    "health_exposes_version": false,
+    "basis": "Version is pinned by the exact upstream Git tag/commit and recorded build inputs/image digests; /health returns only status=ok."
+  },
+  "current_assessments": {
+    "embedding": "LOCAL_CACHE_ONLY_EMBEDDING_PREFLIGHT_REQUIRED",
+    "embedding_configuration_modified": true,
+    "provenance": "AUTHORIZED_NATIVE_DREAM_LINEAGE_PROBE_PENDING_LIVE_OBSERVATION",
+    "fixture_sufficient": true,
+    "provider_config_change_required_before_live_retry": false,
+    "provider_config_change_applied_pending_live_validation": true,
+    "provider_internal_model_request_budget": 100,
+    "dream_operation_budget": 1,
+    "honcho_acceptance": "PENDING_LIVE_ACCEPTANCE"
+  }
+}

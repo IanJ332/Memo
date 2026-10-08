@@ -11,9 +11,13 @@ import pytest
 from pydantic import ValidationError
 
 from memlife.adapters.honcho import (
+    DirectoryRawArtifactCapture,
     HonchoAdapterConfig,
     HonchoAdapterSkeleton,
+    HonchoLiveAdapter,
+    HonchoLiveConfig,
     LiveProviderExecutionNotAuthorized,
+    NativeHonchoResponse,
     NormalizedHonchoRecord,
     QuiescenceContract,
     RawArtifactIdentity,
@@ -383,3 +387,100 @@ def test_model_boundary_is_conditional_and_freeze_v2_remains_non_final() -> None
     draft = load_phase08a_draft(FREEZE_V2_DRAFT)
     assert draft["is_final_freeze"] is False
     assert draft["draft_status"] == "NON_FINAL_DESIGN_ONLY"
+
+
+def test_phase08b1_live_adapter_captures_native_bytes_before_mapping(tmp_path) -> None:
+    create_raw = (
+        b'[{"id":"msg-native-1","content":"fictional alpha",'
+        b'"peer_id":"peer-a","created_at":"2026-10-05T00:00:00Z"}]'
+    )
+    search_raw = (
+        b'[{"id":"msg-native-1","content":"fictional alpha",'
+        b'"peer_id":"peer-a","created_at":"2026-10-05T00:00:00Z"}]'
+    )
+    inspection_raw = (
+        b'{"items":[{"id":"msg-native-1","content":"fictional alpha",'
+        b'"peer_id":"peer-a","created_at":"2026-10-05T00:00:00Z"}],'
+        b'"total":1,"page":1,"size":10,"pages":1}'
+    )
+
+    class Transport:
+        requests = []
+        responses = [
+            NativeHonchoResponse(status_code=201, body=create_raw),
+            NativeHonchoResponse(status_code=200, body=search_raw),
+            NativeHonchoResponse(status_code=200, body=inspection_raw),
+        ]
+
+        def request(self, method, path, *, payload=None):
+            self.requests.append((method, path, payload))
+            return self.responses.pop(0)
+
+    adapter = HonchoLiveAdapter(
+        HonchoLiveConfig(
+            base_url="http://127.0.0.1:8000",
+            workspace_id="phase08b1-attempt",
+            session_id="phase08b1-session",
+            peer_id="peer-a",
+        ),
+        transport=Transport(),
+        capture=DirectoryRawArtifactCapture(tmp_path),
+    )
+    written = adapter.write(
+        WriteCommand(namespace="phase08b1-session", content="fictional alpha")
+    )
+    retrieved = adapter.query(
+        QueryCommand(
+            namespace="phase08b1-session",
+            query="Where is fictional alpha?",
+            limit=10,
+        )
+    )
+    inspected = adapter.list_or_inspect("phase08b1-session")
+    assert written.memory_id == retrieved[0].memory_id == "msg-native-1"
+    assert inspected[0].memory_id == "msg-native-1"
+    assert retrieved[0].metadata["retrieval_rank"] == 1
+    assert Transport.requests[1] == (
+        "POST",
+        "v3/workspaces/phase08b1-attempt/search",
+        {
+            "query": "Where is fictional alpha?",
+            "filters": {"session_id": "phase08b1-session"},
+            "limit": 10,
+        },
+    )
+    assert "/messages/list" in Transport.requests[2][1]
+    assert Transport.requests[1][1] != Transport.requests[2][1]
+    create_path = (
+        tmp_path
+        / "honcho_capability_create_write_v1"
+        / "provider-raw-response.json"
+    )
+    retrieval_path = (
+        tmp_path / "honcho_capability_retrieval_v1" / "provider-raw-response.json"
+    )
+    assert create_path.read_bytes() == create_raw
+    inspection_path = (
+        tmp_path / "honcho_capability_raw_inspection_v1" / "provider-raw-response.json"
+    )
+    assert retrieval_path.read_bytes() == search_raw
+    assert inspection_path.read_bytes() == inspection_raw
+
+
+def test_phase08b1_live_adapter_rejects_empty_retrieval_query(tmp_path) -> None:
+    class NoTransport:
+        def request(self, method, path, *, payload=None):
+            raise AssertionError("empty query must fail before provider contact")
+
+    adapter = HonchoLiveAdapter(
+        HonchoLiveConfig(
+            base_url="http://127.0.0.1:8000",
+            workspace_id="w",
+            session_id="s",
+            peer_id="p",
+        ),
+        transport=NoTransport(),
+        capture=DirectoryRawArtifactCapture(tmp_path),
+    )
+    with pytest.raises(Exception, match="non-empty search query"):
+        adapter.query(QueryCommand(namespace="s", query="", limit=1))

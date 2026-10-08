@@ -14,17 +14,17 @@ Authoritative**.
 4. Read the experiment or provider documents linked from those files only when
    needed.
 
-The active line is `phase-06b-storage-batch`. Phase 06B is partial; Phase
-06B-C passed; local-only Phase 06B-S1 supplement implementation is complete.
-Phase 06B-S2 attempt `20261001T205742Z-67a4ab301c67` was blocked before provider
-startup and executed zero runs because the provenance-repaired artifact hash
-was checkout-EOL-dependent. Phase 06B-S2R locally repaired validation to use
-repository-source canonical CRLF materialization, added derived evidence-gap
-closure, and normalized lifecycle statuses; publication is pending. The
-dedicated path can select only the exact ten never-executed OpenViking runs and
-adds observability without changing experiment behavior. A second live
-supplement lifecycle is **not authorized**. Jetstream is **SHELVED** by default
-and must not be started without explicit authorization.
+The active line is `phase-08b1-candidate10-publication`. Candidate10 attempt
+`20261007T165110Z-19d0ccd6b106` is scientifically complete, its frozen Honcho
+provider decision is **NO_GO**, and the reviewed closeout is being prepared as
+a local publication candidate. The result preserves 10 `SUPPORTED`, 4
+`UNSUPPORTED`, and 4 `UNKNOWN` capabilities; only S0 was directly executed.
+S1 remains `UNKNOWN`, S2-S5 are capability-derived `UNSUPPORTED`, and native
+Dream quiescence remains `UNKNOWN`. The controller SSH transport failure is
+separate from scientific completion and its root cause remains `UNKNOWN`.
+Candidate10 must not be rerun or replaced. The raw evidence appendix remains
+local and unpublished. Jetstream is **SHELVED** and no new live action is
+authorized.
 
 ## Non-negotiable invariants
 
