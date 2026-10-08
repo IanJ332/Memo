@@ -30,11 +30,11 @@ the main storage-lifecycle experiment.
 
 | Item | State |
 | --- | --- |
-| Branch | `phase-08b1-candidate10-publication`; original publication `54c1f7847af582cffc078fbc99aecfaab6b12dc2`; published portability closure `3c126216f4f5b7ac4f842e344598324c8d6a4097`; not merged |
+| Branch | `phase-08c0-research-reconciliation`, based on authoritative `origin/main` `b1ff61b862a45df41405eb821d3a46318eb66c29` |
 | Published Phase 08A branch | `phase-08-expansion-freeze-v2` at `a17bc7cb05558012992c19bb264fc7a6e18ac06b` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Published Phase 07 base | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` |
-| Current phase | Phase 08B-1 Candidate10: scientific closeout ACCEPTED; frozen provider decision `NO_GO`; portability closure completed and published; merge to `main` pending |
+| Current phase | Phase 08C-0 research design reconciliation: DESIGN COMPLETE; original Freeze-v2 draft preserved; publication pending |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
@@ -46,7 +46,7 @@ the main storage-lifecycle experiment.
 | Error root cause | `UNKNOWN`; classified only as provider process crash |
 | Residual cells | Mem0 S1; Hindsight S1; Hindsight S4; OpenViking S4 (OpenViking S0 indexed by repetition disagreement) |
 | Phase 07 RQ3 result | NOT ACTIVATED; 0 eligible empirical contexts; 0 calls |
-| Freeze v2 | Non-final design draft only; no live provider accepted |
+| Freeze v2 | Non-final Phase 08A draft preserved unchanged; its Honcho-plus-Provider-5 schedule is blocked by frozen Honcho `NO_GO`; no live provider accepted |
 | Jetstream | `SHELVED`; Candidate10 used one separately authorized lifecycle, which is complete and cleaned up; no new live action is authorized |
 
 The baseline HEAD above is the scientific handoff point. Local documentation
@@ -108,22 +108,39 @@ experiment or origin state.
   published on `phase-08b1-candidate10-publication` at
   `54c1f7847af582cffc078fbc99aecfaab6b12dc2`. The latest published commit,
   `3c126216f4f5b7ac4f842e344598324c8d6a4097`, completes offline portability
-  closure without changing scientific evidence or implementation. Main remains
-  unchanged, and the raw evidence ZIP remains local and unpublished.
+  closure without changing scientific evidence or implementation. The main
+  handoff was synchronized at `b1ff61b862a45df41405eb821d3a46318eb66c29`;
+  the raw evidence ZIP remains local and unpublished.
+  The historical preflight rule, "Phase 08B-1 requires separate authorization,"
+  was satisfied for Candidate10 once and does not authorize a rerun or another
+  candidate.
+- Phase 08C-0: design-only reconciliation preserves the original Freeze-v2
+  draft and records that Honcho `NO_GO` blocks its two-provider schedule and
+  finalization prerequisites. A static RetainDB Server preview found an exact
+  upstream repository and feasible source-commit pinning, but all acceptance
+  capabilities remain `UNKNOWN` and acceptance remains
+  `PENDING_LIVE_ACCEPTANCE`. The recommended sequence is offline deterministic
+  RQ4 mediator implementation first, a separate RetainDB preflight, and no
+  separately versioned Freeze-v2 revision until new evidence or an approved
+  revised objective warrants one. See
+  [`PHASE_08C0_RESEARCH_DESIGN_RECONCILIATION.md`](../experiments/PHASE_08C0_RESEARCH_DESIGN_RECONCILIATION.md).
 
 See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 [`EXPERIMENT_LEDGER.md`](EXPERIMENT_LEDGER.md) for canonical provenance.
 
 ## Next authorized action
 
-Phase 08B-1 Candidate10 scientific closeout has been accepted. Its original
-publication commit is `54c1f7847af582cffc078fbc99aecfaab6b12dc2`; the published
-portability closure is `3c126216f4f5b7ac4f842e344598324c8d6a4097`. The immediate
-authorized action is final main review. Do not merge without separate
-authorization. The governing
-preflight rule was that Phase 08B-1 requires separate authorization; Candidate10
-received that authorization, completed once, and must not be rerun or replaced.
-At present, no live action is authorized, including Candidate11.
+Phase 08C-0 design reconciliation is complete. The original Phase 08A draft
+remains the historical design record and must not be edited to conceal the
+Honcho gate result. Its future live schedule and finalization remain blocked.
+The recommended next scientific and engineering phase is a separately
+authorized Phase 08C-1 offline deterministic RQ4 mediator implementation and
+evaluation. A RetainDB static/preflight phase may be prepared separately, but
+live calibration requires its own explicit authorization. At present, no live
+action is authorized, Candidate10 must not be rerun or replaced, and no revised
+Freeze-v2 draft is approved.
+
+The current execution rule is: no live action is authorized.
 
 Jetstream remains `SHELVED`. Honcho is not accepted for Freeze-v2 entry because
 the frozen gate returned `NO_GO`. Freeze v2 remains a draft and is not
@@ -132,10 +149,11 @@ provider-internal calls are separately accounted provider behavior and cannot
 act as an authority/security judge or activate RQ3. The raw evidence appendix
 is preserved locally but is not published with the repository.
 
-RetainDB Server remains `PENDING_LIVE_ACCEPTANCE`; Graphiti is fallback only.
-Do not start Jetstream, install or contact any proposed provider, change
-Freeze v1, or rerun any of the 42 historical repetitions without separate
-authorization.
+RetainDB Server remains `PENDING_LIVE_ACCEPTANCE`; all previewed capabilities
+remain `UNKNOWN`. Graphiti is fallback only and does not become eligible from
+Honcho `NO_GO`. Do not start Jetstream, install or contact any proposed
+provider, change Freeze v1, finalize or silently revise Freeze v2, or rerun any
+historical repetition without separate authorization.
 
 ## Safe continuation checklist
 

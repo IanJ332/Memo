@@ -14,19 +14,16 @@ Authoritative**.
 4. Read the experiment or provider documents linked from those files only when
    needed.
 
-The active line is `phase-08b1-candidate10-publication`. The original Candidate10
-publication commit is `54c1f7847af582cffc078fbc99aecfaab6b12dc2`; the published
-portability closure is `3c126216f4f5b7ac4f842e344598324c8d6a4097`. Scientific
-closeout is accepted and merge to `main` remains pending final review. Candidate10
-attempt `20261007T165110Z-19d0ccd6b106` is scientifically complete and its frozen
-Honcho provider decision is **NO_GO**. The result preserves 10
-`SUPPORTED`, 4 `UNSUPPORTED`, and 4 `UNKNOWN` capabilities; only S0 was
-directly executed.
-S1 remains `UNKNOWN`, S2-S5 are capability-derived `UNSUPPORTED`, and native
-Dream quiescence remains `UNKNOWN`. The controller SSH transport failure is
-separate from scientific completion and its root cause remains `UNKNOWN`.
-Candidate10 must not be rerun or replaced. The raw evidence appendix remains
-local and unpublished. Jetstream is **SHELVED** and no new live action is
+The active line is `phase-08c0-research-reconciliation`, based on authoritative
+`origin/main` `b1ff61b862a45df41405eb821d3a46318eb66c29`. Candidate10 attempt
+`20261007T165110Z-19d0ccd6b106` is scientifically complete and its frozen Honcho
+3.2.1 provider decision is **NO_GO**; it must not be rerun, replaced, or
+reinterpreted. Phase 08C-0 preserves the original Freeze-v2 draft and records
+that its Honcho-plus-Provider-5 schedule is blocked. RetainDB Server remains
+`PENDING_LIVE_ACCEPTANCE` with all previewed capabilities `UNKNOWN`; Graphiti
+remains fallback only. The recommended next phase is a separately authorized
+offline deterministic RQ4 mediator implementation. Jetstream is **SHELVED**
+and no provider, hosted-model, downstream, RQ3, or other live action is
 authorized.
 
 ## Non-negotiable invariants
