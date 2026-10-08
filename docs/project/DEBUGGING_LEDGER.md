@@ -216,6 +216,37 @@ each regression. It is not generic troubleshooting advice.
 - **Regression invariant:** Transport retry may retry evidence retrieval only, never scientific execution.
 - **Protection:** `scripts/jetstream/phase06b_supplement.py` bounded retry and `tests/unit/test_phase06b_supplement_retrieval.py`.
 
+## Candidate10 patch fixture absent from clean clones
+
+- **Symptom:** A clean checkout fails
+  `test_patch_transport_is_file_based_and_candidate_reproduces_local_bytes`
+  with `FileNotFoundError` for the ignored Candidate10 patch. The development
+  worktree passed only because `.local/review` was a machine-specific junction.
+- **Root cause:** The controller intentionally transports a file from ignored
+  `.local` storage, but the historical fixture had no repository-contained,
+  offline preparation process. On Windows with global `core.autocrlf=true`, a
+  fresh checkout also materialized the nine frozen sources as CRLF even though
+  their Git blobs and the validator's source-byte contract are LF.
+- **Separate fixture dependencies:** Several other frozen Phase08B-1 tests read
+  the historical Candidate8 patch or pinned Honcho compose example. They do not
+  consume the Candidate10 patch and are not Python dependency failures.
+- **Correct fix:** From a checkout containing the full branch history, run the
+  repository `.venv` interpreter on
+  `scripts/prepare_phase08b1_candidate10_patch.py`. It reconstructs the patch
+  from base `cb44f639642442b8277bc3cb2f6afb4b96d81307` and publication commit
+  `54c1f7847af582cffc078fbc99aecfaab6b12dc2`, using only the nine frozen
+  implementation paths and pinned Git diff settings. It writes the ignored
+  fixture exclusively and refuses to overwrite different bytes. Exact
+  `.gitattributes` rules materialize those nine tracked files as LF without
+  changing their Git-blob bytes.
+- **Regression invariant:** The prepared patch is exactly 369,953 LF bytes with
+  SHA-256 `593b18eda51b8d9291b004683b875c06ebed70f4a8424f02108228bf18261ca3`.
+  Never regenerate different bytes and label them as the original Candidate10
+  patch.
+- **Protection:** `scripts/prepare_phase08b1_candidate10_patch.py`,
+  `tests/unit/test_phase08b1_candidate10_patch_fixture.py`, and isolated-clone
+  execution of the named transport/reproduction test after fixture preparation.
+
 ## Phase 08B-1 remote completion separated from SSH transport
 
 - **Symptom:** Candidate10 wrote authoritative remote completion at

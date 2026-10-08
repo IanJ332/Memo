@@ -1,2 +1,13 @@
 # Freeze v1's authoritative SHA-256 is over CRLF bytes on every platform.
 experiments/freeze/experiment-freeze-v1.json text eol=crlf
+
+# Candidate10's frozen transfer validator compares these working-tree bytes.
+experiments/acceptance/phase08b1-honcho-v3.2.1-static-audit.json text eol=lf
+scripts/jetstream/jetstreamctl.py text eol=lf
+scripts/jetstream/phase08b1_honcho.py text eol=lf
+scripts/jetstream/phase08b1_honcho_remote.py text eol=lf
+src/memlife/adapters/honcho.py text eol=lf
+src/memlife/runner/phase08b1.py text eol=lf
+tests/unit/test_phase08b0_honcho_preflight.py text eol=lf
+tests/unit/test_phase08b1_honcho_live.py text eol=lf
+tests/unit/test_project_handoff.py text eol=lf

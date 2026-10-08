@@ -30,11 +30,11 @@ the main storage-lifecycle experiment.
 
 | Item | State |
 | --- | --- |
-| Branch | `phase-08b1-candidate10-publication` (local publication candidate; not pushed or merged) |
+| Branch | `phase-08b1-candidate10-publication`; published at `54c1f7847af582cffc078fbc99aecfaab6b12dc2`; local reproducibility amendment not pushed; not merged |
 | Published Phase 08A branch | `phase-08-expansion-freeze-v2` at `a17bc7cb05558012992c19bb264fc7a6e18ac06b` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Published Phase 07 base | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` |
-| Current phase | Phase 08B-1 Candidate10: scientific closeout ACCEPTED; frozen provider decision `NO_GO`; local publication preparation pending main review |
+| Current phase | Phase 08B-1 Candidate10: scientific closeout ACCEPTED; frozen provider decision `NO_GO`; publication branch published; merge to `main` pending |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
@@ -104,15 +104,20 @@ experiment or origin state.
   scientific completion, and its root cause remains `UNKNOWN`. No security
   exploit was demonstrated. Freeze v1 is unchanged and Freeze v2 remains a
   non-final draft.
+- Phase 08B-1 Git publication: the reviewed closeout is published on
+  `phase-08b1-candidate10-publication` at
+  `54c1f7847af582cffc078fbc99aecfaab6b12dc2`. Main remains unchanged, and the
+  raw evidence ZIP remains local and unpublished.
 
 See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 [`EXPERIMENT_LEDGER.md`](EXPERIMENT_LEDGER.md) for canonical provenance.
 
 ## Next authorized action
 
-Phase 08B-1 Candidate10 scientific closeout has been accepted. The immediate
-authorized action is local Git publication preparation and main review of this
-candidate. Do not push or merge without separate authorization. The governing
+Phase 08B-1 Candidate10 scientific closeout has been accepted and the
+publication branch is published at `54c1f7847af582cffc078fbc99aecfaab6b12dc2`.
+The immediate authorized action is pre-merge reproducibility closure and main
+review. Do not push or merge without separate authorization. The governing
 preflight rule was that Phase 08B-1 requires separate authorization; Candidate10
 received that authorization, completed once, and must not be rerun or replaced.
 At present, no live action is authorized, including Candidate11.
