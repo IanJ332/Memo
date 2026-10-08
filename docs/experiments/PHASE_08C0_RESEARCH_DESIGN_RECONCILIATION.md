@@ -28,8 +28,12 @@ premature now. Freeze v2 is not finalized.
 - Candidate10 attempt `20261007T165110Z-19d0ccd6b106` is scientifically closed.
 - Honcho 3.2.1 at commit
   `79cb31645f4efdef626d1bd9316a648adb5da89b` has a frozen `NO_GO`
-  acceptance result: 10 required capabilities `SUPPORTED`, 4 `UNSUPPORTED`,
-  and 4 `UNKNOWN`. Only S0 was directly executed.
+  acceptance result. Across all 18 assessed capabilities, 10 are `SUPPORTED`,
+  4 are `UNSUPPORTED`, and 4 are `UNKNOWN`. Of the nine mandatory GO-gate
+  requirements, eight are `SUPPORTED` and
+  `quiescence_async_completion_proof` is `UNKNOWN`; because every mandatory
+  GO-gate requirement must be `SUPPORTED`, that unproven quiescence proof is
+  the exact `NO_GO` blocker. Only S0 was directly executed.
 - Candidate10 is not rerun, replaced, reclassified, or used as evidence of a
   provider security failure.
 - Experiment Freeze v1 and its canonical SHA-256
