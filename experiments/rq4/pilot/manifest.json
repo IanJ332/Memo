@@ -1,0 +1,180 @@
+{
+  "pilot_schema_version": "memlife-rq4-pilot-v1",
+  "policy_version": "rq4-minimal-exact-v1",
+  "evaluation_timestamp": "2026-10-08T18:00:00Z",
+  "base_main_sha": "43b50ae437e5dfb7f56b20a06509ac2bb0a49094",
+  "evidence_classes": {
+    "empirical": "PROVIDER_OBSERVED",
+    "benchmark_derived": "SYNTHETIC_RQ4_CHALLENGE",
+    "hand_authored": "SYNTHETIC_RQ4_CHALLENGE"
+  },
+  "source_artifacts": [
+    {
+      "path": "artifacts/phase06b/derived/20261001T183940Z-1fc4c4929532/freeze-v1-raw-runs.provenance-repaired.jsonl",
+      "sha256": "80b82f177adf4a15659bc583df61c78dafaa034ac931b5592e22a47d01f67a9f",
+      "attempt_id": "20261001T183940Z-1fc4c4929532"
+    },
+    {
+      "path": "artifacts/phase06b/supplements/attempts/20261002T000350Z-c272b34d2cc3/supplement-raw-runs.jsonl",
+      "sha256": "331782266e8172b69fcf2f99085490840cfe2ee6e172ad09c4b49c1aaaee8d69",
+      "attempt_id": "20261002T000350Z-c272b34d2cc3"
+    },
+    {
+      "path": "artifacts/phase07/hindsight-s1-recovery-review.json",
+      "sha256": "25b08dca63ba3d39ef5531224e9330342548b7e4deed4688c45d55103ee9b3b5",
+      "attempt_id": "20261003T003809Z-7a3425bf2f4c"
+    },
+    {
+      "path": "artifacts/phase07/prep/scientific-decisions.json",
+      "sha256": "6be381b3a98ab12f36b1def2a87fb3e9670627cd06a323c24e429e354749011c",
+      "attempt_id": null
+    }
+  ],
+  "longmemeval": {
+    "repository": "https://github.com/xiaowu0162/LongMemEval",
+    "dataset": "https://huggingface.co/datasets/xiaowu0162/longmemeval-cleaned",
+    "revision": "98d7416c24c778c2fee6e6f3006e7a073259d48f",
+    "artifact": "longmemeval_oracle.json",
+    "artifact_sha256": "821a2034d219ab45846873dd14c14f12cfe7776e73527a483f9dac095d38620c",
+    "license": "MIT",
+    "tracked_source_dataset": false,
+    "selection_rule": "Four manually audited knowledge-update histories with two explicit, time-ordered answer-bearing source sessions, plus one related abstention history with no target fact.",
+    "limitations": "Adapted labels test exact fixture identities only; they are not provider observations and do not measure benchmark QA accuracy."
+  },
+  "empirical_controls": [
+    {
+      "case_id": "empirical-mem0-s1-r1-current-mixed-lineage",
+      "provider": "mem0",
+      "scenario": "S1",
+      "run_id": "freeze-v1__mem0__S1__r1",
+      "attempt_id": "20261001T183940Z-1fc4c4929532",
+      "eligible": true,
+      "expected_action": "ALLOW",
+      "candidate_id": "freeze-v1__mem0__S1__r1__final-new__candidate-1",
+      "candidate_content_utf8": "freeze-v1__mem0__S1__r1: Project Alder reports may be sent only to Bob.",
+      "candidate_raw_sha256": "b03c218be7d6ea4ea755d628334b14b07000021e11f7e9d712a90d4177cf215d",
+      "canonical_proposition_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+      "logical_fact_id": "freeze-v1__mem0__S1__r1__fact-v2",
+      "current_source_event_id": "freeze-v1__mem0__S1__r1__update-v2",
+      "current_source_record_sha256": "b03c218be7d6ea4ea755d628334b14b07000021e11f7e9d712a90d4177cf215d",
+      "stale_source_event_id": "freeze-v1__mem0__S1__r1__write-v1",
+      "stale_source_record_sha256": "e7314b8a88cd26a53eece5bd6f90c4314675c93797bd6f83459eb37bfe05d419",
+      "stale_canonical_proposition_sha256": "c85c74b064b6bfedb3be520d27d7aab4f6249562aa6016feafb089dc83018a56"
+    },
+    {
+      "case_id": "empirical-hindsight-s1-r1-current-derived-mixed-lineage",
+      "provider": "hindsight",
+      "scenario": "S1",
+      "run_id": "freeze-v1__hindsight__S1__r1",
+      "attempt_id": "20261001T183940Z-1fc4c4929532",
+      "recovery_attempt_id": "20261003T003809Z-7a3425bf2f4c",
+      "eligible": true,
+      "expected_action": "ALLOW",
+      "candidate_id": "freeze-v1__hindsight__S1__r1__final-new__candidate-2",
+      "candidate_content_utf8": "Project Alder reports may be sent only to Bob.",
+      "candidate_raw_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+      "canonical_proposition_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+      "logical_fact_id": "freeze-v1__hindsight__S1__r1__fact-v2",
+      "current_source_event_id": "freeze-v1__hindsight__S1__r1__update-v2",
+      "current_source_record_sha256": "ecb4e26bbc1a2f91c214dba0c7cf37fe8267190a68dc0b8418d3c76c4ccb234d",
+      "stale_source_event_id": "freeze-v1__hindsight__S1__r1__write-v1",
+      "stale_source_record_sha256": "53f398519afd19eb662f7f1d09fb39404c97fbb2415ef86e1d76471d4da84bb8",
+      "stale_canonical_proposition_sha256": "c85c74b064b6bfedb3be520d27d7aab4f6249562aa6016feafb089dc83018a56"
+    },
+    {
+      "case_id": "empirical-hindsight-s4",
+      "provider": "hindsight",
+      "scenario": "S4",
+      "run_ids": [
+        "freeze-v1__hindsight__S4__r1",
+        "freeze-v1__hindsight__S4__r2",
+        "freeze-v1__hindsight__S4__r3"
+      ],
+      "attempt_id": "20261001T183940Z-1fc4c4929532",
+      "eligible": false,
+      "eligibility_status": "NOT_ELIGIBLE_FOR_EMPIRICAL_MEDIATION",
+      "limitation": "Final retrieval hashes and write-support attribution exist, but exact final candidate bytes were not serialized or independently recovered."
+    },
+    {
+      "case_id": "empirical-openviking-s4",
+      "provider": "openviking",
+      "scenario": "S4",
+      "run_ids": [
+        "freeze-v1__openviking__S4__r1",
+        "freeze-v1__openviking__S4__r2",
+        "freeze-v1__openviking__S4__r3"
+      ],
+      "attempt_id": "20261002T000350Z-c272b34d2cc3",
+      "eligible": false,
+      "eligibility_status": "NOT_ELIGIBLE_FOR_EMPIRICAL_MEDIATION",
+      "limitation": "Repetitions disagree on derived-state production and the immutable rows contain final hashes but not exact final candidate bytes."
+    }
+  ],
+  "benchmark_histories": [
+    {
+      "question_id": "01493427",
+      "question_type": "knowledge-update",
+      "question": "How many new postcards have I added to my collection since I started collecting again?",
+      "answer": "25",
+      "logical_fact_id": "lme:01493427:fact",
+      "versions": [
+        {"version_id": "v1", "source_session_id": "answer_a7b44747_1", "source_date": "2023/08/11 (Fri) 20:17", "source_record_sha256": "80585f7cbf46d60920b9fd4d49da89e418d0d29c1be7ce6ed39f7b54e711b2eb", "canonical_content": "postcards_added_since_resuming=17", "canonical_sha256": "2cd563b2e7da802c8b7a381887fad02e394701153d5096df63bb1baa5c00a975", "authoritative": false, "lifecycle_state": "superseded"},
+        {"version_id": "v2", "source_session_id": "answer_a7b44747_2", "source_date": "2023/11/30 (Thu) 20:25", "source_record_sha256": "6d4c108747f5c13b864ce1d572a01ba60d80a0423d8b10e358ac203817d19e8a", "canonical_content": "postcards_added_since_resuming=25", "canonical_sha256": "01aac5b31db1a62589d8f02e5b78ba53d87840a2df48974d93f37770c3a44e41", "authoritative": true, "lifecycle_state": "active"}
+      ]
+    },
+    {
+      "question_id": "0e4e4c46",
+      "question_type": "knowledge-update",
+      "question": "What is my current highest score in Ticket to Ride?",
+      "answer": "132 points",
+      "logical_fact_id": "lme:0e4e4c46:fact",
+      "versions": [
+        {"version_id": "v1", "source_session_id": "answer_f2f998c7_1", "source_date": "2023/05/25 (Thu) 19:52", "source_record_sha256": "b0c18456b585013a87313eddb335e9d6bd4bcfc46f7077420f3bc27f944394aa", "canonical_content": "ticket_to_ride_high_score_points=124", "canonical_sha256": "1556a1cdce3c946987396002a6e83aa1e27098ba429e9492e67b4184df161fb3", "authoritative": false, "lifecycle_state": "superseded"},
+        {"version_id": "v2", "source_session_id": "answer_f2f998c7_2", "source_date": "2023/05/30 (Tue) 16:19", "source_record_sha256": "82ce118161b1a7a5bf7cc7beed0b49b653cf634a49acb2a63f652285ebdef8d6", "canonical_content": "ticket_to_ride_high_score_points=132", "canonical_sha256": "c22fdfcc66285bce46638568fe51b027d9285682d4ad78e05c347a6a25141f14", "authoritative": true, "lifecycle_state": "active"}
+      ]
+    },
+    {
+      "question_id": "0f05491a",
+      "question_type": "knowledge-update",
+      "question": "How many stars do I need to reach the gold level on my Starbucks Rewards app?",
+      "answer": "120",
+      "logical_fact_id": "lme:0f05491a:fact",
+      "versions": [
+        {"version_id": "v1", "source_session_id": "answer_d6d2eba8_1", "source_date": "2023/07/11 (Tue) 18:10", "source_record_sha256": "6f2ded16d6ace2d524e94c1ce4083528ffad07807c15c9be5243ea453ce7c017", "canonical_content": "starbucks_gold_stars_needed=125", "canonical_sha256": "f7d8e1dd8b2e61ab39ddd822e1b1d6ec3693687a0190b68427166b79b5a8b13e", "authoritative": false, "lifecycle_state": "superseded"},
+        {"version_id": "v2", "source_session_id": "answer_d6d2eba8_2", "source_date": "2023/07/30 (Sun) 03:56", "source_record_sha256": "df88564400ace085c740e8b2d1f9e672f57c1bf2431a3d053f4866e11ede2fe5", "canonical_content": "starbucks_gold_stars_needed=120", "canonical_sha256": "6a91ade8598cf39fb8391f2dff821e9c6c2e14b091ca3c196b941b67f8ff88ec", "authoritative": true, "lifecycle_state": "active"}
+      ]
+    },
+    {
+      "question_id": "18bc8abd",
+      "question_type": "knowledge-update",
+      "question": "What brand of BBQ sauce am I currently obsessed with?",
+      "answer": "Kansas City Masterpiece",
+      "logical_fact_id": "lme:18bc8abd:fact",
+      "versions": [
+        {"version_id": "v1", "source_session_id": "answer_fff743f5_1", "source_date": "2023/04/16 (Sun) 11:33", "source_record_sha256": "28fc89083214943553f26fecc80da7a32f3d29f5722f15ed7d617e7a2de18513", "canonical_content": "bbq_sauce_current=Sweet Baby Ray's", "canonical_sha256": "38f7c91bc9832a00a5622b41223d4a7295d993936b4201b734da060808918492", "authoritative": false, "lifecycle_state": "superseded"},
+        {"version_id": "v2", "source_session_id": "answer_fff743f5_2", "source_date": "2023/06/30 (Fri) 12:37", "source_record_sha256": "223193c2279a5874a62ee431acf1f53147bd544ea0f362b22bd2fce4b459501f", "canonical_content": "bbq_sauce_current=Kansas City Masterpiece", "canonical_sha256": "c43ed4b3b165e916ffdd02c2781dc412b2d174e34a406c96b445ce43f6a716cb", "authoritative": true, "lifecycle_state": "active"}
+      ]
+    }
+  ],
+  "benchmark_cases": [
+    {"case_id": "lme-01493427-v1-stale", "question_id": "01493427", "version_id": "v1", "expected_action": "DENY"},
+    {"case_id": "lme-01493427-v2-current", "question_id": "01493427", "version_id": "v2", "expected_action": "ALLOW"},
+    {"case_id": "lme-0e4e4c46-v1-stale", "question_id": "0e4e4c46", "version_id": "v1", "expected_action": "DENY"},
+    {"case_id": "lme-0e4e4c46-v2-current", "question_id": "0e4e4c46", "version_id": "v2", "expected_action": "ALLOW"},
+    {"case_id": "lme-0f05491a-v1-stale", "question_id": "0f05491a", "version_id": "v1", "expected_action": "DENY"},
+    {"case_id": "lme-0f05491a-v2-current", "question_id": "0f05491a", "version_id": "v2", "expected_action": "ALLOW"},
+    {"case_id": "lme-18bc8abd-v1-stale", "question_id": "18bc8abd", "version_id": "v1", "expected_action": "DENY"},
+    {"case_id": "lme-18bc8abd-v2-current", "question_id": "18bc8abd", "version_id": "v2", "expected_action": "ALLOW"},
+    {"case_id": "lme-031748ae-abs-unresolved", "question_id": "031748ae_abs", "source_session_ids": ["answer_8748f791_abs_1", "answer_8748f791_abs_2"], "expected_action": "QUARANTINE", "limitation": "The source history does not establish the Software Engineer Manager proposition; no authority label is invented."}
+  ],
+  "synthetic_cases": [
+    {"case_id": "synthetic-exact-current", "control": "EXACT_CURRENT_AUTHORITY", "expected_action": "ALLOW"},
+    {"case_id": "synthetic-exact-stale", "control": "EXACT_STALE_VERSION", "expected_action": "DENY"},
+    {"case_id": "synthetic-revoked-source", "control": "REVOKED_SOURCE", "expected_action": "DENY"},
+    {"case_id": "synthetic-deleted-source", "control": "DELETED_SOURCE", "expected_action": "DENY"},
+    {"case_id": "synthetic-missing-proposition", "control": "MISSING_PROPOSITION_IDENTITY", "expected_action": "QUARANTINE"},
+    {"case_id": "synthetic-contradictory-authority", "control": "CONTRADICTORY_AUTHORITY", "expected_action": "QUARANTINE"},
+    {"case_id": "synthetic-current-with-superseded-ancestry", "control": "SUPERSEDED_ANCESTRY_CURRENT_CONTENT", "expected_action": "ALLOW"},
+    {"case_id": "synthetic-mixed-authority-aggregate", "control": "MIXED_AUTHORITY_AGGREGATE", "expected_action": "QUARANTINE"}
+  ]
+}

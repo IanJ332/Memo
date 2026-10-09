@@ -30,11 +30,11 @@ the main storage-lifecycle experiment.
 
 | Item | State |
 | --- | --- |
-| Branch | `phase-08c0-research-reconciliation`, based on authoritative `origin/main` `b1ff61b862a45df41405eb821d3a46318eb66c29` |
+| Branch | `phase-08c1-rq4-minimal-pilot`, based on merged `main` `43b50ae437e5dfb7f56b20a06509ac2bb0a49094` |
 | Published Phase 08A branch | `phase-08-expansion-freeze-v2` at `a17bc7cb05558012992c19bb264fc7a6e18ac06b` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Published Phase 07 base | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` |
-| Current phase | Phase 08C-0 research design reconciliation: DESIGN COMPLETE; original Freeze-v2 draft preserved; publication pending |
+| Current phase | Phase 08C-1 minimal deterministic RQ4 mediator: OFFLINE PILOT PASS; scientific review pending |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
@@ -124,21 +124,28 @@ experiment or origin state.
   separately versioned Freeze-v2 revision until new evidence or an approved
   revised objective warrants one. See
   [`PHASE_08C0_RESEARCH_DESIGN_RECONCILIATION.md`](../experiments/PHASE_08C0_RESEARCH_DESIGN_RECONCILIATION.md).
+- Phase 08C-1: the minimal offline exact-identity RQ4 policy passes 19 eligible
+  cases (2 provider-observed controls, 9 LongMemEval-derived challenges, and 8
+  hand-authored controls) with 0 incorrect ALLOW, 0 incorrect DENY, and 0/11
+  non-ALLOW candidate byte strings in delivered context. Hindsight S4 and
+  OpenViking S4 remain explicitly ineligible because exact final candidate
+  bytes were not preserved. No provider, Jetstream, hosted model, downstream
+  model, embedding, or RQ3 call occurred. See
+  [`PHASE_08C1_RQ4_MINIMAL_PILOT.md`](../experiments/PHASE_08C1_RQ4_MINIMAL_PILOT.md).
 
 See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 [`EXPERIMENT_LEDGER.md`](EXPERIMENT_LEDGER.md) for canonical provenance.
 
 ## Next authorized action
 
-Phase 08C-0 design reconciliation is complete. The original Phase 08A draft
-remains the historical design record and must not be edited to conceal the
-Honcho gate result. Its future live schedule and finalization remain blocked.
-The recommended next scientific and engineering phase is a separately
-authorized Phase 08C-1 offline deterministic RQ4 mediator implementation and
-evaluation. A RetainDB static/preflight phase may be prepared separately, but
-live calibration requires its own explicit authorization. At present, no live
-action is authorized, Candidate10 must not be rerun or replaced, and no revised
-Freeze-v2 draft is approved.
+Phase 08C-1 offline implementation and evaluation are complete on the review
+branch. The next action is scientific review of the exact policy boundary,
+fixture adaptation, exclusions, and reported metrics. A broader RQ4 evaluation,
+production policy service, downstream model experiment, revised Freeze-v2, or
+provider phase requires separate approval. A RetainDB static/preflight phase
+may be prepared separately, but live calibration requires its own explicit
+authorization. At present, no live action is authorized, Candidate10 must not
+be rerun or replaced, and no revised Freeze-v2 draft is approved.
 
 The current execution rule is: no live action is authorized.
 

@@ -193,4 +193,26 @@ is no majority voting and no replacement of errors.
   closure is `3c126216f4f5b7ac4f842e344598324c8d6a4097`; merge to `main` remains
   pending. The raw evidence ZIP remains local and unpublished.
 
+## Phase 08C-1 minimal deterministic RQ4 mediator pilot
+
+- Base main: `43b50ae437e5dfb7f56b20a06509ac2bb0a49094`.
+- Execution class: offline deterministic policy evaluation only.
+- Evidence inventory: 2 eligible and 2 ineligible empirical controls; 9
+  LongMemEval-derived `SYNTHETIC_RQ4_CHALLENGE` cases; 8 hand-authored
+  `SYNTHETIC_RQ4_CHALLENGE` cases.
+- Eligible outcomes: 19 total; 8 `ALLOW`, 7 `DENY`, 4 `QUARANTINE`; 0 incorrect
+  ALLOW; 0 incorrect DENY; 0/11 non-ALLOW candidate byte strings in serialized
+  context.
+- Empirical exclusions: Hindsight S4 and OpenViking S4 are
+  `NOT_ELIGIBLE_FOR_EMPIRICAL_MEDIATION` because exact final candidate bytes
+  were not preserved. No evidence was reconstructed.
+- LongMemEval source: `longmemeval_oracle.json` at dataset revision
+  `98d7416c24c778c2fee6e6f3006e7a073259d48f`, SHA-256
+  `821a2034d219ab45846873dd14c14f12cfe7776e73527a483f9dac095d38620c`;
+  source file retained outside Git; derived cases are not provider evidence.
+- Jetstream/provider/hosted-model/downstream-model/RQ3 calls: **0 / 0 / 0 / 0 / 0**.
+- Freeze v1, the original Freeze-v2 draft, all historical attempts, and frozen
+  evidence remain unchanged.
+- Scientific record: [pilot report](../experiments/PHASE_08C1_RQ4_MINIMAL_PILOT.md).
+
 
