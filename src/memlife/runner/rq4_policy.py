@@ -27,7 +27,7 @@ from memlife.models.mediator import (
 from memlife.models.memory import NonEmptyText, StrictModel
 from memlife.models.provenance import MemorySurface
 
-RQ4_POLICY_VERSION = "rq4-minimal-exact-v1"
+RQ4_POLICY_VERSION = "rq4-minimal-exact-v2"
 CONTEXT_MAGIC = b"MEMLIFE-RQ4-CONTEXT-V1\x00"
 _INVALIDATED_STATES = {
     LifecycleState.SUPERSEDED,
@@ -38,6 +38,32 @@ _INVALIDATED_STATES = {
 _SUPPORTED_LINEAGE_RELATIONS = {"CREATED_FROM", "DERIVED_FROM", "RETRIEVED_FROM"}
 
 
+class ContentIdentityBinding(StrictModel):
+    """Independent evidence binding candidate bytes to one proposition."""
+
+    binding_id: NonEmptyText
+    raw_bytes_sha256: NonEmptyText
+    canonical_proposition_sha256: NonEmptyText
+    logical_fact_id: NonEmptyText
+    source_event_id: NonEmptyText
+    canonicalization_id: NonEmptyText
+    evidence_source_id: NonEmptyText
+    evidence_source_sha256: NonEmptyText
+
+    @field_validator(
+        "raw_bytes_sha256",
+        "canonical_proposition_sha256",
+        "evidence_source_sha256",
+    )
+    @classmethod
+    def hashes_are_sha256(cls, value: str) -> str:
+        if len(value) != 64 or any(
+            character not in "0123456789abcdef" for character in value
+        ):
+            raise ValueError("content identity hashes must be lowercase SHA-256")
+        return value
+
+
 class AuthorityBundle(StrictModel):
     """Versioned authority evidence whose artifact is independent of retrieval."""
 
@@ -45,6 +71,7 @@ class AuthorityBundle(StrictModel):
     authority_source_id: NonEmptyText
     authority_source_sha256: NonEmptyText
     snapshots: tuple[AuthoritySnapshot, ...] = ()
+    content_bindings: tuple[ContentIdentityBinding, ...] = ()
 
     @field_validator("authority_source_sha256")
     @classmethod
@@ -54,13 +81,28 @@ class AuthorityBundle(StrictModel):
         return value
 
     @model_validator(mode="after")
-    def snapshot_versions_are_unique(self) -> Self:
-        coordinates = [
-            (snapshot.version_id, snapshot.source_event_id)
-            for snapshot in self.snapshots
+    def authority_coordinates_are_unique(self) -> Self:
+        version_ids = [snapshot.version_id for snapshot in self.snapshots]
+        if len(version_ids) != len(set(version_ids)):
+            raise ValueError("authority snapshot version_id values must be unique")
+        source_event_ids = [snapshot.source_event_id for snapshot in self.snapshots]
+        if len(source_event_ids) != len(set(source_event_ids)):
+            raise ValueError("authority snapshot source_event_id values must be unique")
+        binding_ids = [binding.binding_id for binding in self.content_bindings]
+        if len(binding_ids) != len(set(binding_ids)):
+            raise ValueError("content binding IDs must be unique")
+        binding_coordinates = [
+            (
+                binding.raw_bytes_sha256,
+                binding.canonical_proposition_sha256,
+                binding.logical_fact_id,
+                binding.source_event_id,
+                binding.canonicalization_id,
+            )
+            for binding in self.content_bindings
         ]
-        if len(coordinates) != len(set(coordinates)):
-            raise ValueError("authority snapshot version/source coordinates must be unique")
+        if len(binding_coordinates) != len(set(binding_coordinates)):
+            raise ValueError("content binding coordinates must be unique")
         return self
 
 
@@ -230,6 +272,19 @@ def evaluate_candidates(
         candidate.raw_bytes_sha256 for candidate in candidates
     }:
         raise ValueError("authority artifact must not be the candidate content artifact")
+    candidate_hashes = {candidate.raw_bytes_sha256 for candidate in candidates}
+    if any(
+        binding.evidence_source_id in set(candidate_ids)
+        for binding in authority.content_bindings
+    ):
+        raise ValueError("content binding evidence must be independent of candidates")
+    if any(
+        binding.evidence_source_sha256 in candidate_hashes
+        for binding in authority.content_bindings
+    ):
+        raise ValueError(
+            "content binding evidence artifact must not be candidate content"
+        )
 
     input_hash = _input_bundle_sha256(candidates, content_by_candidate_id)
     authority_hash = canonical_contract_sha256((authority,))
@@ -319,6 +374,36 @@ def evaluate_candidates(
         ):
             reasons.append("MATCHING_SOURCE_NOT_IN_LINEAGE")
 
+        content_bindings = [
+            binding
+            for binding in authority.content_bindings
+            if binding.raw_bytes_sha256 == candidate.raw_bytes_sha256
+            and binding.canonical_proposition_sha256
+            == candidate.canonical_body_sha256
+            and binding.logical_fact_id == candidate.logical_fact_id
+            and binding.canonicalization_id == candidate.canonicalization_id
+        ]
+        if (
+            candidate.logical_fact_id is not None
+            and candidate.canonical_body_sha256 is not None
+            and candidate.canonicalization_id is not None
+        ):
+            if not content_bindings:
+                reasons.append("UNRESOLVED_CONTENT_BINDING")
+            elif len(content_bindings) > 1:
+                reasons.append("AMBIGUOUS_CONTENT_BINDING")
+            else:
+                binding = content_bindings[0]
+                if binding.source_event_id not in candidate.source_ids:
+                    reasons.append("CONTENT_BINDING_SOURCE_MISMATCH")
+                bound_authority = [
+                    snapshot
+                    for snapshot in matches
+                    if snapshot.source_event_id == binding.source_event_id
+                ]
+                if len(bound_authority) != 1:
+                    reasons.append("CONTENT_BINDING_AUTHORITY_MISMATCH")
+
         if allows and supplied is not None and candidate.surface is MemorySurface.SOURCE:
             if allows[0].source_record_sha256 != hashlib.sha256(supplied).hexdigest():
                 reasons.append("SOURCE_RECORD_SHA256_MISMATCH")
@@ -345,6 +430,10 @@ def evaluate_candidates(
             "MATCHING_SOURCE_NOT_IN_LINEAGE",
             "SOURCE_RECORD_SHA256_MISMATCH",
             "MIXED_AUTHORITY_AGGREGATE",
+            "UNRESOLVED_CONTENT_BINDING",
+            "AMBIGUOUS_CONTENT_BINDING",
+            "CONTENT_BINDING_SOURCE_MISMATCH",
+            "CONTENT_BINDING_AUTHORITY_MISMATCH",
         }
         if fail_closed_reasons.intersection(reasons):
             action = MediatorAction.QUARANTINE

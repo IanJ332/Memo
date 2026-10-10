@@ -1,6 +1,6 @@
 {
-  "pilot_schema_version": "memlife-rq4-pilot-v1",
-  "policy_version": "rq4-minimal-exact-v1",
+  "pilot_schema_version": "memlife-rq4-pilot-v2",
+  "policy_version": "rq4-minimal-exact-v2",
   "evaluation_timestamp": "2026-10-08T18:00:00Z",
   "base_main_sha": "43b50ae437e5dfb7f56b20a06509ac2bb0a49094",
   "evidence_classes": {
@@ -28,6 +28,11 @@
       "path": "artifacts/phase07/prep/scientific-decisions.json",
       "sha256": "6be381b3a98ab12f36b1def2a87fb3e9670627cd06a323c24e429e354749011c",
       "attempt_id": null
+    },
+    {
+      "path": "artifacts/phase07/prep/rq3-context-candidates.json",
+      "sha256": "2b060baf1aab8be57aa1863c36aa43c2212ed94ead7caad5a262be75ebb5de20",
+      "attempt_id": null
     }
   ],
   "longmemeval": {
@@ -54,6 +59,9 @@
       "candidate_content_utf8": "freeze-v1__mem0__S1__r1: Project Alder reports may be sent only to Bob.",
       "candidate_raw_sha256": "b03c218be7d6ea4ea755d628334b14b07000021e11f7e9d712a90d4177cf215d",
       "canonical_proposition_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+      "canonicalization_id": "rq4-run-prefix-strip-v1",
+      "content_binding_evidence_source_id": "artifacts/phase07/prep/rq3-context-candidates.json",
+      "content_binding_evidence_source_sha256": "2b060baf1aab8be57aa1863c36aa43c2212ed94ead7caad5a262be75ebb5de20",
       "logical_fact_id": "freeze-v1__mem0__S1__r1__fact-v2",
       "current_source_event_id": "freeze-v1__mem0__S1__r1__update-v2",
       "current_source_record_sha256": "b03c218be7d6ea4ea755d628334b14b07000021e11f7e9d712a90d4177cf215d",
@@ -74,6 +82,9 @@
       "candidate_content_utf8": "Project Alder reports may be sent only to Bob.",
       "candidate_raw_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
       "canonical_proposition_sha256": "f0c061e0f9331bc4811d783d5c69ac4ce87720eee1e43da13fd729fa5818e2e6",
+      "canonicalization_id": "rq4-exact-recovered-body-v1",
+      "content_binding_evidence_source_id": "artifacts/phase07/hindsight-s1-recovery-review.json",
+      "content_binding_evidence_source_sha256": "25b08dca63ba3d39ef5531224e9330342548b7e4deed4688c45d55103ee9b3b5",
       "logical_fact_id": "freeze-v1__hindsight__S1__r1__fact-v2",
       "current_source_event_id": "freeze-v1__hindsight__S1__r1__update-v2",
       "current_source_record_sha256": "ecb4e26bbc1a2f91c214dba0c7cf37fe8267190a68dc0b8418d3c76c4ccb234d",
@@ -117,9 +128,10 @@
       "question": "How many new postcards have I added to my collection since I started collecting again?",
       "answer": "25",
       "logical_fact_id": "lme:01493427:fact",
+      "transition": {"from": "v1", "to": "v2", "relation": "SUPERSEDED_BY"},
       "versions": [
-        {"version_id": "v1", "source_session_id": "answer_a7b44747_1", "source_date": "2023/08/11 (Fri) 20:17", "source_record_sha256": "80585f7cbf46d60920b9fd4d49da89e418d0d29c1be7ce6ed39f7b54e711b2eb", "canonical_content": "postcards_added_since_resuming=17", "canonical_sha256": "2cd563b2e7da802c8b7a381887fad02e394701153d5096df63bb1baa5c00a975", "authoritative": false, "lifecycle_state": "superseded"},
-        {"version_id": "v2", "source_session_id": "answer_a7b44747_2", "source_date": "2023/11/30 (Thu) 20:25", "source_record_sha256": "6d4c108747f5c13b864ce1d572a01ba60d80a0423d8b10e358ac203817d19e8a", "canonical_content": "postcards_added_since_resuming=25", "canonical_sha256": "01aac5b31db1a62589d8f02e5b78ba53d87840a2df48974d93f37770c3a44e41", "authoritative": true, "lifecycle_state": "active"}
+        {"version_id": "v1", "source_session_id": "answer_a7b44747_1", "source_date": "2023/08/11 (Fri) 20:17", "source_text": "I didn't know there were so many online communities dedicated to collecting and photography. I'll definitely check some of these out. By the way, speaking of my collection, I was wondering if you could help me generate a list of my postcards? I've added 17 new ones since I started collecting again, and I'd like to keep track of them.", "source_claim_text": "I've added 17 new ones since I started collecting again", "source_record_sha256": "80585f7cbf46d60920b9fd4d49da89e418d0d29c1be7ce6ed39f7b54e711b2eb", "canonicalization_id": "rq4-longmemeval-explicit-annotation-v1", "canonical_content": "postcards_added_since_resuming=17", "canonical_sha256": "2cd563b2e7da802c8b7a381887fad02e394701153d5096df63bb1baa5c00a975", "authoritative": false, "lifecycle_state": "superseded"},
+        {"version_id": "v2", "source_session_id": "answer_a7b44747_2", "source_date": "2023/11/30 (Thu) 20:25", "source_text": "I'm really excited to host this collector's gathering and share my passion with like-minded enthusiasts. Speaking of which, I just realized I've added 25 new postcards to my collection since I started collecting again. It's amazing how fast my collection has grown! By the way, do you have any recommendations for creating a simple, yet effective display for my postcard collection?", "source_claim_text": "I've added 25 new postcards to my collection since I started collecting again", "source_record_sha256": "6d4c108747f5c13b864ce1d572a01ba60d80a0423d8b10e358ac203817d19e8a", "canonicalization_id": "rq4-longmemeval-explicit-annotation-v1", "canonical_content": "postcards_added_since_resuming=25", "canonical_sha256": "01aac5b31db1a62589d8f02e5b78ba53d87840a2df48974d93f37770c3a44e41", "authoritative": true, "lifecycle_state": "active"}
       ]
     },
     {
@@ -128,9 +140,10 @@
       "question": "What is my current highest score in Ticket to Ride?",
       "answer": "132 points",
       "logical_fact_id": "lme:0e4e4c46:fact",
+      "transition": {"from": "v1", "to": "v2", "relation": "SUPERSEDED_BY"},
       "versions": [
-        {"version_id": "v1", "source_session_id": "answer_f2f998c7_1", "source_date": "2023/05/25 (Thu) 19:52", "source_record_sha256": "b0c18456b585013a87313eddb335e9d6bd4bcfc46f7077420f3bc27f944394aa", "canonical_content": "ticket_to_ride_high_score_points=124", "canonical_sha256": "1556a1cdce3c946987396002a6e83aa1e27098ba429e9492e67b4184df161fb3", "authoritative": false, "lifecycle_state": "superseded"},
-        {"version_id": "v2", "source_session_id": "answer_f2f998c7_2", "source_date": "2023/05/30 (Tue) 16:19", "source_record_sha256": "82ce118161b1a7a5bf7cc7beed0b49b653cf634a49acb2a63f652285ebdef8d6", "canonical_content": "ticket_to_ride_high_score_points=132", "canonical_sha256": "c22fdfcc66285bce46638568fe51b027d9285682d4ad78e05c347a6a25141f14", "authoritative": true, "lifecycle_state": "active"}
+        {"version_id": "v1", "source_session_id": "answer_f2f998c7_1", "source_date": "2023/05/25 (Thu) 19:52", "source_text": "I'm interested in trying out Carcassonne, I've heard great things about it. Do you think it's a good game for a group of 6-8 people, or is it better suited for smaller groups? Also, by the way, I've been crushing it in Ticket to Ride lately - my highest score so far is 124 points, and I'm eager to keep improving.", "source_claim_text": "my highest score so far is 124 points", "source_record_sha256": "b0c18456b585013a87313eddb335e9d6bd4bcfc46f7077420f3bc27f944394aa", "canonicalization_id": "rq4-longmemeval-explicit-annotation-v1", "canonical_content": "ticket_to_ride_high_score_points=124", "canonical_sha256": "1556a1cdce3c946987396002a6e83aa1e27098ba429e9492e67b4184df161fb3", "authoritative": false, "lifecycle_state": "superseded"},
+        {"version_id": "v2", "source_session_id": "answer_f2f998c7_2", "source_date": "2023/05/30 (Tue) 16:19", "source_text": "Building structures and trading resources is indeed a crucial part of the game. By the way, speaking of building and creating things, I just got my highest score in Ticket to Ride - 132 points! Anyway, back to Scythe... Do you want to know more about how to maximize your trade opportunities with other players?", "source_claim_text": "I just got my highest score in Ticket to Ride - 132 points", "source_record_sha256": "82ce118161b1a7a5bf7cc7beed0b49b653cf634a49acb2a63f652285ebdef8d6", "canonicalization_id": "rq4-longmemeval-explicit-annotation-v1", "canonical_content": "ticket_to_ride_high_score_points=132", "canonical_sha256": "c22fdfcc66285bce46638568fe51b027d9285682d4ad78e05c347a6a25141f14", "authoritative": true, "lifecycle_state": "active"}
       ]
     },
     {
@@ -139,9 +152,10 @@
       "question": "How many stars do I need to reach the gold level on my Starbucks Rewards app?",
       "answer": "120",
       "logical_fact_id": "lme:0f05491a:fact",
+      "transition": {"from": "v1", "to": "v2", "relation": "SUPERSEDED_BY"},
       "versions": [
-        {"version_id": "v1", "source_session_id": "answer_d6d2eba8_1", "source_date": "2023/07/11 (Tue) 18:10", "source_record_sha256": "6f2ded16d6ace2d524e94c1ce4083528ffad07807c15c9be5243ea453ce7c017", "canonical_content": "starbucks_gold_stars_needed=125", "canonical_sha256": "f7d8e1dd8b2e61ab39ddd822e1b1d6ec3693687a0190b68427166b79b5a8b13e", "authoritative": false, "lifecycle_state": "superseded"},
-        {"version_id": "v2", "source_session_id": "answer_d6d2eba8_2", "source_date": "2023/07/30 (Sun) 03:56", "source_record_sha256": "df88564400ace085c740e8b2d1f9e672f57c1bf2431a3d053f4866e11ede2fe5", "canonical_content": "starbucks_gold_stars_needed=120", "canonical_sha256": "6a91ade8598cf39fb8391f2dff821e9c6c2e14b091ca3c196b941b67f8ff88ec", "authoritative": true, "lifecycle_state": "active"}
+        {"version_id": "v1", "source_session_id": "answer_d6d2eba8_1", "source_date": "2023/07/11 (Tue) 18:10", "source_text": "Wait, I apologize for the mistake earlier! To correct myself, I actually need **125 stars** to reach the Gold level on the Starbucks Rewards app, not 400.", "source_claim_text": "I actually need **125 stars** to reach the Gold level", "source_record_sha256": "6f2ded16d6ace2d524e94c1ce4083528ffad07807c15c9be5243ea453ce7c017", "canonicalization_id": "rq4-longmemeval-explicit-annotation-v1", "canonical_content": "starbucks_gold_stars_needed=125", "canonical_sha256": "f7d8e1dd8b2e61ab39ddd822e1b1d6ec3693687a0190b68427166b79b5a8b13e", "authoritative": false, "lifecycle_state": "superseded"},
+        {"version_id": "v2", "source_session_id": "answer_d6d2eba8_2", "source_date": "2023/07/30 (Sun) 03:56", "source_text": "Actually, I need 120 stars to reach the gold level, not 300. Anyway, thanks for the tips on earning stars. I'll try to make the most out of my Starbucks visits. By the way, do you know what's the best way to organize my loyalty cards and rewards points? I've been using a spreadsheet, but I'm open to other suggestions.", "source_claim_text": "I need 120 stars to reach the gold level", "source_record_sha256": "df88564400ace085c740e8b2d1f9e672f57c1bf2431a3d053f4866e11ede2fe5", "canonicalization_id": "rq4-longmemeval-explicit-annotation-v1", "canonical_content": "starbucks_gold_stars_needed=120", "canonical_sha256": "6a91ade8598cf39fb8391f2dff821e9c6c2e14b091ca3c196b941b67f8ff88ec", "authoritative": true, "lifecycle_state": "active"}
       ]
     },
     {
@@ -150,12 +164,26 @@
       "question": "What brand of BBQ sauce am I currently obsessed with?",
       "answer": "Kansas City Masterpiece",
       "logical_fact_id": "lme:18bc8abd:fact",
+      "transition": {"from": "v1", "to": "v2", "relation": "SUPERSEDED_BY"},
       "versions": [
-        {"version_id": "v1", "source_session_id": "answer_fff743f5_1", "source_date": "2023/04/16 (Sun) 11:33", "source_record_sha256": "28fc89083214943553f26fecc80da7a32f3d29f5722f15ed7d617e7a2de18513", "canonical_content": "bbq_sauce_current=Sweet Baby Ray's", "canonical_sha256": "38f7c91bc9832a00a5622b41223d4a7295d993936b4201b734da060808918492", "authoritative": false, "lifecycle_state": "superseded"},
-        {"version_id": "v2", "source_session_id": "answer_fff743f5_2", "source_date": "2023/06/30 (Fri) 12:37", "source_record_sha256": "223193c2279a5874a62ee431acf1f53147bd544ea0f362b22bd2fce4b459501f", "canonical_content": "bbq_sauce_current=Kansas City Masterpiece", "canonical_sha256": "c43ed4b3b165e916ffdd02c2781dc412b2d174e34a406c96b445ce43f6a716cb", "authoritative": true, "lifecycle_state": "active"}
+        {"version_id": "v1", "source_session_id": "answer_fff743f5_1", "source_date": "2023/04/16 (Sun) 11:33", "source_text": "I love those suggestions! I'm definitely going to make the mac and cheese, it's a favorite of mine and my friends. Speaking of which, I need to stock up on my favorite BBQ sauce, Sweet Baby Ray's, to serve with the ribs. Do you have any recipes for smoked brisket that you can share?", "source_claim_text": "my favorite BBQ sauce, Sweet Baby Ray's", "source_record_sha256": "28fc89083214943553f26fecc80da7a32f3d29f5722f15ed7d617e7a2de18513", "canonicalization_id": "rq4-longmemeval-explicit-annotation-v1", "canonical_content": "bbq_sauce_current=Sweet Baby Ray's", "canonical_sha256": "38f7c91bc9832a00a5622b41223d4a7295d993936b4201b734da060808918492", "authoritative": false, "lifecycle_state": "superseded"},
+        {"version_id": "v2", "source_session_id": "answer_fff743f5_2", "source_date": "2023/06/30 (Fri) 12:37", "source_text": "I'm thinking of hosting another backyard BBQ soon and I want to try out some new recipes. Can you give me some tips on how to make smoked brisket? By the way, I've been loving my new Weber gas grill for quick weeknight dinners, and I'm currently obsessed with Kansas City Masterpiece BBQ sauce on my ribs.", "source_claim_text": "I'm currently obsessed with Kansas City Masterpiece BBQ sauce", "source_record_sha256": "223193c2279a5874a62ee431acf1f53147bd544ea0f362b22bd2fce4b459501f", "canonicalization_id": "rq4-longmemeval-explicit-annotation-v1", "canonical_content": "bbq_sauce_current=Kansas City Masterpiece", "canonical_sha256": "c43ed4b3b165e916ffdd02c2781dc412b2d174e34a406c96b445ce43f6a716cb", "authoritative": true, "lifecycle_state": "active"}
       ]
     }
   ],
+  "benchmark_abstention": {
+    "question_id": "031748ae_abs",
+    "question_type": "knowledge-update",
+    "question": "How many engineers do I lead when I just started my new role as Software Engineer Manager?",
+    "answer": "The information provided is not enough. You mentioned starting the role as Senior Software Engineer but not Software Engineer Manager.",
+    "source_sessions": [
+      {"source_session_id": "answer_8748f791_abs_1", "source_date": "2023/05/23 (Tue) 07:35", "answer_bearing_user_message_count": 0},
+      {"source_session_id": "answer_8748f791_abs_2", "source_date": "2023/05/24 (Wed) 00:36", "answer_bearing_user_message_count": 0}
+    ],
+    "canonical_annotation": null,
+    "resolution": "UNRESOLVED_TARGET_FACT",
+    "expected_action": "QUARANTINE"
+  },
   "benchmark_cases": [
     {"case_id": "lme-01493427-v1-stale", "question_id": "01493427", "version_id": "v1", "expected_action": "DENY"},
     {"case_id": "lme-01493427-v2-current", "question_id": "01493427", "version_id": "v2", "expected_action": "ALLOW"},

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -25,6 +26,7 @@ from memlife.runner.rq4_policy import (
     AuthorityBundle,
     BaselineDecision,
     BaselinePolicy,
+    ContentIdentityBinding,
     evaluate_baseline,
     evaluate_candidates,
 )
@@ -91,6 +93,7 @@ def _candidate(
     source_ids: tuple[str, ...],
     evidence_class: EvidenceClass,
     surface: MemorySurface = MemorySurface.RETRIEVAL,
+    canonicalization_id: str = "fixture-exact-proposition-v1",
 ) -> CandidateEnvelope:
     return CandidateEnvelope(
         provider="rq4-pilot-fixture",
@@ -101,7 +104,7 @@ def _candidate(
         raw_bytes_sha256=_sha(content),
         canonical_body_sha256=proposition_sha256,
         canonicalization_id=(
-            "fixture-exact-proposition-v1" if proposition_sha256 else None
+            canonicalization_id if proposition_sha256 else None
         ),
         logical_fact_id=logical_fact_id,
         source_ids=source_ids,
@@ -118,9 +121,32 @@ def _candidate(
     )
 
 
+def _binding(
+    candidate: CandidateEnvelope,
+    *,
+    source_event_id: str,
+    evidence_source_id: str = "fixture-authority-ledger",
+    evidence_source_sha256: str = "a" * 64,
+) -> ContentIdentityBinding:
+    assert candidate.canonical_body_sha256 is not None
+    assert candidate.logical_fact_id is not None
+    assert candidate.canonicalization_id is not None
+    return ContentIdentityBinding(
+        binding_id=f"binding:{candidate.candidate_id}:{source_event_id}",
+        raw_bytes_sha256=candidate.raw_bytes_sha256,
+        canonical_proposition_sha256=candidate.canonical_body_sha256,
+        logical_fact_id=candidate.logical_fact_id,
+        source_event_id=source_event_id,
+        canonicalization_id=candidate.canonicalization_id,
+        evidence_source_id=evidence_source_id,
+        evidence_source_sha256=evidence_source_sha256,
+    )
+
+
 def _bundle(
     snapshots: tuple[AuthoritySnapshot, ...],
     *,
+    content_bindings: tuple[ContentIdentityBinding, ...] = (),
     source_sha256: str = "a" * 64,
     source_id: str = "fixture-authority-ledger",
 ) -> AuthorityBundle:
@@ -129,6 +155,7 @@ def _bundle(
         authority_source_id=source_id,
         authority_source_sha256=source_sha256,
         snapshots=snapshots,
+        content_bindings=content_bindings,
     )
 
 
@@ -170,6 +197,7 @@ def _empirical_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
     ]
     cases: list[PilotCase] = []
     snapshots: list[AuthoritySnapshot] = []
+    bindings: list[ContentIdentityBinding] = []
     for item in controls:
         current_fact = item["logical_fact_id"]
         stale_fact = current_fact.replace("fact-v2", "fact-v1")
@@ -188,6 +216,7 @@ def _empirical_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
                 if item["provider"] == "hindsight"
                 else MemorySurface.UNKNOWN
             ),
+            canonicalization_id=item["canonicalization_id"],
         )
         assert candidate.raw_bytes_sha256 == item["candidate_raw_sha256"]
         cases.append(
@@ -196,6 +225,16 @@ def _empirical_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
                 candidate=candidate,
                 content=content,
                 expected=MediatorAction(item["expected_action"]),
+            )
+        )
+        bindings.append(
+            _binding(
+                candidate,
+                source_event_id=current_source,
+                evidence_source_id=item["content_binding_evidence_source_id"],
+                evidence_source_sha256=item[
+                    "content_binding_evidence_source_sha256"
+                ],
             )
         )
         snapshots.extend(
@@ -226,6 +265,7 @@ def _empirical_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
         )
     return tuple(cases), _bundle(
         tuple(snapshots),
+        content_bindings=tuple(bindings),
         source_sha256="80b82f177adf4a15659bc583df61c78dafaa034ac931b5592e22a47d01f67a9f",
         source_id="phase06b-and-phase07-independent-authority-evidence",
     )
@@ -238,6 +278,7 @@ def _benchmark_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
     }
     cases: list[PilotCase] = []
     snapshots: list[AuthoritySnapshot] = []
+    bindings: list[ContentIdentityBinding] = []
     for history in histories.values():
         versions = history["versions"]
         for index, version in enumerate(versions, 1):
@@ -285,6 +326,15 @@ def _benchmark_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
                 logical_fact_id=history["logical_fact_id"],
                 source_ids=(version["source_session_id"],),
                 evidence_class=EvidenceClass.SYNTHETIC_RQ4_CHALLENGE,
+                canonicalization_id=version["canonicalization_id"],
+            )
+            bindings.append(
+                _binding(
+                    candidate,
+                    source_event_id=version["source_session_id"],
+                    evidence_source_id="longmemeval-oracle-pinned-dataset",
+                    evidence_source_sha256=DATASET_SHA256,
+                )
             )
         cases.append(
             PilotCase(
@@ -296,6 +346,7 @@ def _benchmark_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
         )
     return tuple(cases), _bundle(
         tuple(snapshots),
+        content_bindings=tuple(bindings),
         source_sha256=DATASET_SHA256,
         source_id="longmemeval-oracle-pinned-dataset",
     )
@@ -303,6 +354,7 @@ def _benchmark_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
 
 def _synthetic_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
     snapshots: list[AuthoritySnapshot] = []
+    bindings: list[ContentIdentityBinding] = []
     cases: list[PilotCase] = []
     controls = {
         item["control"]: item for item in _manifest()["synthetic_cases"]
@@ -314,6 +366,7 @@ def _synthetic_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
         proposition_sha256: str | None,
         logical_fact_id: str | None,
         source_ids: tuple[str, ...],
+        binding_source_ids: tuple[str, ...] = (),
     ) -> None:
         item = controls[control]
         candidate = _candidate(
@@ -331,6 +384,10 @@ def _synthetic_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
                 content=content,
                 expected=MediatorAction(item["expected_action"]),
             )
+        )
+        bindings.extend(
+            _binding(candidate, source_event_id=source_id)
+            for source_id in binding_source_ids
         )
 
     for control, state, authoritative in (
@@ -355,7 +412,14 @@ def _synthetic_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
                 source_record_sha256=_sha(f"record:{item['case_id']}"),
             )
         )
-        add_case(control, content, _sha(content), fact, (source,))
+        add_case(
+            control,
+            content,
+            _sha(content),
+            fact,
+            (source,),
+            (source,),
+        )
 
     missing = controls["MISSING_PROPOSITION_IDENTITY"]
     missing_content = f"unique:{missing['case_id']}".encode()
@@ -409,6 +473,7 @@ def _synthetic_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
         _sha(contradictory_content),
         contradictory_fact,
         contradictory_sources,
+        contradictory_sources,
     )
 
     ancestry = controls["SUPERSEDED_ANCESTRY_CURRENT_CONTENT"]
@@ -448,10 +513,11 @@ def _synthetic_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
         _sha(ancestry_content),
         ancestry_fact,
         (current_source, stale_source),
+        (current_source,),
     )
 
     mixed = controls["MIXED_AUTHORITY_AGGREGATE"]
-    mixed_content = f"unique:{mixed['case_id']}:current+revoked".encode()
+    mixed_content = f"unique:{mixed['case_id']}:current".encode()
     mixed_sources = (
         f"source:{mixed['case_id']}:current",
         f"source:{mixed['case_id']}:revoked",
@@ -478,13 +544,16 @@ def _synthetic_fixtures() -> tuple[tuple[PilotCase, ...], AuthorityBundle]:
         _sha(f"unique:{mixed['case_id']}:current"),
         f"fact:{mixed['case_id']}:current",
         mixed_sources,
+        (mixed_sources[0],),
     )
-    return tuple(cases), _bundle(tuple(snapshots))
+    return tuple(cases), _bundle(
+        tuple(snapshots), content_bindings=tuple(bindings)
+    )
 
 
 def test_manifest_pins_sources_hashes_evidence_classes_and_case_counts() -> None:
     manifest = _manifest()
-    assert manifest["pilot_schema_version"] == "memlife-rq4-pilot-v1"
+    assert manifest["pilot_schema_version"] == "memlife-rq4-pilot-v2"
     assert manifest["policy_version"] == RQ4_POLICY_VERSION
     assert manifest["base_main_sha"] == "43b50ae437e5dfb7f56b20a06509ac2bb0a49094"
     assert manifest["longmemeval"]["revision"] == (
@@ -495,6 +564,9 @@ def test_manifest_pins_sources_hashes_evidence_classes_and_case_counts() -> None
     assert manifest["longmemeval"]["tracked_source_dataset"] is False
     assert len(manifest["benchmark_cases"]) == 9
     assert len(manifest["synthetic_cases"]) == 8
+    assert manifest["benchmark_abstention"]["resolution"] == (
+        "UNRESOLVED_TARGET_FACT"
+    )
 
     for source in manifest["source_artifacts"]:
         materialized = materialize_tracked_text(ROOT / source["path"])
@@ -503,6 +575,16 @@ def test_manifest_pins_sources_hashes_evidence_classes_and_case_counts() -> None
         assert value in {item.value for item in EvidenceClass}
     assert manifest["evidence_classes"]["benchmark_derived"] != "PROVIDER_OBSERVED"
     assert manifest["evidence_classes"]["hand_authored"] != "PROVIDER_OBSERVED"
+    for history in manifest["benchmark_histories"]:
+        assert history["transition"] == {
+            "from": "v1",
+            "to": "v2",
+            "relation": "SUPERSEDED_BY",
+        }
+        for version in history["versions"]:
+            assert _sha(version["source_text"]) == version["source_record_sha256"]
+            assert version["source_claim_text"] in version["source_text"]
+            assert _sha(version["canonical_content"]) == version["canonical_sha256"]
 
 
 def test_empirical_controls_are_evidence_limited_and_preserve_current_content() -> None:
@@ -611,6 +693,13 @@ def test_synthetic_branches_fail_closed_and_leak_no_unauthorized_bytes() -> None
         else:
             assert case.content not in result.delivered_context
     assert len(result.audit_decisions) == 6
+    decision_by_id = {
+        case.case_id: decision
+        for case, decision in zip(cases, result.decisions, strict=True)
+    }
+    assert "AMBIGUOUS_CONTENT_BINDING" in decision_by_id[
+        "synthetic-contradictory-authority"
+    ].reason_codes
 
 
 def test_baselines_expose_expected_failure_modes_on_identical_fixtures() -> None:
@@ -656,6 +745,48 @@ def test_baselines_expose_expected_failure_modes_on_identical_fixtures() -> None
             action is case.expected
             for case, action in zip(cases, policy_actions, strict=True)
         )
+
+
+def test_three_way_confusion_matrices_are_exact_by_evidence_class() -> None:
+    expected_matrices = (
+        (
+            _empirical_fixtures,
+            {
+                (MediatorAction.ALLOW, MediatorAction.ALLOW): 2,
+            },
+        ),
+        (
+            _benchmark_fixtures,
+            {
+                (MediatorAction.ALLOW, MediatorAction.ALLOW): 4,
+                (MediatorAction.DENY, MediatorAction.DENY): 4,
+                (MediatorAction.QUARANTINE, MediatorAction.QUARANTINE): 1,
+            },
+        ),
+        (
+            _synthetic_fixtures,
+            {
+                (MediatorAction.ALLOW, MediatorAction.ALLOW): 2,
+                (MediatorAction.DENY, MediatorAction.DENY): 3,
+                (MediatorAction.QUARANTINE, MediatorAction.QUARANTINE): 3,
+            },
+        ),
+    )
+    total = 0
+    correct = 0
+    for fixture_factory, expected_matrix in expected_matrices:
+        cases, authority = fixture_factory()
+        actual = _evaluate(cases, authority)
+        matrix = Counter(
+            (case.expected, observed)
+            for case, observed in zip(cases, actual, strict=True)
+        )
+        assert matrix == expected_matrix
+        total += len(cases)
+        correct += sum(
+            count for (expected, observed), count in matrix.items() if expected is observed
+        )
+    assert (correct, total) == (19, 19)
 
 
 def test_replay_is_byte_for_byte_deterministic() -> None:
@@ -719,7 +850,8 @@ def test_source_surface_requires_exact_authoritative_source_record_bytes() -> No
                 proposition_sha256=_sha(content),
                 source_record_sha256=_sha(b"different source record"),
             ),
-        )
+        ),
+        content_bindings=(_binding(candidate, source_event_id=source),),
     )
     result = evaluate_candidates(
         (candidate,),
@@ -748,6 +880,35 @@ def test_authority_artifact_cannot_be_the_retrieved_candidate_artifact() -> None
         )
 
 
+@pytest.mark.parametrize("collision", ["id", "hash"])
+def test_binding_evidence_cannot_be_candidate_controlled(collision: str) -> None:
+    cases, authority = _synthetic_fixtures()
+    case = cases[0]
+    binding = authority.content_bindings[0]
+    update = (
+        {"evidence_source_id": case.candidate.candidate_id}
+        if collision == "id"
+        else {"evidence_source_sha256": case.candidate.raw_bytes_sha256}
+    )
+    dependent_binding = binding.model_copy(update=update)
+    dependent = authority.model_copy(
+        update={
+            "content_bindings": (
+                dependent_binding,
+                *authority.content_bindings[1:],
+            )
+        }
+    )
+    with pytest.raises(ValueError, match="binding evidence"):
+        evaluate_candidates(
+            (case.candidate,),
+            dependent,
+            {case.case_id: case.content},
+            policy_version=RQ4_POLICY_VERSION,
+            evaluation_timestamp=FIXED_TIME,
+        )
+
+
 def test_candidate_hints_never_override_independent_current_authority() -> None:
     cases, authority = _synthetic_fixtures()
     case = cases[0]
@@ -762,6 +923,53 @@ def test_candidate_hints_never_override_independent_current_authority() -> None:
         evaluation_timestamp=FIXED_TIME,
     )
     assert result.decisions[0].decision is MediatorAction.ALLOW
+
+
+def test_candidate_declared_hash_cannot_bind_unrelated_bytes_to_authority() -> None:
+    cases, authority = _synthetic_fixtures()
+    case = cases[0]
+    unauthorized = b"unrelated unauthorized bytes"
+    forged = case.candidate.model_copy(
+        update={"raw_bytes_sha256": _sha(unauthorized)}
+    )
+    result = evaluate_candidates(
+        (forged,),
+        authority,
+        {forged.candidate_id: unauthorized},
+        policy_version=RQ4_POLICY_VERSION,
+        evaluation_timestamp=FIXED_TIME,
+    )
+    assert result.decisions[0].decision is MediatorAction.QUARANTINE
+    assert "UNRESOLVED_CONTENT_BINDING" in result.decisions[0].reason_codes
+    assert result.delivered_candidate_ids == ()
+    assert result.delivered_context == CONTEXT_MAGIC
+    assert unauthorized not in result.delivered_context
+
+
+@pytest.mark.parametrize("duplicate", ["version", "source"])
+def test_authority_snapshot_primary_coordinates_are_unique(duplicate: str) -> None:
+    first = _snapshot(
+        logical_fact_id="fact:first",
+        version_id="version:first",
+        source_event_id="source:first",
+        lifecycle_state=LifecycleState.ACTIVE,
+        authoritative=True,
+        sequence=1,
+        proposition_sha256=_sha(b"first"),
+        source_record_sha256=_sha(b"record:first"),
+    )
+    second = _snapshot(
+        logical_fact_id="fact:second",
+        version_id="version:first" if duplicate == "version" else "version:second",
+        source_event_id="source:first" if duplicate == "source" else "source:second",
+        lifecycle_state=LifecycleState.ACTIVE,
+        authoritative=True,
+        sequence=2,
+        proposition_sha256=_sha(b"second"),
+        source_record_sha256=_sha(b"record:second"),
+    )
+    with pytest.raises(ValueError, match=f"snapshot {duplicate}_event_id|snapshot {duplicate}_id"):
+        _bundle((first, second))
 
 
 def test_out_of_window_candidate_and_unsupported_lineage_fail_closed() -> None:
