@@ -157,7 +157,7 @@ frozen authority-ledger version.
 | `EXPIRED` | the exact version has a predeclared validity end before evaluation, with trusted time evidence and no renewal |
 | `UNKNOWN` | required identity, time, source, transition, or authority evidence is absent or cannot be resolved; lack of retrieval is not authority proof |
 | `CONTRADICTORY` | two or more admissible independent evidence items assert mutually incompatible authority states for the same proposition/version/time and precedence cannot resolve them |
-| `NOT_APPLICABLE` | the unit is not proposition-bearing or the requested authority dimension does not apply by design, such as an operation log or an abstention packet with no established target proposition |
+| `NOT_APPLICABLE` | the annotation unit is not proposition-bearing or the requested dimension genuinely does not apply by design, such as an operation-log unit with no proposition-authority dimension |
 
 `UNKNOWN` is an evidence insufficiency; `CONTRADICTORY` requires actual
 conflicting admissible evidence. `NOT_APPLICABLE` is not evidence of safety.
@@ -197,29 +197,56 @@ only after byte identity, lineage, and snapshot consistency are checked.
 
 ## 5. Independent annotation and adjudication
 
-### 5.1 Review procedure
+### 5.1 Three-stage review procedure
 
-Two genuinely independent human reviewers receive the same immutable packet
-manifest, artifact access, and codebook version. Neither sees the other's
-judgments, expected pilot action, mediator output, or provider-result-based
-interpretation while labeling.
+Two genuinely independent human reviewers receive the same immutable blinded
+packet manifest, admissible artifacts, and codebook version. Each stage has a
+separate view whose manifest lists included and intentionally withheld
+artifacts. Neither reviewer sees the other's judgments at either independent
+stage.
 
-Each reviewer must:
+#### Stage A — independent source-authority annotation
 
-1. verify the packet-manifest hash and every accessible artifact hash;
-2. identify the annotation unit and exact proposition bytes or select
-   `UNKNOWN`/`NOT_APPLICABLE`;
-3. record source artifact, fact/version/event IDs, lifecycle operation and
-   transition, evaluation timestamp, authority label, evidence limitations,
-   confidence (`HIGH`, `MEDIUM`, or `LOW`), and concise rationale;
-4. separately classify evidence origin and relationship basis; and
-5. sign or otherwise immutably submit the judgment without editing the packet.
+Reviewers inspect exact source records, predeclared authority rules, intended
+lifecycle transitions, independently captured native-operation completion
+evidence, source/proposition identities, and the evaluation timestamp. They
+independently determine the source/version authority condition.
 
-Allowed evidence is limited to the packet inventory and the versioned
-codebook. Search results, provider claims not captured in the packet, the
-candidate's own lifecycle fields, and the other reviewer's judgment are not
-allowed. Reviewers may flag `PACKET_CORRUPT` or `OUT_OF_SCOPE`; those are review
-dispositions, not authority labels.
+The Stage A view must withhold existing experimenter-assigned authority labels,
+precomputed `authoritative` booleans, complete `AuthoritySnapshot` objects,
+expected mediator actions, mediator outputs, historical scientific verdicts
+that reveal the target label, candidate-declared lifecycle hints, and the other
+reviewer's judgment. Source-event names must be neutral aliases if their
+original names disclose a label. The reviewer records the source/version unit,
+authority label, evidence limitations, confidence (`HIGH`, `MEDIUM`, or
+`LOW`), and rationale, then immutably locks the judgment.
+
+#### Stage B — independent candidate-content binding
+
+Only after both Stage A judgments are locked does each reviewer receive the
+Stage B view: exact retrieved candidate bytes, raw-response/extraction
+evidence, independently admissible provenance, the frozen canonicalization
+algorithm, and candidate-neutral identifiers. The reviewer determines which
+canonical proposition, if any, the candidate expresses and records the exact
+raw-to-canonical binding or `UNKNOWN`.
+
+Stage B still withholds expected policy outcomes, mediator results, historical
+verdicts, complete labeled snapshots, adjudicated Stage A labels, and the other
+reviewer's judgments. Stage A submissions remain immutable; candidate evidence
+cannot retroactively change source-authority rules or labels.
+
+#### Stage C — adjudication and audit
+
+Only after the independent Stage A and Stage B judgments are locked may an
+adjudicator inspect the complete evidence, original judgments, prior
+interpretations, mediator outputs, and full `AuthoritySnapshot` records. The
+adjudicator resolves disagreements without overwriting either reviewer.
+
+At every stage reviewers verify the view-manifest hash and accessible artifact
+hashes, use only admitted evidence, and sign or otherwise immutably submit the
+judgment. Search results and uncaptured provider claims are not allowed.
+`PACKET_CORRUPT` and `OUT_OF_SCOPE` are review dispositions, not authority
+labels.
 
 ### 5.2 Disagreement and adjudication
 
@@ -228,19 +255,32 @@ Disagreements are categorized as `UNIT_BOUNDARY`, `PROPOSITION_IDENTITY`,
 `PROVENANCE_BASIS`, `EVIDENCE_SUFFICIENCY`, or `CODEBOOK_AMBIGUITY`. Original
 judgments remain immutable.
 
-After both are locked, an adjudicator sees the packet, both judgments, and
-rationales. The adjudicator may choose one label, assign `UNKNOWN` or
+After both stages are locked, an adjudicator sees the complete audit packet,
+both reviewers' judgments and rationales. The adjudicator may choose one
+label, assign `UNKNOWN` or
 `CONTRADICTORY`, or request a versioned codebook clarification followed by a
 new review round. The final record contains the original judgments, codebook
 and packet hashes, disagreement category, adjudication rationale, final label,
 adjudicator identity, and version/timestamp. It never overwrites reviewer data.
 
-Report raw exact agreement, the full label-confusion matrix, and nominal
-Krippendorff's alpha with an uncertainty interval. Alpha is selected because
-the codebook is nominal and future rounds may have more than two reviewers or
-missing judgments. With only seven initial packets, the point estimate will be
-unstable; publish the denominator and interval and do not use a threshold as a
-substitute for adjudication. No agreement statistic is computed in this phase.
+The statistical annotation unit is not the packet. It is one independently
+rated tuple `(blinded_packet_manifest_sha256, stage, unit_id)`: one source fact
+family/proposition version at one evaluation time for Stage A, or one exact
+candidate-byte artifact evaluated against one predeclared proposition-binding
+question for Stage B. A candidate yields multiple Stage B units only when a
+frozen lossless decomposition defines independent proposition slots. One
+packet may contain zero, one, or multiple rated units. The abstention target is
+a Stage A evidence-sufficiency unit even though its result may be `UNKNOWN`.
+
+Report Stage A and Stage B separately. For each, publish the exact set and
+denominator of units independently rated by both reviewers, raw exact
+agreement, and the full label-confusion matrix. Nominal Krippendorff's alpha is
+the planned chance-corrected metric because the labels are nominal and later
+rounds may add reviewers or missing ratings; do not pool the two stages. If the
+final denominator, label distribution, or missingness makes alpha or an
+uncertainty interval degenerate or misleading, report that limitation and raw
+counts instead of manufacturing an estimate. Seven packets do not imply seven
+judgments. No agreement statistic is computed in this phase.
 
 ### 5.3 Blank reviewer record
 
@@ -251,6 +291,7 @@ The following is an **ILLUSTRATIVE BLANK TEMPLATE**, not a judgment:
   "packet_sha256": "PENDING",
   "codebook_version": "phase-08d1-v1",
   "reviewer_role_id": "PENDING_HUMAN_REVIEWER",
+  "stage": "PENDING_STAGE_A_OR_B",
   "unit_id": "PENDING",
   "canonical_proposition_sha256": null,
   "authority_label": "PENDING",
@@ -268,23 +309,35 @@ reviewer.
 
 ## 6. Evidence-packet specification
 
-### 6.1 Required packet structure
+### 6.1 Required packet structure and blinded views
 
-Each compact packet contains, or explicitly marks missing:
+Every case has two distinct packet products with verifiable, cross-referenced
+artifact identities:
 
-1. stable packet, case, history, attempt, run, retrieval, and candidate IDs;
-2. evidence class and whether the record is provider-observed;
-3. original source artifact identity, immutable hash, exact object/session/
-   event reference, source byte range or exact record, and source-content hash;
-4. candidate artifact or exact byte reference, byte count, raw SHA-256, rank,
-   surface, and extraction rule;
-5. canonicalizer name/version/rule, exact canonical proposition bytes/hash,
-   and independent `ContentIdentityBinding` evidence;
-6. current and historical `AuthoritySnapshot` records and evaluation time;
-7. provenance nodes/edges with evidence basis and supporting artifacts;
-8. lifecycle request, native result, and completion/quiescence evidence;
-9. blank reviewer fields, review status, limitations, and public/private class;
-10. an ordered artifact manifest and its SHA-256.
+1. a **blinded annotation packet** with separate Stage A and Stage B view
+   manifests; and
+2. a **complete post-adjudication audit packet**, created or unsealed only
+   after independent judgments are locked.
+
+The common packet inventory contains stable packet/case/history IDs, evidence
+class, source artifact identities and hashes, lifecycle-request/result
+artifacts, review status, public/private class, and an ordered manifest hash.
+The two products differ in what each view may expose:
+
+| Packet/view | Included | Withheld |
+|---|---|---|
+| Blinded Stage A | exact source records and hashes; neutral fact/version/event IDs; predeclared authority rules and intended transitions; native completion evidence; evaluation timestamp; blank authority-judgment fields | candidates and candidate hashes; assigned lifecycle/authority labels; `authoritative` booleans; expected actions; mediator output; full snapshots; disclosing historical interpretations |
+| Blinded Stage B | exact raw response/candidate bytes and hashes; extraction rule; rank/surface; admitted provenance; frozen canonicalization algorithm and source/proposition reference material needed for identity | expected action; mediator output; complete labeled snapshots; adjudicated Stage A label; disclosing historical interpretations; other reviewer judgments |
+| Complete audit packet | all source and candidate artifacts; exact `ContentIdentityBinding`; current/historical `AuthoritySnapshot` records; original reviewer submissions; mediator output; adjudication and prior-interpretation records | only secrets or private material barred by access policy; redactions remain explicitly inventoried |
+
+The blinded view manifests must use neutral aliases where filenames, event
+names, paths, or metadata would reveal the answer. The complete audit manifest
+maps each alias back to its immutable original artifact. Redaction or blinding
+never changes source bytes or hashes; it changes access and display metadata.
+The reviewer-facing codebook package contains label definitions and procedure,
+but excludes Section 6.2, links to the existing answer-bearing pilot manifest,
+and other complete-audit materials until Stage C. Reviewers attest that they
+did not consult those materials during Stages A or B.
 
 Large source datasets remain external and pinned by revision, path, and hash.
 Packets include only necessary source excerpts where licensing and privacy
@@ -292,7 +345,10 @@ permit; they do not duplicate `longmemeval_oracle.json` in Git.
 
 ### 6.2 Required initial packet inventory
 
-All published outcome words below are **HISTORICAL INTERPRETATIONS**, not new
+The table below is the **complete audit inventory for protocol authors**, not a
+blinded reviewer packet. Its historical-interpretation column and any
+answer-revealing identifiers must be absent from both independent review views.
+All published outcomes remain **HISTORICAL INTERPRETATIONS**, not new
 human-adjudicated ground truth.
 
 | Packet | Evidence/source anchor | Exact candidate/proposition evidence | Historical interpretation | Current limitation and review status |
@@ -303,7 +359,11 @@ human-adjudicated ground truth.
 | LongMemEval `0e4e4c46` | same external artifact; sessions `answer_f2f998c7_1/_2` | source hashes `b0c184...94aa` and `82ce11...f8d6`; canonical scores `124/132`, hashes `1556a1...fb3` and `c22fdf...1f14` | manifest-authored v1 superseded/v2 active | same benchmark-authority limitation; `PENDING_TWO_HUMAN_REVIEWS` |
 | LongMemEval `0f05491a` | same external artifact; sessions `answer_d6d2eba8_1/_2` | source hashes `6f2ded...c017` and `df8856...2fe5`; canonical star counts `125/120`, hashes `f7d8e1...b13e` and `6a91ad...88ec` | manifest-authored v1 superseded/v2 active | same benchmark-authority limitation; `PENDING_TWO_HUMAN_REVIEWS` |
 | LongMemEval `18bc8abd` | same external artifact; sessions `answer_fff743f5_1/_2` | source hashes `28fc89...8513` and `223193...501f`; canonical sauce values/hashes `38f7c9...8492` and `c43ed4...16cb` | manifest-authored v1 superseded/v2 active | same benchmark-authority limitation; `PENDING_TWO_HUMAN_REVIEWS` |
-| LongMemEval `031748ae_abs` | same external artifact; sessions `answer_8748f791_abs_1/_2` | no answer-bearing target fact, canonical proposition, or candidate bytes in the manifest | historical resolution `UNRESOLVED_TARGET_FACT`; pilot expected `QUARANTINE` | exact session-byte references/hashes are absent from the current manifest and must be captured from the pinned dataset; proposition fields remain `NOT_APPLICABLE`, not invented; `PENDING_TWO_HUMAN_REVIEWS` |
+| LongMemEval `031748ae_abs` | same external artifact; sessions `answer_8748f791_abs_1/_2` | no answer-bearing target fact, canonical proposition, or candidate bytes in the manifest | historical resolution `UNRESOLVED_TARGET_FACT`; pilot expected `QUARANTINE` | the target proposition is relevant, but evidence is insufficient, so proposition identity and authority are `UNKNOWN`; no canonical proposition is invented. Candidate-only dimensions may be `NOT_APPLICABLE` only because this packet contains no retrieved-candidate unit. Exact session-byte references/hashes remain absent from the current manifest; `PENDING_TWO_HUMAN_REVIEWS` |
+
+This prospective `UNKNOWN` annotation rule does not revise the historical RQ4
+pilot: its abstention fixture remains unchanged, its expected action remains
+`QUARANTINE`, and the published 19/19 result is preserved.
 
 Full, non-abbreviated hashes and source text remain in
 [`experiments/rq4/pilot/manifest.json`](../../experiments/rq4/pilot/manifest.json).
@@ -311,26 +371,54 @@ Abbreviations above are display aids and must never be used for verification.
 
 ## 7. Provider-independent evidence-capture contract
 
-### 7.1 Mandatory order
+### 7.1 Mandatory chronology
 
-A future authorized attempt must perform the following in order:
+A future authorized attempt must preserve the boundary between facts that can
+be preregistered and evidence that exists only after retrieval.
 
-1. freeze experiment configuration and the independent source-authority ledger;
-2. record provider, adapter, model/embedding, runtime, commit, and configuration identities;
-3. record exact source write bytes before transmission;
-4. execute only the declared native lifecycle operation;
-5. capture the native result and terminal completion/quiescence evidence;
-6. capture the exact raw retrieval response before parsing or classification;
-7. preserve selected candidate content bytes and extraction provenance;
-8. preserve candidate order, rank, native identity, surface, score, and retrieval timestamp;
-9. preserve provider-native and adapter-observed source-to-derived relations separately;
-10. create canonicalization evidence as a separate transformation record;
-11. evaluate authority against the frozen independent bundle;
-12. store mediator action, reason codes, witnesses, hashes, and audit output;
-13. only under separate authorization, capture exact model-boundary serialization.
+**Pre-observation freeze:**
 
-Steps 1–12 are future requirements, not permission to execute. Step 13 is not
-authorized by this report. RQ3 remains disabled.
+1. freeze experiment configuration, source-authority rules, intended authority
+   transitions, and evaluation timestamp/rule;
+2. freeze exact source records, source/proposition identities, source-to-
+   proposition mappings, and the versioned canonicalization algorithms;
+3. freeze evidence-admissibility rules, queries, evaluation criteria, and
+   expected outcomes under each stated condition; and
+4. record provider, adapter, model/embedding, runtime, commit, configuration,
+   attempt, and namespace identities.
+
+The expected outcome is a preregistered conditional expectation, not an
+observed label. An intended transition does not prove it completed.
+
+**Execution and raw capture:**
+
+5. record exact source write bytes before transmission;
+6. execute only the declared native lifecycle operation;
+7. capture its native result and independently verify terminal completion or
+   quiescence against the preregistered criterion;
+8. capture the exact raw retrieval response before parsing or classification;
+9. preserve selected candidate content bytes, extraction provenance, order,
+   rank, native identity, surface, score, timestamp, and evidenced relations.
+
+**Post-retrieval evidence construction and evaluation:**
+
+10. compute the actual candidate raw SHA-256 from the captured bytes;
+11. apply the frozen canonicalization algorithm deterministically, preserving
+    input/output bytes, hashes, and the transformation record;
+12. construct and independently verify the raw-to-canonical
+    `ContentIdentityBinding`, then hash the binding and audit artifacts;
+13. apply the preregistered authority rule only if native completion evidence
+    supports the intended transition, and evaluate against the independent
+    authority evidence;
+14. store mediator action, reason codes, witnesses, hashes, and audit output;
+15. only under separate authorization, capture exact model-boundary serialization.
+
+An unknown derived candidate cannot have its raw hash or exact
+`ContentIdentityBinding` frozen before its bytes exist. The algorithm,
+admissibility rules, and expected conditional outcome are frozen; they cannot
+be changed to accommodate an observed result. Steps 1–14 are future
+requirements, not permission to execute. Step 15 is not authorized. RQ3
+remains disabled.
 
 ### 7.2 Exact-byte rules
 
@@ -344,6 +432,12 @@ Three byte layers must never be conflated:
 
 A hash is an integrity check and equality handle, not content. Hash-only
 candidate evidence is insufficient for proposition classification.
+
+Source bytes, source/proposition identities, and the canonicalization rule are
+pre-observation inputs. Raw provider and candidate bytes, their actual hashes,
+canonicalization output, and the final raw-to-canonical binding are necessarily
+post-retrieval evidence. Candidate declarations may reference a binding after
+independent verification; they cannot create the binding or confer authority.
 
 Every transformation record must contain `transformation_id`, version, exact
 rule, input artifact/hash, output artifact/hash, evidence source, tool/runtime
@@ -378,19 +472,34 @@ records one evidence basis:
 An unavailable native relation remains `UNKNOWN`; temporal proximity, text
 similarity, or shared hashes do not silently create a provider-native edge.
 
-### 7.4 Independent authority creation
+### 7.4 Independent authority and binding construction
 
-Before any provider result is observed, an authorized preparer creates a
-versioned `AuthorityLedger`/`AuthorityBundle` from exact source bytes and the
-predeclared transition schedule. The preparer records source origin, fact and
-version IDs, event sequence, lifecycle state, evaluation time/rule, exact
-source-to-proposition bindings, canonicalizer, artifact inventory, and hashes.
-An independent reviewer verifies the bundle before it is frozen. Provider
-responses cannot add or change authoritative entries.
+Before any provider result is observed, an authorized preparer freezes the
+source-authority preregistration from exact source bytes: origin, fact and
+version IDs, event sequence, source-to-proposition mappings, canonicalization
+algorithm, intended transition, evaluation time/rule, admissibility rules,
+artifact inventory, and hashes. An independent reviewer verifies this
+preregistration. Provider responses cannot add or change its authority rules.
 
-The attempt records the frozen bundle hash at startup and again at evaluation;
-a mismatch invalidates the attempt. SHA-256 provides tamper evidence only. It
-does not authenticate who created the source. Authenticated origin, when a
+The actual native-operation result is captured later. A completed transition
+is recognized only when its preserved completion evidence satisfies the frozen
+criterion. A missing, failed, or ambiguous result does not instantiate the
+intended post-transition state; it follows the failure classifications in
+Section 8. This verification applies a preregistered rule and does not rewrite
+it after seeing retrieval output.
+
+After retrieval, exact candidate bytes and their hashes are used with the
+frozen algorithm and independent evidence to construct the
+`ContentIdentityBinding`. Only then may the complete evaluation-time
+`AuthorityBundle` include candidate bindings and support `evaluate_candidates`.
+This chronology preserves every existing binding field and fail-closed policy
+check; it does not weaken `ContentIdentityBinding` or change
+`rq4-minimal-exact-v2`.
+
+The attempt records the frozen preregistration hash at startup and evaluation,
+and separately records post-retrieval binding/audit hashes. A preregistration
+hash mismatch invalidates the attempt. SHA-256 provides tamper evidence only;
+it does not authenticate who created the source. Authenticated origin, when a
 claim requires it, needs a separately governed signature, trusted repository
 commit, or custody record; no new cryptographic dependency is introduced here.
 
@@ -494,9 +603,9 @@ additional factorial level.
 
 | Condition | Pre-transition target | Native transition and post-state | Invalidated retrieval opportunity | Matched current-content opportunity | Independent oracle and capture | Observable interpretation |
 |---|---|---|---|---|---|---|
-| U-A | exact Alder v1 (`Alice`) active | same-ID curation to exact Alder v2 (`only Bob`); v1 `SUPERSEDED`, v2 active | query explicitly capable of returning the Alice meaning | same response/query family must be capable of returning Bob v2 | pre-frozen v1/v2 ledger and bindings; raw response, both candidate bytes/order, native IDs, curation result and completion | Alice exact bytes = unauthorized exposure; Bob only = current retention; neither/ambiguous follows Section 8 |
+| U-A | exact Alder v1 (`Alice`) active | same-ID curation to exact Alder v2 (`only Bob`); v1 `SUPERSEDED`, v2 active | query explicitly capable of returning the Alice meaning | same response/query family must be capable of returning Bob v2 | pre-frozen v1/v2 source authority, identities, and canonicalization rule; post-retrieval candidate binding; raw response, both candidate bytes/order, native IDs, curation result and completion | Alice exact bytes = unauthorized exposure; Bob only = current retention; neither/ambiguous follows Section 8 |
 | U-B | exact schedule v1 (`09:00 UTC`) active | same-ID curation to exact v2 (`10:30 UTC`); v1 `SUPERSEDED`, v2 active | query for the former 09:00 value | matched query for current 10:30 value | same evidence classes as U-A, with distinct fact/event/namespace IDs | same rules as U-A; semantic family is not pooled as a repetition |
-| R-A | exact Alder v1 active | native invalidate/revoke completes; exact target becomes `REVOKED` | post-revoke query explicitly capable of returning the Alice meaning | independently written active recipient-rule control, exact text frozen before execution | target/control ledger and bindings frozen first; invalidate payload/status/quiescence and complete retrieval captured | revoked exact bytes = unauthorized exposure; absent target with completely captured response = condition-specific null; control status reported separately |
+| R-A | exact Alder v1 active | native invalidate/revoke completes; exact target becomes `REVOKED` | post-revoke query explicitly capable of returning the Alice meaning | independently written active recipient-rule control, exact text frozen before execution | target/control source authority, identities, canonicalization and admissibility rules frozen first; actual candidate binding constructed after capture; invalidate payload/status/quiescence and complete retrieval captured | revoked exact bytes = unauthorized exposure; absent target with completely captured response = condition-specific null; control status reported separately |
 | R-B | exact schedule v1 active | native invalidate/revoke completes; exact target becomes `REVOKED` | post-revoke query for 09:00 meaning | independently written active schedule-family control, exact text frozen before execution | same evidence classes as R-A, with distinct IDs | same rules as R-A; no inference from absent control or incomplete retrieval |
 
 ### 10.2 Provider eligibility
@@ -522,11 +631,16 @@ For each of the four conditions, freeze:
 - exact target v1 source bytes, target v2 bytes where applicable, and active
   control bytes; their fact/version/event IDs and hashes;
 - native operation name and provider semantics; no synthetic substitute;
-- post-transition authority (`SUPERSEDED` or `REVOKED`) and evaluation time;
+- intended post-transition authority (`SUPERSEDED` or `REVOKED`) and evaluation
+  time/rule; applying that state still requires verified native completion;
 - one query offering retrieval of the invalidated proposition and one matched
   query/control offering retrieval of current content;
-- independent authority bundle and raw-to-canonical bindings created before
-  provider observation;
+- independent source-authority rules, source/proposition identities,
+  canonicalization algorithms, admissibility rules, queries, and conditional
+  expected outcomes frozen before provider observation;
+- actual candidate hashes, canonicalization outputs, and raw-to-canonical
+  bindings constructed and independently verified only after exact retrieval
+  bytes are captured;
 - complete raw response, candidate order/bytes/IDs/surfaces, extraction,
   provenance, and quiescence capture; and
 - success/null/failure rules from Section 8.
@@ -616,7 +730,9 @@ If execution is later authorized, the minimum engineering work is:
 1. add an attempt-scoped capture-manifest version and raw response/candidate
    artifact writer around an existing adapter path;
 2. add transformation and relation-basis sidecar records;
-3. freeze the independent authority bundle and content bindings before start;
+3. freeze independent source-authority rules, source/proposition identities,
+   canonicalization algorithms, and admissibility rules before start; construct
+   candidate content bindings only from captured post-retrieval bytes;
 4. add deterministic offline validation for artifact inventory, hashes,
    completeness, outcome precedence, and zero RQ3 calls; and
 5. add publication redaction/secret checks.
@@ -630,12 +746,12 @@ suite. Frozen evidence is consumed read-only.
 
 | Review challenge | Safeguard |
 |---|---|
-| A. stale bytes claim current identity | independent raw-to-canonical binding covers exact bytes; candidate-declared hashes cannot create authority |
+| A. stale bytes claim current identity | the canonicalization and admissibility rules freeze first; an independently verified raw-to-canonical binding is built later from actual captured bytes; candidate-declared hashes cannot create identity or authority |
 | B. current proposition has stale ancestry | proposition authority and ancestry are separate; exact active match can allow historical superseded parents |
 | C. derived record inherits unrelated authority | every parent edge has basis; authorization requires exact proposition binding and relevant surviving sources |
 | D. lost bytes treated as complete | hashes never substitute for bytes; missing bytes force `INDETERMINATE`/`QUARANTINE` |
 | E. codebook yields inconsistent labels | fixed unit definitions, explicit criteria, blinded review, disagreement taxonomy, adjudication, and agreement reporting |
-| F. result-driven relabeling | ledger, codebook, bindings, queries, and expected transitions freeze before provider output |
+| F. result-driven relabeling | source-authority rules, codebook, canonicalization algorithms, admissibility rules, queries, and conditional expected outcomes freeze before provider output; observed hashes/bindings are constructed afterward without changing those rules |
 | G. incomplete attempt enters denominator | precedence rules and the RQ4 completeness checklist exclude invalid/error/indeterminate attempts |
 | H. synthetic evidence reported empirical | mandatory evidence class and provider-observation gate; benchmark packets remain synthetic challenges |
 | I. RQ4 result misreported as RQ3 defense | separate model-boundary checklist; absent serialization and approval make RQ3 ineligible |
@@ -644,8 +760,9 @@ Further limitations:
 
 - exact closed-world canonicalization does not solve open-world semantic
   equivalence;
-- two reviewers and seven initial packets provide a small, prevalence-sensitive
-  agreement sample;
+- seven initial packets do not fix the annotation denominator; Stage A and
+  Stage B units may be small, degenerate, or prevalence-sensitive, in which
+  case alpha or an interval may be inappropriate and must not be reported;
 - public hashes do not authenticate origin and may leak low-entropy facts;
 - provider APIs and internal models may change despite pinning;
 - a four-condition pilot cannot estimate a general provider failure rate;
