@@ -15,7 +15,7 @@
 | Area | Status | Evidence-Preserving Result and Boundary |
 |---|---|---|
 | **D1 exact HTTP capture** | IMPLEMENTED | Verified from Phase 08D-3. Captures raw wire request/response bytes before JSON decoding, headers (redacting auth/cookies), status codes, and latency with deterministic SHA-256 manifests. |
-| **D2 candidate persistence** | IMPLEMENTED & VERIFIED | `CandidateArtifactSink` reparses persisted response bytes and independently validates candidate values, positions, transformations, selection decisions, and disposition. Fails closed on missing or malformed `results` or forged candidates. Replaces shared mutable transport state with thread-local exchange correlation and validates recall endpoint association. Decoded UTF-8 string bytes are preserved separately from stripped normalized bytes and wire JSON. Validated via `verify_candidate_integrity`. All 13 focused tests passing 100%. |
+| **D2 candidate persistence** | IMPLEMENTED & VERIFIED | `CandidateArtifactSink` reparses persisted response bytes and independently recomputes candidate positions, inclusion flags, selection/discard reasons, counts, and retrieval disposition from response bytes and persisted retrieval limit using frozen extraction rules. Verifies linked D1 HTTP exchange manifest and its SHA-256 (exchange ID, attempt identity, method, path, status code, and response artifact references). Fails closed on missing or malformed `results` or forged/tampered candidates. Replaces shared mutable transport state with thread-local exchange correlation and validates recall endpoint association. Decoded UTF-8 string bytes are preserved separately from stripped normalized bytes and wire JSON. Validated via `verify_candidate_integrity`. All 16 focused tests passing 100%. |
 | **D3 lifecycle completion** | PARTIAL | Paginated polling and terminal receipt validation implemented in Phase 08D-3. Quiescence listing cannot prove global worker quiescence; background and overall coverage remain explicitly `UNKNOWN`. |
 | **D4 internal send boundary** | PARTIALLY_FEASIBLE / BLOCKED | Candidate OpenAI-compatible send seam identified at `OpenAICompatibleLLM._client.chat.completions.create` (or `AsyncOpenAI` `httpx` transport). However, complete runtime interception across all background worker paths is **not** independently proven statically. Actual-send enforcement remains **BLOCKED**. Local ONNX embeddings execute in-process on CPU via `ort.InferenceSession.run`, but `OnnxEmbeddings.initialize` requires pre-cached model paths to prevent network downloads via `snapshot_download`. |
 | **D5 attempt/evidence gates** | PARTIAL | Offline gate primitives, inventory validation, and fail-closed integrity checks implemented. No live pilot authorized. |
@@ -63,19 +63,23 @@ The D2 persistence extension in `src/memlife/runner/phase08d3.py` builds upon `A
 
 5. **Airtight Integrity Validation (`verify_candidate_integrity`):**
    `verify_candidate_integrity(store, exchange_id)` independently validates that:
-   - The candidate manifest exists and is valid JSON.
-   - The linked D1 response artifact exists and matches recorded byte count and SHA-256.
-   - The response bytes are re-parsed as valid JSON with a `"results"` list.
-   - `manifest["total_candidates"]` and `manifest["candidates"]` length equal `len(results)`.
-   - `manifest["selected_count"]` equals the count of candidates with `included is True`.
-   - `manifest["retrieval_disposition"]` matches the actual results and selection counts.
+   - The candidate manifest exists, is valid JSON, and records matching `exchange_id` and non-empty `attempt_id`.
+   - The actual retrieval `limit` is persisted in the candidate manifest (`limit` and `extraction.limit`) as a non-negative integer.
+   - The linked D1 HTTP exchange manifest artifact (`http/{exchange_id}.json`) exists on disk, byte count and SHA-256 match, parses as valid JSON, and records matching `exchange_id`, `attempt_id`, `method`, `path`, and `status_code`.
+   - The response artifact reference in the D1 exchange manifest matches the response reference in the candidate manifest (`http/{exchange_id}.response.bin`, byte count, and SHA-256).
+   - The response artifact exists on disk, byte count and SHA-256 match, and is re-parsed as valid JSON containing a `"results"` list.
+   - **Independent Selection Recomputation:** Scans `raw_results` from the parsed response bytes according to frozen extraction rules (strings non-blank after strip), selects prefix positions up to `limit`, and recomputes expected `included`, `selection_reason`, `discard_reason`, `selected_count`, and `retrieval_disposition` (`COMPLETE_EMPTY` / `COMPLETE_NONEMPTY` / `FILTERED_ALL`).
+   - Verifies `manifest["total_candidates"] == len(raw_results)` and `manifest["selected_count"] == expected_selected_count`.
+   - Verifies `manifest["retrieval_disposition"] == expected_disposition`.
    - For every candidate at index `idx` (position `idx + 1`):
      - `json_path` matches `/results/{idx}` and `field_path` matches `/results/{idx}/text`.
+     - `included` matches `expected_included` with strict boolean identity (`is not`).
+     - `selection_reason` and `discard_reason` match recomputed expectations.
      - `native_id`, `surface`, and `parent_ids` match raw response fields.
      - Decoded field artifact exists on disk and its bytes match `raw_text.encode("utf-8")`.
      - Normalized artifact exists on disk and its bytes match `raw_text.strip().encode("utf-8")`.
      - Both transformation records match expected rules, inputs, and output hashes.
-   - Any missing file, hash mismatch, or forged/inconsistent candidate returns `False`.
+   - Any missing file, hash mismatch, or forged/tampered candidate returns `False`.
 
 6. **Exchange Correlation & Thread Safety:**
    - `UrllibHindsightTransport` and `FakeHindsightTransport` use thread-local storage (`_thread_local`) for `last_exchange` rather than shared mutable instance attributes.
@@ -198,7 +202,7 @@ class GovernedChatCompletions:
 ## 5. Offline Test Evidence
 
 ### 5.1 Focused D2 Tests
-All 13 unit tests in `tests/unit/test_phase08d4_evidence_persistence.py` passed cleanly:
+All 16 unit tests in `tests/unit/test_phase08d4_evidence_persistence.py` passed cleanly:
 - `test_d2_unicode_whitespace_and_json_escapes`: exact byte equality and hash verification.
 - `test_d2_duplicate_native_ids_and_truncation`: non-collapse of duplicate native IDs with distinct artifact paths.
 - `test_d2_empty_and_malformed_responses`: complete empty retrieval vs filtered all.
@@ -212,6 +216,9 @@ All 13 unit tests in `tests/unit/test_phase08d4_evidence_persistence.py` passed 
 - `test_d2_rejects_missing_or_malformed_results`: rejects missing `"results"` key, non-list results, and null results without classifying as empty.
 - `test_d2_evidence_completeness_and_json_field_paths`: verifies RFC 6901 field paths (`/results/{idx}` and `/results/{idx}/text`), rejects invalid positions and blank selection, and preserves distinction between wire JSON and decoded UTF-8 bytes.
 - `test_d2_exchange_correlation_concurrent_and_failure_paths`: verifies thread-local exchange isolation under concurrent queries, correct bank correlation, and proper error-exchange recording without stale reuse.
+- `test_d2_tampered_disposition_filtered_all_with_unchanged_bytes_fails_closed`: negative test proving that mutating a valid selected candidate into `FILTERED_ALL` while leaving candidate bytes unchanged on disk is rejected by `verify_candidate_integrity` via independent recomputation.
+- `test_d2_linked_d1_exchange_manifest_verification_and_mismatch_fails_closed`: verifies that missing D1 exchange manifest file, corrupted SHA-256, exchange ID mismatch, attempt ID mismatch, method mismatch, path mismatch, status code mismatch, or response artifact reference mismatch fail closed.
+- `test_d2_tampered_retrieval_limit_fails_closed`: verifies that mutating the persisted retrieval limit (or top-level vs extraction limit mismatch) fails closed under independent candidate selection recomputation.
 
 Targeted suite command:
 ```bash
@@ -221,7 +228,7 @@ Targeted suite command:
   tests/unit/test_hindsight_adapter.py \
   tests/unit/test_hindsight_lifecycle_trace.py -v
 ```
-**Result: 36 passed in 0.55s.**
+**Result: 39 passed in 0.78s.**
 
 ### 5.2 Full Test Suite Results
 Full test suite run (`./.venv/bin/python -m pytest tests -q`):

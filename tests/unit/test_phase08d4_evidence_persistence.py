@@ -612,3 +612,223 @@ def test_d2_exchange_correlation_concurrent_and_failure_paths(tmp_path: Path) ->
     pop_res = transport.pop_last_exchange()
     assert pop_res["status_code"] == 404
     assert transport.pop_last_exchange() is None
+
+
+def test_d2_tampered_disposition_filtered_all_with_unchanged_bytes_fails_closed(tmp_path: Path) -> None:
+    """Negative test: mutating a valid selected candidate into FILTERED_ALL while
+
+    leaving candidate bytes unchanged on disk must be rejected by
+    verify_candidate_integrity.
+    """
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-tamper-disp")
+    sink = CandidateArtifactSink(store)
+
+    candidate_text = "Persisted authentic memory"
+    resp_obj = {
+        "results": [
+            {
+                "id": "cand-1",
+                "text": candidate_text,
+                "fact_type": "world",
+                "source_memory_ids": ["src-1"],
+            }
+        ]
+    }
+    resp_bytes = json.dumps(resp_obj).encode("utf-8")
+    exchange = capture.capture(
+        method="POST",
+        path="/v1/default/banks/test/memories/recall",
+        request_body=b'{"query":"*"}',
+        response_body=resp_bytes,
+        status_code=200,
+        request_id="req-tamper-disp-1",
+    )
+
+    evidence = sink.capture_and_persist(
+        results=resp_obj["results"],
+        selected_positions={1},
+        limit=5,
+        exchange_manifest=exchange,
+    )
+    assert len(evidence) == 1
+    assert evidence[0].included is True
+
+    exchange_id = exchange["exchange_id"]
+    cand_manifest_path = tmp_path / "attempt" / f"candidates/{exchange_id}.json"
+    decoded_bin_path = tmp_path / "attempt" / f"candidates/{exchange_id}/candidate-0001.decoded.bin"
+    normalized_bin_path = tmp_path / "attempt" / f"candidates/{exchange_id}/candidate-0001.normalized.bin"
+
+    # Bytes exist and are valid before tampering
+    assert decoded_bin_path.read_bytes() == candidate_text.encode("utf-8")
+    assert normalized_bin_path.read_bytes() == candidate_text.strip().encode("utf-8")
+    assert verify_candidate_integrity(store, exchange_id) is True
+
+    # Mutate candidate manifest on disk: change valid selected candidate to FILTERED_ALL
+    manifest_data = json.loads(cand_manifest_path.read_text(encoding="utf-8"))
+    manifest_data["retrieval_disposition"] = "FILTERED_ALL"
+    manifest_data["selected_count"] = 0
+    manifest_data["candidates"][0]["included"] = False
+    manifest_data["candidates"][0]["selection_reason"] = None
+    manifest_data["candidates"][0]["discard_reason"] = "filtered_or_truncated"
+
+    # Overwrite candidate manifest with tampered disposition; candidate bytes remain unchanged
+    cand_manifest_path.write_text(json.dumps(manifest_data, indent=2), encoding="utf-8")
+    assert decoded_bin_path.read_bytes() == candidate_text.encode("utf-8")
+    assert normalized_bin_path.read_bytes() == candidate_text.strip().encode("utf-8")
+
+    # verify_candidate_integrity must recompute from response bytes and reject the tampered disposition
+    assert verify_candidate_integrity(store, exchange_id) is False
+
+
+def test_d2_linked_d1_exchange_manifest_verification_and_mismatch_fails_closed(tmp_path: Path) -> None:
+    """Verify that linked D1 HTTP exchange manifest identity and fields are verified fail-closed:
+
+    missing manifest file, SHA-256 mismatch, exchange_id mismatch, attempt_id mismatch,
+    method mismatch, path mismatch, status_code mismatch, and response reference mismatch.
+    """
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-d1-verify")
+    sink = CandidateArtifactSink(store)
+
+    resp_obj = {"results": [{"id": "m1", "text": "Sample memory"}]}
+    resp_bytes = json.dumps(resp_obj).encode("utf-8")
+    exchange = capture.capture(
+        method="POST",
+        path="/v1/default/banks/test/memories/recall",
+        request_body=b'{"query":"*"}',
+        response_body=resp_bytes,
+        status_code=200,
+        request_id="req-d1-v-1",
+    )
+
+    sink.capture_and_persist(
+        results=resp_obj["results"],
+        selected_positions={1},
+        limit=5,
+        exchange_manifest=exchange,
+    )
+    exchange_id = exchange["exchange_id"]
+    d1_manifest_path = tmp_path / "attempt" / f"http/{exchange_id}.json"
+    cand_manifest_path = tmp_path / "attempt" / f"candidates/{exchange_id}.json"
+
+    # Baseline is valid
+    assert verify_candidate_integrity(store, exchange_id) is True
+
+    # 1. Missing D1 exchange manifest file
+    d1_orig_bytes = d1_manifest_path.read_bytes()
+    d1_manifest_path.unlink()
+    assert verify_candidate_integrity(store, exchange_id) is False
+
+    # 2. Corrupted D1 exchange manifest SHA-256
+    d1_manifest_path.write_bytes(d1_orig_bytes + b" ")
+    assert verify_candidate_integrity(store, exchange_id) is False
+
+    # Helper to re-save d1_manifest with custom fields and update candidate manifest's d1 SHA
+    def set_d1_fields_and_update_sha(mutations: dict[str, Any]) -> None:
+        data = json.loads(d1_orig_bytes.decode("utf-8"))
+        data.update(mutations)
+        new_bytes = json.dumps(data, indent=2).encode("utf-8")
+        d1_manifest_path.write_bytes(new_bytes)
+        c_data = json.loads(cand_manifest_path.read_text(encoding="utf-8"))
+        c_data["http_exchange"]["manifest"]["sha256"] = hashlib.sha256(new_bytes).hexdigest()
+        c_data["http_exchange"]["manifest"]["byte_count"] = len(new_bytes)
+        cand_manifest_path.write_text(json.dumps(c_data, indent=2), encoding="utf-8")
+
+    # 3. Exchange ID mismatch
+    set_d1_fields_and_update_sha({"exchange_id": "exchange-mismatch"})
+    assert verify_candidate_integrity(store, exchange_id) is False
+
+    # 4. Attempt ID mismatch
+    set_d1_fields_and_update_sha({"attempt_id": "attempt-mismatch"})
+    assert verify_candidate_integrity(store, exchange_id) is False
+
+    # 5. Method mismatch
+    set_d1_fields_and_update_sha({"method": "GET"})
+    assert verify_candidate_integrity(store, exchange_id) is False
+
+    # 6. Path mismatch
+    set_d1_fields_and_update_sha({"path": "/v1/other/path"})
+    assert verify_candidate_integrity(store, exchange_id) is False
+
+    # 7. Status code mismatch
+    set_d1_fields_and_update_sha({"status_code": 500})
+    assert verify_candidate_integrity(store, exchange_id) is False
+
+    # 8. Response artifact mismatch in D1 manifest
+    set_d1_fields_and_update_sha({
+        "response": {
+            "path": f"http/{exchange_id}.response.bin",
+            "sha256": "0" * 64,
+            "byte_count": 999,
+        }
+    })
+    assert verify_candidate_integrity(store, exchange_id) is False
+
+    # Restore original D1 manifest
+    d1_manifest_path.write_bytes(d1_orig_bytes)
+    c_data = json.loads(cand_manifest_path.read_text(encoding="utf-8"))
+    c_data["http_exchange"]["manifest"]["sha256"] = hashlib.sha256(d1_orig_bytes).hexdigest()
+    c_data["http_exchange"]["manifest"]["byte_count"] = len(d1_orig_bytes)
+    cand_manifest_path.write_text(json.dumps(c_data, indent=2), encoding="utf-8")
+    assert verify_candidate_integrity(store, exchange_id) is True
+
+
+def test_d2_tampered_retrieval_limit_fails_closed(tmp_path: Path) -> None:
+    """Verify that tampering with persisted limit or extraction limit fails integrity verification."""
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-limit-tamper")
+    sink = CandidateArtifactSink(store)
+
+    resp_obj = {
+        "results": [
+            {"id": "c1", "text": "Item 1"},
+            {"id": "c2", "text": "Item 2"},
+        ]
+    }
+    resp_bytes = json.dumps(resp_obj).encode("utf-8")
+    exchange = capture.capture(
+        method="POST",
+        path="/v1/default/banks/test/memories/recall",
+        request_body=b"{}",
+        response_body=resp_bytes,
+        status_code=200,
+        request_id="req-limit-1",
+    )
+
+    # Persist with limit=1: position 1 selected, position 2 truncated
+    sink.capture_and_persist(
+        results=resp_obj["results"],
+        selected_positions={1},
+        limit=1,
+        exchange_manifest=exchange,
+    )
+    exchange_id = exchange["exchange_id"]
+    cand_manifest_path = tmp_path / "attempt" / f"candidates/{exchange_id}.json"
+    orig_manifest_text = cand_manifest_path.read_text(encoding="utf-8")
+
+    assert verify_candidate_integrity(store, exchange_id) is True
+
+    # Mutate manifest limit to 2 (expecting both items selected)
+    manifest = json.loads(orig_manifest_text)
+    manifest["limit"] = 2
+    manifest["extraction"]["limit"] = 2
+    cand_manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    # Fails because stored candidate 2 has included=False, but recomputed limit 2 requires included=True
+    assert verify_candidate_integrity(store, exchange_id) is False
+
+    # Mutate manifest limit to 0 (expecting 0 items selected)
+    manifest = json.loads(orig_manifest_text)
+    manifest["limit"] = 0
+    manifest["extraction"]["limit"] = 0
+    cand_manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    # Fails because stored candidate 1 has included=True, but recomputed limit 0 requires included=False
+    assert verify_candidate_integrity(store, exchange_id) is False
+
+    # Limit mismatch between top-level limit and extraction.limit
+    manifest = json.loads(orig_manifest_text)
+    manifest["limit"] = 1
+    manifest["extraction"]["limit"] = 5
+    cand_manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    assert verify_candidate_integrity(store, exchange_id) is False
+

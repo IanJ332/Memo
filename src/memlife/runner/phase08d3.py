@@ -254,6 +254,60 @@ class CandidateArtifactSink:
         if not exchange_id:
             raise CaptureFailure("exchange manifest missing exchange_id")
 
+        attempt_id = str(exchange_manifest.get("attempt_id") or "")
+        if not attempt_id:
+            raise CaptureFailure("exchange manifest missing attempt_id")
+
+        method = str(exchange_manifest.get("method") or "").upper()
+        path = str(exchange_manifest.get("path") or "")
+        status_code = exchange_manifest.get("status_code")
+        if not method or not path or not isinstance(status_code, int):
+            raise CaptureFailure("exchange manifest missing method, path, or status_code")
+
+        d1_manifest_meta = exchange_manifest.get("manifest")
+        if not isinstance(d1_manifest_meta, Mapping):
+            raise CaptureFailure("exchange manifest missing linked D1 manifest identity")
+        d1_rel_path = str(d1_manifest_meta.get("path") or "")
+        d1_sha256 = str(d1_manifest_meta.get("sha256") or "")
+        d1_byte_count = int(d1_manifest_meta.get("byte_count") or 0)
+        if not d1_rel_path or not d1_sha256 or d1_byte_count <= 0:
+            raise CaptureFailure("linked D1 manifest identity missing path, sha256, or byte_count")
+
+        d1_file = (self.store.root / d1_rel_path).resolve()
+        if self.store.root.resolve() not in d1_file.parents or not d1_file.is_file():
+            raise CaptureFailure(f"linked D1 HTTP exchange manifest missing: {d1_rel_path}")
+        d1_bytes = d1_file.read_bytes()
+        if len(d1_bytes) != d1_byte_count or _sha256(d1_bytes) != d1_sha256:
+            raise CaptureFailure("linked D1 HTTP exchange manifest hash mismatch")
+
+        try:
+            d1_data = json.loads(d1_bytes.decode("utf-8"))
+        except Exception as exc:
+            raise CaptureFailure(f"linked D1 HTTP exchange manifest is not valid JSON: {exc}") from exc
+        if not isinstance(d1_data, Mapping):
+            raise CaptureFailure("linked D1 HTTP exchange manifest is not a JSON object")
+
+        if d1_data.get("exchange_id") != exchange_id:
+            raise CaptureFailure(
+                f"linked D1 exchange ID mismatch: manifest={d1_data.get('exchange_id')}, expected={exchange_id}"
+            )
+        if d1_data.get("attempt_id") != attempt_id:
+            raise CaptureFailure(
+                f"linked D1 attempt ID mismatch: manifest={d1_data.get('attempt_id')}, expected={attempt_id}"
+            )
+        if d1_data.get("method") != method:
+            raise CaptureFailure(
+                f"linked D1 method mismatch: manifest={d1_data.get('method')}, expected={method}"
+            )
+        if d1_data.get("path") != path:
+            raise CaptureFailure(
+                f"linked D1 path mismatch: manifest={d1_data.get('path')}, expected={path}"
+            )
+        if d1_data.get("status_code") != status_code:
+            raise CaptureFailure(
+                f"linked D1 status code mismatch: manifest={d1_data.get('status_code')}, expected={status_code}"
+            )
+
         response_meta = exchange_manifest.get("response")
         if not isinstance(response_meta, Mapping):
             raise CaptureFailure("exchange manifest missing response artifact metadata")
@@ -263,6 +317,16 @@ class CandidateArtifactSink:
         resp_byte_count = int(response_meta.get("byte_count") or 0)
         if not resp_rel_path or not resp_sha256:
             raise CaptureFailure("exchange response metadata missing path or sha256")
+
+        d1_resp_meta = d1_data.get("response")
+        if not isinstance(d1_resp_meta, Mapping):
+            raise CaptureFailure("linked D1 exchange manifest missing response metadata")
+        if (
+            d1_resp_meta.get("path") != resp_rel_path
+            or d1_resp_meta.get("sha256") != resp_sha256
+            or d1_resp_meta.get("byte_count") != resp_byte_count
+        ):
+            raise CaptureFailure("linked D1 exchange manifest response artifact mismatch")
 
         # Fail closed on missing or corrupt D1 response artifact in the store
         resp_file = (self.store.root / resp_rel_path).resolve()
@@ -298,8 +362,8 @@ class CandidateArtifactSink:
             if results != raw_results:
                 raise CaptureFailure("candidate results do not match persisted HTTP response results")
 
-        if limit < 0:
-            raise CaptureFailure("limit must not be negative")
+        if not isinstance(limit, int) or limit < 0:
+            raise CaptureFailure("limit must be a non-negative integer")
 
         total_results = len(raw_results)
         for pos in selected_positions:
@@ -418,20 +482,26 @@ class CandidateArtifactSink:
                 ))
 
             candidate_manifest = {
-                "attempt_id": str(exchange_manifest.get("attempt_id") or ""),
+                "attempt_id": attempt_id,
                 "exchange_id": exchange_id,
                 "captured_at": _now(),
                 "retrieval_disposition": disposition,
+                "limit": limit,
                 "http_exchange": {
                     "exchange_id": exchange_id,
+                    "attempt_id": attempt_id,
+                    "method": method,
+                    "path": path,
+                    "status_code": status_code,
                     "request_id": exchange_manifest.get("request_id"),
-                    "manifest": exchange_manifest.get("manifest"),
+                    "manifest": dict(d1_manifest_meta),
                     "response": dict(response_meta),
                 },
                 "extraction": {
                     "rule": self.extraction_rule,
                     "version": self.extraction_version,
                     "charset": "utf-8",
+                    "limit": limit,
                 },
                 "total_candidates": len(evidence_list),
                 "selected_count": sum(1 for e in evidence_list if e.included),
@@ -511,9 +581,10 @@ class CandidateArtifactSink:
 
 
 def verify_candidate_integrity(store: AttemptArtifactStore, exchange_id: str) -> bool:
-    """Verify that all candidate artifacts and linked HTTP response for an exchange are intact,
-    and prove candidates originated from that response with exact values, positions, transformations,
-    and dispositions.
+    """Verify that all candidate artifacts, linked D1 HTTP exchange manifest, and linked
+    HTTP response for an exchange are intact, and independently prove candidate selection,
+    values, positions, transformations, counts, and disposition from the persisted HTTP response
+    using the frozen extraction rules.
     """
     manifest_path = (store.root / f"candidates/{exchange_id}.json").resolve()
     if store.root.resolve() not in manifest_path.parents or not manifest_path.is_file():
@@ -523,12 +594,94 @@ def verify_candidate_integrity(store: AttemptArtifactStore, exchange_id: str) ->
     except Exception:
         return False
 
-    http_meta = manifest.get("http_exchange", {}).get("response", {})
+    if not isinstance(manifest, Mapping):
+        return False
+    if manifest.get("exchange_id") != exchange_id:
+        return False
+
+    attempt_id = manifest.get("attempt_id")
+    if not isinstance(attempt_id, str) or not attempt_id:
+        return False
+
+    limit = manifest.get("limit")
+    if not isinstance(limit, int) or limit < 0:
+        return False
+
+    extraction = manifest.get("extraction")
+    if not isinstance(extraction, Mapping) or extraction.get("limit") != limit:
+        return False
+
+    http_exchange = manifest.get("http_exchange")
+    if not isinstance(http_exchange, Mapping):
+        return False
+    if http_exchange.get("exchange_id") != exchange_id or http_exchange.get("attempt_id") != attempt_id:
+        return False
+
+    method = http_exchange.get("method")
+    path = http_exchange.get("path")
+    status_code = http_exchange.get("status_code")
+    if not isinstance(method, str) or not method:
+        return False
+    if not isinstance(path, str) or not path:
+        return False
+    if not isinstance(status_code, int):
+        return False
+
+    # 1. Verify linked D1 HTTP exchange manifest artifact
+    d1_manifest_meta = http_exchange.get("manifest")
+    if not isinstance(d1_manifest_meta, Mapping):
+        return False
+    d1_rel = d1_manifest_meta.get("path")
+    d1_sha = d1_manifest_meta.get("sha256")
+    d1_len = d1_manifest_meta.get("byte_count")
+    if not d1_rel or not d1_sha or not isinstance(d1_len, int) or d1_len <= 0:
+        return False
+    if d1_rel != f"http/{exchange_id}.json":
+        return False
+    d1_file = (store.root / d1_rel).resolve()
+    if store.root.resolve() not in d1_file.parents or not d1_file.is_file():
+        return False
+    d1_bytes = d1_file.read_bytes()
+    if len(d1_bytes) != d1_len or _sha256(d1_bytes) != d1_sha:
+        return False
+    try:
+        d1_json = json.loads(d1_bytes.decode("utf-8"))
+    except Exception:
+        return False
+    if not isinstance(d1_json, Mapping):
+        return False
+    if (
+        d1_json.get("exchange_id") != exchange_id
+        or d1_json.get("attempt_id") != attempt_id
+        or d1_json.get("method") != method
+        or d1_json.get("path") != path
+        or d1_json.get("status_code") != status_code
+    ):
+        return False
+
+    # 2. Verify linked D1 HTTP response artifact
+    http_meta = http_exchange.get("response")
+    if not isinstance(http_meta, Mapping):
+        return False
     resp_rel = http_meta.get("path")
     resp_sha = http_meta.get("sha256")
     resp_len = http_meta.get("byte_count")
-    if not resp_rel or not resp_sha:
+    if not resp_rel or not resp_sha or not isinstance(resp_len, int) or resp_len < 0:
         return False
+    if resp_rel != f"http/{exchange_id}.response.bin":
+        return False
+
+    # Verify D1 exchange manifest's response metadata agrees with candidate manifest
+    d1_resp_meta = d1_json.get("response")
+    if not isinstance(d1_resp_meta, Mapping):
+        return False
+    if (
+        d1_resp_meta.get("path") != resp_rel
+        or d1_resp_meta.get("sha256") != resp_sha
+        or d1_resp_meta.get("byte_count") != resp_len
+    ):
+        return False
+
     resp_file = (store.root / resp_rel).resolve()
     if store.root.resolve() not in resp_file.parents or not resp_file.is_file():
         return False
@@ -536,7 +689,7 @@ def verify_candidate_integrity(store: AttemptArtifactStore, exchange_id: str) ->
     if len(resp_data) != resp_len or _sha256(resp_data) != resp_sha:
         return False
 
-    # Reparse persisted response bytes to verify candidates originated from that response
+    # 3. Reparse persisted response bytes
     try:
         resp_obj = json.loads(resp_data.decode("utf-8"))
     except Exception:
@@ -553,32 +706,52 @@ def verify_candidate_integrity(store: AttemptArtifactStore, exchange_id: str) ->
     if manifest.get("total_candidates") != len(raw_results):
         return False
 
-    selected_count = sum(1 for c in candidates if isinstance(c, Mapping) and c.get("included") is True)
-    if manifest.get("selected_count") != selected_count:
-        return False
+    # 4. Independently recompute selection decisions using frozen extraction rules
+    acceptable_positions: list[int] = []
+    for idx, raw_item in enumerate(raw_results):
+        pos = idx + 1
+        if isinstance(raw_item, Mapping):
+            raw_text = raw_item.get("text")
+            if isinstance(raw_text, str) and raw_text.strip():
+                acceptable_positions.append(pos)
 
-    # Verify disposition consistency
-    expected_disposition = (
-        "COMPLETE_EMPTY" if len(raw_results) == 0
-        else ("FILTERED_ALL" if selected_count == 0 else "COMPLETE_NONEMPTY")
-    )
+    expected_selected_positions = set(acceptable_positions[:limit])
+    expected_selected_count = len(expected_selected_positions)
+
+    if len(raw_results) == 0:
+        expected_disposition = "COMPLETE_EMPTY"
+    elif expected_selected_count == 0:
+        expected_disposition = "FILTERED_ALL"
+    else:
+        expected_disposition = "COMPLETE_NONEMPTY"
+
+    if manifest.get("selected_count") != expected_selected_count:
+        return False
     if manifest.get("retrieval_disposition") != expected_disposition:
         return False
 
-    # Verify candidate values, positions, and transformations against response
+    # 5. Verify every candidate entry against independently recomputed expectations and response data
     for idx, raw_item in enumerate(raw_results):
         cand = candidates[idx]
         if not isinstance(cand, Mapping):
             return False
-        if cand.get("position") != idx + 1:
+        pos = idx + 1
+        if cand.get("position") != pos:
             return False
         if cand.get("json_path") != f"/results/{idx}":
             return False
         if cand.get("field_path") != f"/results/{idx}/text":
             return False
 
+        is_selected = pos in expected_selected_positions
+        expected_included = is_selected
+        expected_selection_reason = "selected" if is_selected else None
+
         if not isinstance(raw_item, Mapping):
-            if cand.get("included") is not False or cand.get("discard_reason") != "non_object":
+            expected_discard_reason = "non_object"
+            if cand.get("included") is not expected_included or cand.get("discard_reason") != expected_discard_reason:
+                return False
+            if cand.get("selection_reason") != expected_selection_reason:
                 return False
             if cand.get("decoded_field", {}).get("artifact") is not None:
                 return False
@@ -590,15 +763,28 @@ def verify_candidate_integrity(store: AttemptArtifactStore, exchange_id: str) ->
 
         raw_text = raw_item.get("text")
         if not isinstance(raw_text, str):
-            if cand.get("included") is not False or cand.get("discard_reason") != "missing_or_nonstring_text":
+            expected_discard_reason = "missing_or_nonstring_text"
+            if cand.get("included") is not expected_included or cand.get("discard_reason") != expected_discard_reason:
+                return False
+            if cand.get("selection_reason") != expected_selection_reason:
                 return False
             if cand.get("decoded_field", {}).get("artifact") is not None:
                 return False
             continue
 
         if not raw_text.strip():
-            if cand.get("included") is not False or cand.get("discard_reason") != "blank_after_existing_strip":
-                return False
+            expected_discard_reason = "blank_after_existing_strip"
+        elif not is_selected:
+            expected_discard_reason = "filtered_or_truncated"
+        else:
+            expected_discard_reason = None
+
+        if cand.get("included") is not expected_included:
+            return False
+        if cand.get("selection_reason") != expected_selection_reason:
+            return False
+        if cand.get("discard_reason") != expected_discard_reason:
+            return False
 
         # Verify decoded_field artifact
         dec_info = cand.get("decoded_field", {})
