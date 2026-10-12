@@ -26,6 +26,7 @@ from memlife.models.lifecycle import LifecycleState
 from memlife.models.memory import DeleteCommand, MemoryRecord, QueryCommand
 from memlife.models.memory import SupersedeCommand, WriteCommand
 from memlife.models.provenance import MemorySurface, ProvenanceStatus
+from memlife.runner.phase08d3 import CandidateEvidence, HttpExchangeCapture, capture_candidates
 
 HINDSIGHT_VERSION = "0.10.1"
 HINDSIGHT_UPSTREAM_COMMIT = "f8950b0c07d9e34c76493dba802bb309f0ce60fd"
@@ -97,6 +98,7 @@ class UrllibHindsightTransport:
 
     base_url: str = DEFAULT_BASE_URL
     timeout_seconds: float = 120.0
+    capture: HttpExchangeCapture | None = None
 
     def __post_init__(self) -> None:
         self.base_url = self.base_url.rstrip("/")
@@ -131,19 +133,36 @@ class UrllibHindsightTransport:
             method=method.upper(),
             headers={"Accept": "application/json", "Content-Type": "application/json"},
         )
+        status_code = 0
+        headers: Mapping[str, str] | None = None
         try:
             with urlopen(request, timeout=self.timeout_seconds) as response:
                 raw = response.read()
+                status_code = int(response.status)
+                headers = {str(key): str(value) for key, value in response.headers.items()}
         except HTTPError as exc:
-            raw = exc.read().decode("utf-8", errors="replace")
+            raw = exc.read()
+            if self.capture is not None:
+                self.capture.capture(
+                    method=method, path=path, request_body=body, response_body=raw,
+                    status_code=exc.code, response_headers={str(key): str(value) for key, value in exc.headers.items()} if exc.headers else None,
+                    request_id=exc.headers.get("X-Request-ID") if exc.headers else None,
+                )
+            decoded = raw.decode("utf-8", errors="replace")
             try:
-                parsed = json.loads(raw)
+                parsed = json.loads(decoded)
                 detail = str(parsed.get("detail", parsed))
             except json.JSONDecodeError:
-                detail = raw or str(exc.reason)
+                detail = decoded or str(exc.reason)
             raise HindsightHTTPError(exc.code, detail) from exc
         except (URLError, TimeoutError) as exc:
             raise AdapterError(f"Hindsight service request failed: {exc}") from exc
+        if self.capture is not None:
+            self.capture.capture(
+                method=method, path=path, request_body=body, response_body=raw,
+                status_code=status_code, response_headers=headers,
+                request_id=headers.get("X-Request-ID") if headers else None,
+            )
         if not raw:
             return None
         return json.loads(raw.decode("utf-8"))
@@ -164,6 +183,7 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
         restart_callback: Callable[[], None] | None = None,
         quiescence_timeout_seconds: float = 300.0,
         poll_interval_seconds: float = 0.25,
+        candidate_evidence_sink: Callable[[tuple[CandidateEvidence, ...]], None] | None = None,
     ) -> None:
         if quiescence_timeout_seconds <= 0:
             raise ValueError("quiescence timeout must be positive")
@@ -173,6 +193,7 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
         self._restart_callback = restart_callback
         self.quiescence_timeout_seconds = quiescence_timeout_seconds
         self.poll_interval_seconds = poll_interval_seconds
+        self._candidate_evidence_sink = candidate_evidence_sink
         self._last_operation: dict[str, Any] = {}
 
     @classmethod
@@ -424,20 +445,29 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
 
     def _list_operations(self, namespace: str) -> list[dict[str, Any]]:
         path = f"/v1/default/banks/{self._bank_path(namespace)}/operations"
-        try:
-            response = self.transport.request(
-                "GET", path, query={"limit": 100, "offset": 0}
-            )
-        except HindsightHTTPError as exc:
-            if exc.status_code == 404:
-                return []
-            raise
-        if not isinstance(response, Mapping):
-            raise AdapterError("Hindsight operations listing returned a non-object")
-        operations = response.get("operations", [])
-        if not isinstance(operations, list):
-            raise AdapterError("Hindsight operations listing omitted operations")
-        return [item for item in operations if isinstance(item, dict)]
+        offset = 0
+        rows: list[dict[str, Any]] = []
+        while True:
+            try:
+                response = self.transport.request(
+                    "GET", path, query={"limit": 100, "offset": offset}
+                )
+            except HindsightHTTPError as exc:
+                if exc.status_code == 404 and offset == 0:
+                    return []
+                raise
+            if not isinstance(response, Mapping):
+                raise AdapterError("Hindsight operations listing returned a non-object")
+            operations = response.get("operations", [])
+            if not isinstance(operations, list):
+                raise AdapterError("Hindsight operations listing omitted operations")
+            if any(not isinstance(item, dict) for item in operations):
+                raise AdapterError("Hindsight operations listing contained malformed item")
+            rows.extend(operations)
+            offset += len(operations)
+            total = int(response.get("total", len(rows)))
+            if not operations or offset >= total:
+                return rows
 
     def _wait_for_operation(
         self, namespace: str, operation_id: str
@@ -449,7 +479,9 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
         )
         deadline = time.monotonic() + self.quiescence_timeout_seconds
         last: Mapping[str, Any] = {}
+        poll_timestamps: list[str] = []
         while time.monotonic() < deadline:
+            poll_timestamps.append(datetime.now(timezone.utc).isoformat())
             response = self.transport.request("GET", path)
             if not isinstance(response, Mapping):
                 raise AdapterError("Hindsight operation status returned a non-object")
@@ -462,12 +494,19 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
                     "operation_submitted_at": submitted.isoformat(),
                     "operation_completed_at": completed.isoformat(),
                     "quiescence_criterion": "provider operation status=completed",
+                    "operation_terminal_receipt": dict(response),
+                    "operation_poll_timestamps": poll_timestamps,
+                    "operation_coverage": "COMPLETE",
                 }
                 return response
             if status in {"failed", "cancelled"}:
                 raise AdapterError(
                     f"Hindsight operation {operation_id} ended as {status}: "
                     f"{response.get('error_message')}"
+                )
+            if status != "pending" and status != "processing":
+                raise AdapterError(
+                    f"Hindsight operation {operation_id} has unknown or malformed status {status!r}"
                 )
             time.sleep(self.poll_interval_seconds)
         raise AdapterError(
@@ -486,15 +525,31 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
         deadline = time.monotonic() + self.quiescence_timeout_seconds
         submitted = datetime.now(timezone.utc)
         seen_ids: set[str] = set()
+        poll_timestamps: list[str] = []
         while time.monotonic() < deadline:
-            operations = self._list_operations(namespace)
+            poll_timestamps.append(datetime.now(timezone.utc).isoformat())
+            all_operations = self._list_operations(namespace)
+            preexisting = []
             if known_operation_ids is not None:
+                preexisting = [
+                    item for item in all_operations
+                    if str(item.get("id") or item.get("operation_id") or "") in known_operation_ids
+                ]
                 operations = [
                     item
-                    for item in operations
+                    for item in all_operations
                     if str(item.get("id") or item.get("operation_id") or "")
                     not in known_operation_ids
                 ]
+            else:
+                operations = all_operations
+            malformed = [
+                item for item in operations
+                if not str(item.get("id") or item.get("operation_id") or "")
+                or str(item.get("status") or "") not in {"pending", "processing", "completed", "failed", "cancelled"}
+            ]
+            if malformed:
+                raise AdapterError(f"Hindsight operation has malformed or unknown state: {malformed!r}")
             active = [
                 item
                 for item in operations
@@ -520,9 +575,12 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
                 completed = datetime.now(timezone.utc)
                 self._last_operation = {
                     "operation_ids": sorted(seen_ids),
+                    "preexisting_operation_receipts": preexisting,
                     "operation_submitted_at": submitted.isoformat(),
                     "operation_completed_at": completed.isoformat(),
                     "quiescence_criterion": "no provider operations pending or processing",
+                    "operation_poll_timestamps": poll_timestamps,
+                    "operation_coverage": "COMPLETE" if not preexisting else "UNKNOWN",
                 }
                 return
             time.sleep(self.poll_interval_seconds)
@@ -620,7 +678,16 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
             for item in response.get("results", [])
             if isinstance(item, Mapping) and str(item.get("text") or "").strip()
         ]
-        return tuple(records[: command.limit])
+        selected = tuple(records[: command.limit])
+        if self._candidate_evidence_sink is not None:
+            self._candidate_evidence_sink(
+                capture_candidates(
+                    response.get("results", []),
+                    selected_ids={record.memory_id for record in selected},
+                    limit=command.limit,
+                )
+            )
+        return selected
 
     def update_or_supersede(self, command: SupersedeCommand) -> MemoryRecord:
         self.require_supported(ProviderCapability.UPDATE_OR_SUPERSEDE)
