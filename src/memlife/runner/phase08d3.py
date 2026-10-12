@@ -141,6 +141,17 @@ class CandidateEvidence:
     provenance_basis: str
     delivery: str = "CALLBACK_ONLY"
     durable_artifact_persisted: bool = False
+    selection_reason: str | None = None
+    exchange_id: str | None = None
+    decoded_field_artifact: ArtifactIdentity | None = None
+    normalized_artifact: ArtifactIdentity | None = None
+    http_response_artifact: ArtifactIdentity | None = None
+    extraction_rule: str | None = None
+    extraction_version: str | None = None
+
+    @property
+    def parent_ids(self) -> tuple[str, ...]:
+        return self.source_ids
 
 
 def capture_candidates(
@@ -157,7 +168,19 @@ def capture_candidates(
     selected_count = 0
     for position, item in enumerate(results, start=1):
         if not isinstance(item, Mapping):
-            evidence.append(CandidateEvidence(position, None, False, "non_object", None, None, None, (), "UNKNOWN"))
+            evidence.append(CandidateEvidence(
+                position=position,
+                native_id=None,
+                included=False,
+                discard_reason="non_object",
+                decoded_field_bytes=None,
+                normalized_bytes=None,
+                surface=None,
+                source_ids=(),
+                provenance_basis="UNKNOWN",
+                delivery="CALLBACK_ONLY",
+                durable_artifact_persisted=False,
+            ))
             continue
         native_id = str(item.get("id")) if item.get("id") is not None else None
         text = item.get("text")
@@ -166,23 +189,308 @@ def capture_candidates(
         included = position in selected_positions
         if included:
             selected_count += 1
-        reason = None
+        selection_reason = "selected" if included else None
+        discard_reason = None
         if not isinstance(text, str):
-            reason = "missing_or_nonstring_text"
+            discard_reason = "missing_or_nonstring_text"
         elif not text.strip():
-            reason = "blank_after_existing_strip"
+            discard_reason = "blank_after_existing_strip"
         elif not included:
-            reason = "filtered_or_truncated"
+            discard_reason = "filtered_or_truncated"
         sources = item.get("source_memory_ids", item.get("source_fact_ids", []))
+        surface = str(item.get("fact_type") or item.get("type")) if (item.get("fact_type") is not None or item.get("type") is not None) else None
         evidence.append(CandidateEvidence(
-            position, native_id, included, reason, decoded, normalized,
-            str(item.get("fact_type")) if item.get("fact_type") is not None else None,
-            tuple(str(value) for value in sources) if isinstance(sources, list) else (),
-            "PROVIDER_NATIVE" if isinstance(sources, list) else "UNKNOWN",
+            position=position,
+            native_id=native_id,
+            included=included,
+            discard_reason=discard_reason,
+            decoded_field_bytes=decoded,
+            normalized_bytes=normalized,
+            surface=surface,
+            source_ids=tuple(str(value) for value in sources) if isinstance(sources, list) else (),
+            provenance_basis="PROVIDER_NATIVE" if isinstance(sources, list) else "UNKNOWN",
+            delivery="CALLBACK_ONLY",
+            durable_artifact_persisted=False,
+            selection_reason=selection_reason,
         ))
     if selected_count > limit:
         raise CaptureFailure("selected candidate count exceeds command limit")
     return tuple(evidence)
+
+
+class CandidateArtifactSink:
+    """Persists candidate evidence to AttemptArtifactStore linked to D1 HTTP response."""
+
+    def __init__(
+        self,
+        store: AttemptArtifactStore,
+        *,
+        extraction_rule: str = "hindsight-recall-results-v1",
+        extraction_version: str = "phase-08d4-v1",
+    ) -> None:
+        self.store = store
+        self.extraction_rule = extraction_rule
+        self.extraction_version = extraction_version
+        self.persisted_manifests: list[dict[str, Any]] = []
+        self._lock = threading.Lock()
+
+    def capture_and_persist(
+        self,
+        results: object,
+        *,
+        selected_positions: set[int],
+        limit: int,
+        exchange_manifest: Mapping[str, Any] | None,
+        raw_response: Mapping[str, Any] | None = None,
+    ) -> tuple[CandidateEvidence, ...]:
+        if exchange_manifest is None:
+            raise CaptureFailure("missing D1 HTTP response exchange reference")
+        if not isinstance(exchange_manifest, Mapping):
+            raise CaptureFailure("invalid D1 HTTP exchange manifest")
+
+        exchange_id = str(exchange_manifest.get("exchange_id") or "")
+        if not exchange_id:
+            raise CaptureFailure("exchange manifest missing exchange_id")
+
+        response_meta = exchange_manifest.get("response")
+        if not isinstance(response_meta, Mapping):
+            raise CaptureFailure("exchange manifest missing response artifact metadata")
+
+        resp_rel_path = str(response_meta.get("path") or "")
+        resp_sha256 = str(response_meta.get("sha256") or "")
+        resp_byte_count = int(response_meta.get("byte_count") or 0)
+        if not resp_rel_path or not resp_sha256:
+            raise CaptureFailure("exchange response metadata missing path or sha256")
+
+        # Fail closed on missing or corrupt D1 response artifact in the store
+        resp_file = (self.store.root / resp_rel_path).resolve()
+        if self.store.root.resolve() not in resp_file.parents or not resp_file.is_file():
+            raise CaptureFailure(f"D1 HTTP response artifact missing: {resp_rel_path}")
+        resp_bytes = resp_file.read_bytes()
+        if len(resp_bytes) != resp_byte_count or _sha256(resp_bytes) != resp_sha256:
+            raise CaptureFailure("D1 HTTP response artifact hash mismatch")
+
+        http_response_artifact = ArtifactIdentity(resp_rel_path, resp_sha256, resp_byte_count)
+
+        if not isinstance(results, list):
+            raise CaptureFailure("recall response results is not a list")
+
+        selected_count = len(selected_positions)
+        if selected_count > limit:
+            raise CaptureFailure("selected candidate count exceeds command limit")
+
+        if len(results) == 0:
+            disposition = "COMPLETE_EMPTY"
+        elif selected_count == 0:
+            disposition = "FILTERED_ALL"
+        else:
+            disposition = "COMPLETE_NONEMPTY"
+
+        evidence_list: list[CandidateEvidence] = []
+        with self._lock:
+            for position, item in enumerate(results, start=1):
+                if not isinstance(item, Mapping):
+                    evidence_list.append(CandidateEvidence(
+                        position=position,
+                        native_id=None,
+                        included=False,
+                        discard_reason="non_object",
+                        decoded_field_bytes=None,
+                        normalized_bytes=None,
+                        surface=None,
+                        source_ids=(),
+                        provenance_basis="UNKNOWN",
+                        delivery="STORE_PERSISTED",
+                        durable_artifact_persisted=True,
+                        selection_reason=None,
+                        exchange_id=exchange_id,
+                        decoded_field_artifact=None,
+                        normalized_artifact=None,
+                        http_response_artifact=http_response_artifact,
+                        extraction_rule=self.extraction_rule,
+                        extraction_version=self.extraction_version,
+                    ))
+                    continue
+
+                native_id = str(item.get("id")) if item.get("id") is not None else None
+                text = item.get("text")
+                decoded = text.encode("utf-8") if isinstance(text, str) else None
+                normalized = text.strip().encode("utf-8") if isinstance(text, str) else None
+                included = position in selected_positions
+
+                selection_reason = "selected" if included else None
+                discard_reason = None
+                if not isinstance(text, str):
+                    discard_reason = "missing_or_nonstring_text"
+                elif not text.strip():
+                    discard_reason = "blank_after_existing_strip"
+                elif not included:
+                    discard_reason = "filtered_or_truncated"
+
+                sources = item.get("source_memory_ids", item.get("source_fact_ids", []))
+                source_tuple = tuple(str(v) for v in sources) if isinstance(sources, list) else ()
+                provenance_basis = "PROVIDER_NATIVE" if isinstance(sources, list) else "UNKNOWN"
+                surface = str(item.get("fact_type") or item.get("type")) if (item.get("fact_type") is not None or item.get("type") is not None) else None
+
+                decoded_art = None
+                normalized_art = None
+                if decoded is not None:
+                    decoded_art = self.store.write_bytes(
+                        f"candidates/{exchange_id}/candidate-{position:04d}.decoded.bin",
+                        decoded,
+                    )
+                if normalized is not None:
+                    normalized_art = self.store.write_bytes(
+                        f"candidates/{exchange_id}/candidate-{position:04d}.normalized.bin",
+                        normalized,
+                    )
+
+                evidence_list.append(CandidateEvidence(
+                    position=position,
+                    native_id=native_id,
+                    included=included,
+                    discard_reason=discard_reason,
+                    decoded_field_bytes=decoded,
+                    normalized_bytes=normalized,
+                    surface=surface,
+                    source_ids=source_tuple,
+                    provenance_basis=provenance_basis,
+                    delivery="STORE_PERSISTED",
+                    durable_artifact_persisted=True,
+                    selection_reason=selection_reason,
+                    exchange_id=exchange_id,
+                    decoded_field_artifact=decoded_art,
+                    normalized_artifact=normalized_art,
+                    http_response_artifact=http_response_artifact,
+                    extraction_rule=self.extraction_rule,
+                    extraction_version=self.extraction_version,
+                ))
+
+            candidate_manifest = {
+                "attempt_id": str(exchange_manifest.get("attempt_id") or ""),
+                "exchange_id": exchange_id,
+                "captured_at": _now(),
+                "retrieval_disposition": disposition,
+                "http_exchange": {
+                    "exchange_id": exchange_id,
+                    "request_id": exchange_manifest.get("request_id"),
+                    "manifest": exchange_manifest.get("manifest"),
+                    "response": dict(response_meta),
+                },
+                "extraction": {
+                    "rule": self.extraction_rule,
+                    "version": self.extraction_version,
+                    "charset": "utf-8",
+                },
+                "total_candidates": len(evidence_list),
+                "selected_count": sum(1 for e in evidence_list if e.included),
+                "candidates": [
+                    {
+                        "position": item.position,
+                        "native_id": item.native_id,
+                        "included": item.included,
+                        "selection_reason": item.selection_reason,
+                        "discard_reason": item.discard_reason,
+                        "surface": item.surface,
+                        "parent_ids": list(item.parent_ids),
+                        "provenance_basis": item.provenance_basis,
+                        "decoded_field": {
+                            "artifact": item.decoded_field_artifact.__dict__ if item.decoded_field_artifact else None,
+                            "sha256": item.decoded_field_artifact.sha256 if item.decoded_field_artifact else None,
+                            "byte_count": item.decoded_field_artifact.byte_count if item.decoded_field_artifact else None,
+                        },
+                        "normalized": {
+                            "artifact": item.normalized_artifact.__dict__ if item.normalized_artifact else None,
+                            "sha256": item.normalized_artifact.sha256 if item.normalized_artifact else None,
+                            "byte_count": item.normalized_artifact.byte_count if item.normalized_artifact else None,
+                        },
+                        "transformations": [
+                            {
+                                "transformation_id": f"trans-{exchange_id}-{item.position:04d}-decode",
+                                "rule": "json_pointer_to_utf8_decoded_field",
+                                "input_artifact_path": resp_rel_path,
+                                "input_sha256": resp_sha256,
+                                "output_sha256": item.decoded_field_artifact.sha256 if item.decoded_field_artifact else None,
+                                "lossless": True,
+                            },
+                            {
+                                "transformation_id": f"trans-{exchange_id}-{item.position:04d}-normalize",
+                                "rule": "utf8_decoded_field_to_strip_normalized",
+                                "input_sha256": item.decoded_field_artifact.sha256 if item.decoded_field_artifact else None,
+                                "output_sha256": item.normalized_artifact.sha256 if item.normalized_artifact else None,
+                                "lossless": False,
+                            },
+                        ] if item.decoded_field_artifact else [],
+                    }
+                    for item in evidence_list
+                ],
+            }
+            manifest_identity = self.store.write_json(f"candidates/{exchange_id}.json", candidate_manifest)
+            candidate_manifest["manifest"] = manifest_identity.__dict__
+            self.persisted_manifests.append(candidate_manifest)
+
+        return tuple(evidence_list)
+
+    def __call__(
+        self,
+        evidence: tuple[CandidateEvidence, ...],
+        exchange_manifest: Mapping[str, Any] | None = None,
+    ) -> None:
+        if exchange_manifest is not None:
+            raw_results = []
+            selected_positions = set()
+            for item in evidence:
+                raw_results.append({
+                    "id": item.native_id,
+                    "text": item.decoded_field_bytes.decode("utf-8") if item.decoded_field_bytes else None,
+                    "fact_type": item.surface,
+                    "source_memory_ids": list(item.source_ids),
+                })
+                if item.included:
+                    selected_positions.add(item.position)
+            self.capture_and_persist(
+                raw_results,
+                selected_positions=selected_positions,
+                limit=len(selected_positions),
+                exchange_manifest=exchange_manifest,
+            )
+
+
+def verify_candidate_integrity(store: AttemptArtifactStore, exchange_id: str) -> bool:
+    """Verify that all candidate artifacts and linked HTTP response for an exchange are intact."""
+    manifest_path = (store.root / f"candidates/{exchange_id}.json").resolve()
+    if store.root.resolve() not in manifest_path.parents or not manifest_path.is_file():
+        return False
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except Exception:
+        return False
+
+    http_meta = manifest.get("http_exchange", {}).get("response", {})
+    resp_rel = http_meta.get("path")
+    resp_sha = http_meta.get("sha256")
+    resp_len = http_meta.get("byte_count")
+    if not resp_rel or not resp_sha:
+        return False
+    resp_file = (store.root / resp_rel).resolve()
+    if store.root.resolve() not in resp_file.parents or not resp_file.is_file():
+        return False
+    resp_data = resp_file.read_bytes()
+    if len(resp_data) != resp_len or _sha256(resp_data) != resp_sha:
+        return False
+
+    for cand in manifest.get("candidates", []):
+        for field_name in ("decoded_field", "normalized"):
+            field_info = cand.get(field_name, {})
+            art = field_info.get("artifact")
+            if art:
+                p = (store.root / art["path"]).resolve()
+                if store.root.resolve() not in p.parents or not p.is_file():
+                    return False
+                data = p.read_bytes()
+                if len(data) != art["byte_count"] or _sha256(data) != art["sha256"]:
+                    return False
+    return True
 
 
 @dataclass

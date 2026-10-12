@@ -99,6 +99,7 @@ class UrllibHindsightTransport:
     base_url: str = DEFAULT_BASE_URL
     timeout_seconds: float = 120.0
     capture: HttpExchangeCapture | None = None
+    last_exchange: dict[str, Any] | None = None
 
     def __post_init__(self) -> None:
         self.base_url = self.base_url.rstrip("/")
@@ -143,7 +144,7 @@ class UrllibHindsightTransport:
         except HTTPError as exc:
             raw = exc.read()
             if self.capture is not None:
-                self.capture.capture(
+                self.last_exchange = self.capture.capture(
                     method=method, path=path, request_body=body, response_body=raw,
                     status_code=exc.code, response_headers={str(key): str(value) for key, value in exc.headers.items()} if exc.headers else None,
                     request_id=exc.headers.get("X-Request-ID") if exc.headers else None,
@@ -158,7 +159,7 @@ class UrllibHindsightTransport:
         except (URLError, TimeoutError) as exc:
             raise AdapterError(f"Hindsight service request failed: {exc}") from exc
         if self.capture is not None:
-            self.capture.capture(
+            self.last_exchange = self.capture.capture(
                 method=method, path=path, request_body=body, response_body=raw,
                 status_code=status_code, response_headers=headers,
                 request_id=headers.get("X-Request-ID") if headers else None,
@@ -722,13 +723,23 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
             for _, item in selected_pairs
         )
         if self._candidate_evidence_sink is not None:
-            self._candidate_evidence_sink(
-                capture_candidates(
-                    response.get("results", []),
+            exchange_manifest = getattr(self.transport, "last_exchange", None)
+            if hasattr(self._candidate_evidence_sink, "capture_and_persist"):
+                self._candidate_evidence_sink.capture_and_persist(
+                    results=response.get("results"),
                     selected_positions={position for position, _ in selected_pairs},
                     limit=command.limit,
+                    exchange_manifest=exchange_manifest,
+                    raw_response=response,
                 )
-            )
+            else:
+                self._candidate_evidence_sink(
+                    capture_candidates(
+                        response.get("results", []),
+                        selected_positions={position for position, _ in selected_pairs},
+                        limit=command.limit,
+                    )
+                )
         return selected
 
     def update_or_supersede(self, command: SupersedeCommand) -> MemoryRecord:

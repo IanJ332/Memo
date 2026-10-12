@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from copy import deepcopy
 from typing import Any, Mapping
 from urllib.parse import unquote
@@ -10,11 +11,13 @@ from memlife.adapters.hindsight import HindsightHTTPError
 
 
 class FakeHindsightTransport:
-    def __init__(self) -> None:
+    def __init__(self, capture: Any = None) -> None:
         self.banks: dict[str, dict[str, dict[str, Any]]] = {}
         self.next_id = 1
         self.requests: list[tuple[str, str, Mapping[str, Any] | None, Any]] = []
         self.operations: dict[str, dict[str, Any]] = {}
+        self.capture = capture
+        self.last_exchange: dict[str, Any] | None = None
 
     @staticmethod
     def _parts(path: str) -> list[str]:
@@ -26,6 +29,43 @@ class FakeHindsightTransport:
         return bank_id, self.banks.setdefault(bank_id, {}), parts
 
     def request(
+        self,
+        method: str,
+        path: str,
+        *,
+        query: Mapping[str, Any] | None = None,
+        payload: Any | None = None,
+    ) -> Any:
+        try:
+            res = self._handle_request(method, path, query=query, payload=payload)
+            if self.capture is not None:
+                req_b = json.dumps(payload).encode("utf-8") if payload is not None else None
+                resp_b = json.dumps(res).encode("utf-8") if res is not None else b""
+                self.last_exchange = self.capture.capture(
+                    method=method,
+                    path=path,
+                    request_body=req_b,
+                    response_body=resp_b,
+                    status_code=200,
+                    request_id="fake-request-id",
+                )
+            return res
+        except HindsightHTTPError as exc:
+            if self.capture is not None:
+                req_b = json.dumps(payload).encode("utf-8") if payload is not None else None
+                err_dict = {"detail": exc.message}
+                resp_b = json.dumps(err_dict).encode("utf-8")
+                self.last_exchange = self.capture.capture(
+                    method=method,
+                    path=path,
+                    request_body=req_b,
+                    response_body=resp_b,
+                    status_code=exc.status_code,
+                    request_id="fake-request-id",
+                )
+            raise
+
+    def _handle_request(
         self,
         method: str,
         path: str,

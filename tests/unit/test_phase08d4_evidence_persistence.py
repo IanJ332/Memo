@@ -1,0 +1,395 @@
+"""Focused deterministic offline tests for Phase 08D-4 D2 candidate persistence."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from pathlib import Path
+from typing import Any
+
+import pytest
+
+from memlife.adapters.hindsight import HindsightMemoryAdapter, UrllibHindsightTransport
+from memlife.models.memory import QueryCommand, WriteCommand
+from memlife.runner.phase08d3 import (
+    AttemptArtifactStore,
+    CandidateArtifactSink,
+    CaptureFailure,
+    HttpExchangeCapture,
+    capture_candidates,
+    verify_candidate_integrity,
+)
+from tests.fakes.hindsight import FakeHindsightTransport
+
+
+def _sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def test_d2_unicode_whitespace_and_json_escapes(tmp_path: Path) -> None:
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-1")
+    sink = CandidateArtifactSink(store)
+
+    raw_text = "  \u00e9clair \t\n \u4e16\u754c \U0001f600 \"quoted\" \r\n  "
+    response_payload = {
+        "results": [
+            {
+                "id": "item-unicode",
+                "text": raw_text,
+                "fact_type": "world",
+                "source_memory_ids": ["src-1"],
+            }
+        ]
+    }
+    response_bytes = json.dumps(response_payload, ensure_ascii=False).encode("utf-8")
+    exchange = capture.capture(
+        method="POST",
+        path="/v1/default/banks/test/memories/recall",
+        request_body=b'{"query":"*"}',
+        response_body=response_bytes,
+        status_code=200,
+        request_id="req-unicode-1",
+    )
+
+    evidence = sink.capture_and_persist(
+        results=response_payload["results"],
+        selected_positions={1},
+        limit=10,
+        exchange_manifest=exchange,
+    )
+
+    assert len(evidence) == 1
+    item = evidence[0]
+    assert item.position == 1
+    assert item.native_id == "item-unicode"
+    assert item.included is True
+    assert item.selection_reason == "selected"
+    assert item.discard_reason is None
+    assert item.surface == "world"
+    assert item.parent_ids == ("src-1",)
+    assert item.source_ids == ("src-1",)
+    assert item.provenance_basis == "PROVIDER_NATIVE"
+    assert item.delivery == "STORE_PERSISTED"
+    assert item.durable_artifact_persisted is True
+
+    # Exact byte parity
+    expected_decoded = raw_text.encode("utf-8")
+    expected_normalized = raw_text.strip().encode("utf-8")
+    assert item.decoded_field_bytes == expected_decoded
+    assert item.normalized_bytes == expected_normalized
+
+    decoded_file = tmp_path / "attempt" / "candidates" / exchange["exchange_id"] / "candidate-0001.decoded.bin"
+    normalized_file = tmp_path / "attempt" / "candidates" / exchange["exchange_id"] / "candidate-0001.normalized.bin"
+    assert decoded_file.read_bytes() == expected_decoded
+    assert normalized_file.read_bytes() == expected_normalized
+    assert item.decoded_field_artifact.sha256 == _sha256(expected_decoded)
+    assert item.normalized_artifact.sha256 == _sha256(expected_normalized)
+
+    # Manifest verification
+    assert verify_candidate_integrity(store, exchange["exchange_id"]) is True
+
+
+def test_d2_duplicate_native_ids_and_truncation(tmp_path: Path) -> None:
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-2")
+    sink = CandidateArtifactSink(store)
+
+    response_payload = {
+        "results": [
+            {"id": "duplicate-id", "text": "first version", "fact_type": "world", "source_memory_ids": ["s1"]},
+            {"id": "duplicate-id", "text": "second version", "fact_type": "experience", "source_memory_ids": ["s2"]},
+            {"id": "third-id", "text": "third version", "fact_type": "observation", "source_memory_ids": ["s3"]},
+        ]
+    }
+    response_bytes = json.dumps(response_payload).encode("utf-8")
+    exchange = capture.capture(
+        method="POST",
+        path="/v1/default/banks/test/memories/recall",
+        request_body=b"{}",
+        response_body=response_bytes,
+        status_code=200,
+        request_id="req-dup-1",
+    )
+
+    # Only position 1 is selected; position 2 and 3 are truncated by limit=1
+    evidence = sink.capture_and_persist(
+        results=response_payload["results"],
+        selected_positions={1},
+        limit=1,
+        exchange_manifest=exchange,
+    )
+
+    assert len(evidence) == 3
+    assert [e.position for e in evidence] == [1, 2, 3]
+    assert [e.native_id for e in evidence] == ["duplicate-id", "duplicate-id", "third-id"]
+    assert [e.included for e in evidence] == [True, False, False]
+    assert [e.selection_reason for e in evidence] == ["selected", None, None]
+    assert [e.discard_reason for e in evidence] == [None, "filtered_or_truncated", "filtered_or_truncated"]
+
+    # Distinct artifact paths preserved for duplicate IDs
+    p1_path = evidence[0].decoded_field_artifact.path
+    p2_path = evidence[1].decoded_field_artifact.path
+    assert p1_path != p2_path
+    assert (tmp_path / "attempt" / p1_path).read_bytes() == b"first version"
+    assert (tmp_path / "attempt" / p2_path).read_bytes() == b"second version"
+
+    manifest_data = json.loads((tmp_path / "attempt" / f"candidates/{exchange['exchange_id']}.json").read_text())
+    assert manifest_data["total_candidates"] == 3
+    assert manifest_data["selected_count"] == 1
+    assert [c["position"] for c in manifest_data["candidates"]] == [1, 2, 3]
+    assert [c["native_id"] for c in manifest_data["candidates"]] == ["duplicate-id", "duplicate-id", "third-id"]
+    assert verify_candidate_integrity(store, exchange["exchange_id"]) is True
+
+
+def test_d2_empty_and_malformed_responses(tmp_path: Path) -> None:
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-3")
+    sink = CandidateArtifactSink(store)
+
+    # 1. Complete empty retrieval: {"results": []}
+    exchange_empty = capture.capture(
+        method="POST", path="/recall", request_body=b"{}",
+        response_body=b'{"results": []}', status_code=200, request_id="empty-1",
+    )
+    evidence_empty = sink.capture_and_persist(
+        results=[],
+        selected_positions=set(),
+        limit=5,
+        exchange_manifest=exchange_empty,
+    )
+    assert evidence_empty == ()
+    manifest_empty = json.loads((tmp_path / "attempt" / f"candidates/{exchange_empty['exchange_id']}.json").read_text())
+    assert manifest_empty["retrieval_disposition"] == "COMPLETE_EMPTY"
+    assert manifest_empty["total_candidates"] == 0
+    assert manifest_empty["selected_count"] == 0
+    assert verify_candidate_integrity(store, exchange_empty["exchange_id"]) is True
+
+    # 2. Filtered all items: results had entries, but none included
+    exchange_filtered = capture.capture(
+        method="POST", path="/recall", request_body=b"{}",
+        response_body=b'{"results": [{"id": "x", "text": "   "}, "invalid"]}',
+        status_code=200, request_id="filtered-1",
+    )
+    evidence_filtered = sink.capture_and_persist(
+        results=[{"id": "x", "text": "   "}, "invalid"],
+        selected_positions=set(),
+        limit=5,
+        exchange_manifest=exchange_filtered,
+    )
+    assert len(evidence_filtered) == 2
+    assert [e.included for e in evidence_filtered] == [False, False]
+    manifest_filtered = json.loads((tmp_path / "attempt" / f"candidates/{exchange_filtered['exchange_id']}.json").read_text())
+    assert manifest_filtered["retrieval_disposition"] == "FILTERED_ALL"
+    assert manifest_filtered["total_candidates"] == 2
+    assert manifest_filtered["selected_count"] == 0
+    assert verify_candidate_integrity(store, exchange_filtered["exchange_id"]) is True
+
+    # 3. Malformed responses fail closed
+    with pytest.raises(CaptureFailure, match="not a list"):
+        sink.capture_and_persist(
+            results="not-a-list",
+            selected_positions=set(),
+            limit=5,
+            exchange_manifest=exchange_empty,
+        )
+
+
+def test_d2_candidate_to_response_correlation(tmp_path: Path) -> None:
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-4")
+    sink = CandidateArtifactSink(store, extraction_rule="test-extractor-v1", extraction_version="test-version-1")
+
+    resp_body = b'{"results":[{"id":"m1","text":"test value","fact_type":"world"}]}'
+    exchange = capture.capture(
+        method="POST", path="/memories/recall", request_body=b'{"query":"q"}',
+        response_body=resp_body, status_code=200, request_id="corr-1",
+    )
+
+    sink.capture_and_persist(
+        results=[{"id": "m1", "text": "test value", "fact_type": "world"}],
+        selected_positions={1},
+        limit=5,
+        exchange_manifest=exchange,
+    )
+
+    manifest = json.loads((tmp_path / "attempt" / f"candidates/{exchange['exchange_id']}.json").read_text())
+    assert manifest["http_exchange"]["exchange_id"] == exchange["exchange_id"]
+    assert manifest["http_exchange"]["request_id"] == "corr-1"
+    assert manifest["http_exchange"]["response"]["path"] == exchange["response"]["path"]
+    assert manifest["http_exchange"]["response"]["sha256"] == exchange["response"]["sha256"]
+    assert manifest["extraction"]["rule"] == "test-extractor-v1"
+    assert manifest["extraction"]["version"] == "test-version-1"
+    assert manifest["extraction"]["charset"] == "utf-8"
+
+    cand = manifest["candidates"][0]
+    transforms = cand["transformations"]
+    assert len(transforms) == 2
+    assert transforms[0]["rule"] == "json_pointer_to_utf8_decoded_field"
+    assert transforms[0]["input_artifact_path"] == exchange["response"]["path"]
+    assert transforms[0]["input_sha256"] == exchange["response"]["sha256"]
+    assert transforms[0]["output_sha256"] == cand["decoded_field"]["sha256"]
+    assert transforms[0]["lossless"] is True
+
+    assert transforms[1]["rule"] == "utf8_decoded_field_to_strip_normalized"
+    assert transforms[1]["input_sha256"] == cand["decoded_field"]["sha256"]
+    assert transforms[1]["output_sha256"] == cand["normalized"]["sha256"]
+    assert transforms[1]["lossless"] is False
+
+
+def test_d2_exact_byte_integrity_and_deterministic_hashes(tmp_path: Path) -> None:
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-5")
+    sink = CandidateArtifactSink(store)
+
+    text1 = "Alpha \n \t Beta"
+    text2 = "Gamma \u221e Delta"
+    exchange = capture.capture(
+        method="POST", path="/recall", request_body=b"{}",
+        response_body=b'{"results": []}', status_code=200, request_id="det-1",
+    )
+
+    evidence = sink.capture_and_persist(
+        results=[
+            {"id": "c1", "text": text1},
+            {"id": "c2", "text": text2},
+        ],
+        selected_positions={1, 2},
+        limit=2,
+        exchange_manifest=exchange,
+    )
+
+    for item, raw in zip(evidence, [text1, text2]):
+        decoded_path = tmp_path / "attempt" / item.decoded_field_artifact.path
+        normalized_path = tmp_path / "attempt" / item.normalized_artifact.path
+        assert decoded_path.read_bytes() == raw.encode("utf-8")
+        assert normalized_path.read_bytes() == raw.strip().encode("utf-8")
+        assert item.decoded_field_artifact.sha256 == hashlib.sha256(raw.encode("utf-8")).hexdigest()
+        assert item.normalized_artifact.sha256 == hashlib.sha256(raw.strip().encode("utf-8")).hexdigest()
+
+    assert verify_candidate_integrity(store, exchange["exchange_id"]) is True
+
+
+def test_d2_missing_or_corrupt_artifacts_fail_closed(tmp_path: Path) -> None:
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-6")
+    sink = CandidateArtifactSink(store)
+
+    # 1. Missing exchange manifest fails closed
+    with pytest.raises(CaptureFailure, match="missing D1 HTTP response exchange reference"):
+        sink.capture_and_persist(results=[], selected_positions=set(), limit=1, exchange_manifest=None)
+
+    # 2. Corrupted D1 HTTP response hash fails closed before candidate writing
+    exchange = capture.capture(
+        method="POST", path="/recall", request_body=b"{}",
+        response_body=b'{"results":[{"id":"1","text":"ok"}]}', status_code=200, request_id="tamper-1",
+    )
+    # Mutate the response file on disk
+    resp_on_disk = tmp_path / "attempt" / exchange["response"]["path"]
+    resp_on_disk.write_bytes(b'{"results":[{"id":"1","text":"TAMPERED"}]}')
+
+    with pytest.raises(CaptureFailure, match="hash mismatch"):
+        sink.capture_and_persist(
+            results=[{"id": "1", "text": "ok"}],
+            selected_positions={1},
+            limit=1,
+            exchange_manifest=exchange,
+        )
+
+    # 3. Missing response file on disk fails closed
+    resp_on_disk.unlink()
+    with pytest.raises(CaptureFailure, match="artifact missing"):
+        sink.capture_and_persist(
+            results=[{"id": "1", "text": "ok"}],
+            selected_positions={1},
+            limit=1,
+            exchange_manifest=exchange,
+        )
+
+
+def test_d2_write_failures_and_partial_capture_fail_closed(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-7")
+    sink = CandidateArtifactSink(store)
+
+    exchange = capture.capture(
+        method="POST", path="/recall", request_body=b"{}",
+        response_body=b'{"results":[{"id":"1","text":"sample"}]}', status_code=200,
+    )
+
+    # Injected write failure during candidate byte writing
+    real_write_bytes = store.write_bytes
+    call_count = [0]
+
+    def failing_write_bytes(relative_path: str, data: bytes):
+        call_count[0] += 1
+        if "candidate-0001.normalized.bin" in relative_path:
+            raise CaptureFailure("simulated disk full")
+        return real_write_bytes(relative_path, data)
+
+    monkeypatch.setattr(store, "write_bytes", failing_write_bytes)
+
+    with pytest.raises(CaptureFailure, match="simulated disk full"):
+        sink.capture_and_persist(
+            results=[{"id": "1", "text": "sample"}],
+            selected_positions={1},
+            limit=1,
+            exchange_manifest=exchange,
+        )
+
+    # Integrity verification fails because the manifest was never committed
+    assert verify_candidate_integrity(store, exchange["exchange_id"]) is False
+
+
+def test_d2_disabled_instrumentation_backward_compatibility() -> None:
+    transport = FakeHindsightTransport()
+    adapter = HindsightMemoryAdapter(transport)
+
+    # Baseline write and query without any instrumentation
+    record1 = adapter.write(WriteCommand(namespace="uninstrumented", content="first"))
+    record2 = adapter.write(WriteCommand(namespace="uninstrumented", content="second"))
+    query_res = adapter.query(QueryCommand(namespace="uninstrumented", limit=2))
+
+    assert len(query_res) == 2
+    assert [r.content for r in query_res] == ["first", "second"]
+    assert adapter._candidate_evidence_sink is None
+    assert transport.capture is None
+    assert transport.last_exchange is None
+
+
+def test_d2_adapter_query_integration_with_fake_and_urllib_transports(tmp_path: Path) -> None:
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-8")
+    sink = CandidateArtifactSink(store)
+
+    # Test with FakeHindsightTransport instrumented with capture
+    transport = FakeHindsightTransport(capture=capture)
+    adapter = HindsightMemoryAdapter(transport, candidate_evidence_sink=sink)
+
+    adapter.write(WriteCommand(namespace="test_bank", content="Alice Alder"))
+    adapter.write(WriteCommand(namespace="test_bank", content="Bob Alder"))
+
+    # Execute query with limit=1: Alice selected, Bob truncated
+    result = adapter.query(QueryCommand(namespace="test_bank", limit=1))
+    assert [r.content for r in result] == ["Alice Alder"]
+
+    # Verify sink persisted candidates linked to recall exchange
+    assert len(sink.persisted_manifests) == 1
+    manifest = sink.persisted_manifests[0]
+    exchange_id = manifest["exchange_id"]
+    assert manifest["retrieval_disposition"] == "COMPLETE_NONEMPTY"
+    assert manifest["total_candidates"] == 2
+    assert manifest["selected_count"] == 1
+    assert verify_candidate_integrity(store, exchange_id) is True
+
+    # Test complete empty query on empty bank
+    empty_transport = FakeHindsightTransport(capture=capture)
+    empty_adapter = HindsightMemoryAdapter(empty_transport, candidate_evidence_sink=sink)
+    empty_result = empty_adapter.query(QueryCommand(namespace="empty_bank", limit=1))
+    assert empty_result == ()
+
+    assert len(sink.persisted_manifests) == 2
+    empty_manifest = sink.persisted_manifests[1]
+    assert empty_manifest["retrieval_disposition"] == "COMPLETE_EMPTY"
+    assert empty_manifest["total_candidates"] == 0
+    assert verify_candidate_integrity(store, empty_manifest["exchange_id"]) is True
