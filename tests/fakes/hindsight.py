@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import threading
 from copy import deepcopy
 from typing import Any, Mapping
 from urllib.parse import unquote
@@ -17,7 +18,20 @@ class FakeHindsightTransport:
         self.requests: list[tuple[str, str, Mapping[str, Any] | None, Any]] = []
         self.operations: dict[str, dict[str, Any]] = {}
         self.capture = capture
-        self.last_exchange: dict[str, Any] | None = None
+        self._thread_local = threading.local()
+
+    @property
+    def last_exchange(self) -> dict[str, Any] | None:
+        return getattr(self._thread_local, "last_exchange", None)
+
+    @last_exchange.setter
+    def last_exchange(self, value: dict[str, Any] | None) -> None:
+        self._thread_local.last_exchange = value
+
+    def pop_last_exchange(self) -> dict[str, Any] | None:
+        val = getattr(self._thread_local, "last_exchange", None)
+        self._thread_local.last_exchange = None
+        return val
 
     @staticmethod
     def _parts(path: str) -> list[str]:
@@ -53,7 +67,7 @@ class FakeHindsightTransport:
         except HindsightHTTPError as exc:
             if self.capture is not None:
                 req_b = json.dumps(payload).encode("utf-8") if payload is not None else None
-                err_dict = {"detail": exc.message}
+                err_dict = {"detail": exc.detail}
                 resp_b = json.dumps(err_dict).encode("utf-8")
                 self.last_exchange = self.capture.capture(
                     method=method,

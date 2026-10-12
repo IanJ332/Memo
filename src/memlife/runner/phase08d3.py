@@ -148,6 +148,8 @@ class CandidateEvidence:
     http_response_artifact: ArtifactIdentity | None = None
     extraction_rule: str | None = None
     extraction_version: str | None = None
+    json_path: str = ""
+    field_path: str = ""
 
     @property
     def parent_ids(self) -> tuple[str, ...]:
@@ -272,23 +274,68 @@ class CandidateArtifactSink:
 
         http_response_artifact = ArtifactIdentity(resp_rel_path, resp_sha256, resp_byte_count)
 
-        if not isinstance(results, list):
-            raise CaptureFailure("recall response results is not a list")
+        # Reparse persisted response bytes and validate source binding
+        try:
+            resp_text = resp_bytes.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise CaptureFailure(f"D1 HTTP response bytes are not valid UTF-8: {exc}") from exc
+        try:
+            parsed_resp = json.loads(resp_text)
+        except json.JSONDecodeError as exc:
+            raise CaptureFailure(f"D1 HTTP response is not valid JSON: {exc}") from exc
 
-        selected_count = len(selected_positions)
-        if selected_count > limit:
+        if not isinstance(parsed_resp, Mapping):
+            raise CaptureFailure("D1 HTTP response JSON is not an object")
+        if "results" not in parsed_resp:
+            raise CaptureFailure("D1 HTTP response JSON missing 'results' field")
+        raw_results = parsed_resp["results"]
+        if not isinstance(raw_results, list):
+            raise CaptureFailure("D1 HTTP response 'results' field is not a list")
+
+        if results is not None:
+            if not isinstance(results, list):
+                raise CaptureFailure("recall response results is not a list")
+            if results != raw_results:
+                raise CaptureFailure("candidate results do not match persisted HTTP response results")
+
+        if limit < 0:
+            raise CaptureFailure("limit must not be negative")
+
+        total_results = len(raw_results)
+        for pos in selected_positions:
+            if not isinstance(pos, int) or pos < 1 or pos > total_results:
+                raise CaptureFailure(f"invalid selection position {pos}; total results={total_results}")
+        if len(selected_positions) > limit:
             raise CaptureFailure("selected candidate count exceeds command limit")
 
-        if len(results) == 0:
+        for pos in selected_positions:
+            item = raw_results[pos - 1]
+            if not isinstance(item, Mapping) or not isinstance(item.get("text"), str) or not item.get("text").strip():
+                raise CaptureFailure(f"position {pos} cannot be selected: candidate has non-object, non-string, or blank text")
+
+        acceptable_positions = [
+            idx + 1 for idx, item in enumerate(raw_results)
+            if isinstance(item, Mapping) and isinstance(item.get("text"), str) and item.get("text").strip()
+        ]
+        expected_selected = set(acceptable_positions[:limit])
+        if selected_positions != expected_selected:
+            raise CaptureFailure(
+                f"selection positions {selected_positions} do not match expected candidate prefix selection {expected_selected}"
+            )
+
+        if total_results == 0:
             disposition = "COMPLETE_EMPTY"
-        elif selected_count == 0:
+        elif len(selected_positions) == 0:
             disposition = "FILTERED_ALL"
         else:
             disposition = "COMPLETE_NONEMPTY"
 
         evidence_list: list[CandidateEvidence] = []
         with self._lock:
-            for position, item in enumerate(results, start=1):
+            for idx, item in enumerate(raw_results):
+                position = idx + 1
+                json_path = f"/results/{idx}"
+                field_path = f"/results/{idx}/text"
                 if not isinstance(item, Mapping):
                     evidence_list.append(CandidateEvidence(
                         position=position,
@@ -309,6 +356,8 @@ class CandidateArtifactSink:
                         http_response_artifact=http_response_artifact,
                         extraction_rule=self.extraction_rule,
                         extraction_version=self.extraction_version,
+                        json_path=json_path,
+                        field_path=field_path,
                     ))
                     continue
 
@@ -364,6 +413,8 @@ class CandidateArtifactSink:
                     http_response_artifact=http_response_artifact,
                     extraction_rule=self.extraction_rule,
                     extraction_version=self.extraction_version,
+                    json_path=json_path,
+                    field_path=field_path,
                 ))
 
             candidate_manifest = {
@@ -387,6 +438,8 @@ class CandidateArtifactSink:
                 "candidates": [
                     {
                         "position": item.position,
+                        "json_path": item.json_path,
+                        "field_path": item.field_path,
                         "native_id": item.native_id,
                         "included": item.included,
                         "selection_reason": item.selection_reason,
@@ -408,6 +461,7 @@ class CandidateArtifactSink:
                             {
                                 "transformation_id": f"trans-{exchange_id}-{item.position:04d}-decode",
                                 "rule": "json_pointer_to_utf8_decoded_field",
+                                "json_pointer": item.field_path,
                                 "input_artifact_path": resp_rel_path,
                                 "input_sha256": resp_sha256,
                                 "output_sha256": item.decoded_field_artifact.sha256 if item.decoded_field_artifact else None,
@@ -457,7 +511,10 @@ class CandidateArtifactSink:
 
 
 def verify_candidate_integrity(store: AttemptArtifactStore, exchange_id: str) -> bool:
-    """Verify that all candidate artifacts and linked HTTP response for an exchange are intact."""
+    """Verify that all candidate artifacts and linked HTTP response for an exchange are intact,
+    and prove candidates originated from that response with exact values, positions, transformations,
+    and dispositions.
+    """
     manifest_path = (store.root / f"candidates/{exchange_id}.json").resolve()
     if store.root.resolve() not in manifest_path.parents or not manifest_path.is_file():
         return False
@@ -479,17 +536,127 @@ def verify_candidate_integrity(store: AttemptArtifactStore, exchange_id: str) ->
     if len(resp_data) != resp_len or _sha256(resp_data) != resp_sha:
         return False
 
-    for cand in manifest.get("candidates", []):
-        for field_name in ("decoded_field", "normalized"):
-            field_info = cand.get(field_name, {})
-            art = field_info.get("artifact")
-            if art:
-                p = (store.root / art["path"]).resolve()
-                if store.root.resolve() not in p.parents or not p.is_file():
-                    return False
-                data = p.read_bytes()
-                if len(data) != art["byte_count"] or _sha256(data) != art["sha256"]:
-                    return False
+    # Reparse persisted response bytes to verify candidates originated from that response
+    try:
+        resp_obj = json.loads(resp_data.decode("utf-8"))
+    except Exception:
+        return False
+    if not isinstance(resp_obj, Mapping) or "results" not in resp_obj:
+        return False
+    raw_results = resp_obj["results"]
+    if not isinstance(raw_results, list):
+        return False
+
+    candidates = manifest.get("candidates")
+    if not isinstance(candidates, list) or len(candidates) != len(raw_results):
+        return False
+    if manifest.get("total_candidates") != len(raw_results):
+        return False
+
+    selected_count = sum(1 for c in candidates if isinstance(c, Mapping) and c.get("included") is True)
+    if manifest.get("selected_count") != selected_count:
+        return False
+
+    # Verify disposition consistency
+    expected_disposition = (
+        "COMPLETE_EMPTY" if len(raw_results) == 0
+        else ("FILTERED_ALL" if selected_count == 0 else "COMPLETE_NONEMPTY")
+    )
+    if manifest.get("retrieval_disposition") != expected_disposition:
+        return False
+
+    # Verify candidate values, positions, and transformations against response
+    for idx, raw_item in enumerate(raw_results):
+        cand = candidates[idx]
+        if not isinstance(cand, Mapping):
+            return False
+        if cand.get("position") != idx + 1:
+            return False
+        if cand.get("json_path") != f"/results/{idx}":
+            return False
+        if cand.get("field_path") != f"/results/{idx}/text":
+            return False
+
+        if not isinstance(raw_item, Mapping):
+            if cand.get("included") is not False or cand.get("discard_reason") != "non_object":
+                return False
+            if cand.get("decoded_field", {}).get("artifact") is not None:
+                return False
+            continue
+
+        raw_id = str(raw_item.get("id")) if raw_item.get("id") is not None else None
+        if cand.get("native_id") != raw_id:
+            return False
+
+        raw_text = raw_item.get("text")
+        if not isinstance(raw_text, str):
+            if cand.get("included") is not False or cand.get("discard_reason") != "missing_or_nonstring_text":
+                return False
+            if cand.get("decoded_field", {}).get("artifact") is not None:
+                return False
+            continue
+
+        if not raw_text.strip():
+            if cand.get("included") is not False or cand.get("discard_reason") != "blank_after_existing_strip":
+                return False
+
+        # Verify decoded_field artifact
+        dec_info = cand.get("decoded_field", {})
+        dec_art = dec_info.get("artifact")
+        if not dec_art:
+            return False
+        dec_p = (store.root / dec_art["path"]).resolve()
+        if store.root.resolve() not in dec_p.parents or not dec_p.is_file():
+            return False
+        dec_data = dec_p.read_bytes()
+        expected_dec = raw_text.encode("utf-8")
+        if dec_data != expected_dec or dec_art["byte_count"] != len(expected_dec) or dec_art["sha256"] != _sha256(expected_dec):
+            return False
+
+        # Verify normalized artifact
+        norm_info = cand.get("normalized", {})
+        norm_art = norm_info.get("artifact")
+        if not norm_art:
+            return False
+        norm_p = (store.root / norm_art["path"]).resolve()
+        if store.root.resolve() not in norm_p.parents or not norm_p.is_file():
+            return False
+        norm_data = norm_p.read_bytes()
+        expected_norm = raw_text.strip().encode("utf-8")
+        if norm_data != expected_norm or norm_art["byte_count"] != len(expected_norm) or norm_art["sha256"] != _sha256(expected_norm):
+            return False
+
+        # Verify transformations
+        transforms = cand.get("transformations", [])
+        if len(transforms) != 2:
+            return False
+        t0 = transforms[0]
+        if t0.get("rule") != "json_pointer_to_utf8_decoded_field":
+            return False
+        if t0.get("input_artifact_path") != resp_rel or t0.get("input_sha256") != resp_sha:
+            return False
+        if t0.get("output_sha256") != dec_art["sha256"]:
+            return False
+        if t0.get("lossless") is not True:
+            return False
+
+        t1 = transforms[1]
+        if t1.get("rule") != "utf8_decoded_field_to_strip_normalized":
+            return False
+        if t1.get("input_sha256") != dec_art["sha256"] or t1.get("output_sha256") != norm_art["sha256"]:
+            return False
+        if t1.get("lossless") is not False:
+            return False
+
+        # Verify surface and parents
+        expected_surface = str(raw_item.get("fact_type") or raw_item.get("type")) if (raw_item.get("fact_type") is not None or raw_item.get("type") is not None) else None
+        if cand.get("surface") != expected_surface:
+            return False
+        sources = raw_item.get("source_memory_ids", raw_item.get("source_fact_ids", []))
+        expected_parents = [str(v) for v in sources] if isinstance(sources, list) else []
+        if cand.get("parent_ids") != expected_parents:
+            return False
+
     return True
 
 

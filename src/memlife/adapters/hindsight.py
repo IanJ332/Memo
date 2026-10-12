@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import json
 import os
+import threading
 import time
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Protocol
 from urllib.error import HTTPError, URLError
@@ -99,12 +100,25 @@ class UrllibHindsightTransport:
     base_url: str = DEFAULT_BASE_URL
     timeout_seconds: float = 120.0
     capture: HttpExchangeCapture | None = None
-    last_exchange: dict[str, Any] | None = None
+    _thread_local: threading.local = field(default_factory=threading.local, init=False, repr=False)
 
     def __post_init__(self) -> None:
         self.base_url = self.base_url.rstrip("/")
         if not self.base_url.startswith(("http://", "https://")):
             raise ValueError("Hindsight base URL must use http or https")
+
+    @property
+    def last_exchange(self) -> dict[str, Any] | None:
+        return getattr(self._thread_local, "last_exchange", None)
+
+    @last_exchange.setter
+    def last_exchange(self, value: dict[str, Any] | None) -> None:
+        self._thread_local.last_exchange = value
+
+    def pop_last_exchange(self) -> dict[str, Any] | None:
+        val = getattr(self._thread_local, "last_exchange", None)
+        self._thread_local.last_exchange = None
+        return val
 
     @staticmethod
     def _query_items(query: Mapping[str, Any]) -> list[tuple[str, str]]:
@@ -723,7 +737,16 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
             for _, item in selected_pairs
         )
         if self._candidate_evidence_sink is not None:
-            exchange_manifest = getattr(self.transport, "last_exchange", None)
+            if hasattr(self.transport, "pop_last_exchange"):
+                exchange_manifest = self.transport.pop_last_exchange()
+            else:
+                exchange_manifest = getattr(self.transport, "last_exchange", None)
+            if exchange_manifest is not None:
+                expected_path = f"/v1/default/banks/{self._bank_path(command.namespace)}/memories/recall"
+                if exchange_manifest.get("method") != "POST" or exchange_manifest.get("path") != expected_path:
+                    raise AdapterError(
+                        f"Exchange correlation mismatch: expected POST {expected_path}, got {exchange_manifest.get('method')} {exchange_manifest.get('path')}"
+                    )
             if hasattr(self._candidate_evidence_sink, "capture_and_persist"):
                 self._candidate_evidence_sink.capture_and_persist(
                     results=response.get("results"),

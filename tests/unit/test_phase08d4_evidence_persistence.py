@@ -238,6 +238,12 @@ def test_d2_candidate_to_response_correlation(tmp_path: Path) -> None:
 
 
 def test_d2_exact_byte_integrity_and_deterministic_hashes(tmp_path: Path) -> None:
+    """Negative regression test: candidate results must originate from persisted HTTP response.
+
+    When the HTTP response is {"results": []} but nonempty candidates are passed,
+    capture_and_persist must reject the inconsistent evidence, and verify_candidate_integrity
+    must fail closed.
+    """
     store = AttemptArtifactStore(tmp_path / "attempt")
     capture = HttpExchangeCapture(store, attempt_id="attempt-d2-5")
     sink = CandidateArtifactSink(store)
@@ -249,11 +255,42 @@ def test_d2_exact_byte_integrity_and_deterministic_hashes(tmp_path: Path) -> Non
         response_body=b'{"results": []}', status_code=200, request_id="det-1",
     )
 
+    with pytest.raises(CaptureFailure, match="candidate results do not match persisted HTTP response results"):
+        sink.capture_and_persist(
+            results=[
+                {"id": "c1", "text": text1},
+                {"id": "c2", "text": text2},
+            ],
+            selected_positions={1, 2},
+            limit=2,
+            exchange_manifest=exchange,
+        )
+
+    # Forged or inconsistent evidence must also be rejected by verify_candidate_integrity
+    assert verify_candidate_integrity(store, exchange["exchange_id"]) is False
+
+
+def test_d2_exact_byte_integrity_and_deterministic_hashes_positive(tmp_path: Path) -> None:
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-5-pos")
+    sink = CandidateArtifactSink(store)
+
+    text1 = "Alpha \n \t Beta"
+    text2 = "Gamma \u221e Delta"
+    resp_obj = {
+        "results": [
+            {"id": "c1", "text": text1, "fact_type": "world", "source_memory_ids": ["s1"]},
+            {"id": "c2", "text": text2, "fact_type": "world", "source_memory_ids": ["s2"]},
+        ]
+    }
+    resp_bytes = json.dumps(resp_obj, ensure_ascii=False).encode("utf-8")
+    exchange = capture.capture(
+        method="POST", path="/recall", request_body=b"{}",
+        response_body=resp_bytes, status_code=200, request_id="det-pos-1",
+    )
+
     evidence = sink.capture_and_persist(
-        results=[
-            {"id": "c1", "text": text1},
-            {"id": "c2", "text": text2},
-        ],
+        results=resp_obj["results"],
         selected_positions={1, 2},
         limit=2,
         exchange_manifest=exchange,
@@ -393,3 +430,185 @@ def test_d2_adapter_query_integration_with_fake_and_urllib_transports(tmp_path: 
     assert empty_manifest["retrieval_disposition"] == "COMPLETE_EMPTY"
     assert empty_manifest["total_candidates"] == 0
     assert verify_candidate_integrity(store, empty_manifest["exchange_id"]) is True
+
+
+def test_d2_rejects_missing_or_malformed_results(tmp_path: Path) -> None:
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-missing")
+    sink = CandidateArtifactSink(store)
+
+    # 1. Missing "results" key in response JSON must NOT be classified as COMPLETE_EMPTY
+    ex_missing = capture.capture(
+        method="POST", path="/recall", request_body=b"{}",
+        response_body=b'{"status": "ok"}', status_code=200, request_id="missing-res",
+    )
+    with pytest.raises(CaptureFailure, match="missing 'results' field"):
+        sink.capture_and_persist(
+            results=[],
+            selected_positions=set(),
+            limit=5,
+            exchange_manifest=ex_missing,
+        )
+
+    # 2. "results" is not a list
+    ex_nonlist = capture.capture(
+        method="POST", path="/recall", request_body=b"{}",
+        response_body=b'{"results": "not-a-list"}', status_code=200, request_id="nonlist-res",
+    )
+    with pytest.raises(CaptureFailure, match="'results' field is not a list"):
+        sink.capture_and_persist(
+            results=[],
+            selected_positions=set(),
+            limit=5,
+            exchange_manifest=ex_nonlist,
+        )
+
+    # 3. "results" is null
+    ex_null = capture.capture(
+        method="POST", path="/recall", request_body=b"{}",
+        response_body=b'{"results": null}', status_code=200, request_id="null-res",
+    )
+    with pytest.raises(CaptureFailure, match="'results' field is not a list"):
+        sink.capture_and_persist(
+            results=[],
+            selected_positions=set(),
+            limit=5,
+            exchange_manifest=ex_null,
+        )
+
+
+def test_d2_evidence_completeness_and_json_field_paths(tmp_path: Path) -> None:
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-completeness")
+    sink = CandidateArtifactSink(store)
+
+    resp_obj = {
+        "results": [
+            {"id": "m1", "text": "   leading whitespace   ", "fact_type": "world", "source_memory_ids": ["s1"]},
+            {"id": "m2", "text": "   ", "fact_type": "experience", "source_memory_ids": ["s2"]},
+            {"id": "m3", "text": "valid item", "fact_type": "observation", "source_memory_ids": ["s3"]},
+        ]
+    }
+    resp_bytes = json.dumps(resp_obj).encode("utf-8")
+    exchange = capture.capture(
+        method="POST", path="/recall", request_body=b"{}",
+        response_body=resp_bytes, status_code=200, request_id="comp-1",
+    )
+
+    # Invalid selection position 0 rejected
+    with pytest.raises(CaptureFailure, match="invalid selection position 0"):
+        sink.capture_and_persist(
+            results=resp_obj["results"],
+            selected_positions={0},
+            limit=1,
+            exchange_manifest=exchange,
+        )
+
+    # Invalid selection position out of bounds (4 > 3) rejected
+    with pytest.raises(CaptureFailure, match="invalid selection position 4"):
+        sink.capture_and_persist(
+            results=resp_obj["results"],
+            selected_positions={4},
+            limit=1,
+            exchange_manifest=exchange,
+        )
+
+    # Position 2 is blank after strip; cannot be selected
+    with pytest.raises(CaptureFailure, match="position 2 cannot be selected"):
+        sink.capture_and_persist(
+            results=resp_obj["results"],
+            selected_positions={2},
+            limit=1,
+            exchange_manifest=exchange,
+        )
+
+    # Selected count exceeds limit
+    with pytest.raises(CaptureFailure, match="selected candidate count exceeds command limit"):
+        sink.capture_and_persist(
+            results=resp_obj["results"],
+            selected_positions={1, 3},
+            limit=1,
+            exchange_manifest=exchange,
+        )
+
+    # Valid selection: position 1 selected with limit 1
+    evidence = sink.capture_and_persist(
+        results=resp_obj["results"],
+        selected_positions={1},
+        limit=1,
+        exchange_manifest=exchange,
+    )
+    assert len(evidence) == 3
+    assert evidence[0].json_path == "/results/0"
+    assert evidence[0].field_path == "/results/0/text"
+    assert evidence[1].json_path == "/results/1"
+    assert evidence[1].field_path == "/results/1/text"
+    assert evidence[2].json_path == "/results/2"
+    assert evidence[2].field_path == "/results/2/text"
+
+    # Distinction between original response bytes and decoded UTF-8 field bytes
+    raw_response_bytes = (tmp_path / "attempt" / exchange["response"]["path"]).read_bytes()
+    decoded_field_bytes = (tmp_path / "attempt" / evidence[0].decoded_field_artifact.path).read_bytes()
+    assert decoded_field_bytes == b"   leading whitespace   "
+    assert raw_response_bytes != decoded_field_bytes
+    assert b'"results"' in raw_response_bytes
+
+    manifest = json.loads((tmp_path / "attempt" / f"candidates/{exchange['exchange_id']}.json").read_text())
+    assert manifest["candidates"][0]["json_path"] == "/results/0"
+    assert manifest["candidates"][0]["field_path"] == "/results/0/text"
+    assert manifest["candidates"][0]["transformations"][0]["json_pointer"] == "/results/0/text"
+    assert verify_candidate_integrity(store, exchange["exchange_id"]) is True
+
+
+def test_d2_exchange_correlation_concurrent_and_failure_paths(tmp_path: Path) -> None:
+    from concurrent.futures import ThreadPoolExecutor
+    from memlife.adapters.hindsight import HindsightHTTPError
+
+    store = AttemptArtifactStore(tmp_path / "attempt")
+    capture = HttpExchangeCapture(store, attempt_id="attempt-d2-concurrency")
+    sink = CandidateArtifactSink(store)
+
+    transport = FakeHindsightTransport(capture=capture)
+    adapter = HindsightMemoryAdapter(transport, candidate_evidence_sink=sink)
+
+    # Seed data in distinct banks
+    adapter.write(WriteCommand(namespace="bank_alpha", content="Alpha Item"))
+    adapter.write(WriteCommand(namespace="bank_beta", content="Beta Item"))
+
+    # Test concurrent queries across threads
+    results_map: dict[str, list[str]] = {}
+    errors: list[Exception] = []
+
+    def run_query(ns: str) -> None:
+        try:
+            res = adapter.query(QueryCommand(namespace=ns, limit=5))
+            results_map[ns] = [r.content for r in res]
+        except Exception as exc:
+            errors.append(exc)
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        f1 = executor.submit(run_query, "bank_alpha")
+        f2 = executor.submit(run_query, "bank_beta")
+        f1.result()
+        f2.result()
+
+    assert not errors
+    assert results_map["bank_alpha"] == ["Alpha Item"]
+    assert results_map["bank_beta"] == ["Beta Item"]
+
+    # Verify each persisted manifest correctly correlates to its own bank and exchange
+    assert len(sink.persisted_manifests) == 2
+    for manifest in sink.persisted_manifests:
+        assert verify_candidate_integrity(store, manifest["exchange_id"]) is True
+
+    # Test failure path: transport error records failed exchange on thread-local
+    with pytest.raises(HindsightHTTPError):
+        transport.request("GET", "/v1/default/banks/test/memories/nonexistent-id")
+    failed_exchange = transport.last_exchange
+    assert failed_exchange is not None
+    assert failed_exchange["status_code"] == 404
+
+    # Subsequent query does not reuse stale error exchange
+    pop_res = transport.pop_last_exchange()
+    assert pop_res["status_code"] == 404
+    assert transport.pop_last_exchange() is None
