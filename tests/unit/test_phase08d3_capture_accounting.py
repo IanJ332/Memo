@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import threading
 from pathlib import Path
 from urllib.error import HTTPError
 
@@ -55,7 +56,21 @@ def test_http_capture_preserves_exact_unicode_whitespace_and_escapes(monkeypatch
     request = (tmp_path / "attempt" / "http" / "exchange-000001.request.bin").read_bytes()
     assert response == body
     assert request == json.dumps({"text": "é  \n"}).encode("utf-8")
-    assert (tmp_path / "attempt" / "http" / "exchange-000001.json").exists()
+    manifest = json.loads((tmp_path / "attempt" / "http" / "exchange-000001.json").read_text())
+    assert manifest["response_headers"] == {"X-Request-ID": "r-1"}
+
+
+def test_http_capture_allowlists_response_headers(tmp_path: Path) -> None:
+    capture = HttpExchangeCapture(AttemptArtifactStore(tmp_path / "attempt"), attempt_id="attempt-1")
+    manifest = capture.capture(
+        method="GET", path="/x", request_body=None, response_body=b"{}", status_code=200,
+        response_headers={
+            "Content-Type": "application/json", "Set-Cookie": "secret=1",
+            "Authorization": "Bearer never-record", "Proxy-Authorization": "also-never",
+            "X-Request-ID": "request-1",
+        },
+    )
+    assert manifest["response_headers"] == {"Content-Type": "application/json", "X-Request-ID": "request-1"}
 
 
 def test_http_error_body_is_captured_before_error_decode(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -81,13 +96,26 @@ def test_candidate_capture_preserves_positions_filters_and_original_decoded_byte
         {"id": "two", "text": "   "},
         {"id": "three", "text": "kept only if room"},
         "malformed",
-    ], selected_ids={"one"}, limit=1)
+    ], selected_positions={1}, limit=1)
     assert [item.position for item in evidence] == [1, 2, 3, 4]
     assert evidence[0].decoded_field_bytes == "  é  ".encode()
     assert evidence[0].normalized_bytes == "é".encode()
     assert evidence[1].discard_reason == "blank_after_existing_strip"
     assert evidence[2].discard_reason == "filtered_or_truncated"
     assert evidence[3].discard_reason == "non_object"
+    assert evidence[0].delivery == "CALLBACK_ONLY"
+    assert evidence[0].durable_artifact_persisted is False
+
+
+def test_candidate_capture_is_position_aware_for_duplicate_native_ids() -> None:
+    evidence = capture_candidates([
+        {"id": "duplicate", "text": "first"},
+        {"id": "duplicate", "text": "second"},
+        {"id": "third", "text": "third"},
+    ], selected_positions={2}, limit=1)
+    assert [item.included for item in evidence] == [False, True, False]
+    assert evidence[0].discard_reason == "filtered_or_truncated"
+    assert evidence[2].discard_reason == "filtered_or_truncated"
 
 
 def test_query_capture_is_optional_and_does_not_change_existing_results() -> None:
@@ -114,7 +142,7 @@ def test_query_capture_records_discarded_results_without_changing_order() -> Non
 
 
 def test_operation_coverage_requires_explicit_terminal_pagination() -> None:
-    assert assess_operation_coverage((( {"id": "old", "status": "completed"},), ({"id": "new", "status": "cancelled"},))) == "COMPLETE"
+    assert assess_operation_coverage((( {"id": "old", "status": "completed"},), ({"id": "new", "status": "cancelled"},))) == "UNKNOWN"
     assert assess_operation_coverage((( {"id": "new", "status": "processing"},),)) == "UNKNOWN"
     assert assess_operation_coverage(()) == "UNKNOWN"
 
@@ -137,6 +165,7 @@ def test_adapter_operation_pagination_cancellation_and_unknown_coverage() -> Non
     assert [item["id"] for item in adapter._list_operations("n")] == ["old", "cancelled"]
     with pytest.raises(Exception, match="ended as cancelled"):
         adapter._wait_for_operation("n", "cancelled")
+    assert adapter.benchmark_metadata()["operation_terminal_receipt"]["id"] == "cancelled"
     adapter.wait_for_quiescence("n", known_operation_ids={"old", "cancelled"})
     assert adapter.benchmark_metadata()["operation_coverage"] == "UNKNOWN"
 
@@ -148,8 +177,45 @@ def test_concurrent_reservations_and_missing_usage_are_accounted() -> None:
         accounting.admit(endpoint="e", model="m", maximum_units=3)
     accounting.receipt(first, actual_units=None, outcome="failed")
     assert accounting.records[-1]["state"] == "USAGE_MISSING"
-    second = accounting.admit(endpoint="e", model="m", maximum_units=5)
-    accounting.receipt(second, actual_units=4, outcome="success")
+    assert accounting.outstanding_units == 3
+    with pytest.raises(AccountingRejected, match="exhaust"):
+        accounting.admit(endpoint="e", model="m", maximum_units=3)
+
+
+def test_sequential_usage_overrun_is_rejected_without_releasing_reservation() -> None:
+    accounting = SendAccounting(5)
+    reservation = accounting.admit(endpoint="e", model="m", maximum_units=3)
+    with pytest.raises(AccountingRejected, match="exceeds"):
+        accounting.receipt(reservation, actual_units=4, outcome="success")
+    assert accounting.outstanding_units == 3
+    accounting.receipt(reservation, actual_units=3, outcome="success")
+    assert accounting.committed_units == 3
+    with pytest.raises(AccountingRejected, match="exhaust"):
+        accounting.admit(endpoint="e", model="m", maximum_units=3)
+
+
+def test_concurrent_usage_overruns_are_rejected_and_budget_stays_accounted() -> None:
+    accounting = SendAccounting(10)
+    reservations = [accounting.admit(endpoint="e", model="m", maximum_units=5) for _ in range(2)]
+    outcomes: list[str] = []
+
+    def report(reservation, actual_units: int) -> None:
+        try:
+            accounting.receipt(reservation, actual_units=actual_units, outcome="success")
+        except AccountingRejected:
+            outcomes.append("rejected")
+
+    threads = [
+        threading.Thread(target=report, args=(reservations[0], 5)),
+        threading.Thread(target=report, args=(reservations[1], 6)),
+    ]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert outcomes == ["rejected"]
+    assert accounting.committed_units == 5
+    assert accounting.outstanding_units == 5
 
 
 def test_uninstrumented_bound_and_evidence_corruption_fail_closed(tmp_path: Path) -> None:

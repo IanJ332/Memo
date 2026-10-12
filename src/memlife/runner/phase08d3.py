@@ -18,6 +18,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 
+SAFE_RESPONSE_HEADERS = frozenset({"content-type", "content-encoding", "x-request-id"})
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -110,7 +113,11 @@ class HttpExchangeCapture:
                 "status_code": status_code,
                 "request": request.__dict__,
                 "response": response.__dict__,
-                "response_headers": dict(response_headers or {}),
+                "response_headers": {
+                    str(name): str(value)
+                    for name, value in (response_headers or {}).items()
+                    if str(name).lower() in SAFE_RESPONSE_HEADERS
+                },
             }
             identity = self.store.write_json(f"http/{exchange_id}.json", manifest)
             manifest["manifest"] = identity.__dict__
@@ -132,10 +139,12 @@ class CandidateEvidence:
     surface: str | None
     source_ids: tuple[str, ...]
     provenance_basis: str
+    delivery: str = "CALLBACK_ONLY"
+    durable_artifact_persisted: bool = False
 
 
 def capture_candidates(
-    results: object, *, selected_ids: set[str], limit: int
+    results: object, *, selected_positions: set[int], limit: int
 ) -> tuple[CandidateEvidence, ...]:
     """Retain each original result and separately record extraction outcomes.
 
@@ -154,7 +163,7 @@ def capture_candidates(
         text = item.get("text")
         decoded = text.encode("utf-8") if isinstance(text, str) else None
         normalized = text.strip().encode("utf-8") if isinstance(text, str) else None
-        included = native_id in selected_ids if native_id else False
+        included = position in selected_positions
         if included:
             selected_count += 1
         reason = None
@@ -197,7 +206,8 @@ class SendAccounting:
         if ceiling_units < 0:
             raise ValueError("ceiling_units must not be negative")
         self.ceiling_units = ceiling_units
-        self._reserved = 0
+        self._outstanding = 0
+        self.committed_units = 0
         self._counter = 0
         self._lock = threading.Lock()
         self.records: list[dict[str, Any]] = []
@@ -206,11 +216,11 @@ class SendAccounting:
         if maximum_units is None or maximum_units < 0:
             raise AccountingRejected("per-send independently justified bound is required")
         with self._lock:
-            if self._reserved + maximum_units > self.ceiling_units:
-                raise AccountingRejected("outstanding reservations exhaust call ceiling")
+            if self.committed_units + self._outstanding + maximum_units > self.ceiling_units:
+                raise AccountingRejected("committed usage and outstanding reservations exhaust call ceiling")
             self._counter += 1
             reservation = SendReservation(f"send-{self._counter:06d}", endpoint, model, maximum_units)
-            self._reserved += maximum_units
+            self._outstanding += maximum_units
             self.records.append({"reservation_id": reservation.reservation_id, "state": "RESERVED", "at": _now(), "endpoint": endpoint, "model": model, "reserved_units": maximum_units})
             return reservation
 
@@ -218,14 +228,26 @@ class SendAccounting:
         with self._lock:
             if reservation.state != "RESERVED":
                 raise AccountingRejected("reservation is not outstanding")
-            reservation.state = "RECEIPTED" if actual_units is not None else "USAGE_MISSING"
-            self._reserved -= reservation.maximum_units
+            if actual_units is not None and (actual_units < 0 or actual_units > reservation.maximum_units):
+                raise AccountingRejected("actual usage exceeds admitted bound")
+            if actual_units is None:
+                reservation.state = "USAGE_MISSING"
+            else:
+                reservation.state = "RECEIPTED"
+                self._outstanding -= reservation.maximum_units
+                self.committed_units += actual_units
             self.records.append({"reservation_id": reservation.reservation_id, "state": reservation.state, "at": _now(), "outcome": outcome, "actual_units": actual_units, "reserved_units": reservation.maximum_units})
+
+    @property
+    def outstanding_units(self) -> int:
+        """Reserved capacity, including sends whose usage receipt is missing."""
+        with self._lock:
+            return self._outstanding
 
 
 def assess_operation_coverage(pages: tuple[tuple[Mapping[str, Any], ...], ...]) -> str:
     """Return COMPLETE only for explicitly terminal, paginated evidence."""
-    terminal = {"completed", "failed", "cancelled"}
+    terminal = {"completed"}
     for page in pages:
         for operation in page:
             if str(operation.get("status") or "") not in terminal:

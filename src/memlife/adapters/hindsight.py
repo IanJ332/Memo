@@ -496,10 +496,20 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
                     "quiescence_criterion": "provider operation status=completed",
                     "operation_terminal_receipt": dict(response),
                     "operation_poll_timestamps": poll_timestamps,
-                    "operation_coverage": "COMPLETE",
+                    "target_operation_coverage": "COMPLETE",
+                    "background_operation_coverage": "UNKNOWN",
+                    "operation_coverage": "UNKNOWN",
                 }
                 return response
             if status in {"failed", "cancelled"}:
+                self._last_operation = {
+                    "operation_id": operation_id,
+                    "operation_terminal_receipt": dict(response),
+                    "operation_poll_timestamps": poll_timestamps,
+                    "target_operation_coverage": "UNKNOWN",
+                    "background_operation_coverage": "UNKNOWN",
+                    "operation_coverage": "UNKNOWN",
+                }
                 raise AdapterError(
                     f"Hindsight operation {operation_id} ended as {status}: "
                     f"{response.get('error_message')}"
@@ -560,6 +570,11 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
                 for item in operations
                 if str(item.get("status")) == "failed"
             ]
+            cancelled = [
+                item
+                for item in operations
+                if str(item.get("status")) == "cancelled"
+            ]
             if failed:
                 evidence = [
                     {
@@ -569,7 +584,25 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
                     }
                     for item in failed
                 ]
+                self._last_operation = {
+                    "operation_ids": sorted(seen_ids),
+                    "operation_terminal_receipts": failed,
+                    "preexisting_operation_receipts": preexisting,
+                    "operation_poll_timestamps": poll_timestamps,
+                    "operation_coverage": "UNKNOWN",
+                }
                 raise AdapterError(f"Hindsight async operation failure: {evidence!r}")
+            if cancelled:
+                self._last_operation = {
+                    "operation_ids": sorted(seen_ids),
+                    "operation_terminal_receipts": cancelled,
+                    "preexisting_operation_receipts": preexisting,
+                    "operation_poll_timestamps": poll_timestamps,
+                    "operation_coverage": "UNKNOWN",
+                }
+                raise AdapterError(
+                    f"Hindsight async operation cancelled: {cancelled!r}"
+                )
             seen_ids.update(str(item.get("id")) for item in active if item.get("id"))
             if not active:
                 completed = datetime.now(timezone.utc)
@@ -580,7 +613,12 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
                     "operation_completed_at": completed.isoformat(),
                     "quiescence_criterion": "no provider operations pending or processing",
                     "operation_poll_timestamps": poll_timestamps,
-                    "operation_coverage": "COMPLETE" if not preexisting else "UNKNOWN",
+                    "operation_terminal_receipts": [
+                        item for item in operations
+                        if str(item.get("status")) == "completed"
+                    ],
+                    "background_operation_coverage": "UNKNOWN",
+                    "operation_coverage": "UNKNOWN",
                 }
                 return
             time.sleep(self.poll_interval_seconds)
@@ -673,17 +711,21 @@ class HindsightMemoryAdapter(MemoryProviderAdapter):
             response.get("results", []), list
         ):
             raise AdapterError("unexpected Hindsight recall response")
-        records = [
-            self._normalized_record(command.namespace, item)
-            for item in response.get("results", [])
+        accepted = [
+            (position, item)
+            for position, item in enumerate(response.get("results", []), start=1)
             if isinstance(item, Mapping) and str(item.get("text") or "").strip()
         ]
-        selected = tuple(records[: command.limit])
+        selected_pairs = accepted[: command.limit]
+        selected = tuple(
+            self._normalized_record(command.namespace, item)
+            for _, item in selected_pairs
+        )
         if self._candidate_evidence_sink is not None:
             self._candidate_evidence_sink(
                 capture_candidates(
                     response.get("results", []),
-                    selected_ids={record.memory_id for record in selected},
+                    selected_positions={position for position, _ in selected_pairs},
                     limit=command.limit,
                 )
             )
