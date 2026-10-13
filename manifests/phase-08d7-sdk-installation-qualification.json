@@ -1,0 +1,497 @@
+{
+  "D3": "PARTIAL",
+  "D4": "BLOCKED",
+  "D5": "PARTIAL",
+  "all_wheel_byte_counts_and_sha256_verified": true,
+  "authorization": "USER_GRANTED_EXACT_PLAN",
+  "authorized_acquisition_https_requests": 7,
+  "authorized_plan_sha256": "5543ed2470a56f0a3082ba51a1f81eb56b9ebc879aafaaf17d841365dd2f5b0a",
+  "branch": "phase-08d7-runtime-dependencies",
+  "cache_sources_and_installer_metadata_unchanged": true,
+  "case_summaries": [
+    {
+      "configuration": {
+        "httpx_follow_redirects": true,
+        "httpx_trust_env": true,
+        "sdk_max_retries": 0
+      },
+      "name": "sdk_owned_client_defaults",
+      "sdk_invocations": 0,
+      "status": "PASS",
+      "transport_requests": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "chat_tools_success",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "sdk_429_retries_0",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "sdk_429_retries_1",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 2,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "sdk_500_retries_0",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "sdk_500_retries_1",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 2,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "sdk_connect_retries_0",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "sdk_connect_retries_1",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 2,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "sdk_timeout_retries_0",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "sdk_timeout_retries_1",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 2,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "redirect_307_same_default",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 2,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "redirect_307_same_disabled",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "redirect_307_cross_default",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 2,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "redirect_307_cross_disabled",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "redirect_308_same_default",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 2,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "redirect_308_same_disabled",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "redirect_308_cross_default",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 2,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "redirect_308_cross_disabled",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "routing_defaults_overrides_proxy_disabled",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "extra_body_changes_wire_model",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "copy_retained_resource_shared_client_close",
+      "sdk_invocations": 2,
+      "shared_client": true,
+      "status": "PASS",
+      "transport_requests": 2,
+      "usage_receipts": 2
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "resource_replacement_reroutes_client",
+      "original_transport_requests": 1,
+      "replacement_transport_requests": 1,
+      "sdk_invocations": 2,
+      "status": "PASS",
+      "transport_requests": 2
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "cancellation_cleanup_no_usage_receipt",
+      "sdk_invocations": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "layer": "HTTPX_MOCKTRANSPORT",
+      "name": "alternate_http_resources_not_inference_counts",
+      "sdk_invocations": 3,
+      "status": "PASS",
+      "transport_requests": 3,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "all_streams_closed": true,
+      "connection_attempts": 1,
+      "layer": "REAL_HTTPCORE_SCRIPTED_BACKEND_SIMULATED_TLS",
+      "name": "core_success",
+      "raw_stream_writes": 3,
+      "sdk_invocations": 1,
+      "serialized_http_request_starts": 1,
+      "simulated_tls_starts": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "transport_retry_sleeps": 0,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "all_streams_closed": true,
+      "connection_attempts": 1,
+      "layer": "REAL_HTTPCORE_SCRIPTED_BACKEND_SIMULATED_TLS",
+      "name": "core_connect_no_retry",
+      "raw_stream_writes": 0,
+      "sdk_invocations": 1,
+      "serialized_http_request_starts": 0,
+      "simulated_tls_starts": 0,
+      "status": "PASS",
+      "transport_requests": 1,
+      "transport_retry_sleeps": 0,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "all_streams_closed": true,
+      "connection_attempts": 2,
+      "layer": "REAL_HTTPCORE_SCRIPTED_BACKEND_SIMULATED_TLS",
+      "name": "core_connect_retry_control",
+      "raw_stream_writes": 3,
+      "sdk_invocations": 1,
+      "serialized_http_request_starts": 1,
+      "simulated_tls_starts": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "transport_retry_sleeps": 1,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "all_streams_closed": true,
+      "connection_attempts": 1,
+      "layer": "REAL_HTTPCORE_SCRIPTED_BACKEND_SIMULATED_TLS",
+      "name": "core_read_timeout",
+      "raw_stream_writes": 3,
+      "sdk_invocations": 1,
+      "serialized_http_request_starts": 1,
+      "simulated_tls_starts": 1,
+      "status": "PASS",
+      "transport_requests": 1,
+      "transport_retry_sleeps": 0,
+      "usage_receipts": 0
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "all_streams_closed": true,
+      "connection_attempts": 2,
+      "layer": "REAL_HTTPCORE_SCRIPTED_BACKEND_SIMULATED_TLS",
+      "name": "core_same_host_redirect",
+      "raw_stream_writes": 6,
+      "sdk_invocations": 1,
+      "serialized_http_request_starts": 2,
+      "simulated_tls_starts": 2,
+      "status": "PASS",
+      "transport_requests": 2,
+      "transport_retry_sleeps": 0,
+      "usage_receipts": 1
+    },
+    {
+      "actual_socket_transmissions": 0,
+      "all_streams_closed": true,
+      "connection_attempts": 2,
+      "layer": "REAL_HTTPCORE_SCRIPTED_BACKEND_SIMULATED_TLS",
+      "name": "core_cross_host_redirect",
+      "raw_stream_writes": 6,
+      "sdk_invocations": 1,
+      "serialized_http_request_starts": 2,
+      "simulated_tls_starts": 2,
+      "status": "PASS",
+      "transport_requests": 2,
+      "transport_retry_sleeps": 0,
+      "usage_receipts": 1
+    }
+  ],
+  "core_backend": "SCRIPTED_STREAMS_AND_SIMULATED_TLS_NO_REAL_NETWORK",
+  "distribution_count": 16,
+  "download_bytes": 2279867,
+  "download_count": 7,
+  "environment_whitelist_corrected": true,
+  "event_loop_wakeup": "NONBLOCKING_OS_PIPE_NO_SOCKETPAIR",
+  "existing_wheels_copied": 9,
+  "guard": {
+    "denied_self_test_events": [
+      "socket.__new__",
+      "socket.getaddrinfo"
+    ],
+    "dns_denied_before_syscall": true,
+    "socket_creation_denied_before_syscall": true
+  },
+  "hindsight_installed_or_initialized": false,
+  "imports": "16/16 PASS from isolated environment",
+  "installation": "VERIFIED",
+  "installation_options": [
+    "--no-index",
+    "--no-deps",
+    "--require-hashes",
+    "--only-binary=:all:",
+    "--no-cache-dir",
+    "--no-compile"
+  ],
+  "installed_record_files_verified": 1464,
+  "installer": "existing repository pip 24.3.1 --python; no pip installed into target",
+  "jetstream_ssh_actions": 0,
+  "mocktransport_proves_httpcore_physical_sends": false,
+  "native_hindsight_or_live_transport_qualification": false,
+  "network_guards_relaxed": false,
+  "os_network_policy": "macOS sandbox (version 1)(allow default)(deny network*)",
+  "packages": [
+    {
+      "bytes": 13643,
+      "name": "annotated-types",
+      "origin": "EXISTING_LOCAL_CACHE_COPY",
+      "sha256": "1f02e8b43a8fbbc3f3e0d4f0f4bfc8131bcb4eebe8849b8e5c773f3a1c582a53",
+      "version": "0.7.0"
+    },
+    {
+      "bytes": 125813,
+      "name": "anyio",
+      "origin": "AUTHORIZED_HTTPS",
+      "sha256": "9f505dda5ac9f0c8309b5e8bd445a8c2bf7246f3ce950121e45ea15bc41d1494",
+      "version": "4.14.2"
+    },
+    {
+      "bytes": 163286,
+      "name": "certifi",
+      "origin": "AUTHORIZED_HTTPS",
+      "sha256": "0f212c2744a9bb6de0c56639a6f68afe01ecd92d91f14ae897c4fe7bbeeef0de",
+      "version": "2025.10.5"
+    },
+    {
+      "bytes": 20277,
+      "name": "distro",
+      "origin": "AUTHORIZED_HTTPS",
+      "sha256": "7bffd925d65168f85027d8da9af6bddab658135b840670a223589bc0c8ef02b2",
+      "version": "1.9.0"
+    },
+    {
+      "bytes": 37515,
+      "name": "h11",
+      "origin": "EXISTING_LOCAL_CACHE_COPY",
+      "sha256": "63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86",
+      "version": "0.16.0"
+    },
+    {
+      "bytes": 78784,
+      "name": "httpcore",
+      "origin": "EXISTING_LOCAL_CACHE_COPY",
+      "sha256": "2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55",
+      "version": "1.0.9"
+    },
+    {
+      "bytes": 73517,
+      "name": "httpx",
+      "origin": "EXISTING_LOCAL_CACHE_COPY",
+      "sha256": "d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad",
+      "version": "0.28.1"
+    },
+    {
+      "bytes": 72340,
+      "name": "idna",
+      "origin": "AUTHORIZED_HTTPS",
+      "sha256": "048adeaf8c2d788c40fee287673ccaa74c24ffd8dcf09ffa555a2fbb59f10ac8",
+      "version": "3.15"
+    },
+    {
+      "bytes": 314449,
+      "name": "jiter",
+      "origin": "AUTHORIZED_HTTPS",
+      "sha256": "305e061fa82f4680607a775b2e8e0bcb071cd2205ac38e6ef48c8dd5ebe1cf37",
+      "version": "0.12.0"
+    },
+    {
+      "bytes": 1120122,
+      "name": "openai",
+      "origin": "AUTHORIZED_HTTPS",
+      "sha256": "fed30480d7d6c884303287bde864980a4b137b60553ffbcf9ab4a233b7a73d94",
+      "version": "2.24.0"
+    },
+    {
+      "bytes": 463580,
+      "name": "pydantic",
+      "origin": "AUTHORIZED_HTTPS",
+      "sha256": "e561593fccf61e8a20fc46dfc2dfe075b8be7d0188df33f221ad1f0139180f9d",
+      "version": "2.12.5"
+    },
+    {
+      "bytes": 2110990,
+      "name": "pydantic-core",
+      "origin": "EXISTING_LOCAL_CACHE_COPY",
+      "sha256": "f41a7489d32336dbf2199c8c0a215390a751c5b014c2c1c5366e817202e9cdf7",
+      "version": "2.41.5"
+    },
+    {
+      "bytes": 10235,
+      "name": "sniffio",
+      "origin": "EXISTING_LOCAL_CACHE_COPY",
+      "sha256": "2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2",
+      "version": "1.3.1"
+    },
+    {
+      "bytes": 78540,
+      "name": "tqdm",
+      "origin": "EXISTING_LOCAL_CACHE_COPY",
+      "sha256": "26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2",
+      "version": "4.67.1"
+    },
+    {
+      "bytes": 44614,
+      "name": "typing-extensions",
+      "origin": "EXISTING_LOCAL_CACHE_COPY",
+      "sha256": "f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548",
+      "version": "4.15.0"
+    },
+    {
+      "bytes": 14611,
+      "name": "typing-inspection",
+      "origin": "EXISTING_LOCAL_CACHE_COPY",
+      "sha256": "4ed1cacbdc298c220f1bd249ed5287caa16f34d44ef4e9c3d0cbad5b521545e7",
+      "version": "0.4.2"
+    }
+  ],
+  "phase": "08D-7",
+  "pip_check": "PASS",
+  "preflight_false_positive": {
+    "cause": "overly strict harness environment whitelist rejected non-network macOS encoding metadata",
+    "correction": "explicit encoding-key allowance; OS sandbox and Python socket/DNS guard unchanged",
+    "key": "__CF_USER_TEXT_ENCODING",
+    "present_before_sdk_imports": true,
+    "sdk_invocations_before_correction": 0
+  },
+  "provider_model_embedding_downstream_rq3_calls": 0,
+  "proxy_and_credential_inheritance": false,
+  "python": "3.12.8",
+  "qualification": "SDK_ONLY_OFFLINE_PASS_NOT_NATIVE_READINESS",
+  "redirects_followed": 0,
+  "scope": "SDK_ONLY",
+  "scripted_core_connection_attempts": 9,
+  "scripted_core_serialized_http_request_starts": 7,
+  "sdk_invocations": 33,
+  "sdk_test_socket_or_dns_attempts": 0,
+  "sdk_transport_cases_executed": 30,
+  "sdk_verification_and_test_actual_socket_transmissions": 0,
+  "starting_commit": "310a94c43bb47ae08423fe629d10845adeec3b1a",
+  "starting_worktree_clean": true,
+  "test_suite_rerun": true,
+  "tls_verification": true,
+  "transport_requests": 43,
+  "wheel_record_files_verified": 1412
+}

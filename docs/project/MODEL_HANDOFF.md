@@ -138,20 +138,28 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ## Next authorized action
 
-### Phase 08D-7 dependency preparation addendum
+### Phase 08D-7 SDK-only installation and qualification addendum
 
 Separately authorized preparation on `phase-08d7-runtime-dependencies`, base
 `d29742e9a59575d63f54c50e10205208654240c1`, verified pinned upstream dependency
 metadata and inventoried existing local environments/caches without changing
-them. The proposed CPython 3.12.8 Intel macOS lock resolution has 33 locally
-available matching wheels out of 184 packages; 151 remain BLOCKED. The SDK-only
-closure has nine ready wheels and seven missing. Full Hindsight also lacks a
+them. The initial CPython 3.12.8 Intel macOS lock inventory had 33 locally
+available matching wheels out of 184 packages; 151 were BLOCKED. The SDK-only
+closure initially had nine ready wheels and seven missing. Full Hindsight lacks a
 complete source/release artifact and a locked Intel macOS cryptography wheel.
-No dependency installation or SDK/native test occurred. Runtime/pilot remain
-BLOCKED; D1/D2 evidence and scientific denominators are unchanged. See the
+Subsequent explicit user authorization acquired exactly seven allowlisted SDK
+wheels and copied nine local wheels. All 16 pinned distributions installed
+offline; hashes/RECORDs, imports and pip check passed. After correcting a harness
+false positive on macOS encoding metadata (`__CF_USER_TEXT_ENCODING`), all 30
+offline SDK/HTTPX/scripted-HTTPCore cases passed: 33 SDK invocations and 43 HTTPX
+requests, zero real socket/DNS attempts beyond denied self-tests. Network guards
+were unchanged. Scripted streams/TLS do not qualify live physical sends or native
+Hindsight; it remains uninstalled. Runtime/pilot remain BLOCKED; D3/D5 PARTIAL,
+D1/D2 evidence and scientific denominators unchanged. See the
 [Phase 08D-7 report and acquisition restrictions](../experiments/PHASE_08D7_RUNTIME_DEPENDENCY_PREPARATION.md).
-Stop pending separate dependency acquisition/installation authorization; the
-prepared SDK-only plan does not authorize provider initialization or live work.
+Stop for independent review of SDK-only results and native qualification gaps.
+No qualification rerun, Hindsight installation, provider initialization or live
+work is authorized by this handoff.
 
 ### Phase 08D-6 engineering review addendum (historical)
 

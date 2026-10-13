@@ -303,3 +303,18 @@ each regression. It is not generic troubleshooting advice.
 - **Protection:** unchanged `require_hindsight_runtime_ready()`,
   `tests/unit/test_phase08d6_runtime_qualification.py`, and
   [qualification report](../experiments/PHASE_08D6_NATIVE_RUNTIME_QUALIFICATION.md).
+
+## Phase 08D-7 SDK test environment whitelist false positive
+
+- **Finding:** exact SDK-only installation, RECORD integrity, imports and pip
+  check passed, but test preflight rejected `__CF_USER_TEXT_ENCODING`, present
+  before SDK imports despite an empty-environment launch. Initial SDK calls were
+  zero; no proxy, credential or network bypass was demonstrated.
+- **Correction:** diagnosed names only and explicitly allowed the non-network
+  encoding key. OS sandbox and Python socket/DNS guard remained unchanged.
+  Subsequent full SDK-only qualification passed 30 cases; no real SDK networking.
+- **Invariant:** distinguish harness false positives from actual network-policy
+  failures; never silently relax socket/DNS or credential/proxy restrictions.
+  SDK-only/scripted-stream results cannot promote native readiness.
+- **Next:** independent review; D4 BLOCKED, D3/D5 PARTIAL.
+  [Report](../experiments/PHASE_08D7_RUNTIME_DEPENDENCY_PREPARATION.md).

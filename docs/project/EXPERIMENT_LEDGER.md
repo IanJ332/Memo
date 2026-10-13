@@ -252,3 +252,17 @@ is no majority voting and no replacement of errors.
   downstream/RQ3 execution, SSH or Jetstream action. No empirical row or new
   denominator. D1/D2 evidence, runtime BLOCKED gate and frozen attempts unchanged.
 - Engineering report: [Phase 08D-7](../experiments/PHASE_08D7_RUNTIME_DEPENDENCY_PREPARATION.md).
+
+### Phase 08D-7 SDK-only authorized installation continuation
+
+- Start: `310a94c43bb47ae08423fe629d10845adeec3b1a`, clean same review branch.
+- Exact allowlist: seven TLS-verified downloads and nine immutable cache copies;
+  16 pinned distributions installed offline. Metadata/versions, wheel/installed
+  RECORDs, imports and pip check passed. No Hindsight or additional package.
+- Initial preflight false positive on macOS encoding metadata corrected; OS/
+  Python network guards unchanged. **30 SDK-only offline cases PASS**, with
+  **33 SDK invocations / 43 HTTPX requests**, zero real SDK socket/DNS attempts.
+  Scripted HTTPCore/TLS are not live physical sends. D4 BLOCKED, D3/D5 PARTIAL.
+- Provider/model/embedding/downstream/RQ3/SSH/Jetstream actions: zero. No new
+  empirical row, denominator or scientific evidence; D1/D2 and freezes unchanged.
+- [Installation/qualification receipt](../../manifests/phase-08d7-sdk-installation-qualification.json).
