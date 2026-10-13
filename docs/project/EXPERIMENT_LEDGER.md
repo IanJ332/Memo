@@ -301,3 +301,24 @@ is no majority voting and no replacement of errors.
   services, SSH or Jetstream action; no scientific artifact/denominator change.
 - [Acquisition/inspection receipt](../../manifests/phase-08d8-source-inspection.json).
   Independent review; expanded source-only plan needs separate authorization.
+
+### Phase 08D-8 expanded 75-file source inspection (2026-10-13)
+
+- Start: `0e6d6a7d3d6faa5fc21fb6cae89fb45da91e30ef`, clean same review branch.
+  Exact 75-file / 1,305,501-byte plan frozen before acquisition; source-only scope.
+- Acquired `_thread_limits.py`, `engine/cross_encoder.py`, `engine/db/__init__.py`:
+  three files / 101,207 bytes; all exact blob/size/SHA-256 and HTTPS controls pass.
+  Prior initializers/log remain unchanged. Six locally acquired files total across
+  separate authorizations; none committed. Group-by-group closure/review recorded.
+- Database initializer imports three required bodies outside scope: base, ops,
+  result. Acquisition STOPPED before remaining 72 approved files or new frontier
+  files. 26 verified sources, 17 rehashed wheels and six static controls PASS.
+- Known package lower bound remains 28; 11 wheel gaps. Complete native closure,
+  faithful import safety and native cryptography requirement UNKNOWN. D3/D5
+  PARTIAL; D4 startup/runtime BLOCKED unchanged. No source/native/SDK execution,
+  package download/install/build, provider/model/database/embedding/RQ3/SSH or
+  Jetstream action; no scientific artifact or denominator changed.
+- [Expanded receipt](../../manifests/phase-08d8-expanded-source-inspection.json)
+  and [frozen plan](../../manifests/phase-08d8-expanded-source-plan.json).
+  Stop for independent review; three database source bodies are the narrow next
+  source-only authorization, not installation/execution permission.

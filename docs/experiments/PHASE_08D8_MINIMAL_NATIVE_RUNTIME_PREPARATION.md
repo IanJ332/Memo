@@ -1,11 +1,177 @@
 # Phase 08D-8 — Minimal Hindsight Native Runtime Preparation
 
-**Authorized source inspection STOPPED after 3/31 files (7,029 bytes). Parent
-initializers expose mandatory imports outside the allowlist. The known frontier
-is now 75 missing source nodes; the known package lower bound is 28. Complete
-native closure remains UNKNOWN. D3 PARTIAL, D4 BLOCKED, D5 PARTIAL.**
+**Expanded inspection STOPPED after 3/75 new files (101,207 bytes). The database
+initializer exposes three required sources outside the approved set. The known
+frontier is 72 unacquired approved files plus 3 newly required files. Native
+import feasibility and cryptography necessity remain UNKNOWN; the known package
+lower bound remains 28. D3 PARTIAL, D4 BLOCKED, D5 PARTIAL.**
 
-## Authorized pinned source inspection continuation
+## Expanded pinned source inspection — 2026-10-13
+
+CONVERSATION: Phase 08D-8 expanded pinned source inspection. MODEL: GPT-6 Codex
+runtime; no independent model-variant receipt. EXECUTION TARGET: assigned local
+worktree `/Users/ian/.codex/worktrees/b648/Memo`. JETSTREAM ACTION: none; remains
+SHELVED without infrastructure queries.
+
+The continuation verified clean branch `phase-08d8-native-runtime-preparation`
+at exactly `0e6d6a7d3d6faa5fc21fb6cae89fb45da91e30ef`. The existing 75-file
+source receipt remained unchanged, SHA-256
+`053ef0d487dd4c546732bfcedf9ff08f6fb70908018cd02cc2aa54036afaf038`.
+All 75 paths, exact commit-qualified URLs, lengths and Git blob SHA-1 identities
+were checked against the previously verified non-truncated pinned source tree.
+The 20 cached sources, three prior initializers and prior acquisition log were
+reverified. The user superseded the old 31-file limit with 75 new files and
+1,305,501 new source bytes; no package/native execution authorization followed.
+
+### Frozen plan and exact acquired files
+
+Before the first request, the exclusive
+[expanded acquisition plan](../../manifests/phase-08d8-expanded-source-plan.json)
+was frozen at SHA-256
+`f5d1bce8158dad16c6300e18aef04f2d58ed69b80a9c56ac742817df66fafb94`.
+It contains the exact 75-file allowlist and singleton dependency groups. The
+first group is `_thread_limits.py`; the next is `engine/cross_encoder.py`, the
+engine initializer's first eager child; then required package initializers.
+Each group receives a closure recomputation and a recorded static side-effect
+review before another request. Singleton groups bound acquisition at each
+newly exposed dependency. No plan or prior acquisition record was overwritten.
+
+The [expanded source-integrity/graph receipt](../../manifests/phase-08d8-expanded-source-inspection.json)
+records three new files, **101,207 bytes**, acquired in three HTTPS requests.
+Each response was HTTP 200, TLS verification result zero, zero redirects, and
+the exact pinned effective URL. SHA-1 and size were verified before parsing,
+and SHA-256 recorded. Source bodies and raw group receipts remain ignored under
+`.local/phase08d8/source-frontier/`. The three prior initializer files were
+neither reacquired nor modified; total locally acquired source is now six files
+/ 108,236 bytes across both separate authorizations.
+
+| New source, relative to `hindsight-api-slim/hindsight_api/` | Bytes | Git blob SHA-1 | SHA-256 |
+| --- | --- | --- | --- |
+| `_thread_limits.py` | 4,780 | `2a690711d4651dbb75304248d11d5bf2f7fdaf2f` | `1d7460ef59675b658b7871e777042581eb1df3360719ed888ddea6f3402a3c8b` |
+| `engine/cross_encoder.py` | 93,469 | `124fb210e2ada35182cf1d41bb0f48165610541e` | `0e7f2f9ce61dbcc597159a09c28451b89f3c9ab1e474439184146c1854609ed5` |
+| `engine/db/__init__.py` | 2,958 | `3e9fde9fd8908778ab7ae65819a2ab57716e7e21` | `f580d13c226508070e00601ecf20b6445a8013cc894861c1f913a2441d6943b9` |
+
+The [expanded acquisition/static group code](../../scripts/phase08d8_expanded_sources.py)
+retains strict HTTPS-only curl controls, TLS verification/TLS 1.2 minimum,
+empty subprocess environment, disabled curl configuration/proxies, no redirects,
+exclusive partial/final files and streaming per-file bounds. Both cumulative
+75-file and 1,305,501-byte limits are enforced. Review records bind the frozen
+plan and exact group-receipt hashes. A STOP group rejects another acquisition
+before curl. Actual acquisition remains bound to the authorized base; a later
+review commit may reverify a STOP without gaining acquisition permission.
+
+### Import-time behavior and group decisions
+
+| Group | Static evidence | Closure after group | Decision |
+| --- | --- | --- | --- |
+| 1: thread limits | Imports only standard-library `os`. Root-triggered `apply_default_thread_limits()` computes a CPU cap and calls `os.environ.setdefault` for four thread variables. | 91 known modules; 17 verified reachable bodies; 74 missing approved bodies; no new outside source | Continue static inspection |
+| 2: cross-encoder | Mandatory helper imports stay inside the approved set. Module-level call is `logging.getLogger`. Model/client/executor construction is deferred to constructors/initialization methods. | 91 known modules; 18 verified reachable bodies; 73 missing approved bodies; no new outside source | Continue static inspection |
+| 3: database initializer | Lines 15–17 unconditionally import `.base`, `.ops`, `.result`, none in the approved 75. Backend factories defer instance construction; module defines an empty operations cache. | 94 known modules; 19 verified reachable bodies; 72 approved missing + 3 new outside bodies | **STOP** |
+
+Thread-limit behavior is now source-verified: `_available_cpu_count()` queries
+CPU count/affinity and reads cgroup v1/v2 CPU quota files, handling absence or
+invalid content. `default_native_thread_count()` caps the result at 16.
+`apply_default_thread_limits()` supplies `OMP_NUM_THREADS`,
+`OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`, and `NUMEXPR_NUM_THREADS` only when
+unset. These are prospective process environment mutations/read-only CPU and
+filesystem queries, not observed effects: source was never executed. The
+implementation contains no model import, thread-pool creation, model load,
+worker/database/service initialization or network call, so it did not trigger
+the prohibited-initialization stop.
+
+Cross-encoder `sentence_transformers`, flashrank, MLX and other backend SDK/model
+imports and model/executor creation occur in deferred method paths. They do not
+become required merely by inspecting this body or by calling the OpenAI-compatible
+provider. Its mandatory `_cross_loop`, config, aiohttp-session, attribution,
+local-device and retry helper bodies still need inspection before their own
+import side effects can be certified. No inferred bypass or package extra is
+introduced from the absence of execution.
+
+The database initializer's `create_database_backend()` and
+`create_data_access_ops()` call backend/ops constructors only when invoked;
+Oracle/PostgreSQL selection imports inside those factories are deferred.
+However, `.base`, `.ops` and `.result` are unconditional **module** imports.
+Their missing bodies therefore block a faithful ordinary import even when no
+database factory is called. Source inspection cannot assume they are harmless.
+**Acquisition stopped at group 3; the remaining 72 approved files were not
+acquired and no new frontier file was fetched.**
+
+### Feasibility, dependency readiness and cryptography
+
+There is no verified requirement in these three new bodies to construct
+MemoryEngine or initialize a model/database during ordinary import. Their
+inspected code separates those constructions from module imports. That improves
+the evidence, but **faithful restricted native import is still UNKNOWN / not
+established**, because it executes real engine/provider/worker initializers and
+many required bodies remain missing. It has not been shown impossible, safe,
+or dependency-complete. No native import or provider construction was attempted.
+Package initializer bypasses, module stubs, upstream edits and runtime-gate
+exceptions remain prohibited.
+
+| Inventory | Updated result |
+| --- | --- |
+| VERIFIED source | 26 source files total; 19 reachable verified bodies in the known ordinary-import/method graph |
+| MISSING source | 75 bodies: 72 suspended approved files plus 3 newly required out-of-allowlist files |
+| READY wheel artifacts | 17 rehashed current artifacts: 16 qualified SDK wheels + aiosignal; no SDK import or installed-runtime requalification |
+| MISSING wheel artifacts | 11 matching selected artifacts in the bounded recorded inventory, totaling 1,647,815 bytes |
+| UNKNOWN | Further source/third-party closure, missing-body side effects, complete minimal installation set and native cryptography necessity |
+
+The known mandatory external import roots remain aiohttp, asyncpg, dotenv,
+httpx, json_repair, openai, orjson and pydantic. Root `os` and cross-encoder's
+`concurrent.futures` are standard-library dependencies. The pinned metadata
+and target-selected closure therefore leave the prior **28-package lower
+bound unchanged**. All exact candidate identities remain in the expanded
+receipt, with the prior receipt hash binding their provenance. This lower bound
+does not justify installing 28 packages or the full 184-package runtime.
+
+Cryptography remains **REQUIRED by full-distribution metadata; NOT REQUIRED by
+the qualified SDK; UNKNOWN for ordinary native import and provider methods**.
+There are zero direct cryptography imports in all 26 verified source bodies.
+That does not rule out a transitive import from the missing database, auth,
+provider or observability bodies. The pinned lock's cryptography 50.0.0 Intel
+macOS wheel gap remains unchanged. No version substitution, source build,
+architecture workaround or security-floor change is proposed.
+
+### Exact next source authorization and checks
+
+The narrow next source-only authorization would add these three files, **55,505
+bytes total**, with the same pinned commit and strict transport/integrity
+controls. Inspect/recompute after each and stop at another new requirement:
+
+| Required source | Git blob SHA-1 | Bytes | Required purpose |
+| --- | --- | --- | --- |
+| `engine/db/base.py` | `ab1b55394584e8eccfc2bfaea6e533d4e723df2d` | 13,415 | Unconditional import in db initializer line 15 |
+| `engine/db/ops.py` | `878424b69baee60e86005ebbf3eb199a11dfec97` | 38,673 | Unconditional import in db initializer line 16 |
+| `engine/db/result.py` | `4d16a2544c9137260e8de8cf1fe1148c859fb2de` | 3,417 | Unconditional import in db initializer line 17 |
+
+Their exact commit-qualified raw URLs and identities are in the expanded
+receipt's `missing_source_frontier`. The remaining 72 approved files are
+suspended by this run's STOP, not silently added to a resumed run. A broader
+explicit resumption plan could cover those 72 plus the three new files: **75
+remaining files / 1,259,799 bytes**, exactly enumerated in that frontier.
+Neither choice authorizes installation or execution. No wheel acquisition or
+installation plan is ready for approval before source closure is established.
+
+[Focused static/integrity verification](../../scripts/verify_phase08d8_expanded_sources.py)
+ran under the macOS deny-all-network profile with the existing repository SDK
+`.venv` interpreter, `-I -B`, and an empty environment. The verifier uses only
+our code and standard-library parsing/hashing; an audit hook forbids native/SDK
+imports and socket events. **Six checks PASS:** frozen scope/tree, 26 source
+identities and transport receipts, group review/graph integrity, 17 wheel hashes
+and pinned dependency metadata, tampered-source rejection before parsing, and
+STOP rejection before curl with existing files/logs unchanged. Earlier derived
+verification receipts remain ignored and preserved; the tracked expanded receipt
+is the final pass. Prior authorizing receipts/plans and raw source remain intact.
+
+Source acquisition made exactly three separately authorized HTTPS requests.
+Static inspection/checks made zero requests. No native/SDK source execution,
+provider construction, package download/install/build, service/database/model,
+embedding, RQ3, SSH, Jetstream or empirical action occurred. D1/D2, Freeze v1,
+scientific denominators and historical evidence are unchanged. **D3 PARTIAL,
+D4 BLOCKED, D5 PARTIAL; the startup gate is unchanged. Stop for independent
+review.**
+
+## Prior 31-file authorized inspection (historical, 2026-10-12)
 
 CONVERSATION: Phase 08D-8 authorized pinned source inspection. MODEL: GPT-6
 Codex runtime; no independent model-variant receipt. EXECUTION TARGET: assigned

@@ -357,3 +357,22 @@ each regression. It is not generic troubleshooting advice.
 - **Protection:** `scripts/acquire_phase08d8_sources.py`,
   `scripts/inspect_phase08d8_sources.py`, source-only constraint tests and the
   [acquisition/inspection receipt](../../manifests/phase-08d8-source-inspection.json).
+
+### Phase 08D-8 expanded inspection reaches database abstraction bodies
+
+- **Verified behavior:** `_thread_limits` imports only os; the root-triggered
+  function reads CPU/cgroup information and supplies four process environment
+  defaults. Cross-encoder model/client/executor creation is deferred to methods;
+  its mandatory helpers remain uninspected. No source was executed.
+- **New frontier:** `engine/db/__init__.py:15–17` imports base, ops and result
+  unconditionally even though database/backend instance factories are deferred.
+  These three bodies lie outside the authorized 75-file set. Three new files
+  (101,207 bytes) acquired, then STOP; remaining 72 approved files untouched.
+- **Invariant:** deferred backend construction does not make required database
+  module imports optional. Missing-body safety and crypto dependencies remain
+  UNKNOWN. A frozen allowlist/group review binds exact bytes; a STOP prevents
+  further curl before any new file creation.
+- **Protection:** `scripts/phase08d8_expanded_sources.py`,
+  `scripts/verify_phase08d8_expanded_sources.py`, six static/integrity controls and
+  [expanded source receipt](../../manifests/phase-08d8-expanded-source-inspection.json).
+  D4 gate unchanged; next action is independent review.

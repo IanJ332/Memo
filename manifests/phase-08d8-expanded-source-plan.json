@@ -1,0 +1,1401 @@
+{
+  "authorization": "USER_GRANTED_EXACT_EXPANDED_SOURCE_FRONTIER_ONLY",
+  "base_commit": "0e6d6a7d3d6faa5fc21fb6cae89fb45da91e30ef",
+  "dependency_groups": [
+    [
+      "hindsight-api-slim/hindsight_api/_thread_limits.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/cross_encoder.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/db/__init__.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/reflect/__init__.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/retain/__init__.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/search/__init__.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/sql/__init__.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/storage/__init__.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/_cross_loop.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/_pg_search.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/_vector_index.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/cancellation.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/aiohttp_session.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/audit.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/bank_attribution.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/bank_stats_cache.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/cache_affinity.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/chunk_ids.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/db/ops_postgresql.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/db/postgresql.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/db_budget.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/db_utils.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/entity_resolver.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/fact_budget.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/interface.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/local_device.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/mental_model_refresh.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/operation_metadata.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/provider_auth.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/anthropic_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/claude_code_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/codex_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/cursor_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/fireworks_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/gemini_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/github_copilot_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/litellm_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/litellm_router_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/llamacpp_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/llm_debug.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/mock_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/none_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_headers.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/providers/openai_responses_llm.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/query_analyzer.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/reflect/models.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/reflect/retractions.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/reflect/structured_doc.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/reflect/tools.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/remote_retry.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/response_models.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/retain/bank_utils.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/retain/embedding_utils.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/retain/fold.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/retain/timing.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/retain/types.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/schema.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/search/reranking.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/search/tag_resolution.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/search/tags.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/search/trace.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/search/tracer.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/search/types.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/source_facts.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/sql/postgresql.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/structured_output.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/tei_retry.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/time_filter.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/engine/token_encoding.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/metrics.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/pg0.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/tracing.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/utils.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/worker/backpressure.py"
+    ],
+    [
+      "hindsight-api-slim/hindsight_api/worker/exceptions.py"
+    ]
+  ],
+  "files": [
+    {
+      "bytes": 5958,
+      "git_blob_sha1": "0314034e7899aa36b88cfa418bd6caf7b2d750ff",
+      "path": "hindsight-api-slim/hindsight_api/_cross_loop.py",
+      "purposes": [
+        {
+          "line": 16,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/llm_wrapper.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/_cross_loop.py"
+    },
+    {
+      "bytes": 3048,
+      "git_blob_sha1": "de210865f2cbeb6eef2b07e60c7f6e5039186e2d",
+      "path": "hindsight-api-slim/hindsight_api/_pg_search.py",
+      "purposes": [
+        {
+          "line": 19,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/config.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/_pg_search.py"
+    },
+    {
+      "bytes": 4780,
+      "git_blob_sha1": "2a690711d4651dbb75304248d11d5bf2f7fdaf2f",
+      "path": "hindsight-api-slim/hindsight_api/_thread_limits.py",
+      "purposes": [
+        {
+          "line": 39,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/_thread_limits.py"
+    },
+    {
+      "bytes": 17725,
+      "git_blob_sha1": "b850eafe6ffd1968838e6b2dca871f5ade5cdb5c",
+      "path": "hindsight-api-slim/hindsight_api/_vector_index.py",
+      "purposes": [
+        {
+          "line": 20,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/config.py"
+        },
+        {
+          "line": 34,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/_vector_index.py"
+    },
+    {
+      "bytes": 3598,
+      "git_blob_sha1": "307880f18323ffe9f3cf2270300a2d3619e1a038",
+      "path": "hindsight-api-slim/hindsight_api/cancellation.py",
+      "purposes": [
+        {
+          "line": 40,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/cancellation.py"
+    },
+    {
+      "bytes": 9185,
+      "git_blob_sha1": "9875978718459f2de145056e6853055703a6cb1b",
+      "path": "hindsight-api-slim/hindsight_api/engine/aiohttp_session.py",
+      "purposes": [
+        {
+          "line": 38,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_llm.py"
+        },
+        {
+          "line": 36,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/llm_transport.py"
+        },
+        {
+          "line": 56,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/embeddings.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/aiohttp_session.py"
+    },
+    {
+      "bytes": 9961,
+      "git_blob_sha1": "70dd965e8138599f2d7d2a05bf0d141c28dad8a7",
+      "path": "hindsight-api-slim/hindsight_api/engine/audit.py",
+      "purposes": [
+        {
+          "line": 60,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/audit.py"
+    },
+    {
+      "bytes": 1878,
+      "git_blob_sha1": "8f4e72c03dc9a21c319389d0cf850e648f53c94a",
+      "path": "hindsight-api-slim/hindsight_api/engine/bank_attribution.py",
+      "purposes": [
+        {
+          "line": 39,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_llm.py"
+        },
+        {
+          "line": 57,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/embeddings.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/bank_attribution.py"
+    },
+    {
+      "bytes": 11827,
+      "git_blob_sha1": "06b0133bb25a43c0d8aeb7c55603132f64454b9d",
+      "path": "hindsight-api-slim/hindsight_api/engine/bank_stats_cache.py",
+      "purposes": [
+        {
+          "line": 61,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/bank_stats_cache.py"
+    },
+    {
+      "bytes": 11951,
+      "git_blob_sha1": "54d745ae6c8e0a126a2e67b210b99b44ababe6fd",
+      "path": "hindsight-api-slim/hindsight_api/engine/cache_affinity.py",
+      "purposes": [
+        {
+          "line": 40,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_llm.py"
+        },
+        {
+          "line": 34,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/llm_wrapper.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/cache_affinity.py"
+    },
+    {
+      "bytes": 4739,
+      "git_blob_sha1": "d85e5b3c0fc2a75c5b5337685f3cce0f1e51d7d1",
+      "path": "hindsight-api-slim/hindsight_api/engine/chunk_ids.py",
+      "purposes": [
+        {
+          "line": 62,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/chunk_ids.py"
+    },
+    {
+      "bytes": 93469,
+      "git_blob_sha1": "124fb210e2ada35182cf1d41bb0f48165610541e",
+      "path": "hindsight-api-slim/hindsight_api/engine/cross_encoder.py",
+      "purposes": [
+        {
+          "line": 10,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/__init__.py"
+        },
+        {
+          "line": 513,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/cross_encoder.py"
+    },
+    {
+      "bytes": 2958,
+      "git_blob_sha1": "3e9fde9fd8908778ab7ae65819a2ab57716e7e21",
+      "path": "hindsight-api-slim/hindsight_api/engine/db/__init__.py",
+      "purposes": [
+        {
+          "line": 63,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.db.ops_postgresql"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.db.postgresql"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/db/__init__.py"
+    },
+    {
+      "bytes": 84304,
+      "git_blob_sha1": "578351944a0638b0aee6db59e2905b5dbe86f3a0",
+      "path": "hindsight-api-slim/hindsight_api/engine/db/ops_postgresql.py",
+      "purposes": [
+        {
+          "line": 64,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/db/ops_postgresql.py"
+    },
+    {
+      "bytes": 17739,
+      "git_blob_sha1": "8c1657774a0117eef3eb91c7cc9667326ac6478d",
+      "path": "hindsight-api-slim/hindsight_api/engine/db/postgresql.py",
+      "purposes": [
+        {
+          "line": 65,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        },
+        {
+          "line": 66,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/db/postgresql.py"
+    },
+    {
+      "bytes": 8885,
+      "git_blob_sha1": "8e2f36abe845c1bafce7395c46a13ead8431b2d5",
+      "path": "hindsight-api-slim/hindsight_api/engine/db_budget.py",
+      "purposes": [
+        {
+          "line": 67,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/db_budget.py"
+    },
+    {
+      "bytes": 8143,
+      "git_blob_sha1": "0be22f71f64058e1643e9cc920dd7abdb2692cac",
+      "path": "hindsight-api-slim/hindsight_api/engine/db_utils.py",
+      "purposes": [
+        {
+          "line": 11,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/__init__.py"
+        },
+        {
+          "line": 35,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/llm_trace.py"
+        },
+        {
+          "line": 1536,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/db_utils.py"
+    },
+    {
+      "bytes": 82989,
+      "git_blob_sha1": "ac674bc14318edcffe17328f3a10a5474e5f556c",
+      "path": "hindsight-api-slim/hindsight_api/engine/entity_resolver.py",
+      "purposes": [
+        {
+          "line": 540,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/entity_resolver.py"
+    },
+    {
+      "bytes": 3480,
+      "git_blob_sha1": "3aa6c9f969db1e0182309578966257fdada02d84",
+      "path": "hindsight-api-slim/hindsight_api/engine/fact_budget.py",
+      "purposes": [
+        {
+          "line": 541,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/fact_budget.py"
+    },
+    {
+      "bytes": 21942,
+      "git_blob_sha1": "7990c41e68b1a64d482fc913db54aa85c7bb0050",
+      "path": "hindsight-api-slim/hindsight_api/engine/interface.py",
+      "purposes": [
+        {
+          "line": 515,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/interface.py"
+    },
+    {
+      "bytes": 14579,
+      "git_blob_sha1": "a1e5d4c20be479394107bef2608a70f6e89ca016",
+      "path": "hindsight-api-slim/hindsight_api/engine/local_device.py",
+      "purposes": [
+        {
+          "line": 58,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/embeddings.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/local_device.py"
+    },
+    {
+      "bytes": 17755,
+      "git_blob_sha1": "cf7cb87bda4a1390208f8c7ef9c9a6c3091d0d26",
+      "path": "hindsight-api-slim/hindsight_api/engine/mental_model_refresh.py",
+      "purposes": [
+        {
+          "line": 550,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/mental_model_refresh.py"
+    },
+    {
+      "bytes": 9187,
+      "git_blob_sha1": "8207a6cfcc32dd0e05e97ec49ca9367051e9a206",
+      "path": "hindsight-api-slim/hindsight_api/engine/operation_metadata.py",
+      "purposes": [
+        {
+          "line": 78,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/operation_metadata.py"
+    },
+    {
+      "bytes": 896,
+      "git_blob_sha1": "9b077bab0821578199096f00b2a0aeb70252e968",
+      "path": "hindsight-api-slim/hindsight_api/engine/provider_auth.py",
+      "purposes": [
+        {
+          "line": 47,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/llm_wrapper.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/provider_auth.py"
+    },
+    {
+      "bytes": 41586,
+      "git_blob_sha1": "860b9b655dfab746146a0e9bd8744fc1d0dd42d1",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/anthropic_llm.py",
+      "purposes": [
+        {
+          "line": 7,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/anthropic_llm.py"
+    },
+    {
+      "bytes": 34102,
+      "git_blob_sha1": "6badcc3c0d335b9482c8ceced99fc7e1e7963ea1",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/claude_code_llm.py",
+      "purposes": [
+        {
+          "line": 8,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/claude_code_llm.py"
+    },
+    {
+      "bytes": 54114,
+      "git_blob_sha1": "c4a47ca528789650a6e18e28eb65d3ce7e2c8465",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/codex_llm.py",
+      "purposes": [
+        {
+          "line": 9,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/codex_llm.py"
+    },
+    {
+      "bytes": 24623,
+      "git_blob_sha1": "3c50dba7af6a426f29c5e8b9fd04d12dc1298ad8",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/cursor_llm.py",
+      "purposes": [
+        {
+          "line": 10,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/cursor_llm.py"
+    },
+    {
+      "bytes": 17232,
+      "git_blob_sha1": "e7543d55db67078657a4787c881ec4c95c4cf13f",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/fireworks_llm.py",
+      "purposes": [
+        {
+          "line": 11,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/fireworks_llm.py"
+    },
+    {
+      "bytes": 74004,
+      "git_blob_sha1": "b927e2501a1904366795da243953dbeb282a22a4",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/gemini_llm.py",
+      "purposes": [
+        {
+          "line": 12,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/gemini_llm.py"
+    },
+    {
+      "bytes": 35028,
+      "git_blob_sha1": "d9606e3a7b5749130b056bdc8f2a91d144550d49",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/github_copilot_llm.py",
+      "purposes": [
+        {
+          "line": 13,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/github_copilot_llm.py"
+    },
+    {
+      "bytes": 30615,
+      "git_blob_sha1": "33fb904fda21cf4c65eb942794bb8e2ff16fe2cb",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/litellm_llm.py",
+      "purposes": [
+        {
+          "line": 14,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/litellm_llm.py"
+    },
+    {
+      "bytes": 8051,
+      "git_blob_sha1": "9057f5a2ae4182d97957042e3586226d5cb1a287",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/litellm_router_llm.py",
+      "purposes": [
+        {
+          "line": 15,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/litellm_router_llm.py"
+    },
+    {
+      "bytes": 18890,
+      "git_blob_sha1": "0c424a302a663b18b6ed264f96e3b76e4993fc86",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/llamacpp_llm.py",
+      "purposes": [
+        {
+          "line": 16,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/llamacpp_llm.py"
+    },
+    {
+      "bytes": 7289,
+      "git_blob_sha1": "ecbb7413f925222468e5d850d5f1fbbbf605cc48",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/llm_debug.py",
+      "purposes": [
+        {
+          "line": 58,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_llm.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/llm_debug.py"
+    },
+    {
+      "bytes": 20700,
+      "git_blob_sha1": "3daf6b26d23d327a756771fb3ba3fa94cfdebe02",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/mock_llm.py",
+      "purposes": [
+        {
+          "line": 17,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/mock_llm.py"
+    },
+    {
+      "bytes": 3140,
+      "git_blob_sha1": "5e5ad5ee6b2a6dc758ad427d5b6c37bba4fc8a43",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/none_llm.py",
+      "purposes": [
+        {
+          "line": 18,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/none_llm.py"
+    },
+    {
+      "bytes": 720,
+      "git_blob_sha1": "23208bc7eb5b596b940ec4658d3ee10e5adf4284",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_headers.py",
+      "purposes": [
+        {
+          "line": 59,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_llm.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_headers.py"
+    },
+    {
+      "bytes": 28587,
+      "git_blob_sha1": "1884fb10a71be06bbc23e885610953474b6490dc",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/openai_responses_llm.py",
+      "purposes": [
+        {
+          "line": 20,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/providers/openai_responses_llm.py"
+    },
+    {
+      "bytes": 28278,
+      "git_blob_sha1": "779befffedc316fa82c7249002e5549c74116e1e",
+      "path": "hindsight-api-slim/hindsight_api/engine/query_analyzer.py",
+      "purposes": [
+        {
+          "line": 567,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/query_analyzer.py"
+    },
+    {
+      "bytes": 813,
+      "git_blob_sha1": "25f818224fed0a922ab378c45b79ef548489ff4c",
+      "path": "hindsight-api-slim/hindsight_api/engine/reflect/__init__.py",
+      "purposes": [
+        {
+          "line": 568,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.reflect.models"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.reflect.retractions"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.reflect.structured_doc"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.reflect.tools"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/reflect/__init__.py"
+    },
+    {
+      "bytes": 8471,
+      "git_blob_sha1": "88c5b52f8a49eb940a1df1cac4bbfab6cb814bb5",
+      "path": "hindsight-api-slim/hindsight_api/engine/reflect/models.py",
+      "purposes": [
+        {
+          "line": 575,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/reflect/models.py"
+    },
+    {
+      "bytes": 7335,
+      "git_blob_sha1": "d7be2b2f40353df3fe7ad798e2fe3dafaeeb7902",
+      "path": "hindsight-api-slim/hindsight_api/engine/reflect/retractions.py",
+      "purposes": [
+        {
+          "line": 576,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/reflect/retractions.py"
+    },
+    {
+      "bytes": 18162,
+      "git_blob_sha1": "9ac153c2dfd4bf5997c5e1e642e81f3c06481e63",
+      "path": "hindsight-api-slim/hindsight_api/engine/reflect/structured_doc.py",
+      "purposes": [
+        {
+          "line": 582,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/reflect/structured_doc.py"
+    },
+    {
+      "bytes": 26077,
+      "git_blob_sha1": "2abd8ce70e60b4ab1d081053303161be0aec51c5",
+      "path": "hindsight-api-slim/hindsight_api/engine/reflect/tools.py",
+      "purposes": [
+        {
+          "line": 583,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/reflect/tools.py"
+    },
+    {
+      "bytes": 9046,
+      "git_blob_sha1": "c99523c55addbb8b3225dbb903825fe6030ad3b6",
+      "path": "hindsight-api-slim/hindsight_api/engine/remote_retry.py",
+      "purposes": [
+        {
+          "line": 65,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/embeddings.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/remote_retry.py"
+    },
+    {
+      "bytes": 29194,
+      "git_blob_sha1": "72260d4fdfc2832e2077c61eb048ac67a72d0297",
+      "path": "hindsight-api-slim/hindsight_api/engine/response_models.py",
+      "purposes": [
+        {
+          "line": 60,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_llm.py"
+        },
+        {
+          "line": 65,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_llm.py"
+        },
+        {
+          "line": 21,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/__init__.py"
+        },
+        {
+          "line": 17,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/llm_interface.py"
+        },
+        {
+          "line": 17,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/llm_wrapper.py"
+        },
+        {
+          "line": 584,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        },
+        {
+          "line": 597,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/response_models.py"
+    },
+    {
+      "bytes": 1069,
+      "git_blob_sha1": "71cd84ef43419df0ae4c6b333884747c1005cb4e",
+      "path": "hindsight-api-slim/hindsight_api/engine/retain/__init__.py",
+      "purposes": [
+        {
+          "line": 598,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        },
+        {
+          "line": 617,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.retain.bank_utils"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.retain.embedding_utils"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.retain.fold"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.retain.types"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.retain.timing"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/retain/__init__.py"
+    },
+    {
+      "bytes": 33042,
+      "git_blob_sha1": "2db3b0cbdf8dc286e21e97cd2872f379b6ecc425",
+      "path": "hindsight-api-slim/hindsight_api/engine/retain/bank_utils.py",
+      "purposes": [
+        {
+          "line": 598,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/retain/bank_utils.py"
+    },
+    {
+      "bytes": 6342,
+      "git_blob_sha1": "f11682637daaf25d83b7db071303d46e941ee2ed",
+      "path": "hindsight-api-slim/hindsight_api/engine/retain/embedding_utils.py",
+      "purposes": [
+        {
+          "line": 598,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/retain/embedding_utils.py"
+    },
+    {
+      "bytes": 9943,
+      "git_blob_sha1": "b7bce6efbb8f2942983d54194b9db7ad44292d20",
+      "path": "hindsight-api-slim/hindsight_api/engine/retain/fold.py",
+      "purposes": [
+        {
+          "line": 599,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/retain/fold.py"
+    },
+    {
+      "bytes": 7765,
+      "git_blob_sha1": "2c0f68a2a0a18e8540886db47a4b012f65e08b56",
+      "path": "hindsight-api-slim/hindsight_api/engine/retain/timing.py",
+      "purposes": [
+        {
+          "line": 617,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/retain/timing.py"
+    },
+    {
+      "bytes": 23987,
+      "git_blob_sha1": "578b195f3a4b846cd4d0131ffc8df9175b409333",
+      "path": "hindsight-api-slim/hindsight_api/engine/retain/types.py",
+      "purposes": [
+        {
+          "line": 600,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/retain/types.py"
+    },
+    {
+      "bytes": 2085,
+      "git_blob_sha1": "4c8df566c66066f5718faee8adcd11b97c4afbd8",
+      "path": "hindsight-api-slim/hindsight_api/engine/schema.py",
+      "purposes": [
+        {
+          "line": 28,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/worker/poller.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/schema.py"
+    },
+    {
+      "bytes": 629,
+      "git_blob_sha1": "e17580bb55b3bf41cce3d4de80093086921fd6b0",
+      "path": "hindsight-api-slim/hindsight_api/engine/search/__init__.py",
+      "purposes": [
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.search.trace"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.search.tracer"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.search.reranking"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.search.tag_resolution"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.search.tags"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.search.types"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/search/__init__.py"
+    },
+    {
+      "bytes": 20887,
+      "git_blob_sha1": "25236756fe705962b783602105d96763dfcd0cc2",
+      "path": "hindsight-api-slim/hindsight_api/engine/search/reranking.py",
+      "purposes": [
+        {
+          "line": 601,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/search/reranking.py"
+    },
+    {
+      "bytes": 11231,
+      "git_blob_sha1": "3343600067d7cf4bb0c9dcaee83e835c47349eac",
+      "path": "hindsight-api-slim/hindsight_api/engine/search/tag_resolution.py",
+      "purposes": [
+        {
+          "line": 602,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/search/tag_resolution.py"
+    },
+    {
+      "bytes": 20614,
+      "git_blob_sha1": "3aedc3f50fe93200611126d5e371d5fa60f3f305",
+      "path": "hindsight-api-slim/hindsight_api/engine/search/tags.py",
+      "purposes": [
+        {
+          "line": 603,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/search/tags.py"
+    },
+    {
+      "bytes": 8549,
+      "git_blob_sha1": "bd0c3f5b72daa4cbda2dfbeb1db257e830b3a625",
+      "path": "hindsight-api-slim/hindsight_api/engine/search/trace.py",
+      "purposes": [
+        {
+          "line": 22,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/search/trace.py"
+    },
+    {
+      "bytes": 15571,
+      "git_blob_sha1": "35ad5819a8511717d7b970f939d86ac3aee019b6",
+      "path": "hindsight-api-slim/hindsight_api/engine/search/tracer.py",
+      "purposes": [
+        {
+          "line": 31,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/__init__.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/search/tracer.py"
+    },
+    {
+      "bytes": 10494,
+      "git_blob_sha1": "336dfd9d6985d68cb1501169840d639dabbcceb9",
+      "path": "hindsight-api-slim/hindsight_api/engine/search/types.py",
+      "purposes": [
+        {
+          "line": 604,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/search/types.py"
+    },
+    {
+      "bytes": 3800,
+      "git_blob_sha1": "6f1e14cca00248e738ed2831ac0d4ee558e881db",
+      "path": "hindsight-api-slim/hindsight_api/engine/source_facts.py",
+      "purposes": [
+        {
+          "line": 605,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/source_facts.py"
+    },
+    {
+      "bytes": 1101,
+      "git_blob_sha1": "fe388313e12d99acd0e71cad2d6f22f2a2849e19",
+      "path": "hindsight-api-slim/hindsight_api/engine/sql/__init__.py",
+      "purposes": [
+        {
+          "line": 87,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        },
+        {
+          "purpose": "Python parent package initialization",
+          "required_by": "hindsight_api.engine.sql.postgresql"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/sql/__init__.py"
+    },
+    {
+      "bytes": 21628,
+      "git_blob_sha1": "de5c9f13d3492eba311fb9e36c20e6d576c6baa7",
+      "path": "hindsight-api-slim/hindsight_api/engine/sql/postgresql.py",
+      "purposes": [
+        {
+          "line": 88,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/sql/postgresql.py"
+    },
+    {
+      "bytes": 6582,
+      "git_blob_sha1": "c78513547831b2e4f2afa2da7346cc4b35e1f490",
+      "path": "hindsight-api-slim/hindsight_api/engine/storage/__init__.py",
+      "purposes": [
+        {
+          "line": 1537,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/storage/__init__.py"
+    },
+    {
+      "bytes": 9294,
+      "git_blob_sha1": "cee28612e8c4cdfa09c4bb89f674e7a42c378622",
+      "path": "hindsight-api-slim/hindsight_api/engine/structured_output.py",
+      "purposes": [
+        {
+          "line": 61,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_llm.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/structured_output.py"
+    },
+    {
+      "bytes": 4263,
+      "git_blob_sha1": "540d6f176f6b3c18625192a6d362c3f09fd216c2",
+      "path": "hindsight-api-slim/hindsight_api/engine/tei_retry.py",
+      "purposes": [
+        {
+          "line": 70,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/embeddings.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/tei_retry.py"
+    },
+    {
+      "bytes": 6264,
+      "git_blob_sha1": "a6df380b81b7d20cde7574478339c7e63add9f90",
+      "path": "hindsight-api-slim/hindsight_api/engine/time_filter.py",
+      "purposes": [
+        {
+          "line": 607,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/time_filter.py"
+    },
+    {
+      "bytes": 8098,
+      "git_blob_sha1": "afaa4d5aad484eb6a6a1516d519caf66eea1e17b",
+      "path": "hindsight-api-slim/hindsight_api/engine/token_encoding.py",
+      "purposes": [
+        {
+          "line": 618,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        },
+        {
+          "line": 619,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/engine/token_encoding.py"
+    },
+    {
+      "bytes": 56401,
+      "git_blob_sha1": "380ffd0af236ff87f737c2381849f20e0ebfe4e9",
+      "path": "hindsight-api-slim/hindsight_api/metrics.py",
+      "purposes": [
+        {
+          "line": 62,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_llm.py"
+        },
+        {
+          "line": 55,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        },
+        {
+          "line": 29,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/worker/poller.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/metrics.py"
+    },
+    {
+      "bytes": 7742,
+      "git_blob_sha1": "5df3693d6df1ffbba4429c9414e7ead8a789a382",
+      "path": "hindsight-api-slim/hindsight_api/pg0.py",
+      "purposes": [
+        {
+          "line": 539,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/pg0.py"
+    },
+    {
+      "bytes": 24339,
+      "git_blob_sha1": "32e16ab7e309da1d7078f79ed450281d551ff11f",
+      "path": "hindsight-api-slim/hindsight_api/tracing.py",
+      "purposes": [
+        {
+          "purpose": "successful native method late import"
+        },
+        {
+          "line": 56,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/tracing.py"
+    },
+    {
+      "bytes": 2524,
+      "git_blob_sha1": "c341485c773a047459f6628f0b5a01e957ef85c7",
+      "path": "hindsight-api-slim/hindsight_api/utils.py",
+      "purposes": [
+        {
+          "line": 21,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/config.py"
+        },
+        {
+          "line": 57,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/utils.py"
+    },
+    {
+      "bytes": 2518,
+      "git_blob_sha1": "5bfac29e4b069c0581a8f6cd3e86856927c8840e",
+      "path": "hindsight-api-slim/hindsight_api/worker/backpressure.py",
+      "purposes": [
+        {
+          "line": 30,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/worker/poller.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/worker/backpressure.py"
+    },
+    {
+      "bytes": 1706,
+      "git_blob_sha1": "25abb7ed4af853ee152e09017544ecd9b5ae186b",
+      "path": "hindsight-api-slim/hindsight_api/worker/exceptions.py",
+      "purposes": [
+        {
+          "line": 58,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/engine/memory_engine.py"
+        },
+        {
+          "line": 31,
+          "purpose": "mandatory module import",
+          "required_by": "hindsight-api-slim/hindsight_api/worker/poller.py"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/vectorize-io/hindsight/f8950b0c07d9e34c76493dba802bb309f0ce60fd/hindsight-api-slim/hindsight_api/worker/exceptions.py"
+    }
+  ],
+  "maximum_new_bytes": 1305501,
+  "maximum_new_files": 75,
+  "phase": "08D-8",
+  "pinned_tree_sha256": "b23c03c1c9daf42b764988da19b5aa70e7bd710c8b05092f290773acef35ed33",
+  "prohibited": [
+    "new_frontier_acquisition",
+    "wheel_download",
+    "package_install",
+    "source_build",
+    "native_import",
+    "provider_construction",
+    "SDK_request",
+    "model_or_database_initialization"
+  ],
+  "reference_receipt_sha256": "053ef0d487dd4c546732bfcedf9ff08f6fb70908018cd02cc2aa54036afaf038",
+  "runtime_gate": "BLOCKED_UNCHANGED",
+  "scope": "SOURCE_ACQUISITION_AND_STATIC_INSPECTION_ONLY",
+  "upstream_commit": "f8950b0c07d9e34c76493dba802bb309f0ce60fd"
+}

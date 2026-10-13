@@ -140,6 +140,27 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ### Phase 08D-8 minimal native runtime preparation addendum
 
+The expanded source-only continuation from
+`0e6d6a7d3d6faa5fc21fb6cae89fb45da91e30ef` froze the exact 75-file plan, then
+acquired/verified `_thread_limits.py`, `engine/cross_encoder.py` and
+`engine/db/__init__.py`: three new files / 101,207 bytes. Thread-limit behavior
+only queries CPU/cgroup values and sets process environment defaults; model and
+executor creation in the cross-encoder body is deferred. The database initializer
+unconditionally imports out-of-allowlist `base.py`, `ops.py`, `result.py`, so
+acquisition STOPPED; the other 72 approved files were untouched. Six static/
+integrity controls pass, with 26 verified sources and 17 rehashed reusable wheels.
+Known package lower bound remains 28, with 11 wheel gaps. Faithful native import
+and cryptography necessity remain UNKNOWN; D3/D5 PARTIAL and D4 BLOCKED.
+See the [expanded source receipt](../../manifests/phase-08d8-expanded-source-inspection.json)
+and [updated report](../experiments/PHASE_08D8_MINIMAL_NATIVE_RUNTIME_PREPARATION.md).
+Independent review is next. The narrow next source-only authorization covers the
+three new database bodies (55,505 bytes); broader explicit resumption can cover
+the exact remaining 75-file / 1,259,799-byte frontier. No wheel/package/build,
+native import/construction/request, service/model/database or live action is
+authorized by this handoff. The runtime BLOCKED gate is unchanged.
+
+The prior 31-file inspection below is historical:
+
 The source-only continuation from `a452984507e83f029ae25cb5c850aaca390354c4`
 acquired and verified the three package initializers (7,029 bytes), then obeyed
 the explicit STOP on finding root `_thread_limits.py` outside the 31-file
