@@ -11,3 +11,14 @@ src/memlife/runner/phase08b1.py text eol=lf
 tests/unit/test_phase08b0_honcho_preflight.py text eol=lf
 tests/unit/test_phase08b1_honcho_live.py text eol=lf
 tests/unit/test_project_handoff.py text eol=lf
+
+# Phase 08D-9 engineered source receipts bind exact LF tool and patch bytes.
+scripts/materialize_phase08d9_provider_boundary.py text eol=lf
+scripts/phase08d9_static.py text eol=lf
+scripts/verify_phase08d9_provider_boundary.py text eol=lf
+scripts/test_phase08d9_static_derivative.py text eol=lf
+manifests/phase-08d9-provider-boundary-source.json text eol=lf
+manifests/phase-08d9-stage1-static-verification.json text eol=lf
+manifests/phase-08d9-stage1-static-tests.json text eol=lf
+# Unified diff context for an empty source line is a single required space.
+patches/phase-08d9-provider-boundary-bootstrap.patch text eol=lf whitespace=-blank-at-eol

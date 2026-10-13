@@ -30,11 +30,11 @@ the main storage-lifecycle experiment.
 
 | Item | State |
 | --- | --- |
-| Branch | `phase-08d9-provider-boundary-design`, based on verified merged `main` `16fdb42afd4e1638dba1f2e38cf5cb3e57fdb897` |
+| Branch | `phase-08d9-stage1-static-derivative`, based on verified merged `main` `523055af834c285ec6608ffa37e15b31ffc4e86b` |
 | Published Phase 08A branch | `phase-08-expansion-freeze-v2` at `a17bc7cb05558012992c19bb264fc7a6e18ac06b` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Published Phase 07 base | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` |
-| Current phase | Phase 08D-9 provider boundary architecture: DESIGN ONLY; independent review pending; D3/D5 PARTIAL, D4 BLOCKED |
+| Current phase | Phase 08D-9 Stage 1: STATIC PASS; engineered source derivative; independent review pending; runtime/parity unexecuted; D3/D5 PARTIAL, D4 BLOCKED |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
@@ -138,7 +138,35 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ## Next authorized action
 
-### Phase 08D-9 provider boundary architecture review
+### Phase 08D-9 Stage 1 static derivative
+
+Separately authorized Stage 1 produced the exclusive ignored engineered source
+`memlife-hindsight-provider-boundary/0.1.0+upstream.f8950b0c07d9`. All 131
+originals match the immutable D8 receipt; exactly engine/providers/worker
+initializers change, and the other 128 files (including the entire native
+provider and real root/helpers) remain byte-identical. Independent static
+verification, deterministic rematerialization, immutable output controls and
+31 tests PASS under OS network denial. Actual projection: 29 modules/41 packages,
+matching the ADR; 19 artifact slots rehashed, 22 missing binary candidates
+(4,390,044 bytes). No acquisition, install/build or native/SDK import/execution.
+Source manifest SHA-256:
+`91bdb4c3cdb28e0879b686ba1bd5448d375c02b51a1e0cd612f120b2f7f4ad72`.
+See [Stage 1 report](../experiments/PHASE_08D9_STAGE1_STATIC_PROVIDER_BOUNDARY.md),
+[manifest](../../manifests/phase-08d9-provider-boundary-source.json) and
+[patch](../../patches/phase-08d9-provider-boundary-bootstrap.patch).
+
+**Next action: independent Stage 1 review; stop after review-branch publication.**
+Stage 2 needs explicit exact artifact acquisition/install authority, a new
+dependency manifest and exclusive runtime `.venv`; imports/methods/reference
+comparison remain later separately authorized stages. Pinned LICENSE bytes are
+unavailable; packaging/redistribution needs separate source-byte authority and
+provenance first. Inactive sources retained on disk do not authorize their use.
+Static success grants no runtime safety, semantic parity or startup promotion.
+All Git network operations in Stage 1 use HTTPS; configured SSH was explicitly
+replaced and scripts reject SSH/rewrite targets. No infrastructure/Jetstream
+action. D4 BLOCKED; D3/D5 PARTIAL; D1/D2, freezes, attempts and denominators intact.
+
+### Phase 08D-9 provider boundary architecture review (historical)
 
 Documentation-only design on `phase-08d9-provider-boundary-design`, base
 `16fdb42afd4e1638dba1f2e38cf5cb3e57fdb897`, compares upstream-supported

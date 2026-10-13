@@ -418,6 +418,30 @@ each regression. It is not generic troubleshooting advice.
   [immutable receipt](../../manifests/phase-08d8-adaptive-source-closure.json).
   Scientific evidence/denominators and D4 BLOCKED gate remain unchanged.
 
+### Phase 08D-9 static derivative preserves targets but cannot qualify execution
+
+- **Implemented:** only three reviewed initializers use PEP 562 export maps;
+  128 other files, native methods, real root and helpers remain byte-identical.
+  Original public maps, docstrings and exact `__all__` text are preserved.
+- **Verifier correction:** original eager import order differs from `__all__`
+  order. The first independent AST oracle rejected a valid initializer. Build
+  its map in preserved public-list order; retain the failed development receipt,
+  then create separate final receipts. Final 31 static controls pass.
+- **Invariant:** static graph resolution/hash equality cannot establish runtime
+  import safety, lazy-cycle behavior or B/C semantic parity. Keep original
+  target exceptions and all excluded bodies unchanged; retained source does not
+  authorize imports. Current projection is 29 modules/41 packages, with no eager
+  engine/poller/sibling imports on that path; optional/dynamic effects UNKNOWN.
+- **Provenance:** versioned engineered identity, exact patch/manifest, exclusive
+  ignored trees and immutable receipts; no source-cache overwrite. LICENSE has
+  pinned blob identity but absent bytes/SHA-256, never fabricated or downloaded.
+- **Transport:** Git remotes and effective rewrites must be HTTPS; reject SSH
+  before networking. No infrastructure/Jetstream action. D4 remains BLOCKED.
+- **Protection:** `scripts/materialize_phase08d9_provider_boundary.py`,
+  `scripts/verify_phase08d9_provider_boundary.py`,
+  `scripts/test_phase08d9_static_derivative.py`, and
+  [Stage 1 report](../experiments/PHASE_08D9_STAGE1_STATIC_PROVIDER_BOUNDARY.md).
+
 ## Phase 08D-9 engineered bootstrap and transport claim boundaries
 
 - **Design finding:** lazifying engine/providers/worker exports is a minimal

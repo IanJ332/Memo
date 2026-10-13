@@ -1,0 +1,222 @@
+--- a/hindsight-api-slim/hindsight_api/engine/__init__.py
++++ b/hindsight-api-slim/hindsight_api/engine/__init__.py
+@@ -7,28 +7,34 @@
+ - Supporting modules: embeddings, cross_encoder, entity_resolver, etc.
+ """
+ 
+-from .cross_encoder import CrossEncoderModel, LocalSTCrossEncoder, RemoteTEICrossEncoder
+-from .db_utils import acquire_with_retry
+-from .embeddings import Embeddings, LocalSTEmbeddings, RemoteTEIEmbeddings
+-from .llm_wrapper import LLMConfig
+-from .memory_engine import (
+-    MemoryEngine,
+-    UnqualifiedTableError,
+-    fq_table,
+-    get_current_schema,
+-    validate_sql_schema,
+-)
+-from .response_models import MemoryFact, RecallResult, ReflectResult
+-from .search.trace import (
+-    EntryPoint,
+-    NodeVisit,
+-    QueryInfo,
+-    SearchPhaseMetrics,
+-    SearchSummary,
+-    SearchTrace,
+-    WeightComponents,
+-)
+-from .search.tracer import SearchTracer
++from typing import TYPE_CHECKING
++
++_LAZY_EXPORTS = {
++    'MemoryEngine': ('.memory_engine', 'MemoryEngine'),
++    'acquire_with_retry': ('.db_utils', 'acquire_with_retry'),
++    'Embeddings': ('.embeddings', 'Embeddings'),
++    'LocalSTEmbeddings': ('.embeddings', 'LocalSTEmbeddings'),
++    'RemoteTEIEmbeddings': ('.embeddings', 'RemoteTEIEmbeddings'),
++    'CrossEncoderModel': ('.cross_encoder', 'CrossEncoderModel'),
++    'LocalSTCrossEncoder': ('.cross_encoder', 'LocalSTCrossEncoder'),
++    'RemoteTEICrossEncoder': ('.cross_encoder', 'RemoteTEICrossEncoder'),
++    'SearchTrace': ('.search.trace', 'SearchTrace'),
++    'SearchTracer': ('.search.tracer', 'SearchTracer'),
++    'QueryInfo': ('.search.trace', 'QueryInfo'),
++    'EntryPoint': ('.search.trace', 'EntryPoint'),
++    'NodeVisit': ('.search.trace', 'NodeVisit'),
++    'WeightComponents': ('.search.trace', 'WeightComponents'),
++    'SearchSummary': ('.search.trace', 'SearchSummary'),
++    'SearchPhaseMetrics': ('.search.trace', 'SearchPhaseMetrics'),
++    'LLMConfig': ('.llm_wrapper', 'LLMConfig'),
++    'RecallResult': ('.response_models', 'RecallResult'),
++    'ReflectResult': ('.response_models', 'ReflectResult'),
++    'MemoryFact': ('.response_models', 'MemoryFact'),
++    'fq_table': ('.memory_engine', 'fq_table'),
++    'get_current_schema': ('.memory_engine', 'get_current_schema'),
++    'validate_sql_schema': ('.memory_engine', 'validate_sql_schema'),
++    'UnqualifiedTableError': ('.memory_engine', 'UnqualifiedTableError'),
++}
+ 
+ __all__ = [
+     "MemoryEngine",
+@@ -57,3 +63,46 @@
+     "validate_sql_schema",
+     "UnqualifiedTableError",
+ ]
++
++
++def __getattr__(name: str):
++    """Resolve the original public target; propagate its import/getattr errors."""
++    try:
++        module_name, attribute = _LAZY_EXPORTS[name]
++    except KeyError:
++        raise AttributeError(f"module {__name__!r} has no attribute {name!r}") from None
++
++    from importlib import import_module
++
++    value = getattr(import_module(module_name, __name__), attribute)
++    globals()[name] = value
++    return value
++
++
++def __dir__():
++    return sorted(set(globals()) | set(__all__))
++
++
++if TYPE_CHECKING:
++    from .cross_encoder import CrossEncoderModel, LocalSTCrossEncoder, RemoteTEICrossEncoder
++    from .db_utils import acquire_with_retry
++    from .embeddings import Embeddings, LocalSTEmbeddings, RemoteTEIEmbeddings
++    from .llm_wrapper import LLMConfig
++    from .memory_engine import (
++        MemoryEngine,
++        UnqualifiedTableError,
++        fq_table,
++        get_current_schema,
++        validate_sql_schema,
++    )
++    from .response_models import MemoryFact, RecallResult, ReflectResult
++    from .search.trace import (
++        EntryPoint,
++        NodeVisit,
++        QueryInfo,
++        SearchPhaseMetrics,
++        SearchSummary,
++        SearchTrace,
++        WeightComponents,
++    )
++    from .search.tracer import SearchTracer
+--- a/hindsight-api-slim/hindsight_api/engine/providers/__init__.py
++++ b/hindsight-api-slim/hindsight_api/engine/providers/__init__.py
+@@ -4,20 +4,24 @@
+ This package contains concrete implementations of the LLMInterface for various providers.
+ """
+ 
+-from .anthropic_llm import AnthropicLLM
+-from .claude_code_llm import ClaudeCodeLLM
+-from .codex_llm import CodexLLM
+-from .cursor_llm import CursorLLM
+-from .fireworks_llm import FireworksLLM
+-from .gemini_llm import GeminiLLM
+-from .github_copilot_llm import GitHubCopilotLLM
+-from .litellm_llm import LiteLLMLLM
+-from .litellm_router_llm import LiteLLMRouterLLM
+-from .llamacpp_llm import LlamaCppLLM
+-from .mock_llm import MockLLM
+-from .none_llm import NoneLLM
+-from .openai_compatible_llm import OpenAICompatibleLLM
+-from .openai_responses_llm import OpenAIResponsesLLM
++from typing import TYPE_CHECKING
++
++_LAZY_EXPORTS = {
++    'AnthropicLLM': ('.anthropic_llm', 'AnthropicLLM'),
++    'ClaudeCodeLLM': ('.claude_code_llm', 'ClaudeCodeLLM'),
++    'CodexLLM': ('.codex_llm', 'CodexLLM'),
++    'CursorLLM': ('.cursor_llm', 'CursorLLM'),
++    'FireworksLLM': ('.fireworks_llm', 'FireworksLLM'),
++    'GeminiLLM': ('.gemini_llm', 'GeminiLLM'),
++    'GitHubCopilotLLM': ('.github_copilot_llm', 'GitHubCopilotLLM'),
++    'LlamaCppLLM': ('.llamacpp_llm', 'LlamaCppLLM'),
++    'LiteLLMLLM': ('.litellm_llm', 'LiteLLMLLM'),
++    'LiteLLMRouterLLM': ('.litellm_router_llm', 'LiteLLMRouterLLM'),
++    'MockLLM': ('.mock_llm', 'MockLLM'),
++    'NoneLLM': ('.none_llm', 'NoneLLM'),
++    'OpenAICompatibleLLM': ('.openai_compatible_llm', 'OpenAICompatibleLLM'),
++    'OpenAIResponsesLLM': ('.openai_responses_llm', 'OpenAIResponsesLLM'),
++}
+ 
+ __all__ = [
+     "AnthropicLLM",
+@@ -35,3 +39,38 @@
+     "OpenAICompatibleLLM",
+     "OpenAIResponsesLLM",
+ ]
++
++
++def __getattr__(name: str):
++    """Resolve the original public target; propagate its import/getattr errors."""
++    try:
++        module_name, attribute = _LAZY_EXPORTS[name]
++    except KeyError:
++        raise AttributeError(f"module {__name__!r} has no attribute {name!r}") from None
++
++    from importlib import import_module
++
++    value = getattr(import_module(module_name, __name__), attribute)
++    globals()[name] = value
++    return value
++
++
++def __dir__():
++    return sorted(set(globals()) | set(__all__))
++
++
++if TYPE_CHECKING:
++    from .anthropic_llm import AnthropicLLM
++    from .claude_code_llm import ClaudeCodeLLM
++    from .codex_llm import CodexLLM
++    from .cursor_llm import CursorLLM
++    from .fireworks_llm import FireworksLLM
++    from .gemini_llm import GeminiLLM
++    from .github_copilot_llm import GitHubCopilotLLM
++    from .litellm_llm import LiteLLMLLM
++    from .litellm_router_llm import LiteLLMRouterLLM
++    from .llamacpp_llm import LlamaCppLLM
++    from .mock_llm import MockLLM
++    from .none_llm import NoneLLM
++    from .openai_compatible_llm import OpenAICompatibleLLM
++    from .openai_responses_llm import OpenAIResponsesLLM
+--- a/hindsight-api-slim/hindsight_api/worker/__init__.py
++++ b/hindsight-api-slim/hindsight_api/worker/__init__.py
+@@ -6,6 +6,32 @@
+ - main: CLI entry point for hindsight-worker
+ """
+ 
+-from .poller import WorkerPoller
++from typing import TYPE_CHECKING
++
++_LAZY_EXPORTS = {
++    'WorkerPoller': ('.poller', 'WorkerPoller'),
++}
+ 
+ __all__ = ["WorkerPoller"]
++
++
++def __getattr__(name: str):
++    """Resolve the original public target; propagate its import/getattr errors."""
++    try:
++        module_name, attribute = _LAZY_EXPORTS[name]
++    except KeyError:
++        raise AttributeError(f"module {__name__!r} has no attribute {name!r}") from None
++
++    from importlib import import_module
++
++    value = getattr(import_module(module_name, __name__), attribute)
++    globals()[name] = value
++    return value
++
++
++def __dir__():
++    return sorted(set(globals()) | set(__all__))
++
++
++if TYPE_CHECKING:
++    from .poller import WorkerPoller

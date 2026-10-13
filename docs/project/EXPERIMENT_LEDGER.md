@@ -388,3 +388,36 @@ is no majority voting and no replacement of errors.
   independent review; next proposed authorization is Stage 1 static derivative
   and manifest work only, not installation/import/method permission.
 - [Architecture decision](../experiments/PHASE_08D9_PROVIDER_BOUNDARY_ARCHITECTURE.md).
+
+## Phase 08D-9 Stage 1 static derivative (2026-10-13; no empirical attempt)
+
+- Expected base `523055af834c285ec6608ffa37e15b31ffc4e86b` verified merged;
+  fetched `origin/main` equals that SHA. Review branch only:
+  `phase-08d9-stage1-static-derivative`. Configured Git SSH explicitly replaced
+  before successful network operations; HTTPS only, no infrastructure SSH.
+- Engineered identity:
+  `memlife-hindsight-provider-boundary/0.1.0+upstream.f8950b0c07d9`;
+  unmodified Hindsight runtime claim is false. Exclusive ignored tree retains
+  131 verified sources: three lazy-export initializer changes, 128 unchanged
+  native sources. Original source cache and all executed evidence immutable.
+- Source manifest SHA-256:
+  `91bdb4c3cdb28e0879b686ba1bd5448d375c02b51a1e0cd612f120b2f7f4ad72`;
+  patch SHA-256:
+  `8792b771f8c6a0c69075ca3d37d512ad409de33ec669dabba5715c14939a499b`.
+- Independent static verifier and deterministic rematerialization PASS;
+  31 controls PASS, zero failures/errors. Actual projection 29 modules/41
+  packages matches ADR; 19 reusable wheel slots rehashed, 22 binary gaps
+  totaling 4,390,044 selected candidate bytes. No installation authority.
+- LICENSE byte/SHA-256 evidence absent; retain pinned tree identity only and
+  require separate provenance preparation before packaging/redistribution.
+  Runtime safety UNKNOWN; semantic parity NOT_EXECUTED. No native/SDK import,
+  construction, acquisition/install/build, provider/model/embedding/database/
+  service/worker/downstream/RQ3/Jetstream or empirical action.
+- D1/D2, D5–D8 receipts/code, unconditional startup gate, frozen attempts,
+  scientific denominators, Freeze v1 and draft v2 unchanged. D4 BLOCKED;
+  D3/D5 PARTIAL. Stage 1 independent review is next; Stage 2 artifact-only
+  preparation needs separately explicit exact acquisition/install authorization.
+- [Stage 1 report](../experiments/PHASE_08D9_STAGE1_STATIC_PROVIDER_BOUNDARY.md),
+  [source manifest](../../manifests/phase-08d9-provider-boundary-source.json),
+  [verification](../../manifests/phase-08d9-stage1-static-verification.json) and
+  [tests](../../manifests/phase-08d9-stage1-static-tests.json).
