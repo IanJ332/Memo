@@ -227,3 +227,16 @@ is no majority voting and no replacement of errors.
   Frozen evidence and prior attempts remain unchanged; Jetstream remains SHELVED.
 - Engineering report: [Phase 08D-5](../experiments/PHASE_08D5_GOVERNED_SEND_INSTRUMENTATION.md).
 
+## Phase 08D-6 offline native-boundary qualification (no empirical attempt)
+
+- Base: `58ab52dcd8e628400533173eac08ed5b1ea42faa`; review branch:
+  `phase-08d6-runtime-qualification`.
+- 19 cached pinned Hindsight source files verified; client/worker/alternate/batch
+  paths traced. Missing local Hindsight and SDK/HTTP dependencies prevent
+  installed-runtime interception proof. Actual SDK transport probes: **0**.
+- Focused deterministic qualification/regressions: **161 passed**. Ownership
+  counterexamples are engineering tests, not native-runtime or provider evidence.
+- D4/pilot **BLOCKED**; D3/D5 **PARTIAL**; runtime startup gate unchanged.
+- Provider/hosted-model/embedding/downstream/RQ3/SSH/Jetstream calls: **0**.
+  D1/D2 evidence, Freeze v1, attempts and denominators remain unchanged.
+- Engineering report: [Phase 08D-6](../experiments/PHASE_08D6_NATIVE_RUNTIME_QUALIFICATION.md).

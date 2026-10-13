@@ -138,7 +138,24 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ## Next authorized action
 
-### Phase 08D-5 engineering review addendum
+### Phase 08D-6 engineering review addendum
+
+The separately authorized offline qualification on
+`phase-08d6-runtime-qualification`, base
+`58ab52dcd8e628400533173eac08ed5b1ea42faa`, verified 19 cached pinned Hindsight
+source files and traced role/member/worker ownership and alternate/batch bypasses.
+The available repository environment lacks Hindsight, OpenAI SDK, httpx/httpcore
+and aiohttp: installed-runtime transport probes could not run without prohibited
+installation. Static evidence and ownership counterexamples do not establish
+native coverage. The focused suite passes 161 tests. D4 and pilot readiness remain
+**BLOCKED**; D3/D5 remain **PARTIAL**. The unconditional runtime gate is unchanged.
+No provider/model/embedding/downstream/RQ3, SSH or Jetstream action occurred;
+scientific evidence and denominators remain unchanged. See the
+[Phase 08D-6 report](../experiments/PHASE_08D6_NATIVE_RUNTIME_QUALIFICATION.md).
+Next action is independent review; stop after review-branch publication. No
+runtime startup or dependency installation is authorized by this handoff.
+
+### Phase 08D-5 engineering review addendum (historical)
 
 The separately authorized offline work on `phase-08d5-governed-sends`, base
 `de011d8bde32ffda76512c87dee550f0baf688d5`, implements an optional governed

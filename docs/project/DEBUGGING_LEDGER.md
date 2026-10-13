@@ -285,3 +285,21 @@ each regression. It is not generic troubleshooting advice.
 - **Protection:** `src/memlife/runner/phase08d5.py` and
   `tests/unit/test_phase08d5_governed_sends.py`; fake-only qualification is distinct
   from real-provider readiness. No native entrypoint is qualified by this phase.
+
+## Phase 08D-6 wrapper ownership and native-startup qualification limits
+
+- **Finding:** an old-wrapper identity check runs only when that wrapper is
+  called. A retained resource, replacement client/resource or unowned member can
+  avoid it. Native batch uploads/submissions also bypass chat completions. Native
+  startup catches verification failures and continues; a probe rejection cannot
+  serve as a pre-construction readiness gate.
+- **Evidence limit:** deterministic ownership counterexamples and 19 verified
+  pinned cached sources; installed Hindsight/OpenAI/httpx/httpcore/aiohttp are
+  absent in the available repository environment. Actual SDK retries, redirects
+  and final routing remain unverified, not statically qualified.
+- **Invariant:** no native readiness promotion from static scans, metadata,
+  fake resources or probe success. Gate before constructing/importing engines;
+  reject uncovered roles, members, workers, transports and batch/alternate paths.
+- **Protection:** unchanged `require_hindsight_runtime_ready()`,
+  `tests/unit/test_phase08d6_runtime_qualification.py`, and
+  [qualification report](../experiments/PHASE_08D6_NATIVE_RUNTIME_QUALIFICATION.md).

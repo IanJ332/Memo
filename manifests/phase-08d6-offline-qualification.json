@@ -1,0 +1,239 @@
+{
+  "base_commit": "58ab52dcd8e628400533173eac08ed5b1ea42faa",
+  "dependencies": {
+    "aiohttp": {
+      "distribution": "aiohttp",
+      "import_available": false,
+      "version": null
+    },
+    "hindsight_api": {
+      "distribution": "hindsight-api-slim",
+      "import_available": false,
+      "version": null
+    },
+    "httpcore": {
+      "distribution": "httpcore",
+      "import_available": false,
+      "version": null
+    },
+    "httpx": {
+      "distribution": "httpx",
+      "import_available": false,
+      "version": null
+    },
+    "openai": {
+      "distribution": "openai",
+      "import_available": false,
+      "version": null
+    }
+  },
+  "installed_runtime_proof": false,
+  "missing_runtime_dependencies": [
+    "hindsight_api",
+    "openai",
+    "httpx",
+    "httpcore",
+    "aiohttp"
+  ],
+  "observations": {
+    "factory_provider_labels": [
+      "anthropic",
+      "atlas",
+      "bedrock",
+      "claude-code",
+      "cursor",
+      "deepseek",
+      "fireworks",
+      "gemini",
+      "github-copilot",
+      "groq",
+      "litellm",
+      "litellmrouter",
+      "llamacpp",
+      "lmstudio",
+      "meta",
+      "minimax",
+      "mock",
+      "none",
+      "nous",
+      "ollama",
+      "ollama-cloud",
+      "openai",
+      "openai-codex",
+      "openai-responses",
+      "opencode-go",
+      "openrouter",
+      "requesty",
+      "vertexai",
+      "volcano",
+      "xai-oauth",
+      "zai"
+    ],
+    "openai_compatible_client_call_sites": [
+      {
+        "call": "self._client.chat.completions.create",
+        "line": 1257
+      },
+      {
+        "call": "self._client.chat.completions.create",
+        "line": 1337
+      },
+      {
+        "call": "self._client.chat.completions.create",
+        "line": 1666
+      },
+      {
+        "call": "session.post",
+        "line": 1880
+      },
+      {
+        "call": "self._client.files.create",
+        "line": 2121
+      },
+      {
+        "call": "self._client.batches.create",
+        "line": 2129
+      },
+      {
+        "call": "self._client.batches.retrieve",
+        "line": 2158
+      },
+      {
+        "call": "self._client.batches.retrieve",
+        "line": 2196
+      },
+      {
+        "call": "self._client.files.content",
+        "line": 2206
+      },
+      {
+        "call": "self._client.close",
+        "line": 2221
+      }
+    ],
+    "qualification": "STATIC_SYNTAX_ONLY_NOT_RUNTIME_COVERAGE"
+  },
+  "phase": "08D-6",
+  "python_version": "3.12.8",
+  "qualification": "STATIC_SOURCE_AND_LOCAL_DEPENDENCY_AVAILABILITY_ONLY",
+  "readiness": "BLOCKED",
+  "runtime_blocker": "MISSING_INSTALLED_RUNTIME_AND_SDK_TRANSPORT_DEPENDENCIES",
+  "sdk_transport_probes_executed": false,
+  "sources": [
+    {
+      "byte_count": 466791,
+      "git_blob_sha1": "1cb787d6f907d37a01c7eba20a64145f45a64008",
+      "path": "hindsight-api-slim/hindsight_api/api/http.py",
+      "sha256": "fad073af96fce016071aa33fc97fdbc80a23914f6c50c2527d3b282cd959e37e"
+    },
+    {
+      "byte_count": 294912,
+      "git_blob_sha1": "20436ec768e9fde0dbc7291c9d5d9718611b2967",
+      "path": "hindsight-api-slim/hindsight_api/config.py",
+      "sha256": "bc27223b849fd2ac2cb1ffc5e31bf3c106ecff7af49ba9a388ca878b5309f8b9"
+    },
+    {
+      "byte_count": 161283,
+      "git_blob_sha1": "565bf19f1ce172ac9a54e0bee8f89f0f49c23c24",
+      "path": "hindsight-api-slim/hindsight_api/engine/consolidation/consolidator.py",
+      "sha256": "7cb6b7a70705b82a2ab31815d9d98613bba5e238e2995969e6746a002aa6ad6b"
+    },
+    {
+      "byte_count": 99922,
+      "git_blob_sha1": "c98bab9105bcbbabbf066900b133993d4490a19a",
+      "path": "hindsight-api-slim/hindsight_api/engine/embeddings.py",
+      "sha256": "bcc903db008cf9c9b3e2d871551824ef7684aaa2a636c0438d72be6f4b9381de"
+    },
+    {
+      "byte_count": 27652,
+      "git_blob_sha1": "a5300b872495fe9bf32fd7d2ecd72f6aa6aea20a",
+      "path": "hindsight-api-slim/hindsight_api/engine/llm_trace.py",
+      "sha256": "991072595fe2c86b9c8c12657218055650049e9a3618790858088018f2b2cc26"
+    },
+    {
+      "byte_count": 5997,
+      "git_blob_sha1": "afbbaaa451faa724d43ec55983aa0439ff69e02f",
+      "path": "hindsight-api-slim/hindsight_api/engine/llm_transport.py",
+      "sha256": "5434d6c48171804d1396bbbf9808d735c23865731f3507662540028932a3854d"
+    },
+    {
+      "byte_count": 82342,
+      "git_blob_sha1": "76575260f47a1ea20efe610710ee16a315bbfa10",
+      "path": "hindsight-api-slim/hindsight_api/engine/llm_wrapper.py",
+      "sha256": "f8a69115e51ce85ef004e22129bff98902fb5fe369f8c101a93f8fcbab12d0e4"
+    },
+    {
+      "byte_count": 1138845,
+      "git_blob_sha1": "100357a9a52181373a3c69a7fec59c003f976e05",
+      "path": "hindsight-api-slim/hindsight_api/engine/memory_engine.py",
+      "sha256": "b6f2af3868d283946079ec5c2a87b44379dfc37c0101f383ea192bc07e220949"
+    },
+    {
+      "byte_count": 14688,
+      "git_blob_sha1": "aded78bcf8baea1b9590a47ffdcecde46f13091f",
+      "path": "hindsight-api-slim/hindsight_api/engine/multi_llm.py",
+      "sha256": "4f3d211b2020254dd2c0c1c9150295a2b9dd78616474aa5af09ed54f6bce0609"
+    },
+    {
+      "byte_count": 987,
+      "git_blob_sha1": "5f8e42ecc549e1ea35b4d6472c71ae755935f6f6",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/__init__.py",
+      "sha256": "ba35543c65d3166834eb0b03ce20da749dc384793d7b64c1eaef3ff4458df41a"
+    },
+    {
+      "byte_count": 105773,
+      "git_blob_sha1": "ae5952f216ca9dcd78435ce7f1966ddfb0b1515b",
+      "path": "hindsight-api-slim/hindsight_api/engine/providers/openai_compatible_llm.py",
+      "sha256": "7c6aad58263b6b4134a7a67c2c5c289d22d106c90532f15a321fc28f6b05abae"
+    },
+    {
+      "byte_count": 175468,
+      "git_blob_sha1": "4bcc2f068002ed854f9224c0bdf0f35b71e94d4b",
+      "path": "hindsight-api-slim/hindsight_api/engine/retain/fact_extraction.py",
+      "sha256": "4a3f52813d8621e5df89f004cc0380af10a6f80654fc022ec1aaa113ac55dd24"
+    },
+    {
+      "byte_count": 19058,
+      "git_blob_sha1": "33bb5c96297226c7a48b238d4210f00bdfa77c06",
+      "path": "hindsight-api-slim/hindsight_api/main.py",
+      "sha256": "90daed26cdeb154c2b1044c4aa8cbc4e18bbcfb75e2874fb6e1953571a7e1c96"
+    },
+    {
+      "byte_count": 3673,
+      "git_blob_sha1": "aaaf84f71eb3edbe3e76b28db82e193a171b3749",
+      "path": "hindsight-api-slim/hindsight_api/server.py",
+      "sha256": "9e13b162aa073502f6222f06760c92ed32a2d1131ac626e2c0e976f96d1e6878"
+    },
+    {
+      "byte_count": 17166,
+      "git_blob_sha1": "edef483a7a72b96d18c406dd17080f533c0c66ea",
+      "path": "hindsight-api-slim/hindsight_api/worker/main.py",
+      "sha256": "5ff33127e64d4991410ce2852c8e56f7dff096244251cbedd78f3ef8258b4690"
+    },
+    {
+      "byte_count": 102864,
+      "git_blob_sha1": "879dde29eb432f514019dd97cf9762e65abed8e7",
+      "path": "hindsight-api-slim/hindsight_api/worker/poller.py",
+      "sha256": "6eb7b8a733fbe6dfd9fd51c41c219f306d45d7b2a95cc59cbbf4c58a733a9bd9"
+    },
+    {
+      "byte_count": 19288,
+      "git_blob_sha1": "052397b6495afbb72d8f6711d51c280354d41aab",
+      "path": "hindsight-api-slim/hindsight_api/engine/llm_interface.py",
+      "sha256": "d2a1836317ab9d8df65b66fb51939d886a450f707418cd41c8e38e80ebac7603"
+    },
+    {
+      "byte_count": 222819,
+      "git_blob_sha1": "3b08b982de2042e5910a7e66b31b91e6a0d59b85",
+      "path": "hindsight-api-slim/hindsight_api/engine/retain/orchestrator.py",
+      "sha256": "53f32c20acaa8c2c09a9b1a1c1f73adb5549ce00b2922bb64cc1d0f6ac2b2988"
+    },
+    {
+      "byte_count": 10294,
+      "git_blob_sha1": "ddf3147a1053cde5904e98185d99b5421917277f",
+      "path": "hindsight-api-slim/hindsight_api/engine/task_backend.py",
+      "sha256": "1033b68c1eb612bdf1e4982d6dc0621cf658bc0ca7c619d9b0e6266a81a9819f"
+    }
+  ],
+  "upstream_commit": "f8950b0c07d9e34c76493dba802bb309f0ce60fd"
+}
