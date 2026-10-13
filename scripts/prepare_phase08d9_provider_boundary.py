@@ -40,6 +40,9 @@ SANDBOX = "(version 1)(allow default)(deny network*)"
 BANNED = {"hindsight", "hindsight_api", "hindsight_client", "openai", "httpx", "httpcore", "aiohttp"}
 LIMIT_FILES = 22
 LIMIT_BYTES = 4_390_044
+GREENLET_FILENAME = "greenlet-3.2.4-cp312-cp312-macosx_11_0_universal2.whl"
+GREENLET_SHA = "3b67ca49f54cede0186854a008109d6ee71f66bd57bb36abd6d0a0267b540cdd"
+GREENLET_HEADER = "greenlet-3.2.4.data/headers/greenlet.h"
 
 
 def require(condition, message):
@@ -208,6 +211,87 @@ def check_record(raw, read, members=None):
     return count, rows
 
 
+def approved_header(row, archive_name):
+    return (archive_name == GREENLET_HEADER and row["name"] == "greenlet" and row["version"] == "3.2.4"
+            and row["filename"] == GREENLET_FILENAME and row["sha256"] == GREENLET_SHA
+            and row["bytes"] == 274079)
+
+
+def installer_scheme(runtime, name):
+    """Use the pinned installer's real scheme logic; no provider/SDK imports.
+
+    Pre-install projection uses prefix=<fresh venv>. The actual target process
+    later runs the same pinned installer logic and must return the same scheme.
+    """
+    from pip._internal.locations import get_scheme
+    scheme = get_scheme(name, prefix=str(runtime))
+    result = {key: getattr(scheme, key) for key in ("purelib", "platlib", "headers", "scripts", "data")}
+    for path in result.values():
+        safe_destination(Path(path), runtime)
+    return result
+
+
+def safe_destination(path, runtime):
+    require(path.is_absolute() and ".." not in path.parts, "absolute canonical destination required")
+    require(not any(p.is_symlink() for p in (path, *path.parents)), "symlink relocation/destination")
+    require(path.resolve().is_relative_to(runtime.resolve()), "destination escapes fresh owned runtime")
+    return path.resolve()
+
+
+def member_destinations(archive, row, scheme, runtime):
+    require(scheme == installer_scheme(runtime, row["name"]), "altered installer scheme/unrelated destination")
+    wheel_name = next(n for n in archive.namelist() if n.count("/") == 1 and n.endswith(".dist-info/WHEEL"))
+    wh = email.message_from_bytes(archive.read(wheel_name))
+    require(wh["Root-Is-Purelib"] in {"true", "false"}, "unknown wheel library scheme")
+    root = Path(scheme["purelib" if wh["Root-Is-Purelib"] == "true" else "platlib"])
+    result = {}
+    occupied = set()
+    for info in archive.infolist():
+        if info.is_dir():
+            continue
+        name = PurePosixPath(info.filename)
+        require(not name.is_absolute() and ".." not in name.parts and "\\" not in info.filename
+                and not stat.S_ISLNK(info.external_attr >> 16), "unsafe source path/symlink")
+        if any(part.endswith(".data") for part in name.parts):
+            require(approved_header(row, info.filename), "unreviewed .data relocation")
+            # PEP 427 spreading: archive scheme key 'headers' -> pip's headers
+            # destination, not the archive's .data path relative to site-packages.
+            destination = Path(scheme["headers"]) / "greenlet.h"
+        else:
+            require(not info.filename.endswith(".pth"), "executable .pth behavior")
+            destination = root / info.filename
+        destination = safe_destination(destination, runtime)
+        require(destination not in occupied, "duplicate destination ownership")
+        occupied.add(destination)
+        result[info.filename] = destination
+    return result
+
+
+def check_installed_members(archive, row, scheme, site, runtime, installed_rows):
+    """Bind archive path -> scheme destination -> installed RECORD relative path."""
+    mapping = member_destinations(archive, row, scheme, runtime)
+    installed = {name: (value, size) for name, value, size in installed_rows}
+    require(len(installed) == len(installed_rows), "duplicate installed RECORD ownership")
+    wheel_record_name = next(n for n in mapping if n.endswith(".dist-info/RECORD"))
+    wheel_records = {name: (value, size) for name, value, size in csv.reader(io.StringIO(archive.read(wheel_record_name).decode()))}
+    mapped_records = set()
+    receipts = []
+    for source, destination in mapping.items():
+        record_path = os.path.relpath(destination, site)
+        require(record_path in installed and record_path not in mapped_records, "missing/duplicate installed source ownership")
+        require(installed_path(site, record_path) == destination, "installed RECORD destination differs from scheme")
+        mapped_records.add(record_path)
+        if source != wheel_record_name:
+            require(installed[record_path] == wheel_records[source], "installed RECORD source hash/size mismatch")
+            require(regular(destination) == archive.read(source), "installed bytes differ from exact wheel")
+        if source == GREENLET_HEADER:
+            receipts.append({"archive_path": source, "destination": str(destination),
+                             "installed_record_path": record_path, "record_hash": installed[record_path][0],
+                             "record_bytes": installed[record_path][1], "byte_equality": True,
+                             "contained": True, "exclusive_source_destination": True})
+    return mapped_records, receipts
+
+
 def verify_wheel(path, row, plan):
     data = regular(path)
     require(len(data) == row["bytes"] and sha(data) == row["sha256"], "wheel size/hash mismatch: " + row["name"])
@@ -221,8 +305,13 @@ def verify_wheel(path, row, plan):
             require(not name.is_absolute() and ".." not in name.parts and "\\" not in info.filename
                     and not stat.S_ISLNK(info.external_attr >> 16), "unsafe ZIP path/symlink")
             require(not info.flag_bits & 1, "encrypted ZIP member")
-            require(not info.filename.endswith(".pth") and not any(p.endswith(".data") for p in name.parts),
-                    "executable .pth or unsupported wheel relocation")
+            require(not info.filename.endswith(".pth"), "executable .pth behavior")
+            if any(part.endswith(".data") for part in name.parts):
+                if info.is_dir():
+                    require(row["name"] == "greenlet" and row["sha256"] == GREENLET_SHA
+                            and GREENLET_HEADER.startswith(info.filename), "unexpected relocation directory")
+                else:
+                    require(approved_header(row, info.filename), "unreviewed .data relocation")
         require(z.testzip() is None, "ZIP CRC failure")
         metadata_names = [n for n in names if n.count("/") == 1 and n.endswith(".dist-info/METADATA")]
         require(len(metadata_names) == 1, "ambiguous wheel metadata")
@@ -243,7 +332,8 @@ def verify_wheel(path, row, plan):
                 "requires_python": md["Requires-Python"], "requires_dist": md.get_all("Requires-Dist", []),
                 "metadata_sha256": sha(md_raw), "wheel_metadata_sha256": sha(wheel_raw),
                 "wheel_record_sha256": sha(record_raw), "wheel_record_files_verified": count,
-                "zip_integrity": "PASS"}
+                "zip_integrity": "PASS", "root_is_purelib": wh["Root-Is-Purelib"] == "true",
+                "approved_header_relocation": GREENLET_HEADER if GREENLET_HEADER in names else None}
 
 
 def dependencies(wheels, plan):
@@ -402,11 +492,30 @@ def stage(plan):
         "plan_sha256": sha(canonical(plan)), "requirements_sha256": sha(requirements.encode())}))
 
 
+def os_network_denial():
+    """Observe kernel sandbox policy without sockets or provider/native imports."""
+    import ctypes
+    library = ctypes.CDLL("/usr/lib/libsandbox.1.dylib")
+    check = library.sandbox_check
+    check.restype = ctypes.c_int
+    states = {op: check(ctypes.c_int(os.getpid()), ctypes.c_char_p(op.encode()), ctypes.c_int(0))
+              for op in ("network-outbound", "network-inbound")}
+    require(all(value in {0, 1} for value in states.values()), "kernel network-denial state unavailable")
+    return states
+
+
 def offline_run(command, log):
-    result = subprocess.run(["/usr/bin/sandbox-exec", "-p", SANDBOX, *command], env=clean_env(),
+    states = os_network_denial()
+    inherited = all(value == 1 for value in states.values())
+    # macOS rejects sandbox_apply under an existing sandbox. Its verified
+    # kernel policy is inherited by children; never attempt to relax/escape it.
+    launch = command if inherited else ["/usr/bin/sandbox-exec", "-p", SANDBOX, *command]
+    result = subprocess.run(launch, env=clean_env(),
                             capture_output=True, text=True, timeout=120)
     write_new(log, canonical({"command": command, "returncode": result.returncode,
-                              "stdout": result.stdout, "stderr": result.stderr, "os_network": "DENY_ALL"}))
+                              "stdout": result.stdout, "stderr": result.stderr, "os_network": "DENY_ALL",
+                              "parent_kernel_network_policy": states,
+                              "network_denial_mode": "INHERITED_KERNEL_VERIFIED" if inherited else "EXPLICIT_PROFILE"}))
     require(result.returncode == 0, "offline subprocess failed; see " + str(log))
     return result
 
@@ -440,14 +549,21 @@ def installed_path(site, name):
     return resolved
 
 
-def verify_installation(plan):
+def claim_installed_ownership(site, rows, owner, ownership):
+    for name, _, _ in rows:
+        path = installed_path(site, name)
+        require(path not in ownership, "distribution ownership conflict: " + str(path))
+        ownership[path] = owner
+
+
+def verify_installation(plan, receipt_area=AREA):
     cfg = regular(RUNTIME / "pyvenv.cfg")
     require(b"include-system-site-packages = false" in cfg, "inherited site packages")
     site = RUNTIME / "lib/python3.12/site-packages"
     require(not list(site.rglob("*.pth")) and not list(site.rglob("*.egg-link")), "executable pth/editable inheritance")
     probe = offline_run([str(RUNTIME / "bin/python"), "-I", "-B", "-c",
         "import sys,site,json,platform; print(json.dumps({'prefix':sys.prefix,'base_prefix':sys.base_prefix,'path':sys.path,'user_site':site.ENABLE_USER_SITE,'python':platform.python_version()}))"],
-        AREA / "environment-probe.json")
+        receipt_area / "environment-probe.json")
     runtime_probe = json.loads(probe.stdout)
     require(runtime_probe["prefix"] == str(RUNTIME) and runtime_probe["prefix"] != runtime_probe["base_prefix"]
             and runtime_probe["user_site"] is False and runtime_probe["python"] == "3.12.8", "target environment identity/inheritance mismatch")
@@ -458,7 +574,7 @@ def verify_installation(plan):
     by_name = {normalize(d.metadata["Name"]): d for d in distributions}
     require(len(distributions) == 41 and {n: d.version for n, d in by_name.items()} == expected, "unexpected installed distributions")
     require(not any(p.name.startswith("hindsight") for p in site.iterdir()), "unexpected Hindsight namespace ownership")
-    checks, ownership = [], {}
+    checks, ownership, relocations = [], {}, []
     for row in plan["artifacts"]:
         wheel = Path(plan["wheelhouse"]) / row["filename"]
         checked = verify_wheel(wheel, row, plan)
@@ -468,19 +584,15 @@ def verify_installation(plan):
         def read(name):
             return regular(installed_path(site, name))
         count, rows = check_record(record.encode(), read)
-        for name, _, _ in rows:
-            path = installed_path(site, name)
-            require(path not in ownership, "distribution ownership conflict: " + str(path))
-            ownership[path] = row["name"]
+        claim_installed_ownership(site, rows, row["name"], ownership)
         with zipfile.ZipFile(wheel) as z:
             md_name = next(n for n in z.namelist() if n.endswith(".dist-info/METADATA"))
             prefix = md_name.removesuffix("METADATA")
-            for info in z.infolist():
-                if not info.is_dir() and info.filename != prefix + "RECORD":
-                    require(read(info.filename) == z.read(info.filename), "installed bytes differ from exact wheel")
+            scheme = installer_scheme(RUNTIME, row["name"])
+            mapped, relocated = check_installed_members(z, row, scheme, site, RUNTIME, rows)
+            relocations.extend(relocated)
             installed_members = {n for n, _, _ in rows}
-            original_members = {i.filename for i in z.infolist() if not i.is_dir()}
-            extras = installed_members - original_members
+            extras = installed_members - mapped
             allowed = {prefix + n for n in ("INSTALLER", "REQUESTED", "direct_url.json")}
             # pip generates only the pinned wheel's declared console/gui scripts.
             ep_raw = z.read(prefix + "entry_points.txt").decode() if prefix + "entry_points.txt" in z.namelist() else ""
@@ -508,10 +620,10 @@ def verify_installation(plan):
     dep = dependencies(checks, plan)
     installer = str(Path(plan["installer"]["repository_venv"]) / "bin/python")
     pip_check = offline_run([installer, "-I", "-B", "-m", "pip", "--isolated", "--python", str(RUNTIME),
-                           "--disable-pip-version-check", "check"], AREA / "pip-check.json")
+                           "--disable-pip-version-check", "check"], receipt_area / "pip-check.json")
     require(pip_check.stdout.strip() == "No broken requirements found.", "pip check failed")
     original_wheels(plan)
-    identity = json.loads(regular(AREA / "environment-identity.json"))
+    identity = json.loads(regular(receipt_area / "environment-identity.json"))
     identity.update(pyvenv_cfg_sha256=sha(cfg), directory_device=RUNTIME.stat().st_dev,
                     directory_inode=RUNTIME.stat().st_ino, interpreter_realpath=str((RUNTIME / "bin/python").resolve()),
                     installed_inventory_sha256=sha(canonical(expected)))
@@ -522,6 +634,7 @@ def verify_installation(plan):
             "wheel_record_files_verified": sum(w["wheel_record_files_verified"] for w in checks),
             "installed_record_files_verified": sum(w["installed_record_files_verified"] for w in checks),
             "ownership_conflicts": 0, "unexpected_distributions": 0, "executable_pth": 0,
+            "relocations": relocations,
             "original_wheels_unchanged": True, "native_sdk_imports": 0,
             "D3": "PARTIAL", "D4": "BLOCKED", "D5": "PARTIAL", "runtime_safety": "UNKNOWN",
             "semantic_parity": "NOT_EXECUTED"}

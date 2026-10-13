@@ -34,7 +34,7 @@ the main storage-lifecycle experiment.
 | Published Phase 08A branch | `phase-08-expansion-freeze-v2` at `a17bc7cb05558012992c19bb264fc7a6e18ac06b` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Published Phase 07 base | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` |
-| Current phase | Phase 08D-9 Stage 2: STOPPED at greenlet header-relocation verifier limitation; no installation; independent review pending; D3/D5 PARTIAL, D4 BLOCKED |
+| Current phase | Phase 08D-9 Stage 2: METADATA INSTALLATION PASS; 41 exact distributions; independent review pending; no import qualification; D3/D5 PARTIAL, D4 BLOCKED |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
@@ -138,7 +138,40 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ## Next authorized action
 
-### Phase 08D-9 Stage 2 dependency preparation STOP
+### Phase 08D-9 Stage 2 header repair and bounded continuation
+
+Explicit human authorization permitted exact greenlet header verification,
+acceptance without redownload, 16 remaining requests and conditional offline
+installation, continuing from `582a9f0ff3aa21c2ba08b8d59e47362386c9ff65`.
+The frozen source manifest, original dependency manifest and acquisition plan
+remain unchanged, as do all historical requests/failures/STOP receipts and the
+greenlet partial. A separate acceptance receipt preserves the historical STOP.
+Only that exact header relocation is permitted; actual pinned pip/target scheme,
+archive/destination/installed-RECORD mapping and exclusive ownership are verified.
+
+Cumulative acquisition is exactly 22 requests / 4,390,044 bytes: the original
+six plus 16 new requests / 2,964,355 bytes, zero retry/redirect/HTTP failure.
+All 19 originals remain unchanged; all 41 exact wheels staged and installed
+offline. Fresh runtime `.local/phase08d9/runtime/.venv` UUID
+`f0b484df-fa35-4a3e-889e-3d95402bf116` is distinct from D7. METADATA/WHEEL,
+closure, 2,677 wheel and 2,807 installed RECORD hashes, relocation/ownership,
+isolation and pip check PASS. 73 controls passed before acquisition; final 76
+passed after transparently correcting a pre-interpreter nested-sandbox wrapper
+failure. That failure created no venv or installed package; its receipts remain
+immutable. Children inherit kernel-verified OS network denial, never weaker policy.
+No native/provider/SDK imports or calls occurred. See the
+[updated report](../experiments/PHASE_08D9_STAGE2_DEPENDENCY_PREPARATION.md) and
+[continuation manifest](../../manifests/phase-08d9-stage2-continuation.json).
+
+**Next action: independent Stage 2 review; STOP after review-branch publication.**
+Stage 3 requires separate explicit normal-import-only authorization, bound source/
+runtime/artifact identities, OS network denial before import, auditing and
+excluded-feature gates. No construction, native method, worker/service/model/
+database/reference/startup or empirical authority follows. D3/D5 PARTIAL;
+D4 BLOCKED; runtime safety UNKNOWN; semantic parity NOT_EXECUTED. Scientific
+freezes, attempts, denominators and LICENSE restrictions remain unchanged.
+
+### Phase 08D-9 Stage 2 dependency preparation STOP (historical)
 
 Stage 1 passed human review and is merged at `a14b21f6157f7994ccb333994a85fd766aba540e`.
 Stage 2 independently verified both remote refs and the clean exact-base branch

@@ -451,17 +451,46 @@ each regression. It is not generic troubleshooting advice.
   wheel `.data` headers. No artifact incompatibility/corruption was demonstrated;
   no executable `.pth` exists in this wheel. Existing pip 24.3.1 installer source
   recognizes the headers scheme, but the qualification verifier does not yet do so.
-- **Handling:** preserve STOP and all six downloads/request/failure receipts;
+- **Initial handling:** preserve STOP and all six downloads/request/failure receipts;
   no rerun, redownload, alternate artifact, installation or native import. Five
   wheels are fully promoted. 39 deterministic controls pass, including the same
   header rejection; this does not establish installation readiness.
-- **Next review:** exact header relocation mapping, installed RECORD/ownership
-  controls and bounded continuation using the existing stopped bytes. Keep the
-  original six-request accounting; only 16 requests / 2,964,355 bytes remain.
+- **Authorized correction:** only the exact pinned greenlet header may spread
+  through pinned pip 24.3.1's actual target scheme. Separate archive names,
+  resolved destinations and installed RECORD-relative names; preserve byte/hash/
+  size equality, containment and one-to-one exclusive ownership. All other `.data`
+  schemes still reject. A separate acceptance retains historical STOP and partial;
+  no redownload. 16 remaining requests complete exactly 22 / 4,390,044 bytes.
+- **Qualification:** 41 isolated installed distributions; 2,677 wheel / 2,807
+  installed RECORD hashes; header and global ownership/isolation/pip check PASS.
+  Original 39 plus new controls: 73 passed before acquisition, final 76 passed.
+  No upstream/native/SDK import or runtime readiness promotion.
 - **Protection:** `scripts/prepare_phase08d9_provider_boundary.py`,
-  `scripts/test_phase08d9_dependencies.py` and
+  `scripts/test_phase08d9_dependencies.py`,
+  `scripts/continue_phase08d9_dependencies.py`,
+  `scripts/test_phase08d9_continuation.py` and
   [Stage 2 report](../experiments/PHASE_08D9_STAGE2_DEPENDENCY_PREPARATION.md).
   D4 BLOCKED, D3/D5 PARTIAL; runtime safety UNKNOWN, parity NOT_EXECUTED.
+
+## Phase 08D-9 nested OS sandbox rejected before venv interpreter
+
+- **Observed:** offline creation helper nested `sandbox-exec` under the calling
+  deny-network sandbox. macOS rejected `sandbox_apply` (exit 71); Python/venv/pip
+  never ran, no `.venv` existed, zero distributions installed. Initial failed
+  creation, identity and diagnostic receipts are preserved unchanged.
+- **Correction:** observe kernel `sandbox_check` inbound/outbound policy. When
+  both operations are denied, child processes inherit verified denial and no
+  second apply is attempted. Otherwise launch through the explicit deny-network
+  profile; unknown policy rejects before child execution. No sandbox relaxation,
+  escape, dependency substitution or actual pip failure repair.
+- **Evidence:** three added controls test inherited child denial, explicit profile
+  selection and unavailable-policy rejection. Final 76 controls pass under OS
+  denial. Completion uses separate receipts and the actual fresh environment UUID,
+  distinct from the pre-interpreter attempted identity. Final pip execution and
+  installed METADATA/RECORD/ownership checks pass. Independent review is next.
+- **Protection:** `offline_run()` / `os_network_denial()` in
+  `scripts/prepare_phase08d9_provider_boundary.py` and the continuation tooling.
+  Full runtime safety UNKNOWN; D4 BLOCKED; no provider/SDK import qualification.
 
 ## Phase 08D-9 engineered bootstrap and transport claim boundaries
 

@@ -1,5 +1,236 @@
 # Phase 08D-9 — Stage 2 isolated dependency preparation
 
+**STAGE 2 METADATA INSTALLATION PASS; independent review pending.**
+Exactly 41 pinned distributions installed. D3/D5 PARTIAL; D4 BLOCKED;
+runtime safety UNKNOWN; semantic parity NOT_EXECUTED. No import qualification.
+
+CONVERSATION: Phase 08D-9 Stage 2 header relocation repair and bounded continuation.
+MODEL: GPT-6 Codex runtime; no independent model-variant receipt.
+EXECUTION TARGET: local `/Users/ian/.codex/worktrees/3a57/Memo`. JETSTREAM ACTION: none; remains SHELVED.
+Date: 2026-10-13, America/Chicago.
+
+## Reviewed repair and preserved evidence
+
+The human explicitly authorized the precise header verifier/ownership repair,
+reuse of the failed greenlet bytes, at most 16 remaining wheel requests, and
+conditional offline installation. The clean branch started at `582a9f0ff3aa21c2ba08b8d59e47362386c9ff65`;
+fresh HTTPS Git independently verified that review ref and main at the approved
+Stage 1 commit. No main merge, SSH or hook bypass occurred.
+
+Initial [dependency manifest](../../manifests/phase-08d9-provider-boundary-dependencies.json)
+remains immutable at SHA-256 `2ac0757b1c525fde914bf8258f180e86b7610391d3d23fb23d5b4516f0bdd87d`. The frozen acquisition plan
+remains `dc477b3135f262a4ed4d3e421ff4d906ee040f0dfd0f9241926791931a8688b9`; source manifest remains `91bdb4c3cdb28e0879b686ba1bd5448d375c02b51a1e0cd612f120b2f7f4ad72`.
+All 19 original wheels, five promoted downloads, exact 274,079-byte greenlet
+partial, original six requests, all historical failure/STOP/test/diagnostic
+receipts and the absence of a runtime were verified before repair. Their
+before-repair snapshot is `73b723f39511fdcd97d8ac01aa35ead794d8111b55ace085e48c1671ea115584`. All historical input bytes are
+rehash-verified unchanged after completion, including the preserved `.part`.
+
+The [preparation verifier](../../scripts/prepare_phase08d9_provider_boundary.py)
+now accepts only the exact hash-pinned greenlet wheel's
+`greenlet-3.2.4.data/headers/greenlet.h`. General `.data` relocation remains
+rejected. The [continuation tool](../../scripts/continue_phase08d9_dependencies.py)
+uses pip 24.3.1's actual `get_scheme`, whose source identities are pinned in the
+snapshot. A fresh target-process probe executed that same pinned installer
+scheme logic before installation and matched the earlier projection. It never
+imported greenlet, Hindsight, OpenAI, HTTPX, HTTPCore or aiohttp.
+
+The verifier separates wheel archive names, resolved destinations and installed
+RECORD paths relative to site-packages. Every source maps one-to-one, ordinary
+members retain their existing byte/hash checks, and installed distribution
+ownership is exclusive across site-packages, generated console scripts and
+the header. Absolute/traversing/symlink/foreign/colliding destinations reject.
+Generated installer metadata and declared console/gui scripts remain narrowly
+controlled, with complete fresh-runtime file ownership verification.
+
+The exact installed header is:
+
+| Identity layer | Observed value |
+| --- | --- |
+| Wheel archive member | `greenlet-3.2.4.data/headers/greenlet.h` |
+| Installer-derived destination | `/Users/ian/.codex/worktrees/3a57/Memo/.local/phase08d9/runtime/.venv/include/site/python3.12/greenlet/greenlet.h` |
+| Installed RECORD path | `../../../include/site/python3.12/greenlet/greenlet.h` |
+| Installed RECORD hash | `sha256=sz5pYRSQqedgOt2AMgxLZdTjO-qcr_JMvgiEJR9IAJ8` |
+| Bytes | `4755` |
+
+Wheel/installed bytes, RECORD hash/size, destination containment and exclusive
+ownership PASS. A separate greenlet acceptance receipt explicitly retains
+`original_gate=STOP_PRESERVED`; promotion used the existing verified partial,
+with zero extra request/bytes and without deleting or altering it.
+
+## Exact acquisition accounting
+
+The new exclusive append-only continuation ledger cryptographically binds the
+original six-request ledger, frozen plan and greenlet acceptance receipt. Its
+16 new exact allowlisted HTTPS requests downloaded **2,964,355 bytes**.
+Cumulative: **22 requests / 4,390,044 bytes**, 22 exact verified downloads,
+zero failed HTTP requests, redirects, retries or replacement artifacts.
+Greenlet was not redownloaded. All 19 originals were reused unchanged. No new
+acquisition attempt or plan was substituted; the original failed gate remains
+a historical observation, separate from repaired acceptance.
+
+| Remaining exact filename acquired | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `json_repair-0.63.2-py3-none-any.whl` | 50916 | `7354c2dd433bf15dedf98d2932ae9cd1ea197d7edc77e6c0538f08e34616580e` |
+| `multidict-6.7.0-py3-none-any.whl` | 12317 | `394fc5c42a333c9ffc3e421a4c85e08580d990e08b99f6bf35b4132114c5dcb3` |
+| `opentelemetry_api-1.44.0-py3-none-any.whl` | 60018 | `94b98c893a91b88657eaac1e3ba89618cdb85be6918196705354f34728b2cdef` |
+| `opentelemetry_exporter_otlp_proto_common-1.44.0-py3-none-any.whl` | 17045 | `9a9fe61bba73d802904bc989f1d6b4a7b1ee40f06c40e98d6f85af65aaebb694` |
+| `opentelemetry_exporter_otlp_proto_http-1.44.0-py3-none-any.whl` | 21850 | `838592fce774c1c8bb7b9a0a7facbfa82e17be5a8a4e94cef10cb84ae026bae3` |
+| `opentelemetry_exporter_prometheus-0.65b0-py3-none-any.whl` | 13031 | `3b3d24b586d0ad9712c7b52b7d19c8a9dfbb318b9b284121b5f95e90ed019367` |
+| `opentelemetry_proto-1.44.0-py3-none-any.whl` | 72483 | `898b155a0e1557afd867478fb6158e8122a46329ca0bb8dc53cc55e98f017f56` |
+| `opentelemetry_sdk-1.44.0-py3-none-any.whl` | 137221 | `df081c4c6bcfdb1211e3e86140376792643128a25f8d72d1d27675936e7e96ad` |
+| `opentelemetry_semantic_conventions-0.65b0-py3-none-any.whl` | 204645 | `1cacde7b0ad306f84c5ef08c3dbe1bbaf20165bba6f8bff43b670e555a086bcb` |
+| `prometheus_client-0.23.1-py3-none-any.whl` | 61145 | `dd1913e6e76b59cfe44e7a4b83e01afc9873c1bdfd2ed8739f1e76aeca115f99` |
+| `propcache-0.4.1-py3-none-any.whl` | 13305 | `af2a6052aeb6cf17d3e46ee169099044fd8224cbaf75c76a2ef596e8163e2237` |
+| `protobuf-7.35.1-py3-none-any.whl` | 171659 | `4bc97768d8fe4ad6743c8a19403e314511ed9f6d13205b687e52421c023ac1b9` |
+| `python_dotenv-1.2.2-py3-none-any.whl` | 22101 | `1d8214789a24de455a8b8bd8ae6fe3c6b69a5e3d64aa8a8e5d68e694bbcb285a` |
+| `sqlalchemy-2.0.44-py3-none-any.whl` | 1928718 | `19de7ca1246fbef9f9d1bff8f1ab25641569df226364a0e40457dc5457c54b05` |
+| `urllib3-2.7.0-py3-none-any.whl` | 131087 | `9fb4c81ebbb1ce9531cce37674bbc6f1360472bc18ca9a553ede278ef7276897` |
+| `yarl-1.22.0-py3-none-any.whl` | 46814 | `1380560bdba02b6b6c90de54133c81c9f2a453dee9912fe58c1dcced1edb7cff` |
+
+## Fresh offline installation and metadata qualification
+
+All 41 unique wheel artifacts passed ZIP, WHEEL tags, METADATA, wheel RECORD,
+target compatibility and actual dependency marker/specifier checks before
+staging or environment creation. The closure equals the frozen 41-package
+plan exactly. Wheelhouse: `.local/phase08d9/stage2/wheelhouse/`; exact hash-locked
+requirements: `.local/phase08d9/stage2/continuation/requirements.txt`.
+
+Fresh environment: `/Users/ian/.codex/worktrees/3a57/Memo/.local/phase08d9/runtime/.venv`.
+Independent identity: `f0b484df-fa35-4a3e-889e-3d95402bf116`; directory inode
+`12281585`; created
+`2026-10-13T18:35:33.185636+00:00`. The receipt binds repository,
+pyvenv.cfg, interpreter, installed inventory and source/plan identities. It is
+distinct from the earlier D7 SDK environment, which remains unchanged.
+
+The initial installation wrapper hit macOS `sandbox_apply: Operation not
+permitted` while nesting `sandbox-exec` inside an already network-denied process.
+Exit 71 was before the venv interpreter started: no `.venv`, installed package
+or pip execution occurred. The failed creation/identity/failure receipts remain
+immutable. This was transparently corrected by observing kernel policy through
+`sandbox_check`: inbound/outbound networking both denied. Children inherit that
+verified policy; otherwise the helper requires an explicit deny-network profile.
+Unknown policy rejects before child execution. No sandbox was weakened or escaped.
+Completion used separate installation receipts and a new real environment UUID;
+the failed identity is retained as an attempted, never-created environment.
+
+All creation, target scheme/probe, installation and verification processes ran
+under OS denial of networking. Pip 24.3.1 used `--python` targeting a fresh
+`--without-pip` venv and `--isolated --no-index --no-deps --require-hashes
+--only-binary=:all: --no-cache-dir --no-compile`; clean environments exclude
+PYTHONPATH, user sites, proxies/credentials and pip configuration. No source
+build, editable install, online dependency resolution or Hindsight distribution.
+
+Final checks PASS:
+
+- Exactly **41 installed distributions**, pinned names/versions and wheel bytes.
+- **2,677 wheel RECORD hashes** and **2,807 installed RECORD hashes** verified.
+- **2,848 exclusively owned installed files**; eight baseline environment files
+  preserved; no unexpected file, distribution, inherited site, executable `.pth`
+  or ownership conflict. Target stdlib probe confirms isolated prefix/user-site.
+- Exact METADATA/Requires-Dist marker selections, WHEEL compatibility tags,
+  original-to-installed byte equality, header spreading and full closure.
+- `pip check`: `No broken requirements found.`
+
+Installed inventory (all METADATA/RECORD verified; none imported):
+
+| Distribution | Installed version |
+| --- | --- |
+| `aiohappyeyeballs` | `2.6.1` |
+| `aiohttp` | `3.14.3` |
+| `aiosignal` | `1.4.0` |
+| `annotated-types` | `0.7.0` |
+| `anyio` | `4.14.2` |
+| `attrs` | `25.4.0` |
+| `certifi` | `2025.10.5` |
+| `charset-normalizer` | `3.4.4` |
+| `distro` | `1.9.0` |
+| `frozenlist` | `1.8.0` |
+| `googleapis-common-protos` | `1.75.0` |
+| `greenlet` | `3.2.4` |
+| `h11` | `0.16.0` |
+| `httpcore` | `1.0.9` |
+| `httpx` | `0.28.1` |
+| `idna` | `3.15` |
+| `jiter` | `0.12.0` |
+| `json-repair` | `0.63.2` |
+| `multidict` | `6.7.0` |
+| `openai` | `2.24.0` |
+| `opentelemetry-api` | `1.44.0` |
+| `opentelemetry-exporter-otlp-proto-common` | `1.44.0` |
+| `opentelemetry-exporter-otlp-proto-http` | `1.44.0` |
+| `opentelemetry-exporter-prometheus` | `0.65b0` |
+| `opentelemetry-proto` | `1.44.0` |
+| `opentelemetry-sdk` | `1.44.0` |
+| `opentelemetry-semantic-conventions` | `0.65b0` |
+| `prometheus-client` | `0.23.1` |
+| `propcache` | `0.4.1` |
+| `protobuf` | `7.35.1` |
+| `pydantic` | `2.12.5` |
+| `pydantic-core` | `2.41.5` |
+| `python-dotenv` | `1.2.2` |
+| `requests` | `2.34.2` |
+| `sniffio` | `1.3.1` |
+| `sqlalchemy` | `2.0.44` |
+| `tqdm` | `4.67.1` |
+| `typing-extensions` | `4.15.0` |
+| `typing-inspection` | `0.4.2` |
+| `urllib3` | `2.7.0` |
+| `yarl` | `1.22.0` |
+
+## Controls, receipts and claim limits
+
+Before any additional acquisition: **73/73 offline controls passed**, including
+the original 39 plus 34 header/ownership/ledger controls. After the wrapper
+correction: **76/76 passed**, adding inherited kernel-denial, explicit-profile
+and unavailable-policy rejection cases. Zero test failures/errors. Positive
+coverage uses the exact approved header; negatives cover byte/RECORD tampering,
+missing/duplicate ownership, forbidden `.data` schemes, scripts/binaries/foreign
+destinations, executable `.pth`, path traversal, symlinks and altered/replayed
+original/continuation acquisition evidence. The unchanged original test's
+generic unreviewed header still rejects; it is not the approved greenlet case.
+[Controls](../../scripts/test_phase08d9_continuation.py) never import copied
+native binaries or provider/SDK modules. No real networking is used by tests.
+
+The [continuation manifest](../../manifests/phase-08d9-stage2-continuation.json),
+SHA-256 `2f6e1a6e1263c32bcf9dc45bd25beb7e5e80ea057a3fb8c7662eb5637e9b06f9`, binds immutable repair/test, greenlet acceptance,
+remaining-acquisition, complete-inventory and installed-verification receipts,
+ledger hashes, environment/relocation identities, exact packages and tool hashes.
+All wheels, environments and raw receipts remain ignored/outside Git. Only
+preparation/continuation/test scripts, the new derived manifest and documentation
+are published to the same review branch. Native provider/helper sources, original
+source/dependency manifests, patch, plan and scientific evidence are unchanged.
+
+Preserved failures: the historical initial greenlet STOP and the pre-interpreter
+nested-sandbox rejection (plus the older bootstrap-without-pip diagnostic).
+No unresolved artifact or actual pip-installation failure remains. Historical
+receipts were neither overwritten nor reinterpreted. There were no model,
+provider, embedding, database, worker/service, Jetstream, SSH, downstream/RQ3
+or empirical calls; runtime startup gate and scientific denominators unchanged.
+Freeze v1 remains
+`0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b`;
+Candidate10 NO_GO and OpenViking S0 r2 ERROR remain frozen.
+
+## Stage 3 prerequisites and review stop
+
+Stage 3 needs independent acceptance of these Stage 2 receipts and a separate
+explicit authorization for normal imports under pre-import OS network denial,
+import auditing and excluded-module/feature gates. Bind the exact source
+manifest/derivative, fresh environment UUID, artifact hashes and harness identity.
+Observe real root thread defaults, CPU/cgroup reads, third-party/native import
+effects, lazy exports and optional/dynamic expansion. Any enlarged closure or
+unapproved effect returns to review. Construction, native methods, SDK/provider
+calls, engine/worker/service/model/database execution, reference comparison and
+runtime readiness are outside that import-only scope.
+
+Pinned upstream LICENSE bytes remain unavailable; no engineered Hindsight
+distribution was constructed, installed, published or redistributed. Licensing
+provenance remains separately authorized before packaging/redistribution.
+D3/D5 PARTIAL; D4 BLOCKED; runtime safety UNKNOWN; semantic parity NOT_EXECUTED.
+**STOP for independent review. Retrieved != Authoritative.**
+
+## Historical initial Stage 2 STOP (immutable raw receipts retained)
+
 **STOPPED during acquisition qualification. Installation NOT_EXECUTED.**
 D3/D5 PARTIAL; D4 BLOCKED; runtime safety UNKNOWN; semantic parity NOT_EXECUTED.
 

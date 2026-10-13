@@ -451,3 +451,40 @@ is no majority voting and no replacement of errors.
   no silent STOP bypass or redownload. Stage 3 requires completed/accepted Stage 2
   and separate import authorization. [Stage 2 report](../experiments/PHASE_08D9_STAGE2_DEPENDENCY_PREPARATION.md),
   [dependency manifest](../../manifests/phase-08d9-provider-boundary-dependencies.json).
+
+## Phase 08D-9 Stage 2 header repair and bounded continuation (2026-10-13)
+
+- Explicit human repair/continuation authorization; clean review branch begins at
+  `582a9f0ff3aa21c2ba08b8d59e47362386c9ff65`. HTTPS independently verifies that
+  remote review ref and unchanged main at Stage 1 `a14b21f6157f7994ccb333994a85fd766aba540e`.
+- Source manifest unchanged (`91bdb4c3cdb28e0879b686ba1bd5448d375c02b51a1e0cd612f120b2f7f4ad72`),
+  initial dependency manifest unchanged (`2ac0757b1c525fde914bf8258f180e86b7610391d3d23fb23d5b4516f0bdd87d`),
+  acquisition plan unchanged (`dc477b3135f262a4ed4d3e421ff4d906ee040f0dfd0f9241926791931a8688b9`).
+  All prior raw requests/failures/STOP/test/diagnostic receipts and greenlet partial
+  rehashed unchanged; original six-request gate is never reinterpreted as PASS.
+- Precise greenlet header spread only, actual pinned installer/target scheme,
+  archive/destination/RECORD one-to-one mapping and exclusive ownership. Separate
+  greenlet acceptance/promoted copy from preserved bytes; no new HTTP request.
+- 16 additional exact HTTPS requests / 2,964,355 bytes complete cumulative
+  22 requests / 4,390,044 bytes; no redirect, retry, HTTP failure or replacement.
+  19 original wheels unchanged; all 41 exact artifacts metadata-verified/staged.
+- Fresh isolated `.local/phase08d9/runtime/.venv`, UUID
+  `f0b484df-fa35-4a3e-889e-3d95402bf116`; 41 pinned distributions installed with
+  OS network denial and binary-only/no-index/no-deps/require-hashes. METADATA,
+  WHEEL, dependency closure, 2,677 wheel / 2,807 installed RECORD hashes,
+  header/global ownership/isolation and pip check PASS.
+- 73 offline controls passed before acquisition; final 76 passed after transparent
+  pre-interpreter nested-sandbox correction. macOS exit 71 preceded Python/venv/pip;
+  no runtime or package existed. Failed attempt retained, separate completion
+  receipts/new actual UUID; kernel-verified network denial inherited by children.
+  No actual pip installation failure silently repaired. No unresolved artifact issue.
+- New [continuation manifest](../../manifests/phase-08d9-stage2-continuation.json)
+  SHA-256 `2f6e1a6e1263c32bcf9dc45bd25beb7e5e80ea057a3fb8c7662eb5637e9b06f9`;
+  [updated report](../experiments/PHASE_08D9_STAGE2_DEPENDENCY_PREPARATION.md).
+  Raw engineering receipts remain ignored; none is an empirical attempt or cell.
+- No native/Hindsight/SDK imports, construction or methods; no provider/model/
+  embedding/database/worker/service/Jetstream/SSH/downstream/RQ3/empirical action.
+  D3/D5 PARTIAL; D4 BLOCKED; safety UNKNOWN; parity NOT_EXECUTED; frozen scientific
+  evidence, denominators, Freeze v1/draft v2 unchanged. Stage 3 requires independent
+  Stage 2 acceptance and separately explicit normal-import-only authorization.
+  STOP for independent review after publication to the same review branch.
