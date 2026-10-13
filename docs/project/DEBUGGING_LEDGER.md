@@ -442,6 +442,27 @@ each regression. It is not generic troubleshooting advice.
   `scripts/test_phase08d9_static_derivative.py`, and
   [Stage 1 report](../experiments/PHASE_08D9_STAGE1_STATIC_PROVIDER_BOUNDARY.md).
 
+## Phase 08D-9 Stage 2 greenlet header-relocation verifier STOP
+
+- **Observed:** exact greenlet 3.2.4 binary wheel matches authorized size/hash,
+  CRC, METADATA/WHEEL tags and all 94 hashed RECORD files, but the new preparation
+  verifier rejects `.data/headers/greenlet.h` under its unsupported-relocation check.
+- **Root cause:** the verifier lacks destination/ownership mapping for ordinary
+  wheel `.data` headers. No artifact incompatibility/corruption was demonstrated;
+  no executable `.pth` exists in this wheel. Existing pip 24.3.1 installer source
+  recognizes the headers scheme, but the qualification verifier does not yet do so.
+- **Handling:** preserve STOP and all six downloads/request/failure receipts;
+  no rerun, redownload, alternate artifact, installation or native import. Five
+  wheels are fully promoted. 39 deterministic controls pass, including the same
+  header rejection; this does not establish installation readiness.
+- **Next review:** exact header relocation mapping, installed RECORD/ownership
+  controls and bounded continuation using the existing stopped bytes. Keep the
+  original six-request accounting; only 16 requests / 2,964,355 bytes remain.
+- **Protection:** `scripts/prepare_phase08d9_provider_boundary.py`,
+  `scripts/test_phase08d9_dependencies.py` and
+  [Stage 2 report](../experiments/PHASE_08D9_STAGE2_DEPENDENCY_PREPARATION.md).
+  D4 BLOCKED, D3/D5 PARTIAL; runtime safety UNKNOWN, parity NOT_EXECUTED.
+
 ## Phase 08D-9 engineered bootstrap and transport claim boundaries
 
 - **Design finding:** lazifying engine/providers/worker exports is a minimal

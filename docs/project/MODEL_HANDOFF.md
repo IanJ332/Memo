@@ -30,11 +30,11 @@ the main storage-lifecycle experiment.
 
 | Item | State |
 | --- | --- |
-| Branch | `phase-08d9-stage1-static-derivative`, based on verified merged `main` `523055af834c285ec6608ffa37e15b31ffc4e86b` |
+| Branch | `phase-08d9-stage2-dependency-preparation`, based on verified merged Stage 1 `a14b21f6157f7994ccb333994a85fd766aba540e` |
 | Published Phase 08A branch | `phase-08-expansion-freeze-v2` at `a17bc7cb05558012992c19bb264fc7a6e18ac06b` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Published Phase 07 base | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` |
-| Current phase | Phase 08D-9 Stage 1: STATIC PASS; engineered source derivative; independent review pending; runtime/parity unexecuted; D3/D5 PARTIAL, D4 BLOCKED |
+| Current phase | Phase 08D-9 Stage 2: STOPPED at greenlet header-relocation verifier limitation; no installation; independent review pending; D3/D5 PARTIAL, D4 BLOCKED |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
@@ -138,7 +138,30 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ## Next authorized action
 
-### Phase 08D-9 Stage 1 static derivative
+### Phase 08D-9 Stage 2 dependency preparation STOP
+
+Stage 1 passed human review and is merged at `a14b21f6157f7994ccb333994a85fd766aba540e`.
+Stage 2 independently verified both remote refs and the clean exact-base branch
+over HTTPS, revalidated the frozen source manifest and 19 original wheels, and
+froze exactly 22 downloads / 4,390,044 bytes. Six HTTP downloads completed with
+matching size/hash; five passed all preparation checks. Request 6's exact greenlet
+wheel contains `greenlet-3.2.4.data/headers/greenlet.h`; the new verifier's blanket
+relocation check STOPPED. Read-only diagnosis verifies ZIP/METADATA/WHEEL/RECORD
+and identifies a verifier limitation, not demonstrated artifact incompatibility.
+39 deterministic controls pass. No wheelhouse or environment was created; no
+installation or pip check occurred. Six requests / 1,425,689 downloaded bytes
+remain counted, 16 requests / 2,964,355 bytes remain unrequested. All prior bytes
+and failure receipts are preserved; do not redownload greenlet or rerun acquisition
+over them. See the [Stage 2 report](../experiments/PHASE_08D9_STAGE2_DEPENDENCY_PREPARATION.md)
+and [dependency manifest](../../manifests/phase-08d9-provider-boundary-dependencies.json).
+
+**Next action: independent review of header relocation verification and bounded,
+evidence-preserving continuation before resumption.** Stage 2 is incomplete and
+does not authorize Stage 3. No native/SDK imports/construction, model/database/
+service/worker/SSH/Jetstream/RQ3 or empirical action. D3/D5 PARTIAL; D4 BLOCKED;
+runtime safety UNKNOWN; semantic parity NOT_EXECUTED; freezes/evidence unchanged.
+
+### Phase 08D-9 Stage 1 static derivative (historical; accepted and merged)
 
 Separately authorized Stage 1 produced the exclusive ignored engineered source
 `memlife-hindsight-provider-boundary/0.1.0+upstream.f8950b0c07d9`. All 131

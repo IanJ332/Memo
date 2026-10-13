@@ -421,3 +421,33 @@ is no majority voting and no replacement of errors.
   [source manifest](../../manifests/phase-08d9-provider-boundary-source.json),
   [verification](../../manifests/phase-08d9-stage1-static-verification.json) and
   [tests](../../manifests/phase-08d9-stage1-static-tests.json).
+
+## Phase 08D-9 Stage 2 dependency STOP (2026-10-13; no empirical attempt)
+
+- Stage 1 human review accepted and fast-forward merge separately completed.
+  HTTPS-only remote preflight verified main and Stage 1 branch both exactly
+  `a14b21f6157f7994ccb333994a85fd766aba540e`; Stage 2 branch clean at that base.
+- Source manifest unchanged at
+  `91bdb4c3cdb28e0879b686ba1bd5448d375c02b51a1e0cd612f120b2f7f4ad72`;
+  read-only independent Stage 1 verification passed. Original 19 wheels verified
+  unchanged. Frozen acquisition-plan SHA-256:
+  `dc477b3135f262a4ed4d3e421ff4d906ee040f0dfd0f9241926791931a8688b9`.
+- Authorized set: 41 packages, 22 downloads / 4,390,044 bytes. Observed: six
+  successful exact HTTPS downloads / 1,425,689 matching bytes; five fully verified
+  promoted wheels / 1,151,610 bytes. Zero failed HTTP requests, redirects or retries.
+- STOP on greenlet's `.data/headers/greenlet.h`: preparation verifier limitation,
+  not demonstrated incompatible/corrupt artifact. Read-only integrity diagnosis
+  confirms CRC/METADATA/WHEEL and 94 hashed RECORD members. Stopped bytes/receipts
+  retained immutable; 16 artifacts / 2,964,355 bytes never requested.
+- No wheelhouse or fresh environment created, zero installed distributions;
+  installed metadata/RECORD/pip check NOT_EXECUTED. 39 deterministic controls PASS.
+  Two engineering diagnostics preserved: historical bootstrap lacks pip, and
+  greenlet relocation rejection. No scientific attempt amended or executed.
+- No native/SDK imports/construction, provider/model/embedding/database/service/
+  worker/Jetstream/SSH/downstream/RQ3 or empirical action. D3/D5 PARTIAL, D4 BLOCKED;
+  runtime safety UNKNOWN, semantic parity NOT_EXECUTED. Freeze v1, draft v2,
+  Candidate10 NO_GO, OpenViking S0 r2 ERROR and all denominators unchanged.
+- Independent review of relocation verification and bounded continuation is next;
+  no silent STOP bypass or redownload. Stage 3 requires completed/accepted Stage 2
+  and separate import authorization. [Stage 2 report](../experiments/PHASE_08D9_STAGE2_DEPENDENCY_PREPARATION.md),
+  [dependency manifest](../../manifests/phase-08d9-provider-boundary-dependencies.json).
