@@ -138,7 +138,25 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ## Next authorized action
 
-### Phase 08D-7 SDK-only installation and qualification addendum
+### Phase 08D-8 minimal native runtime preparation addendum
+
+Separately authorized preparation on `phase-08d8-native-runtime-preparation`,
+base `e07de9832572a910e7055d2df582b919146c35fd`, reverified the existing 16-package
+SDK environment, 20 pinned source files and dependency metadata with networking
+denied. Four artifact rejection controls passed. Ordinary provider import runs
+an eager initializer importing 13 sibling implementations; 31 source files are
+missing from the known frontier. Ten additional helper dependency candidates
+are known; only aiosignal has a matching local wheel. The complete minimal
+native closure remains UNKNOWN. Cryptography is required by full distribution
+metadata, absent from SDK closure, and unresolved for ordinary native import;
+no workaround is justified. No acquisition, installation, native import or
+construction occurred. D3/D5 remain PARTIAL and D4/runtime/pilot BLOCKED.
+See the [Phase 08D-8 report and bounded source-only acquisition proposal](../experiments/PHASE_08D8_MINIMAL_NATIVE_RUNTIME_PREPARATION.md).
+Stop for independent review. The proposed 31-file pinned source inspection
+requires separate authorization before any request; no package, build, native
+method, service, model, SSH or Jetstream action is authorized by this handoff.
+
+### Phase 08D-7 SDK-only installation and qualification addendum (historical)
 
 Separately authorized preparation on `phase-08d7-runtime-dependencies`, base
 `d29742e9a59575d63f54c50e10205208654240c1`, verified pinned upstream dependency

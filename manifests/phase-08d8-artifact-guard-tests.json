@@ -1,0 +1,28 @@
+{
+  "native_calls": 0,
+  "original_artifact_hashes_unchanged": true,
+  "phase": "08D-8",
+  "runtime_gate": "BLOCKED_UNCHANGED",
+  "tests": [
+    {
+      "expected_rejection": "pinned source identity mismatch",
+      "name": "source_identity_mismatch",
+      "status": "PASS"
+    },
+    {
+      "expected_rejection": "pinned non-truncated tree identity mismatch",
+      "name": "tree_identity_mismatch",
+      "status": "PASS"
+    },
+    {
+      "expected_rejection": "dependency metadata identity changed",
+      "name": "metadata_identity_mismatch",
+      "status": "PASS"
+    },
+    {
+      "expected_rejection": "FileExistsError",
+      "name": "existing_receipt_preserved",
+      "status": "PASS"
+    }
+  ]
+}

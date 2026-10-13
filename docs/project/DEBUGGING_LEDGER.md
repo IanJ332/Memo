@@ -318,3 +318,22 @@ each regression. It is not generic troubleshooting advice.
   SDK-only/scripted-stream results cannot promote native readiness.
 - **Next:** independent review; D4 BLOCKED, D3/D5 PARTIAL.
   [Report](../experiments/PHASE_08D7_RUNTIME_DEPENDENCY_PREPARATION.md).
+
+## Phase 08D-8 native submodule import expands through package initializers
+
+- **Finding:** the verified providers initializer eagerly imports 13 other
+  implementations. Ordinary import of OpenAI-compatible executes it; missing
+  root/engine/worker initializers and helper bodies leave a 31-file source
+  frontier. The SDK plus ten known helper packages is not a complete closure.
+- **Invariant:** never use stub packages, extracted helpers or omitted real
+  initializers to claim native import qualification. Source/dependency UNKNOWN
+  cannot become optional from absence in a cache. Keep runtime BLOCKED.
+- **Portability:** the D7 installer deliberately binds its ignored environment
+  to its original worktree. Read-only reuse verifies the immutable plan and
+  original observed artifact paths; it does not assume a new checkout owns or
+  contains those artifacts. Originals and D7 loader remain unchanged.
+- **Cryptography:** full distribution metadata requires its security floor;
+  SDK closure does not. Native necessity is UNKNOWN until missing source is
+  inspected, so no downgrade, architecture substitution or build is justified.
+- **Protection:** `scripts/prepare_phase08d8_native.py`, four artifact rejection
+  controls and [preparation report](../experiments/PHASE_08D8_MINIMAL_NATIVE_RUNTIME_PREPARATION.md).

@@ -266,3 +266,20 @@ is no majority voting and no replacement of errors.
 - Provider/model/embedding/downstream/RQ3/SSH/Jetstream actions: zero. No new
   empirical row, denominator or scientific evidence; D1/D2 and freezes unchanged.
 - [Installation/qualification receipt](../../manifests/phase-08d7-sdk-installation-qualification.json).
+
+## Phase 08D-8 minimal native runtime preparation (no empirical attempt)
+
+- Base `e07de9832572a910e7055d2df582b919146c35fd`; review branch
+  `phase-08d8-native-runtime-preparation` in the assigned local worktree.
+- Existing 16 SDK distributions/imports, 1,412 wheel and 1,464 installed RECORD
+  hashes, 20 source identities and upstream metadata reverified offline.
+  Four real-artifact rejection controls pass; originals unchanged.
+- Normal native import has 31 missing source files in the known frontier;
+  complete source/dependency closure and native cryptography necessity UNKNOWN.
+  Ten known helper dependencies include one reusable local wheel and nine gaps.
+- No acquisition, installation, build, native import/construction/method call,
+  provider/model/embedding/downstream/RQ3/SSH/Jetstream action or empirical row.
+  D1/D2/freezes and scientific denominators unchanged. D4 BLOCKED, D3/D5 PARTIAL.
+- [Preparation report](../experiments/PHASE_08D8_MINIMAL_NATIVE_RUNTIME_PREPARATION.md)
+  and [artifact receipt](../../manifests/phase-08d8-native-preparation.json).
+  Independent review next; bounded source-only acquisition separately authorized.
