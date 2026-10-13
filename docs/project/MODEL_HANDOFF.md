@@ -140,6 +140,27 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ### Phase 08D-8 minimal native runtime preparation addendum
 
+The remaining-source continuation from
+`d11a081855b84b85522fde6ad25deeb34a37ceaa` froze the exact 75-file /
+1,259,799-byte plan. It acquired and verified db base/ops/result, then reflect's
+initializer: four new files / 56,318 bytes. The database bodies are abstraction
+definitions with no import-time backend/connection/model startup. Reflect's
+initializer unconditionally imports unapproved `engine/reflect/agent.py`, so
+acquisition STOPPED; 71 approved files remain untouched. Six static controls
+pass, with 30 source identities and 17 reusable wheel hashes; prior six acquired
+files, logs, plans and receipts remain intact. Native closure INCOMPLETE; faithful
+import/construction and cryptography necessity UNKNOWN. Known package lower
+bound 28 / 11 wheel gaps; D3/D5 PARTIAL, D4 BLOCKED.
+See the [remaining-source receipt](../../manifests/phase-08d8-remaining-source-closure.json)
+and [updated report](../experiments/PHASE_08D8_MINIMAL_NATIVE_RUNTIME_PREPARATION.md).
+Independent review is next. Narrow next authorization: reflect `agent.py`,
+91,029 bytes, source-only. Broader explicit resumption: 72 remaining files /
+1,294,510 bytes. No package acquisition/install/build or native/provider/SDK,
+model/database/worker/service, RQ3, SSH or Jetstream action is authorized by this
+handoff. Startup gate unchanged; no scientific denominator/evidence change.
+
+The expanded 75-file inspection below is historical:
+
 The expanded source-only continuation from
 `0e6d6a7d3d6faa5fc21fb6cae89fb45da91e30ef` froze the exact 75-file plan, then
 acquired/verified `_thread_limits.py`, `engine/cross_encoder.py` and

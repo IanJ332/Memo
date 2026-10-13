@@ -322,3 +322,23 @@ is no majority voting and no replacement of errors.
   and [frozen plan](../../manifests/phase-08d8-expanded-source-plan.json).
   Stop for independent review; three database source bodies are the narrow next
   source-only authorization, not installation/execution permission.
+
+### Phase 08D-8 remaining source closure (2026-10-13)
+
+- Start: `d11a081855b84b85522fde6ad25deeb34a37ceaa`, clean same review branch.
+  Exact remaining 75-file / 1,259,799-byte plan frozen before source requests.
+- Acquired db base/ops/result and reflect initializer: four files / 56,318 bytes;
+  exact HTTPS/blob/size/SHA-256 controls pass. Prior six acquired files, historical
+  evidence/plans/receipts and scientific denominators unchanged; raw source ignored.
+- Database files define abstractions without import-time database initialization.
+  Reflect initializer imports out-of-allowlist agent.py; STOP before remaining
+  71 approved files or new agent bytes. No reflect operation was executed.
+- Six static/integrity checks PASS; 30 verified sources and 17 rehashed wheels.
+  Known package lower bound remains 28 with 11 gaps. Native closure INCOMPLETE;
+  feasibility/cryptography UNKNOWN. D3/D5 PARTIAL, D4 BLOCKED gate unchanged.
+- No Hindsight/native/SDK execution, provider construction, package download/
+  install/build, service/database/model/embedding/worker/RQ3, SSH or Jetstream.
+- [Immutable closure receipt](../../manifests/phase-08d8-remaining-source-closure.json)
+  and [frozen plan](../../manifests/phase-08d8-remaining-source-plan.json).
+  Independent review; narrow next source authorization is pinned agent.py
+  (91,029 bytes), without installation or reflection/native execution permission.

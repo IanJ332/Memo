@@ -376,3 +376,22 @@ each regression. It is not generic troubleshooting advice.
   `scripts/verify_phase08d8_expanded_sources.py`, six static/integrity controls and
   [expanded source receipt](../../manifests/phase-08d8-expanded-source-inspection.json).
   D4 gate unchanged; next action is independent review.
+
+### Phase 08D-8 database abstractions close; reflect agent import expands frontier
+
+- **Verified:** db base/ops/result imports are standard library and one another;
+  base's reverse ops dependency is type-check-only. ABC/dataclass/protocol setup
+  and constants do not create backends or connections; operation methods are
+  deferred. Source was inspected, never executed.
+- **New frontier:** reflect initializer line 10 unconditionally imports agent.py,
+  reached through cached MemoryEngine's reflect import and the eager engine parent.
+  It exports run_reflect_agent without calling it, but the agent body is missing
+  outside the authorized remaining 75. Four new files / 56,318 bytes, then STOP.
+- **Invariant:** exporting a function does not make its source module optional or
+  certify import safety. A source prerequisite does not authorize reflection or
+  scientific execution. Missing-body crypto/safety and complete wheel closure
+  remain UNKNOWN; no partial graph becomes installation-ready.
+- **Protection:** `scripts/phase08d8_remaining_sources.py`,
+  `scripts/verify_phase08d8_remaining_sources.py`, six static controls and
+  [immutable closure receipt](../../manifests/phase-08d8-remaining-source-closure.json).
+  D4 startup gate and historical scientific evidence unchanged.

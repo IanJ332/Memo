@@ -1,12 +1,154 @@
 # Phase 08D-8 — Minimal Hindsight Native Runtime Preparation
 
-**Expanded inspection STOPPED after 3/75 new files (101,207 bytes). The database
-initializer exposes three required sources outside the approved set. The known
-frontier is 72 unacquired approved files plus 3 newly required files. Native
-import feasibility and cryptography necessity remain UNKNOWN; the known package
-lower bound remains 28. D3 PARTIAL, D4 BLOCKED, D5 PARTIAL.**
+**Remaining-source inspection STOPPED after 4/75 new files (56,318 bytes).
+The database abstraction files are verified; the reflect initializer requires
+unapproved `engine/reflect/agent.py`. The import closure remains INCOMPLETE:
+71 approved bodies plus one new body are missing. Known package lower bound:
+28. Native import/construction feasibility and cryptography necessity UNKNOWN.
+D3 PARTIAL, D4 BLOCKED, D5 PARTIAL.**
 
-## Expanded pinned source inspection — 2026-10-13
+## Remaining native source closure — 2026-10-13
+
+CONVERSATION: Phase 08D-8 remaining native source closure. MODEL: GPT-6 Codex
+runtime; no independent model-variant receipt. EXECUTION TARGET: assigned local
+worktree `/Users/ian/.codex/worktrees/b648/Memo`. JETSTREAM ACTION: none; remains
+SHELVED without infrastructure queries.
+
+The clean review branch was verified at exactly
+`d11a081855b84b85522fde6ad25deeb34a37ceaa`. The authorizing expanded receipt is
+unchanged, SHA-256
+`c7bf586e727475ec4a8c045f11ac9b1ab3036435e2b1ddb9fd08d2d5151cde17`.
+Its 75 remaining source paths, Git blob SHA-1 identities, byte counts and exact
+commit-qualified HTTPS URLs were verified against the pinned non-truncated
+Hindsight 0.10.1 tree. The 26 prior source identities and both prior acquisition
+logs were checked before acquisition. Scope was 75 additional source files /
+1,259,799 bytes; no package or native execution was authorized.
+
+### Frozen plan and acquired evidence
+
+The new immutable [remaining-source plan](../../manifests/phase-08d8-remaining-source-plan.json)
+was frozen **before requests**, SHA-256
+`579e8fe5b860bf3ce0a627e94c70161f7a06096628f7d65bafb20a8d2c0387fd`.
+It groups the three database files first, then the remaining required package
+initializers and source dependencies. Each group gets a closure recomputation
+and an explicit static side-effect review bound to its receipt/plan hashes.
+Historical plans and receipts are preserved; no prior file is reacquired.
+
+The [new immutable integrity/closure receipt](../../manifests/phase-08d8-remaining-source-closure.json)
+records **four new files / 56,318 bytes**, four HTTP 200 source responses, TLS
+verification result zero, zero redirects and exact allowlisted effective URLs.
+Every Git blob SHA-1 and length matched before parsing; each SHA-256 is recorded.
+Raw sources and group evidence remain ignored under
+`.local/phase08d8/source-frontier/`. All six previously acquired sources and logs
+remain unchanged. There are now ten acquired files / 164,554 bytes across the
+separate authorizations, plus the 20 original verified cached sources.
+
+| Acquired path, relative to `hindsight-api-slim/hindsight_api/` | Bytes | Git blob SHA-1 | SHA-256 |
+| --- | --- | --- | --- |
+| `engine/db/base.py` | 13,415 | `ab1b55394584e8eccfc2bfaea6e533d4e723df2d` | `1e2be0e5b01b3362791356286f5361719a91cb35406d07f42e3ee4aabc2ff87e` |
+| `engine/db/ops.py` | 38,673 | `878424b69baee60e86005ebbf3eb199a11dfec97` | `c482a1d320c22ac515d938f549cd3cbb296c92c95afc7d926d48d88a9be3c106` |
+| `engine/db/result.py` | 3,417 | `4d16a2544c9137260e8de8cf1fe1148c859fb2de` | `a4d33a8130d1a05ebfd6930a62fa58d5dfec74133e3c229a1eab4b74ffc8a3c6` |
+| `engine/reflect/__init__.py` | 813 | `25f818224fed0a922ab378c45b79ef548489ff4c` | `155c2f0d7757c5be21d1725f2e22a98ffe50050a2cbfa0f8ae57832665c849e8` |
+
+The [remaining acquisition/group verifier](../../scripts/phase08d8_remaining_sources.py)
+reuses the unchanged strict acquisition primitive: HTTPS-only exact URLs, TLS
+verification/TLS 1.2 minimum, empty curl environment, disabled configuration and
+proxies, no redirects, exclusive partial/final source files, streamed per-file
+size bounds and SHA-1/length verification before parsing. Both cumulative
+75-file/1,259,799-byte limits are enforced. Only the new log receives append-only
+records. Partial/mismatched evidence would stop without promotion or overwrite.
+
+### Static findings and mandatory stop
+
+| Group | Import-time assessment | Graph after group | Decision |
+| --- | --- | --- | --- |
+| 1: db base/ops/result | Abstract classes, dataclasses, standard-library typing protocol/decorators and constants. Their mandatory imports are standard library and the three verified database files; the reverse ops import in base is TYPE_CHECKING-only. Database/SQL work remains in deferred methods. No backend/driver instance, connection, worker or model initialization in these bodies. | 94 known modules; 22 verified reachable bodies; 72 approved missing bodies | Continue static inspection |
+| 2: reflect initializer | Unconditionally imports `.agent` at line 10 and `.models` at line 19. Exports `run_reflect_agent` and result/error/tool-limit symbols, without calling them. Agent body is outside the approved 75; models body remains approved but unacquired. | 95 known modules; 23 verified reachable bodies; 71 approved missing + 1 new outside body | **STOP** |
+
+The database base/result/ops imports form a source-resolved cycle: base imports
+result and mentions ops only for type checking; ops imports base/result. Actual
+database operations are defined on ABC methods, not invoked by these import
+bodies. Protocol/dataclass decorators execute when classes are defined, but
+these are standard-library class setup rather than database initialization.
+No source was executed to reach these conclusions.
+
+The exact new mandatory source is:
+
+| Source | Git blob SHA-1 | Bytes | Trigger and scientific relevance |
+| --- | --- | --- | --- |
+| `hindsight-api-slim/hindsight_api/engine/reflect/agent.py` | `e88a5b978a5c042286274afa8acd833d042e0870` | 91,029 | `engine/reflect/__init__.py:10` imports agent symbols unconditionally. Cached MemoryEngine imports the reflect package at module scope, which ordinary provider import reaches through the engine initializer. Thus this is a prerequisite for faithful import qualification, not authorization to execute reflection or add scientific observations. |
+
+Its exact pinned raw URL is recorded in the receipt's `missing_source_frontier`.
+No SHA-256 is claimed because the bytes were not acquired. **Acquisition stopped
+after group 2; `agent.py` was not fetched, and the remaining 71 approved files
+were untouched.** The guard test proves another `next` invocation rejects before
+curl and preserves all existing raw sources/logs.
+
+### Closure, minimum package requirements and feasibility
+
+The ordinary native provider import/method graph is **INCOMPLETE**: 95 known
+source modules, 23 verified reachable bodies and 72 missing bodies. Total source
+integrity coverage is 30 files; the other seven cached verified files are not
+needed by the currently exposed graph. Conditional/deferred imports are retained
+separately in the receipt rather than silently promoted or omitted. Further
+missing bodies can expand both source and third-party dependencies.
+
+The new database/reflect initializer bodies add no mandatory third-party root.
+The inspected roots remain aiohttp, asyncpg, dotenv, httpx, json_repair, openai,
+orjson and pydantic. Their pinned target-specific lock closure remains the
+**28-package lower bound**, with exact versions/artifact identities retained in
+the new receipt: **17 current reusable wheel artifacts rehashed; 11 selected
+matching wheels missing** in the bounded prior inventory (1,647,815 bytes).
+Ready means artifact integrity/availability, not an installed native runtime.
+No SDK import or installed-environment requalification was attempted; no package
+was downloaded, installed or built.
+
+Cryptography verdict: **REQUIRED by full-distribution metadata at >=50.0.0;
+NOT REQUIRED by the qualified SDK; UNKNOWN for ordinary native import/provider
+construction.** No direct cryptography import appears in the 30 verified source
+bodies. Missing reflect/provider/auth/database/observability bodies and their
+third-party transitive imports prevent proving absence. The pinned lock's Intel
+macOS cryptography 50.0.0 wheel gap is unchanged; no downgrade, source build,
+architecture change or workaround is justified.
+
+These database abstraction bodies do not require constructing MemoryEngine or
+starting a backend during import. The reflect initializer imports an agent
+function without invoking it. This supports a distinction between module
+dependencies and runtime operation, but **faithful restricted import and
+construction feasibility remain UNKNOWN**. The missing agent and many other
+bodies could still impose prohibited initialization or further dependencies.
+Neither feasibility nor the smallest complete installation set has been proven.
+Do not install the lower-bound 28 packages or the entire 184-package runtime,
+bypass real initializers, introduce stubs or weaken the startup BLOCKED gate.
+
+### Exact next authorization and focused checks
+
+The narrow next source-only authorization is the **one pinned reflect agent
+file / 91,029 bytes**, with the identity and triggering import above. A broader
+explicit resumption can cover the 71 suspended approved files plus this new
+file: **72 remaining files / 1,294,510 bytes**, exactly enumerated in the new
+receipt. The 71 approved-but-unacquired files alone total 1,203,481 bytes. Each
+resumption must stop at another newly exposed source or prohibited import-time
+initialization. Neither option authorizes reflection, native imports/provider
+construction, packages, models, services, databases or an empirical run.
+
+[Focused verification](../../scripts/verify_phase08d8_remaining_sources.py) ran
+under the macOS deny-all-network profile, using the existing repository SDK
+`.venv` interpreter with `-I -B` and an empty environment. Only our verification
+code and standard-library parsing/hashing execute; an audit hook rejects socket
+events and native/SDK imports. **Six checks PASS:** frozen scope/tree/prior
+evidence; 30 source hashes and transport receipts; group reviews/closure;
+17 wheel hashes and pinned metadata; tampered database bytes rejected before
+parsing; and STOP before curl with source evidence unchanged. Acquisition's
+four authorized HTTPS requests are distinct from zero static-check requests.
+
+D1/D2, Freeze v1, all historical scientific evidence and denominators remain
+unchanged. No Hindsight execution, native import, provider construction, SDK
+request, package acquisition/install/build, service/model/embedding/database,
+worker, Jetstream, SSH, RQ3 or empirical action occurred. **D3 PARTIAL, D4 BLOCKED,
+D5 PARTIAL; startup gate unchanged. Stop for independent review.**
+
+## Prior expanded pinned source inspection (historical) — 2026-10-13
 
 CONVERSATION: Phase 08D-8 expanded pinned source inspection. MODEL: GPT-6 Codex
 runtime; no independent model-variant receipt. EXECUTION TARGET: assigned local
