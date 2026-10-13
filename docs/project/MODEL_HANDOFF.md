@@ -30,11 +30,11 @@ the main storage-lifecycle experiment.
 
 | Item | State |
 | --- | --- |
-| Branch | `phase-08c1-rq4-minimal-pilot`, based on merged `main` `43b50ae437e5dfb7f56b20a06509ac2bb0a49094` |
+| Branch | `phase-08d9-provider-boundary-design`, based on verified merged `main` `16fdb42afd4e1638dba1f2e38cf5cb3e57fdb897` |
 | Published Phase 08A branch | `phase-08-expansion-freeze-v2` at `a17bc7cb05558012992c19bb264fc7a6e18ac06b` |
 | Historical Phase 06B baseline | `f88efd1e71a66c39ff4f702baf4231e01e75aa46` |
 | Published Phase 07 base | `481f9d698e7e48fe9d3d84868a303ec10aa676ea` |
-| Current phase | Phase 08C-1 minimal deterministic RQ4 mediator: OFFLINE PILOT PASS; scientific review pending |
+| Current phase | Phase 08D-9 provider boundary architecture: DESIGN ONLY; independent review pending; D3/D5 PARTIAL, D4 BLOCKED |
 | Freeze | `experiment-freeze-v1` |
 | Freeze SHA-256 | `0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b` |
 | Original attempt | `20261001T183940Z-1fc4c4929532` (42 planned; 32 executed; 31 success; 1 error; 10 never executed) |
@@ -49,9 +49,9 @@ the main storage-lifecycle experiment.
 | Freeze v2 | Non-final Phase 08A draft preserved unchanged; its Honcho-plus-Provider-5 schedule is blocked by frozen Honcho `NO_GO`; no live provider accepted |
 | Jetstream | `SHELVED`; Candidate10 used one separately authorized lifecycle, which is complete and cleaned up; no new live action is authorized |
 
-The baseline HEAD above is the scientific handoff point. Local documentation
-commits may make `git rev-parse HEAD` newer without changing the original
-experiment or origin state.
+The branch base above is the current engineering handoff point. Historical
+scientific commits and attempt denominators remain separately recorded; newer
+documentation commits do not change them.
 
 ## What is complete
 
@@ -138,7 +138,32 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ## Next authorized action
 
-### Phase 08D-8 minimal native runtime preparation addendum
+### Phase 08D-9 provider boundary architecture review
+
+Documentation-only design on `phase-08d9-provider-boundary-design`, base
+`16fdb42afd4e1638dba1f2e38cf5cb3e57fdb897`, compares upstream-supported
+provider-only packaging (not established at the inspected pin), a three-file
+lazy-export refactor, and faithful ordinary import as the reference baseline.
+It conditionally recommends the refactor of engine/providers/worker
+initializers, preserving all native provider/helper bytes and identifying the
+result as a versioned **engineered provider boundary**, never the unmodified
+Hindsight runtime. The design specifies provenance, measurable method contracts,
+final-request/serialized-attempt admission, containment of unowned clients and
+separate reference-parity/readiness gates. No implementation or qualification
+occurred. See the
+[architecture decision](../experiments/PHASE_08D9_PROVIDER_BOUNDARY_ARCHITECTURE.md).
+
+**Next action: independent design review; stop after documentation publication.**
+The prior design-only authorization is satisfied, not permission to implement.
+After approval, the exact proposed next authorization is Stage 1 static source
+derivative/materializer/manifest work only, limited to the three listed
+initializers and unchanged native methods. Acquisition, installation, imports,
+native/SDK execution and later method/reference qualification each require their
+own explicit scopes. The runtime startup gate stays unconditional; D4 BLOCKED,
+D3/D5 PARTIAL. No provider/model/embedding/service/worker/SSH/Jetstream/RQ3 or
+empirical action is authorized. D1/D2, freezes, attempts and denominators intact.
+
+### Phase 08D-8 minimal native runtime preparation addendum (historical)
 
 The bounded adaptive continuation from
 `d226f7859fae94df0055cda43c5900571b0d66d5` acquired 101 pinned first-party sources

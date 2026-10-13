@@ -417,3 +417,23 @@ each regression. It is not generic troubleshooting advice.
   closure verifier, eight static controls and
   [immutable receipt](../../manifests/phase-08d8-adaptive-source-closure.json).
   Scientific evidence/denominators and D4 BLOCKED gate remain unchanged.
+
+## Phase 08D-9 engineered bootstrap and transport claim boundaries
+
+- **Design finding:** lazifying engine/providers/worker exports is a minimal
+  candidate that can preserve provider/helper file bytes. It changes package
+  import timing and creates an engineered runtime; native method identity does
+  not certify ordinary-import parity or the complete MemoryEngine application.
+  Real config still reaches SQLAlchemy; native success still imports tracing.
+- **Transport invariant:** SDK create/HTTPX dispatch/core connection/serialized
+  request start are separate units. A final-request reservation needs a bound,
+  single-use pre-serialization check; an old resource-wrapper identity check
+  cannot govern replacements or unowned clients. Offline OS network denial is
+  the containment root. Live exclusive egress and endpoint inclusive bounds
+  remain unqualified, requiring independent designs/permissions.
+- **Protection proposed, not implemented:** exact three-file transformation
+  allowlist, original/derivative manifests, real lazy exports, unchanged helpers,
+  staged import/method/reference gates and negative controls in the
+  [Phase 08D-9 design](../experiments/PHASE_08D9_PROVIDER_BOUNDARY_ARCHITECTURE.md).
+  No implementation, test execution or readiness promotion occurred; D4 BLOCKED,
+  D3/D5 PARTIAL. Stop for independent review before static derivative work.

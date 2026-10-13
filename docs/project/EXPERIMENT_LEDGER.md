@@ -364,3 +364,25 @@ is no majority voting and no replacement of errors.
 - [Adaptive receipt](../../manifests/phase-08d8-adaptive-source-closure.json) and
   [scope plan](../../manifests/phase-08d8-adaptive-source-plan.json). Stop for
   independent review; next authorization is option-B design review only.
+
+## Phase 08D-9 provider boundary architecture (2026-10-13; no empirical attempt)
+
+- Expected base `16fdb42afd4e1638dba1f2e38cf5cb3e57fdb897` verified merged
+  into freshly fetched `origin/main`; documentation review branch
+  `phase-08d9-provider-boundary-design` created at that SHA.
+- Compared upstream-supported provider-only entrypoint, versioned lazy exports
+  and faithful ordinary import. Conditional recommendation: change only the
+  engine/providers/worker initializers in a future exclusive derivative, keep
+  provider/helpers byte-identical and label engineered bootstrap/transport.
+- Defined original/modified source identities, reproducible manifests, parity
+  measurements, final-wire/physical-attempt ownership, threat/negative controls,
+  staged implementation proposal and explicit D3/D4/D5 gates. Design only;
+  projected source/dependency footprint is not execution or installation proof.
+- No upstream/implementation change, dependency acquisition/install/build,
+  SDK/native import/execution, provider/model/embedding/database/service/worker,
+  downstream/RQ3/SSH/Jetstream or empirical action. No new scientific row,
+  context, attempt or denominator; D1/D2/freezes and prior receipts unchanged.
+- D4 BLOCKED, D3/D5 PARTIAL; unconditional startup gate preserved. Stop for
+  independent review; next proposed authorization is Stage 1 static derivative
+  and manifest work only, not installation/import/method permission.
+- [Architecture decision](../experiments/PHASE_08D9_PROVIDER_BOUNDARY_ARCHITECTURE.md).
