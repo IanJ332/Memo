@@ -138,7 +138,22 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ## Next authorized action
 
-### Phase 08D-6 engineering review addendum
+### Phase 08D-7 dependency preparation addendum
+
+Separately authorized preparation on `phase-08d7-runtime-dependencies`, base
+`d29742e9a59575d63f54c50e10205208654240c1`, verified pinned upstream dependency
+metadata and inventoried existing local environments/caches without changing
+them. The proposed CPython 3.12.8 Intel macOS lock resolution has 33 locally
+available matching wheels out of 184 packages; 151 remain BLOCKED. The SDK-only
+closure has nine ready wheels and seven missing. Full Hindsight also lacks a
+complete source/release artifact and a locked Intel macOS cryptography wheel.
+No dependency installation or SDK/native test occurred. Runtime/pilot remain
+BLOCKED; D1/D2 evidence and scientific denominators are unchanged. See the
+[Phase 08D-7 report and acquisition restrictions](../experiments/PHASE_08D7_RUNTIME_DEPENDENCY_PREPARATION.md).
+Stop pending separate dependency acquisition/installation authorization; the
+prepared SDK-only plan does not authorize provider initialization or live work.
+
+### Phase 08D-6 engineering review addendum (historical)
 
 The separately authorized offline qualification on
 `phase-08d6-runtime-qualification`, base

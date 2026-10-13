@@ -240,3 +240,15 @@ is no majority voting and no replacement of errors.
 - Provider/hosted-model/embedding/downstream/RQ3/SSH/Jetstream calls: **0**.
   D1/D2 evidence, Freeze v1, attempts and denominators remain unchanged.
 - Engineering report: [Phase 08D-6](../experiments/PHASE_08D6_NATIVE_RUNTIME_QUALIFICATION.md).
+
+## Phase 08D-7 dependency preparation (no empirical attempt)
+
+- Base: `d29742e9a59575d63f54c50e10205208654240c1`; review branch:
+  `phase-08d7-runtime-dependencies`.
+- Pinned upstream dependency metadata and local caches/environments inventoried
+  read-only. Proposed runtime closure: 33/184 matching local wheels; SDK subset
+  9/16 ready. Separate acquisition/installation authorization remains required.
+- No package installation, SDK/native transport test, provider/model/embedding/
+  downstream/RQ3 execution, SSH or Jetstream action. No empirical row or new
+  denominator. D1/D2 evidence, runtime BLOCKED gate and frozen attempts unchanged.
+- Engineering report: [Phase 08D-7](../experiments/PHASE_08D7_RUNTIME_DEPENDENCY_PREPARATION.md).
