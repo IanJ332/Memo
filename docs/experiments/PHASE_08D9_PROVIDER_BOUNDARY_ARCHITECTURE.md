@@ -15,6 +15,10 @@ ancestor of freshly fetched `origin/main`; that ref was exactly the expected
 SHA. The assigned checkout was clean before creating
 `phase-08d9-provider-boundary-design` at that base. Git publication is authorized
 only for this documentation review branch. Main is not merged by this phase.
+The initial base fetch used origin's configured Git SSH URL, a transport
+deviation from the requested no-SSH scope. It ran no remote shell or
+infrastructure operation. Branch publication and final remote verification used
+HTTPS; no Jetstream or infrastructure SSH session was opened.
 
 ## Evidence and scope
 

@@ -380,7 +380,9 @@ is no majority voting and no replacement of errors.
   projected source/dependency footprint is not execution or installation proof.
 - No upstream/implementation change, dependency acquisition/install/build,
   SDK/native import/execution, provider/model/embedding/database/service/worker,
-  downstream/RQ3/SSH/Jetstream or empirical action. No new scientific row,
+  downstream/RQ3/infrastructure SSH/Jetstream or empirical action. Initial base
+  fetch used configured Git SSH transport; publication/verification used HTTPS.
+  This transport deviation is disclosed in the report. No new scientific row,
   context, attempt or denominator; D1/D2/freezes and prior receipts unchanged.
 - D4 BLOCKED, D3/D5 PARTIAL; unconditional startup gate preserved. Stop for
   independent review; next proposed authorization is Stage 1 static derivative
