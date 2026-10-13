@@ -283,3 +283,21 @@ is no majority voting and no replacement of errors.
 - [Preparation report](../experiments/PHASE_08D8_MINIMAL_NATIVE_RUNTIME_PREPARATION.md)
   and [artifact receipt](../../manifests/phase-08d8-native-preparation.json).
   Independent review next; bounded source-only acquisition separately authorized.
+
+### Phase 08D-8 authorized pinned source inspection continuation
+
+- Start: `a452984507e83f029ae25cb5c850aaca390354c4`, clean same review branch.
+  Exact 31-file / 586,246-byte source plan authorized; no package/native action.
+- Three package initializers acquired and verified: 7,029 bytes, three HTTP 200
+  responses, TLS result zero, no redirects, exact URLs and pinned blob hashes.
+  Source remains ignored. Root imports/calls out-of-allowlist `_thread_limits`;
+  acquisition STOPPED before the remaining 28 files or any new frontier file.
+- Static inspection: 23 source identities verified; 75 missing nodes (28 prior
+  allowlisted + 47 new), exact pinned purposes/identities recorded. Known package
+  lower bound 28; 17 existing wheels rehashed and 11 missing matching artifacts.
+  Five source-only constraint checks pass; no source/native/SDK execution.
+- D3/D5 PARTIAL; D4/runtime BLOCKED unchanged. Native cryptography UNKNOWN.
+  Zero package download/install/build, model/provider/embedding/downstream/RQ3,
+  services, SSH or Jetstream action; no scientific artifact/denominator change.
+- [Acquisition/inspection receipt](../../manifests/phase-08d8-source-inspection.json).
+  Independent review; expanded source-only plan needs separate authorization.

@@ -337,3 +337,23 @@ each regression. It is not generic troubleshooting advice.
   inspected, so no downgrade, architecture substitution or build is justified.
 - **Protection:** `scripts/prepare_phase08d8_native.py`, four artifact rejection
   controls and [preparation report](../experiments/PHASE_08D8_MINIMAL_NATIVE_RUNTIME_PREPARATION.md).
+
+### Phase 08D-8 initializer inspection expands beyond the authorized frontier
+
+- **Verified finding:** root initializer lazily exports public classes but eagerly
+  imports `_thread_limits` and calls `apply_default_thread_limits()` at module
+  scope. Engine initializer itself is eager and imports MemoryEngine, embeddings,
+  cross-encoder, database/search helpers. Worker initializer imports the poller.
+- **Authorized stop:** three initializer downloads (7,029 bytes) completed, then
+  acquisition stopped on the out-of-allowlist `_thread_limits` dependency. The
+  remaining 28 approved files were not fetched. Five source-only checks confirm
+  integrity and rejection before another curl/file creation.
+- **Invariant:** lazy root exports do not imply lazy parent subpackages. Import
+  exposure is distinct from instance initialization, and uninspected bodies
+  remain UNKNOWN. A scoped acquisition authorization cannot cross a new frontier.
+- **Updated gap:** 75 missing source nodes and 28 known packages, not a complete
+  native environment; cryptography necessity remains UNKNOWN. No native/SDK
+  import/construction/request, installation or gate relaxation occurred.
+- **Protection:** `scripts/acquire_phase08d8_sources.py`,
+  `scripts/inspect_phase08d8_sources.py`, source-only constraint tests and the
+  [acquisition/inspection receipt](../../manifests/phase-08d8-source-inspection.json).

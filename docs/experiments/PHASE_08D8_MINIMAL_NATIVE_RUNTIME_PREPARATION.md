@@ -1,8 +1,208 @@
 # Phase 08D-8 — Minimal Hindsight Native Runtime Preparation
 
-**BLOCKED at source/dependency preparation. The existing SDK is reusable after
-verification; a complete minimal native import closure cannot yet be established.
-D3 PARTIAL, D4 BLOCKED, D5 PARTIAL. Stop for independent review.**
+**Authorized source inspection STOPPED after 3/31 files (7,029 bytes). Parent
+initializers expose mandatory imports outside the allowlist. The known frontier
+is now 75 missing source nodes; the known package lower bound is 28. Complete
+native closure remains UNKNOWN. D3 PARTIAL, D4 BLOCKED, D5 PARTIAL.**
+
+## Authorized pinned source inspection continuation
+
+CONVERSATION: Phase 08D-8 authorized pinned source inspection. MODEL: GPT-6
+Codex runtime; no independent model-variant receipt. EXECUTION TARGET: assigned
+local worktree `/Users/ian/.codex/worktrees/b648/Memo`. JETSTREAM ACTION: none;
+remains SHELVED without infrastructure queries. Date: 2026-10-12,
+America/Chicago.
+
+The continuation started at exactly
+`a452984507e83f029ae25cb5c850aaca390354c4` on
+`phase-08d8-native-runtime-preparation`, with a clean worktree. The authorized
+manifest is unchanged, SHA-256
+`99aea9f5bc42f0d53a3b13ae81b586f3ec92ab25027c3cb99b65c04441afe410`.
+Its 31 unique commit-qualified source URLs and 586,246-byte limit were validated
+before acquisition. This authorization is source acquisition and static
+inspection only; no package acquisition/installation or native execution.
+
+### Acquisition and mandatory stop
+
+The [acquisition/integrity and static inspection receipt](../../manifests/phase-08d8-source-inspection.json)
+records **three HTTPS requests, three verified files, 7,029 aggregate bytes**.
+All returned HTTP 200, TLS verification result zero, zero redirects, and the
+exact allowlisted effective URL. Each file matched its expected byte count and
+Git blob SHA-1 before AST parsing; SHA-256 was then recorded. Source bodies
+remain ignored under `.local/phase08d8/source-frontier/`, never in Git.
+
+| Acquired path, relative to `hindsight-api-slim/hindsight_api/` | Bytes | Git blob SHA-1 | SHA-256 |
+| --- | --- | --- | --- |
+| `__init__.py` | 5,227 | `cbd06145d17392c98482df0a1ccd29d740666e61` | `bcc7731940bd700adbfcc094677c648fa21c9853634ceccf5ec3ac79310355b9` |
+| `engine/__init__.py` | 1,546 | `8ec70075bae971adef5d6bd941a2f1db7fe1787c` | `abdce96a0c096bf31ffeacc9e4390d5f72ca6ff4dbc38636caf14857aadc6863` |
+| `worker/__init__.py` | 256 | `8eb27f9f0d8ce79fc4c29f731d4cbf40615f550a` | `873a4c2ef39f80bd8a2abae293ff68baf13309dbc94ab1fea63e547452badc9d` |
+
+The [acquisition code](../../scripts/acquire_phase08d8_sources.py) uses system
+curl 8.7.1 with an empty child environment and disabled curl configuration,
+proxies and redirect following. HTTPS-only/TLS verification and a TLS 1.2
+minimum are enforced. Per-file `--max-filesize` bounds streaming output; planned
+and actual aggregate bytes cannot exceed 586,246. An exclusively opened partial
+file descriptor receives the body; verified final paths are created by exclusive
+hard link. Existing destinations are rejected. The raw acquisition log is
+append-only; incomplete or mismatched evidence would be retained, not promoted.
+
+The initializers were acquired as the first inspection group. Static inspection
+then met task 8's explicit stop condition:
+
+- Root `__init__.py:39` imports `._thread_limits`; line 41 calls
+  `apply_default_thread_limits()` at module scope. `_thread_limits.py` is outside
+  the 31-file allowlist and is not among the 20 existing verified sources.
+- `engine/__init__.py:11–30` eagerly imports cross-encoder, embeddings,
+  MemoryEngine, database helpers, response models and search modules. The root's
+  lazy public `MemoryEngine` export does **not** make the engine package lazy.
+- `worker/__init__.py:9` imports `WorkerPoller`. Importing `worker.stage` therefore
+  also reaches the existing poller, its schema/backpressure/exception imports,
+  and the engine parent package.
+
+**Further acquisition stopped immediately after inspecting this three-file
+group. The remaining 28 allowlisted files were not retrieved.** No source outside
+the allowlist was fetched. The acquisition script's continuation mode now
+explicitly rejects the discovered `_thread_limits` boundary before curl or file
+creation. Acquiring all 31 despite this finding would contradict the stop rule.
+
+### Recomputed import closure, side effects and cryptography
+
+The [static analyzer](../../scripts/inspect_phase08d8_sources.py) reverified all
+20 existing sources, the three newly acquired files, the pinned non-truncated
+tree, pyproject and lock metadata. It never executes source, imports native or
+SDK modules, or constructs providers. Imports are labeled by module scope,
+deferred function body, type-check-only scope and conditional/ImportError guard.
+Function decorators/defaults and class-body calls are recorded as import-phase
+execution. Dynamic lazy export targets and unresolved helper bodies are not
+treated as proven safe.
+
+```text
+ordinary OpenAI-compatible provider import
+  -> root initializer -> _thread_limits [MISSING, out of allowlist]
+                        apply_default_thread_limits() [module-scope call]
+  -> engine initializer [eager]
+       -> cross_encoder [MISSING]
+       -> embeddings [VERIFIED] -> orjson + local_device/retry helpers [MISSING]
+       -> MemoryEngine module [VERIFIED] -> asyncpg + DB/SQL/search/retain/
+                                            reflect/storage helpers [MISSING]
+       -> llm_wrapper [VERIFIED] -> config/logging/semaphore setup
+  -> providers initializer [VERIFIED] -> 13 sibling implementations [MISSING]
+  -> provider [VERIFIED] -> helpers/metrics/tracing [MISSING]
+  -> worker initializer -> poller [VERIFIED] -> schema/backpressure/exceptions [MISSING]
+```
+
+The known traversal contains **91 distinct source modules: 16 verified reachable
+bodies and 75 missing bodies**. Of the missing bodies, 28 belong to the original
+allowlist and **47 are newly exposed outside it**. The receipt's
+`missing_source_frontier` gives every exact pinned path, raw URL, Git blob SHA-1,
+expected byte count and required purpose/import line. No SHA-256 is claimed for
+unacquired bytes. This frontier is not a complete closure: reading those bodies
+can reveal further dependencies, conditional imports or side effects.
+
+Known import-time execution includes the root's thread-limit call; wrapper
+logging/config resolution and global/per-operation semaphore construction;
+MemoryEngine module ContextVars, dataclasses, decorators and sentinel objects;
+embedding module locks/class definitions; and poller dataclass/configuration
+records. Module **imports** are distinct from engine/model/database **instance
+initialization**. No actual database connection, model load or worker startup
+was observed because nothing was executed. Safety cannot be inferred from that
+absence: `_thread_limits`, cross-encoder, local-device, database and other missing
+bodies remain UNKNOWN. Constructor prerequisites remain blocked; constructing
+only the provider class cannot avoid its real package initializers.
+
+Cryptography verdict remains: **REQUIRED by full distribution metadata,
+NOT REQUIRED by the qualified SDK, UNKNOWN for ordinary native import and
+provider methods**. No direct cryptography import was found in the 23 inspected
+source bodies or the demonstrated package lower bound. Unacquired auth/provider,
+database and observability modules prevent proving transitive absence. The
+pinned lock still provides no compatible Intel macOS cryptography 50.0.0 wheel.
+No downgrade, build, architecture substitution or security-floor change is
+proposed. No cryptography installation authorization is justified yet.
+
+### Revised minimal source/wheel plan and exact next authorization
+
+| Evidence/status | Current result |
+| --- | --- |
+| VERIFIED first-party source | 20 prior cached files + 3 acquired initializers; 16 of these participate in the known traversal |
+| READY reusable artifacts | 16 SDK wheels and one aiosignal wheel rehashed from current bytes; no SDK import or installed-runtime requalification in this continuation |
+| MISSING source | 75 known source nodes: 28 unacquired prior-allowlist + 47 new out-of-allowlist; exact identities/purposes in receipt |
+| MISSING wheels | 11 matching local artifacts in the bounded recorded inventory |
+| UNKNOWN | Further source/third-party closure, missing-body side effects, native cryptography necessity and safe normal import/construction |
+
+The known package lower bound increases from 26 to **28** because the ordinary
+engine import requires `asyncpg==0.30.0`, and embeddings imports
+`orjson==3.12.0`. The mandatory inspected external imports are aiohttp, asyncpg,
+dotenv, httpx, json_repair, openai, orjson and pydantic. Their pinned lock closure
+adds no further packages beyond the existing 26 plus those two on Python 3.12
+Intel macOS. Conditional/deferred third-party imports and missing source bodies
+remain separately unresolved. No optional extras/full distribution closure are
+automatically selected.
+
+The prior 16 SDK versions and ten helper versions remain as listed below.
+Additional exact candidates are:
+
+| Package | Candidate artifact | Bytes | SHA-256 |
+| --- | --- | --- | --- |
+| asyncpg 0.30.0 | `asyncpg-0.30.0-cp312-cp312-macosx_10_13_x86_64.whl` | 673,162 | `c902a60b52e506d38d7e80e0dd5399f657220f24635fee368117b8b5fce1142e` |
+| orjson 3.12.0 | `orjson-3.12.0-cp312-cp312-macosx_10_15_x86_64.macosx_11_0_arm64.macosx_10_15_universal2.whl` | 223,427 | `aa3e43a6846e91d7bde3d5a9c66090fcd8744f569a9b6cffc5e1ca38f6a461c0` |
+
+The receipt's `known_package_lower_bound` records an exact selected artifact for
+all 28 packages, including filename/hash/length and the lock URLs for new wheel
+candidates. The 11 missing selected wheel candidates total **1,647,815 bytes**.
+This is a candidate lower bound, not an executable minimal installation plan.
+Missing statuses reflect the existing bounded inventory, not a repeat machine
+scan. No wheel or package was acquired/installed/built.
+
+**Next authorization required: resume source-only inspection with an explicitly
+expanded allowlist.** The exact known frontier is 75 files / **1,305,501 bytes**,
+as enumerated in `missing_source_frontier` and summarized in `next_source_plan`.
+It includes the 28 previously authorized but unacquired files and 47 newly
+identified files. Start with `_thread_limits.py`, pinned Git blob
+`2a690711d4651dbb75304248d11d5bf2f7fdaf2f`, exactly 4,780 bytes; its purpose is
+to inspect the mandatory root import and module-level environment/thread-limit
+call. A narrower authorization can cover that one file first, but would leave
+the rest of normal native import blocked. Any expanded inspection must use the
+same strict HTTPS/exclusive/hash controls and stop at a newly exposed frontier.
+Neither source plan implies installation or execution authorization.
+
+Do **not** install even the known 28-package set yet. Only a closed static source
+graph and reviewed import-side-effect plan can justify a later exact wheel
+acquisition/install proposal. No blank package initializers, `sys.modules`
+stubs, extracted helper functions, rewritten native methods or weakened runtime
+gate are approved. This evidence shows why the former conditional 26-package
+proposal was insufficient; it does not justify preparing all 184 packages.
+
+### Verification and readiness
+
+Static analysis and [five source-only constraint checks](../../manifests/phase-08d8-source-constraint-tests.json)
+ran using the existing repository SDK `.venv` interpreter with `-I -B`, an empty
+environment, and the macOS deny-all-network profile. The interpreter hosts only
+our verification code and standard-library parsing/hashing; upstream and SDK
+modules are not imported. One initial static lock pass rejected an unsupported
+Windows marker before producing a receipt; the final analyzer evaluates the
+actual pinned marker syntax against an explicit Darwin/Python target without
+`eval()` or upstream execution. Earlier derived receipts remain ignored and
+preserved; the tracked receipt is the final pass.
+
+Checks PASS: immutable 31-file allowlist/limit; three exact transport/integrity
+receipts; tampered initializer rejected before parsing; further acquisition
+rejected before curl with acquired files/log unchanged; and graph/package-plan
+consistency. Source acquisition made three separately authorized HTTPS requests;
+static inspection/tests made zero requests. No native/SDK/provider calls,
+package acquisition/install/build, services, models, embeddings, RQ3, SSH or
+Jetstream action occurred. Freeze v1, D1/D2, scientific denominators and all
+historical artifacts remain unchanged.
+
+| Dimension | Readiness |
+| --- | --- |
+| D3 | PARTIAL: global tasks/workers/quiescence not qualified |
+| D4 | BLOCKED: native import closure/safety, complete send ownership and endpoint inclusive token bounds unresolved; existing startup gate unchanged |
+| D5 | PARTIAL: prior scoped results preserved; native ownership/attribution unqualified |
+
+**Stopped for independent review. No additional acquisition, installation or
+native import/construction/method test is authorized by this report.**
+
+## Original preparation at a452984 (historical scope and results)
 
 CONVERSATION: Phase 08D-8 minimal native runtime preparation. MODEL: GPT-6
 Codex runtime; no independent model-variant receipt. EXECUTION TARGET: assigned

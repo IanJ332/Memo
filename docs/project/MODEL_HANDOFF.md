@@ -140,6 +140,26 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ### Phase 08D-8 minimal native runtime preparation addendum
 
+The source-only continuation from `a452984507e83f029ae25cb5c850aaca390354c4`
+acquired and verified the three package initializers (7,029 bytes), then obeyed
+the explicit STOP on finding root `_thread_limits.py` outside the 31-file
+allowlist. The other 28 files were not acquired. Engine initialization imports
+MemoryEngine/embeddings/cross-encoder modules eagerly; worker initialization
+imports the poller. Static analysis of 23 verified sources exposes 75 missing
+source nodes (28 unacquired allowlisted + 47 new), with exact pinned identities
+and purposes. Known package lower bound: 28; 17 existing artifacts rehashed,
+11 wheel gaps. Five source-only constraint checks pass. No native/SDK import,
+construction/request, package download/install/build or live action occurred.
+D3/D5 PARTIAL, D4 BLOCKED; native cryptography necessity remains UNKNOWN.
+See the [source acquisition/static inspection receipt](../../manifests/phase-08d8-source-inspection.json)
+and [updated report](../experiments/PHASE_08D8_MINIMAL_NATIVE_RUNTIME_PREPARATION.md).
+Independent review is next. A new bounded source-only authorization is required
+to resume at the expanded 75-file / 1,305,501-byte frontier; a narrower first
+step can cover only `_thread_limits.py` (4,780 bytes). No installation or native
+execution is authorized by this handoff.
+
+The preparation summary below is historical, preceding source authorization:
+
 Separately authorized preparation on `phase-08d8-native-runtime-preparation`,
 base `e07de9832572a910e7055d2df582b919146c35fd`, reverified the existing 16-package
 SDK environment, 20 pinned source files and dependency metadata with networking
