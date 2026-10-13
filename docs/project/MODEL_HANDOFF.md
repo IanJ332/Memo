@@ -138,6 +138,22 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ## Next authorized action
 
+### Phase 08D-5 engineering review addendum
+
+The separately authorized offline work on `phase-08d5-governed-sends`, base
+`de011d8bde32ffda76512c87dee550f0baf688d5`, implements an optional governed
+completions boundary for owned deterministic fake clients. The final focused
+suite passes 143 tests. Real-provider D4 and the four-condition pilot remain
+**BLOCKED**: complete client/worker/transport interception and defensible
+endpoint-enforced total-token bounds are unverified. The runtime startup gate
+rejects every configuration. No provider, model, embedding, downstream, RQ3,
+SSH or Jetstream action occurred. See the
+[Phase 08D-5 report and D1–D5 matrix](../experiments/PHASE_08D5_GOVERNED_SEND_INSTRUMENTATION.md).
+Next authorized action for this branch is independent review; stop after
+publication. No historical result or research denominator changed. The earlier
+Phase 08C-1 handoff below remains historical context, not authorization for a
+new pilot or live qualification.
+
 Phase 08C-1 offline implementation and evaluation are complete on the review
 branch. The next action is scientific review of the exact policy boundary,
 fixture adaptation, exclusions, and reported metrics. A broader RQ4 evaluation,

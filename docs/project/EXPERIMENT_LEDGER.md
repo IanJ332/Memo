@@ -215,4 +215,15 @@ is no majority voting and no replacement of errors.
   evidence remain unchanged.
 - Scientific record: [pilot report](../experiments/PHASE_08C1_RQ4_MINIMAL_PILOT.md).
 
+## Phase 08D-5 offline engineering qualification (no empirical attempt)
+
+- Base: `de011d8bde32ffda76512c87dee550f0baf688d5`; review branch:
+  `phase-08d5-governed-sends`.
+- Owned deterministic fake completions admission/accounting tested; 143 focused
+  tests pass. No provider, hosted model, ONNX embedding, downstream or RQ3 calls.
+- Real runtime governance and pilot readiness remain **BLOCKED**; startup rejects
+  pending complete interception, process ownership and endpoint-enforced bounds.
+- Tests are engineering evidence only, never new empirical rows or denominators.
+  Frozen evidence and prior attempts remain unchanged; Jetstream remains SHELVED.
+- Engineering report: [Phase 08D-5](../experiments/PHASE_08D5_GOVERNED_SEND_INSTRUMENTATION.md).
 

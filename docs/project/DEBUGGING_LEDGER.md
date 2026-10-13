@@ -269,3 +269,19 @@ each regression. It is not generic troubleshooting advice.
   [`PHASE_08B1_CONTROLLER_HARDENING_RECOMMENDATIONS.md`](../infrastructure/PHASE_08B1_CONTROLLER_HARDENING_RECOMMENDATIONS.md),
   the immutable Candidate10 attempt, and the independently verified completion
   and evidence manifests.
+
+## Hindsight completions seam is not complete runtime governance
+
+- **Finding:** pinned 0.10.1 disables OpenAI SDK retries and native retries
+  re-enter `chat.completions.create`, but Ollama native HTTP bypasses it.
+  Distinct role/multi-LLM clients and separately constructed worker engines
+  are outside a single owned instance. Generic failover may catch admission errors.
+- **Insufficient:** wrapping one resource, using estimated prompt tokens, or
+  trusting a quiet task list cannot establish complete sends or hard total bounds.
+- **Invariant:** every admitted actual attempt needs its own pre-send reservation
+  and durable attribution. Missing usage/failures retain capacity and close further
+  admission. Unsupported workers must reject before construction; real startup
+  remains BLOCKED until complete ownership and endpoint bounds are qualified.
+- **Protection:** `src/memlife/runner/phase08d5.py` and
+  `tests/unit/test_phase08d5_governed_sends.py`; fake-only qualification is distinct
+  from real-provider readiness. No native entrypoint is qualified by this phase.
