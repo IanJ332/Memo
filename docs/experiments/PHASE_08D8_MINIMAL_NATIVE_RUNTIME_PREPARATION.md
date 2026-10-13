@@ -1,13 +1,246 @@
 # Phase 08D-8 — Minimal Hindsight Native Runtime Preparation
 
-**Remaining-source inspection STOPPED after 4/75 new files (56,318 bytes).
-The database abstraction files are verified; the reflect initializer requires
-unapproved `engine/reflect/agent.py`. The import closure remains INCOMPLETE:
-71 approved bodies plus one new body are missing. Known package lower bound:
-28. Native import/construction feasibility and cryptography necessity UNKNOWN.
-D3 PARTIAL, D4 BLOCKED, D5 PARTIAL.**
+**Adaptive source inspection completed sufficiently for the feasibility decision.
+101 new sources / 1,692,988 bytes / 101 HTTPS requests; 29 new mandatory imports
+discovered. Mandatory literal graph: 125 modules, no missing body. Ordinary
+import's pinned package footprint: 61 packages, including cryptography 50.0.0.
+Recommend B: separately reviewed real provider-boundary architecture; not
+implemented. Runtime safety UNKNOWN; D3 PARTIAL, D4 BLOCKED, D5 PARTIAL.**
 
-## Remaining native source closure — 2026-10-13
+## Bounded adaptive native source closure — 2026-10-13
+
+CONVERSATION: Phase 08D-8 bounded adaptive native source closure. MODEL: GPT-6
+Codex runtime; no independent model-variant receipt. EXECUTION TARGET: assigned
+local worktree `/Users/ian/.codex/worktrees/b648/Memo`. JETSTREAM ACTION: none;
+remains SHELVED without querying infrastructure.
+
+The attached execution request authorized adaptive acquisition of required
+first-party Python sources within pinned commit
+`f8950b0c07d9e34c76493dba802bb309f0ce60fd`, superseding fixed-file discovery
+stops only. Starting review branch and clean HEAD were verified exactly as
+`phase-08d8-native-runtime-preparation` /
+`d226f7859fae94df0055cda43c5900571b0d66d5`. The current source receipt remained
+unchanged at SHA-256
+`ca0d9b4996ce73e8b7192317938417ee9945e8738c9931b5c74f0f251d875cd0`.
+All historical Phase 08D manifests were checked byte-for-byte against this Git
+commit; chained raw-source hashes and acquisition logs were verified. Prior
+30 source files, source plans/receipts and ten locally acquired bodies were
+preserved, not reacquired.
+
+### Frozen scope, append-only discovery and acquisition
+
+The [adaptive source plan](../../manifests/phase-08d8-adaptive-source-plan.json)
+was frozen before requests, SHA-256
+`5916fcffee52ae100e3245d1e7412fdf9aeae75b9b05414bbdcc718a87af1ca9`.
+Its limits are 150 additional successful source files, 3,500,000 source bytes,
+and 200 HTTPS request attempts including failures. Only `.py` blobs within
+`hindsight-api-slim/hindsight_api/` in the previously verified non-truncated tree
+are eligible. Identity/path/size and exact commit-qualified URL are resolved
+before each request. No package, archive, binary or model acquisition is allowed.
+
+The [immutable adaptive receipt](../../manifests/phase-08d8-adaptive-source-closure.json)
+records every acquired path, Git blob SHA-1, length, SHA-256, HTTPS result and
+request/discovery attribution. It also contains the complete discovery ledger
+and graph. Raw source/evidence remain ignored under
+`.local/phase08d8/source-frontier/`; downloaded source is not committed.
+
+| Resource/evidence | Result | Authorized ceiling |
+| --- | --- | --- |
+| New acquired and verified files | **101** | 150 |
+| Additional source bytes | **1,692,988** | 3,500,000 |
+| HTTPS request attempts | **101** | 200 |
+| Successful requests / failed requests | **101 / 0** | Failures consume request budget |
+| Initially required files acquired | **72 / 72** | Initial frontier, not a limit on adaptive discoveries |
+| Newly discovered mandatory files acquired | **29 / 29** | Pinned subtree and cumulative bounds |
+| Dependency-aware batches reviewed | **15** | First reflect agent alone; later batches at most eight files |
+| Total source files verified, including history | **131** | Prior 30 excluded from continuation limits |
+
+`engine/reflect/agent.py` was acquired first. Every newly exposed required source
+was appended to a discovery ledger **before** its acquisition, recording the
+triggering import, pinned tree identity and trigger-source SHA-256. Request
+intent is persisted before curl, so failure cannot disappear from the request
+ceiling. Successful source evidence is appended separately. Batch receipts and
+static reviews are exclusive, hash-bound files. Existing files are refused;
+there is no silent recovery/retry over incomplete evidence.
+
+[Acquisition code](../../scripts/phase08d8_adaptive_sources.py) uses the unchanged
+strict primitive: exact HTTPS URL, TLS verification/TLS 1.2 minimum, no redirects,
+empty curl environment, no configuration/proxies/credentials, exclusive partial
+and final files, streamed per-file limits, SHA-1/length verification before AST
+parsing, then SHA-256 recording. No file outside the allowed subtree/tree was
+retrieved. Acquisition stopped when the source graph was sufficient for the
+feasibility question, with unused file/byte/request capacity.
+
+### Source graph and import-time assessment
+
+The ordinary OpenAI-compatible import plus its successful-call tracing seam has
+**125 reachable source modules and 125 verified bodies**, with zero missing
+mandatory literal module imports and zero unresolved required module names in
+that graph. The other six historical verified source files are not reachable in
+this slice. This is a resolved **literal, unconditional import graph**, not a
+proof of full dynamic Python import semantics or runtime safety.
+
+```text
+OpenAI-compatible provider
+  -> real root initializer -> CPU/cgroup reads + thread environment defaults
+  -> real engine initializer
+       -> MemoryEngine module declarations (no engine instance constructed)
+       -> db / SQLAlchemy ORM / pgvector / NumPy
+       -> retain / reflect / search / storage / query/date parsing / tokenizer
+  -> real providers initializer -> 13 sibling implementation modules
+       -> Gemini module -> Google GenAI -> Google Auth -> cryptography
+  -> real worker initializer -> poller module declarations
+  -> llm_wrapper -> raw config / HTTP logging / cross-loop semaphores
+  -> metrics / tracing -> OpenTelemetry API/SDK/exporter module imports
+```
+
+The discovery ledger records all 29 additional modules. Representative new
+requirements include reflect prompts/tokenization/tool schemas; retain chunk,
+embedding/entity/fact/link handling; search graph/retrieval/link expansion;
+SQL/storage bases; PostgreSQL pool instrumentation; Codex/OAuth helpers; and
+text-search/query helpers. Each entry retains a scientific purpose: resolving
+the actual import prerequisites of the native provider, never executing those
+operations or adding experimental observations.
+
+The graph separately records **637 deferred-function import edges, 53
+type-checking-only edges and 3 guarded/conditional import edges**. There are
+**44 distinct unacquired first-party source targets** represented by 293 such
+nonmandatory edges. They were not fetched because they are outside the demonstrated
+mandatory slice needed for this feasibility decision. Arbitrary extension
+module names/configuration-dependent dynamic imports and third-party module
+effects remain UNKNOWN; no all-configurations completeness claim is made.
+
+Reviewed prospective import-time effects include:
+
+- CPU/cgroup reads and four process thread-limit defaults from the real root.
+- Raw configuration resolution, HTTP logger configuration and cross-loop
+  semaphore/lock/deque construction. Semaphore constructors do not start workers.
+- Pydantic/dataclass/protocol setup; SQLAlchemy column/index/relationship metadata
+  construction. Metadata objects are not database connections or table creation.
+- Regex/constants, ContextVars, native no-op metrics/tracer objects and composite
+  span-recorder registration. Exporter/background-poller startup is deferred.
+- `local_device._resolve_heap_trim()` resolves platform allocator symbols through
+  ctypes at module scope. Actual trim/inference is deferred; native-library
+  loading effects remain UNKNOWN.
+- Prompt constants include a **wall-clock-derived datetime section**. They are
+  not all immutable text; this source observation does not execute a model.
+- Environment/path reads in sibling auth/llama.cpp modules; credential refresh,
+  subprocesses, clients and model loading remain in deferred paths.
+
+No demonstrated source-level import-time MemoryEngine instance construction,
+database connection, embedding/model load, worker/service launch or hosted call
+was found in the reviewed acquired bodies. This negative static finding is not
+runtime-safe certification. The eight source/integrity checks do not import any
+of these modules. Reviews preserve UNKNOWN effects of third-party imports and
+dynamic/native behavior. Final AST phase classifications correct early review
+shorthand: Anthropic/Claude SDK imports are deferred constructor paths; prompt
+building includes the clock read noted above.
+
+### Updated minimum declared package footprint and cryptography
+
+[Metadata closure code](../../scripts/phase08d8_package_closure.py) resolves only
+the external packages required by verified mandatory import roots, including
+dependency-selected extras and target markers, using the existing pinned lock.
+It does not select full Hindsight extras or optional providers merely because
+they are declared in the full distribution. Unknown metadata syntax rejects.
+
+The result is **61 packages**, versus the prior partial lower bound of 28 and
+the full-runtime resolution of 184. Exact versions, dependency edges, applicable
+extras/markers and candidate artifact identities are in the adaptive receipt.
+This is the minimum **declared metadata closure of the demonstrated import
+roots**, not proof that no third-party dynamic dependency exists. Nor is it a
+dependency-compliant installation of the full `hindsight-api-slim` distribution:
+its full metadata must not be silently trimmed.
+
+| Added eager package family | Required by verified source |
+| --- | --- |
+| Google GenAI 2.18.1 / Google Auth 2.56.3 | Gemini sibling module imported by real provider initializer |
+| cryptography 50.0.0 / cffi / pyasn1 family | Google Auth's selected base dependency metadata |
+| OpenTelemetry API/SDK/exporters/protobuf/Prometheus | Real metrics and tracing module imports |
+| SQLAlchemy 2.0.44 / greenlet / pgvector 0.4.1 / NumPy 2.3.4 | Real engine database/ORM/search imports |
+| dateparser 1.4.2 / regex / date/timezone dependencies | Real query analysis module |
+| toktok-rs 0.1.3 | Real engine tokenizer module; vocabulary loading itself deferred |
+
+| Artifact status on pinned CPython 3.12.8 Intel macOS target | Count |
+| --- | --- |
+| READY: rehashed qualified SDK wheel artifacts | 16 |
+| READY: other rehashed matching cached wheel artifacts | 8 |
+| MISSING: compatible locked candidates exist but matching local artifact absent | 36 |
+| BLOCKED: no compatible wheel in the pinned lock | 1 (cryptography 50.0.0) |
+
+This is a bounded artifact inventory, not a repeat machine scan or new package
+acquisition. No installed native runtime or third-party import was requalified.
+
+**Cryptography is now necessary in the dependency-complete pinned ordinary-import
+package closure**, with evidence chain:
+
+```text
+providers/__init__.py -> gemini_llm.py:21–23 (unconditional Google GenAI imports)
+Google GenAI 2.18.1 -> Google Auth 2.56.3 [requests]
+Google Auth 2.56.3 -> cryptography 50.0.0
+```
+
+This is a verified source edge plus pinned metadata dependency, not a measured
+execution of Google/Auth/cryptography. The OpenAI/HTTP SDK-only 16-package closure
+still does not require cryptography. Full Hindsight metadata separately retains
+its `cryptography>=50.0.0` security floor. There is no compatible Intel macOS
+cryptography 50.0.0 wheel in this pinned lock; this does not claim current global
+PyPI availability or a demonstrated CPU failure. No downgrade, source build,
+architecture substitution or workaround is proposed or executed here.
+
+### Engineering decision: B, proposal only
+
+| Option | Evidence, cost and limits | Decision |
+| --- | --- | --- |
+| A: faithful ordinary import of the pinned source | Literal first-party graph resolved; reviewed source separates module declarations from engine/model/service instance initialization. Requires 125 source modules and a 61-package declared footprint, 37 non-ready artifact slots and the locked Intel cryptography gap. Third-party import/native effects, actual constructor behavior and complete runtime governance remain unqualified. It need not install all 184 packages, but substantially expands beyond a provider/SDK test. | Technically plausible pending artifacts and offline runtime evidence; installation is not ready or authorized. |
+| B: separately reviewed real provider-boundary architecture | Make the provider entrypoint independent of engine/retain/search/database/sibling SDK bootstrap through a genuine first-party packaging/lazy-export design, retaining native provider methods and actual SDK semantics. Explicitly distinguish the engineered boundary from unmodified 0.10.1 ordinary runtime. | **Recommended next direction; not implemented.** |
+
+The proposed B design review should define a genuine minimal first-party provider
+entrypoint/package, real helper dependency contracts and a provenance manifest
+for unchanged provider/method bytes. One candidate is a reviewed lazy-export
+refactor of the real engine/provider initializers, consistent with the existing
+lazy root pattern; another is an upstream-supported provider-only library.
+Either needs its own explicit source/packaging review and versioned identity.
+It cannot use `sys.modules` stubs, fake package initializers or a claimed native
+readiness exemption. A changed bootstrap would qualify that engineered boundary,
+not retrospectively certify the unmodified frozen runtime.
+
+The design must preserve model/headers/query/body/schema/tool/reasoning/token
+parameters, native retry behavior, and raw SDK usage before native transformations.
+Any later qualification must use the actual SDK with the separately authorized
+D7 offline transport and preserve HTTP attempt accounting. Complete worker/role
+ownership and endpoint inclusive-token bounds remain separate D4 prerequisites.
+No extraction, lazy-initializer patch, source rewrite, import hook or test
+architecture was implemented in this phase.
+
+**Precise next authorization: design-only review of option B's real provider
+entrypoint/packaging, provenance and semantic-parity contract.** It would not
+authorize acquisition, installation, source modification or native execution
+unless those are expressly added to a subsequent prompt. If option A is chosen
+instead, a separately reviewed compatible-artifact/platform plan is necessary;
+the current 61-package inventory is not an executable install authorization.
+Additional deferred sources need not be acquired merely to exhaust this budget.
+
+### Static/integrity checks and readiness
+
+[Final verification](../../scripts/verify_phase08d8_adaptive_sources.py) ran with
+the existing repository SDK `.venv`, `-I -B`, empty environment, macOS
+deny-all-network profile and a Python audit hook rejecting native/SDK imports
+and socket events. **Eight checks PASS:** historical manifests/131 source
+identities/tree; adaptive discovery/request order/ceilings; 15 reviews/literal
+graph; 61-package markers/extras/crypto chain; ready-wheel hashes; marker target
+and unknown-marker rejection; source tamper/outside-path rejection; and the
+feasibility STOP before curl with all prior evidence unchanged. Static checks
+made zero requests; acquisition's 101 authorized HTTPS requests are separate.
+
+The receipt is immutable and all raw sources remain ignored. D1/D2, Freeze v1,
+frozen attempts and scientific denominators are unchanged. No Hindsight import
+or source execution, provider construction, SDK request, package acquisition/
+installation/build, model/embedding/database/worker/service initialization,
+Jetstream, SSH, RQ3 or empirical action occurred. **D3 PARTIAL, D4 BLOCKED,
+D5 PARTIAL; startup gate unchanged. Stop for independent review.**
+
+## Prior remaining native source closure (historical) — 2026-10-13
 
 CONVERSATION: Phase 08D-8 remaining native source closure. MODEL: GPT-6 Codex
 runtime; no independent model-variant receipt. EXECUTION TARGET: assigned local

@@ -395,3 +395,25 @@ each regression. It is not generic troubleshooting advice.
   `scripts/verify_phase08d8_remaining_sources.py`, six static controls and
   [immutable closure receipt](../../manifests/phase-08d8-remaining-source-closure.json).
   D4 startup gate and historical scientific evidence unchanged.
+
+### Phase 08D-8 adaptive closure exposes ordinary import's crypto coupling
+
+- **Resolved evidence:** adaptive source-only authorization eliminates fixed
+  frontier interruptions while retaining pinned identity, append-only provenance,
+  request/byte/file budgets and source-execution prohibitions. 101 files acquired,
+  29 new discoveries; mandatory literal graph resolved at 125 modules.
+- **Coupling:** real providers initializer eagerly imports Gemini, whose module
+  unconditionally imports Google GenAI. Pinned Google Auth metadata requires
+  crypto 50.0.0; ordinary-import declared package closure is 61, not SDK-only 16.
+  Locked crypto has no Intel macOS wheel. This is metadata necessity, not measured
+  SDK/crypto behavior. Native import/library side effects remain UNKNOWN.
+- **Import effects:** real ORM/dataclass/pydantic/locks/config/logging setup;
+  allocator-symbol resolution and wall-clock prompt constants. Do not equate
+  syntactic graph resolution with runtime-safe startup or complete dynamic paths.
+- **Decision/invariant:** B design review may propose genuine provider packaging/
+  lazy export changes with native method parity, but no architecture is implemented
+  and no initializer bypass, stub, upstream rewrite or gate change is approved.
+- **Protection:** adaptive plan/ledger, `phase08d8_adaptive_sources.py`, metadata
+  closure verifier, eight static controls and
+  [immutable receipt](../../manifests/phase-08d8-adaptive-source-closure.json).
+  Scientific evidence/denominators and D4 BLOCKED gate remain unchanged.

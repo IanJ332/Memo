@@ -342,3 +342,25 @@ is no majority voting and no replacement of errors.
   and [frozen plan](../../manifests/phase-08d8-remaining-source-plan.json).
   Independent review; narrow next source authorization is pinned agent.py
   (91,029 bytes), without installation or reflection/native execution permission.
+
+### Phase 08D-8 bounded adaptive source closure (2026-10-13)
+
+- Start: `d226f7859fae94df0055cda43c5900571b0d66d5`, clean review branch. New
+  authorization permits mandatory pinned .py discovery under source subtree,
+  limits 150 files / 3,500,000 bytes / 200 requests; no packages/native execution.
+- Acquired 101 verified files / 1,692,988 bytes / 101 successful HTTPS requests,
+  zero failures, 15 reviewed batches. Initial 72 plus 29 newly logged required
+  sources; all prior evidence intact, raw sources ignored/unpublished.
+- Eight static/integrity checks PASS: 131 total source identities; mandatory
+  literal 125-module graph has no missing bodies. Conditional/deferred/type-only
+  imports, dynamic behavior and third-party/native effects remain unqualified.
+- Declared package closure of demonstrated import roots: 61; 24 reusable wheel
+  slots rehashed, 36 missing matching artifacts, crypto 50.0.0 Intel lock gap.
+  Eager Gemini -> Google GenAI/Auth establishes crypto metadata necessity.
+- Engineering decision B: separately reviewed genuine provider-boundary design,
+  not implemented. No stubs, rewritten source/initializers, native/SDK calls,
+  packages/builds/services/model/database/embedding/worker/RQ3/SSH/Jetstream action.
+  D3/D5 PARTIAL, D4 BLOCKED; D1/D2/freezes/attempts/denominators unchanged.
+- [Adaptive receipt](../../manifests/phase-08d8-adaptive-source-closure.json) and
+  [scope plan](../../manifests/phase-08d8-adaptive-source-plan.json). Stop for
+  independent review; next authorization is option-B design review only.

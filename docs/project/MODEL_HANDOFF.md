@@ -140,6 +140,29 @@ See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase map and
 
 ### Phase 08D-8 minimal native runtime preparation addendum
 
+The bounded adaptive continuation from
+`d226f7859fae94df0055cda43c5900571b0d66d5` acquired 101 pinned first-party sources
+/ 1,692,988 bytes / 101 HTTPS requests (zero failed), under limits 150 files /
+3.5 MB / 200 requests. All initial 72 plus 29 newly logged mandatory discoveries
+were verified; 131 total source identities and eight static/integrity checks pass.
+The mandatory literal graph is resolved at 125 modules. Conditional/deferred/
+type-only targets and all dynamic/native/third-party runtime effects remain
+unqualified. The mandatory import-root package metadata closure is 61 packages:
+24 ready artifact slots, 36 matching-wheel gaps, one locked Intel compatibility
+gap (cryptography 50.0.0). Eager Gemini import -> Google GenAI/Auth makes crypto
+necessary in this ordinary-import package closure; SDK-only remains separate.
+Engineering decision B: propose a separately reviewed genuine provider-only
+entrypoint/packaging design with unchanged native methods and explicit parity/
+provenance, not unmodified runtime qualification. **Not implemented.** No source
+rewriting, initializer bypass, native/SDK execution, installation or gate change.
+See the [adaptive receipt](../../manifests/phase-08d8-adaptive-source-closure.json)
+and [updated report](../experiments/PHASE_08D8_MINIMAL_NATIVE_RUNTIME_PREPARATION.md).
+Stop for independent review. Next authorization is design-only option-B review;
+no further acquisition/build/install/source modification/native execution is
+authorized by this handoff. D3/D5 PARTIAL, D4 BLOCKED; science/Freeze/D1/D2 unchanged.
+
+The fixed-frontier remaining-source inspection below is historical:
+
 The remaining-source continuation from
 `d11a081855b84b85522fde6ad25deeb34a37ceaa` froze the exact 75-file /
 1,259,799-byte plan. It acquired and verified db base/ops/result, then reflect's
