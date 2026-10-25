@@ -10,6 +10,11 @@ No native or model R1 observation has been collected. The owner grant must
 prospectively authorize bounded native capture; actual context/request bytes are
 then frozen immutably before each send. No R0 conclusion changes.
 
+**2026-10-25 live closeout:** the exact owner-authorized R1 attempt stopped
+before native or remote activity because Docker was unavailable. Zero POSTs;
+32 unobserved slots; no replay. [Sealed closeout and analysis](r1-live-20261025/REPORT.md)
+supersede the prospective R1 execution state below. R0 findings are unchanged.
+
 ## OBSERVED / VERIFIED — Cohort 0
 
 TCEX-20261024-03 is **Cohort 0 — Prompt-Specified Baseline**. The active task supplied the correct recipient.55/60 planned responses are complete;54 contain native proposals. Unit034 has no native call and remains RESPONSE_FORMAT_ANOMALY. Unit056 has an ambiguous send/no response, consumes its slot and has UNKNOWN usage;057–060 were not started. No retries or replacements. Known55-response usage:37,967 prompt +25,039 completion =63,006 total;21,732 reasoning included in completion.

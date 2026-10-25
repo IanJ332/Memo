@@ -2,6 +2,13 @@
 
 ## Current direction — 2026-10-25
 
+**R1 live closeout:** owner-authorized `R1EX-20261025-01` was invoked once and
+closed at startup because the approved local Docker daemon was unavailable.
+Zero native operations, remote access operations or model POSTs; all 32 outcomes
+remain unobserved. The sealed attempt must not be replayed. See the
+[R1 closeout](../research/r1-live-20261025/REPORT.md). The offline readiness
+paragraph below records the accepted pre-execution state, not fresh authority.
+
 R0 is accepted and closed. R1's registered 32-request design is conditionally
 accepted and unexecuted; the [offline integration](../research/R1_READINESS.md)
 reuses qualified Tier C infrastructure with fresh grant/slot identities and
