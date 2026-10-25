@@ -5,6 +5,20 @@ qualified Tier C pipeline to the unchanged [32-slot registration](../../manifest
 and [independent host ACL](../../manifests/r1-memory-necessity-host-acl-v1.json).
 R0 is accepted and closed. No historical grant enrolls R1.
 
+## Acceptance rule for every prospective package
+
+An R1 package is READY FOR OWNER AUTHORIZATION only after a genuine independent
+review receipt binding that exact package has been accepted. `prepare` and
+`verify` alone establish offline package integrity; their success is insufficient
+for this readiness designation. Before handing a package to the owner, verify
+the receipt's schema, acceptance and independence, exact package identity, and
+both source maps against the unchanged comparisons in `check_grant()`. Attach
+the receipt identity to that package's prospective grant before requesting owner
+authorization. Preserve `approved: false` and unset owner provenance/times until
+a genuine direct owner decision. A prior package's receipt cannot be reused by
+changing its package hash. After owner approval, the complete grant must pass
+the unchanged offline admission contract before any campaign claim or live work.
+
 **Offline integration PASS.** The independent focused review accepted the exact
 package after 62 R1 tests passed. The parent also passed 22 R0 regression controls
 and 23 existing Tier C transport/metadata tests: 107 distinct focused tests,

@@ -41,7 +41,33 @@ qualified checkout, which produced one non-test warning only.
 
 ## Remaining authorization
 
-No R1 collection is authorized. A future direct owner message must bind
+The original readiness handoff omitted an exact-package independent review:
+the fresh grant's `source_review` was null, and the earlier receipt bound a
+different package. The subsequent owner-authorized admission therefore stopped
+before claiming this execution identity or starting any live work. Offline
+package integrity and the synthetic tests above did not establish READY FOR
+OWNER AUTHORIZATION. The [per-package acceptance rule](R1_READINESS.md#acceptance-rule-for-every-prospective-package)
+requires a genuine accepted receipt for this exact package before that handoff.
+The original prospective approval requirement is retained at the end of this
+section as historical context.
+
+The subsequent exact-package repair obtained a genuine independent review in
+separate Codex context `/root/r1_exact_review_v3`. It recomputed all eight public
+and 111 qualified private source hashes, inspected the registration, ACL,
+capture/custody, admission, accounting, cleanup and scoring, and passed all 62
+offline R1 tests without skips. No material defect was found. The new private
+receipt SHA-256 is
+`3018259ad4ab1300f3dcba91967aa8f19e3c5ce51a4a8d3881f8de11f990372c`.
+It binds this exact package and both source maps; it is distinct from the prior
+package's receipt and is not owner permission. The receipt was attached to the
+grant, and complete offline admission validation passed. No accepted source or
+package identity changed. The execution remains unclaimed. The repair task
+authorizes no live action; any later execution must revalidate the genuine owner
+approval and its original window under the unchanged contract. Private approval
+provenance and grant records remain excluded from public synchronization.
+
+Original prospective requirement (historical): No R1 collection is authorized.
+A future direct owner message must bind
 `AUTHORIZE_R1_LIVE`, `R1EX-20261025-02`, and the exact package SHA-256 above;
 accept the package's Option B acknowledgment and bounded native/access scope;
 then supply genuine message provenance and UTC-aware approval/window times.
