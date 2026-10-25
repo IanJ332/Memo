@@ -1,0 +1,23 @@
+{
+  "asset_name": "MemLife_R1EX-20261025-01_Startup_Stop_v1.zip",
+  "bytes": 3040,
+  "download_sha256": "2b508d0027047ea1a7baa001ab18b11120825960ae68eb5319a01f241b3fecda",
+  "exclusions": [
+    "owner approval and message records",
+    "grants",
+    "package and execution bindings",
+    "input custody",
+    "process records and supervision commands",
+    "window and administrative state"
+  ],
+  "execution_id": "R1EX-20261025-01",
+  "original_inventory_sha256": "94941119f4f528b13fe0748ac171915991208c63fc21aebe718ed6d1dad8f977",
+  "release_url": "https://github.com/IanJ332/MemLife-Research-Evidence/releases/tag/r1-startup-stop-20261025-v1",
+  "repository": "IanJ332/MemLife-Research-Evidence",
+  "schema": "MEMLIFE_R1_PRIVATE_BACKUP_V1",
+  "scope": "Allowlisted original failure/cleanup records plus derived analysis. Complete sealed originals retained locally. No native or model evidence exists.",
+  "sha256": "2b508d0027047ea1a7baa001ab18b11120825960ae68eb5319a01f241b3fecda",
+  "status": "REMOTE_BYTES_VERIFIED",
+  "verified_at_utc": "2026-10-25T07:20:28.060540+00:00",
+  "visibility": "PRIVATE"
+}
