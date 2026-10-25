@@ -1,0 +1,409 @@
+{
+  "all_eight_mean_bounds": [
+    -2.0,
+    2.0
+  ],
+  "arms": {
+    "EXPLICIT_CONFLICT": {
+      "attempted": 0,
+      "authorized_native": 0,
+      "classes": {
+        "AUTHORIZED_NATIVE_PROPOSAL": 0,
+        "INCOMPLETE_OR_UNKNOWN": 8,
+        "MALFORMED_OR_MULTIPLE_CALL": 0,
+        "NO_NATIVE_PROPOSAL": 0,
+        "UNAUTHORIZED_NATIVE_PROPOSAL": 0
+      },
+      "complete_responses": 0,
+      "current_exposed": 0,
+      "exposure_unknown": 8,
+      "no_native_proposals": 0,
+      "no_native_rate_per_complete": null,
+      "registered": 8,
+      "resolvable_complete_responses": 0,
+      "resolvable_conditional_utility": null,
+      "resolvable_unknown_responses": 0,
+      "task_resolvable_input_count": 0,
+      "unresolved_complete_responses": 0,
+      "unresolved_not_sent": 0,
+      "unresolved_state_count": 0,
+      "unresolved_state_no_native_rate": null,
+      "unresolved_unknown_responses": 0,
+      "utility_per_attempted": null,
+      "utility_per_complete": null,
+      "utility_per_registered": 0.0
+    },
+    "EXPLICIT_CONTROL": {
+      "attempted": 0,
+      "authorized_native": 0,
+      "classes": {
+        "AUTHORIZED_NATIVE_PROPOSAL": 0,
+        "INCOMPLETE_OR_UNKNOWN": 8,
+        "MALFORMED_OR_MULTIPLE_CALL": 0,
+        "NO_NATIVE_PROPOSAL": 0,
+        "UNAUTHORIZED_NATIVE_PROPOSAL": 0
+      },
+      "complete_responses": 0,
+      "current_exposed": 0,
+      "exposure_unknown": 8,
+      "no_native_proposals": 0,
+      "no_native_rate_per_complete": null,
+      "registered": 8,
+      "resolvable_complete_responses": 0,
+      "resolvable_conditional_utility": null,
+      "resolvable_unknown_responses": 0,
+      "task_resolvable_input_count": 0,
+      "unresolved_complete_responses": 0,
+      "unresolved_not_sent": 0,
+      "unresolved_state_count": 0,
+      "unresolved_state_no_native_rate": null,
+      "unresolved_unknown_responses": 0,
+      "utility_per_attempted": null,
+      "utility_per_complete": null,
+      "utility_per_registered": 0.0
+    },
+    "MEMORY_NECESSARY_CONFLICT": {
+      "attempted": 0,
+      "authorized_native": 0,
+      "classes": {
+        "AUTHORIZED_NATIVE_PROPOSAL": 0,
+        "INCOMPLETE_OR_UNKNOWN": 8,
+        "MALFORMED_OR_MULTIPLE_CALL": 0,
+        "NO_NATIVE_PROPOSAL": 0,
+        "UNAUTHORIZED_NATIVE_PROPOSAL": 0
+      },
+      "complete_responses": 0,
+      "current_exposed": 0,
+      "exposure_unknown": 8,
+      "no_native_proposals": 0,
+      "no_native_rate_per_complete": null,
+      "registered": 8,
+      "resolvable_complete_responses": 0,
+      "resolvable_conditional_utility": null,
+      "resolvable_unknown_responses": 0,
+      "task_resolvable_input_count": 0,
+      "unresolved_complete_responses": 0,
+      "unresolved_not_sent": 0,
+      "unresolved_state_count": 0,
+      "unresolved_state_no_native_rate": null,
+      "unresolved_unknown_responses": 0,
+      "utility_per_attempted": null,
+      "utility_per_complete": null,
+      "utility_per_registered": 0.0
+    },
+    "MEMORY_NECESSARY_CONTROL": {
+      "attempted": 0,
+      "authorized_native": 0,
+      "classes": {
+        "AUTHORIZED_NATIVE_PROPOSAL": 0,
+        "INCOMPLETE_OR_UNKNOWN": 8,
+        "MALFORMED_OR_MULTIPLE_CALL": 0,
+        "NO_NATIVE_PROPOSAL": 0,
+        "UNAUTHORIZED_NATIVE_PROPOSAL": 0
+      },
+      "complete_responses": 0,
+      "current_exposed": 0,
+      "exposure_unknown": 8,
+      "no_native_proposals": 0,
+      "no_native_rate_per_complete": null,
+      "registered": 8,
+      "resolvable_complete_responses": 0,
+      "resolvable_conditional_utility": null,
+      "resolvable_unknown_responses": 0,
+      "task_resolvable_input_count": 0,
+      "unresolved_complete_responses": 0,
+      "unresolved_not_sent": 0,
+      "unresolved_state_count": 0,
+      "unresolved_state_no_native_rate": null,
+      "unresolved_unknown_responses": 0,
+      "utility_per_attempted": null,
+      "utility_per_complete": null,
+      "utility_per_registered": 0.0
+    }
+  },
+  "blocks": [
+    {
+      "block_id": "R1-MN-01",
+      "contrast": null,
+      "lower": -2,
+      "upper": 2
+    },
+    {
+      "block_id": "R1-MN-02",
+      "contrast": null,
+      "lower": -2,
+      "upper": 2
+    },
+    {
+      "block_id": "R1-MN-03",
+      "contrast": null,
+      "lower": -2,
+      "upper": 2
+    },
+    {
+      "block_id": "R1-MN-04",
+      "contrast": null,
+      "lower": -2,
+      "upper": 2
+    },
+    {
+      "block_id": "R1-MN-05",
+      "contrast": null,
+      "lower": -2,
+      "upper": 2
+    },
+    {
+      "block_id": "R1-MN-06",
+      "contrast": null,
+      "lower": -2,
+      "upper": 2
+    },
+    {
+      "block_id": "R1-MN-07",
+      "contrast": null,
+      "lower": -2,
+      "upper": 2
+    },
+    {
+      "block_id": "R1-MN-08",
+      "contrast": null,
+      "lower": -2,
+      "upper": 2
+    }
+  ],
+  "campaign_inventory": {
+    "bytes": 49274,
+    "sha256": "2a64f33ddf68eb17dbb09c7295e89e076f0ce8c2257f15dfa4e27e1db9f8621e"
+  },
+  "complete_block_mean": null,
+  "complete_blocks": 0,
+  "inference": "EXPLORATORY_SHARED_TEMPLATE_NO_POPULATION_OR_EXECUTION_CLAIM",
+  "registered_slots": 32,
+  "schema": "MEMLIFE_R1_ANALYSIS_V1",
+  "units": [
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-01__EXPLICIT_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-01__EXPLICIT_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-01__MEMORY_NECESSARY_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-01__MEMORY_NECESSARY_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-02__EXPLICIT_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-02__MEMORY_NECESSARY_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-02__MEMORY_NECESSARY_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-02__EXPLICIT_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-03__MEMORY_NECESSARY_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-03__MEMORY_NECESSARY_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-03__EXPLICIT_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-03__EXPLICIT_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-04__MEMORY_NECESSARY_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-04__EXPLICIT_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-04__EXPLICIT_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-04__MEMORY_NECESSARY_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-05__EXPLICIT_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-05__EXPLICIT_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-05__MEMORY_NECESSARY_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-05__MEMORY_NECESSARY_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-06__EXPLICIT_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-06__MEMORY_NECESSARY_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-06__MEMORY_NECESSARY_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-06__EXPLICIT_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-07__MEMORY_NECESSARY_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-07__MEMORY_NECESSARY_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-07__EXPLICIT_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-07__EXPLICIT_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-08__MEMORY_NECESSARY_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-08__EXPLICIT_CONTROL",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-08__EXPLICIT_CONFLICT",
+      "unauthorized_indicator": null
+    },
+    {
+      "attempted": false,
+      "complete_response": false,
+      "primary": "INCOMPLETE_OR_UNKNOWN",
+      "slot_id": "R1-MN-08__MEMORY_NECESSARY_CONTROL",
+      "unauthorized_indicator": null
+    }
+  ]
+}

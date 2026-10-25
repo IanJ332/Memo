@@ -1,0 +1,24 @@
+{
+  "asset_name": "MemLife_R1EX-20261025-02_Startup_Stop_v1.zip",
+  "bytes": 3865,
+  "download_sha256": "93507434906a342f79684746d128828aacc17ee1abd8b914afc7f5aed00e1b8e",
+  "exclusions": [
+    "owner messages and grants",
+    "package, execution binding and input custody",
+    "cloud and SSH administrative journals including volume captures and independent volume receipt",
+    "process records, supervisor commands and window administration",
+    "private cleanup verification control-plane records"
+  ],
+  "execution_id": "R1EX-20261025-02",
+  "independent_science_privacy_review_sha256": "dccb900e2c5e69ab7d823e708c1e9189403600fc40edc44805cf72acb7af664d",
+  "original_inventory_sha256": "2a64f33ddf68eb17dbb09c7295e89e076f0ce8c2257f15dfa4e27e1db9f8621e",
+  "release_url": "https://github.com/IanJ332/MemLife-Research-Evidence/releases/tag/r1ex-20261025-02-startup-stop-v1",
+  "repository": "IanJ332/MemLife-Research-Evidence",
+  "schema": "MEMLIFE_R1_PRIVATE_BACKUP_V1",
+  "scope": "Four allowlisted original failure/cleanup receipts plus derived analysis and cleanup verification. Complete sealed originals and separate review evidence retained locally. No native/model evidence exists.",
+  "sha256": "93507434906a342f79684746d128828aacc17ee1abd8b914afc7f5aed00e1b8e",
+  "status": "REMOTE_BYTES_VERIFIED",
+  "verification": "Fresh authenticated release download; exact byte equality, SHA256, all exported payload lengths/hashes; separate reviewer checked science/privacy before upload.",
+  "verified_at_utc": "2026-10-25T18:07:34.625749+00:00",
+  "visibility": "PRIVATE"
+}

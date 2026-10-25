@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-25T18:03:34.682853+00:00",
+  "cloud_mutations": 0,
+  "execution_id": "R1EX-20261025-02",
+  "final_lifecycle": "SHELVED_OFFLOADED",
+  "forward_never_started": true,
+  "fresh_authenticated_cloud_read": true,
+  "generation": false,
+  "ledger_absent": true,
+  "matches_observed_initial": true,
+  "native_capture_absent": true,
+  "original_cleanup_sha256": "e639285d524b9ed69fdc03d05b8e62a93b4ce25370a9811d1cc92d3477c71dfb",
+  "original_inventory_sha256": "2a64f33ddf68eb17dbb09c7295e89e076f0ce8c2257f15dfa4e27e1db9f8621e",
+  "original_verification_sha256": "e8bd3c6997e590f16c82b6101f915dbae44b40a234e239f1f79f8e2f6112d610",
+  "owned_containers_absent": true,
+  "owned_floating_IP_count": 0,
+  "owned_supervisor_processes_absent": true,
+  "status": "VERIFIED"
+}

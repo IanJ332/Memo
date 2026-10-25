@@ -2,6 +2,14 @@
 
 ## Current direction — 2026-10-25
 
+**R1EX-20261025-02 closed:** the approved controller stopped at the independent
+volume-review receipt deadline after receipt installation was rejected by
+automatic approval review. Zero native operations and model POSTs; all 32
+outcomes remain unobserved. Exact initial cloud lifecycle and owned-resource
+cleanup were independently verified. See the
+[sealed closeout](../research/r1-live-20261025-02/REPORT.md). Neither R1 attempt
+may be replayed; the prospective notes below are historical context.
+
 **R1 live closeout:** owner-authorized `R1EX-20261025-01` was invoked once and
 closed at startup because the approved local Docker daemon was unavailable.
 Zero native operations, remote access operations or model POSTs; all 32 outcomes
