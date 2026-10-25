@@ -2,6 +2,14 @@
 
 ## Current direction — 2026-10-25
 
+**R1EX-20261025-02 closed:** its required actual-volume review passed separately,
+but receipt installation was blocked by automatic approval review. The unchanged
+controller timed out before native capture or generation. All 32 outcomes remain
+unobserved, with zero POSTs; cleanup and exact lifecycle restoration were
+independently verified. See the [closeout](../research/r1-live-20261025-02/REPORT.md).
+This consumed attempt must not be replayed. Prospective statements below are
+preserved historical context.
+
 **R1 live closeout:** owner-authorized `R1EX-20261025-01` was invoked once and
 closed at startup because the approved local Docker daemon was unavailable.
 Zero native operations, remote access operations or model POSTs; all 32 outcomes
