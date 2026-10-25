@@ -1,6 +1,7 @@
 # R1 offline integration — 2026-10-25
 
-**Conditionally accepted design; not executed.** The integration binds the existing
+**Conditionally accepted design; no scientific collection.** R1EX-20261025-01
+and R1EX-20261025-02 are sealed and cannot be replayed. The integration binds the existing
 qualified Tier C pipeline to the unchanged [32-slot registration](../../manifests/r1-memory-necessity-v1.json)
 and [independent host ACL](../../manifests/r1-memory-necessity-host-acl-v1.json).
 R0 is accepted and closed. No historical grant enrolls R1.
@@ -18,6 +19,75 @@ authorization. Preserve `approved: false` and unset owner provenance/times until
 a genuine direct owner decision. A prior package's receipt cannot be reused by
 changing its package hash. After owner approval, the complete grant must pass
 the unchanged offline admission contract before any campaign claim or live work.
+
+## Receipt-placement preflight — 2026-10-25
+
+Exact package review and owner admission are necessary but insufficient for an
+operational handoff. Before consuming another execution identity, establish the
+current [authoritative instruction context](../../AGENTS.md#current-authority-clarification--2026-10-25),
+the supported external approval route, and the feasibility of installing the
+future actual-volume receipt within the unchanged startup deadline. If that
+approval route cannot be meaningfully cleared offline, report
+`PARTIAL — OFFLINE VERIFIED, LIVE APPROVAL PATH UNPROVEN`; do not prepare another
+package or describe the campaign as ready for live execution. Synthetic controller
+tests and a non-live copy do not demonstrate external acceptance of a live gate.
+
+The prospective owner decision must explicitly cover receipt installation and
+its dependent bounded native/access/model actions for the exact new package,
+along with the existing Option B acknowledgment and resource/window limits.
+Preserve genuine direct-message provenance privately. An external reviewer must
+receive that scope, the dated current instructions, exact proposed operation,
+source/destination identities, independent review provenance and remaining
+deadline. An offline source review, a volume review, a human owner grant and an
+external tool approval are distinct decisions; none substitutes for another.
+
+The unchanged qualified `tier_c_bounded/access.py::volume_diagnosis` writes
+`access/volume-diagnosis.json` then waits for
+`access/independent-volume-review.json`. Its receipt contract requires:
+
+- Classification `INDEPENDENT_ACTUAL_VOLUME_IDENTITY_REVIEW_V1`, `accepted: true`,
+  reviewer `/root/project_binding_review`, and no synthetic/test-scope flag.
+- Exact diagnosis identity, exact input identities for package, original grant
+  and execution binding, and exact verified-volume result. The execution binding
+  ties the output directory and execution ID to that package.
+- Genuine separate review of the captured raw evidence and pinned validator.
+  JSON assertions or the fixed reviewer label alone do not prove independence.
+  Historical evidence can test verification semantics only.
+
+Once a future campaign has separately been authorized, placement is a gated
+operation. Verify the original accepted receipt's bytes and genuine provenance,
+the exact current execution/package/grant/binding, an unsealed waiting campaign,
+the valid owner window and enough startup time. Obtain any required external
+approval for the precise installation and its dependent effects before writing.
+Use the existing durable exclusive-file procedure (`batch.evidence.durable`, raw
+bytes, mode 0600, no overwrite/symlink, file and directory fsync) at the expected
+path; verify byte equality afterward. The unchanged controller then validates
+the receipt and revalidates volume custody before opening the inference forward.
+Documenting this procedure does not authorize invoking it against a campaign.
+
+On an external denial, preserve the actual rationale. Do not switch tools,
+writers, paths, permissions or policy to attain the denied effect. The supported
+review/explicit approval process must accept the exact action while all original
+deadlines still hold; otherwise stop and clean up. There is no timeout extension,
+receipt-only resumption after sealing, or replay. External policy restrictions
+cannot be cleared by editing repository instructions.
+
+The available execution tool exposes escalation of actual commands, not a
+policy-only dry run. [Official Auto-review documentation](https://learn.chatgpt.com/docs/sandboxing/auto-review)
+describes exact-action review and, in the open-source TUI, `/approve` for one
+denied-action retry that still undergoes review. This does not establish that
+the desktop session exposes that control. No such external approval was
+fabricated or exercised by this offline repair. A supported exact-action review
+or operator-provided supported preflight clearance is still required; a generic
+grant field is insufficient.
+
+Only after that boundary is resolved or explicitly cleared may preparation
+confirm Docker via the established non-generating checks, preserve the protocol,
+create one fresh identity/package, obtain a genuine exact-package independent
+receipt and prepare an unapproved owner grant. A new direct owner authorization
+is required before any live action; actual future volume evidence needs a new
+independent review. Neither sealed attempt supplies current observations,
+approvals, timestamps, journals or output directories for a future campaign.
 
 **Offline integration PASS.** The independent focused review accepted the exact
 package after 62 R1 tests passed. The parent also passed 22 R0 regression controls

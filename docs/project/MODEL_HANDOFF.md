@@ -2,6 +2,14 @@
 
 ## Current direction — 2026-10-25
 
+**Current continuation: offline admission governance repair.** The dated
+[AGENTS authority clarification](../../AGENTS.md#current-authority-clarification--2026-10-25)
+and [receipt-placement preflight](../research/R1_READINESS.md#receipt-placement-preflight--2026-10-25)
+distinguish historical restrictions, exact new owner grants, independent review
+and external approval. Both R1 attempts remain sealed. No new live campaign or
+fresh execution identity is authorized by this repair. See the
+[governance findings](../research/R1_ADMISSION_GOVERNANCE_REPAIR_20261025.md).
+
 **R1EX-20261025-02 closed:** the approved controller stopped at the independent
 volume-review receipt deadline after receipt installation was rejected by
 automatic approval review. Zero native operations and model POSTs; all 32
