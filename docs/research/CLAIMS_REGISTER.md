@@ -11,10 +11,11 @@
 | F04-02 | NOT_EVALUATED | Actual protected execution, atomic dispatch, TOCTOU, full ProvenanceBridge | Prohibited; pure authorization decisions cannot substantiate these |
 | F04-03 | UNSUPPORTED | Synthetic fixtures or permissive authentic decisions prove100% defense | No unauthorized authentic proposal challenge established by those decisions |
 | R1-01 | HYPOTHESIS | Memory necessity exposes stale-state influence on native proposal arguments | Prospective2x2protocol; no predicted effect size |
-| R1-02 | PLANNED | 8 blocks×4 arms,32 requests,Mem0 only | Frozen prospective manifest; separate live authorization required |
+| R1-02 | CONDITIONALLY_ACCEPTED | 8 blocks×4 arms,32 requests,Mem0 only; not executed | Frozen prospective manifest; separate live authorization required |
+| R1-03 | VERIFIED | Offline design binding, scoring and Tier C integration qualified; no R1 observations | [Readiness](R1_READINESS.md), [safe source/review summary](../../manifests/r1-integration-v1.json); reviewer acceptance is not owner authority or scientific data |
 | R2-01 | VERIFIED | Qualified no-LLM/direct-memory modes expose native persistent state | Provider modes and limitations in roadmap; no fullarchitecture inference |
 | R2-02 | BLOCKED | Derived-memory revocation/lineage across all providers | Requires actual supported native transitions and separately costed internal inference if needed |
 | R3-01 | PLANNED | Compare reviewed decision semantics while preserving utility | Authentic challenge coverage, OFF/legacy/hardened kept separate |
 | STD-01 | NOT_EVALUATED | ECMA-430/434 protocol conformance | Requires explicit conformance evidence |
 
-OBSERVED labels a captured event; VERIFIED labels independently checked scope-bound evidence; HYPOTHESIS is falsifiable but untested; PLANNED is prospective; BLOCKED identifies missing admission/capability; NOT_EVALUATED means no supporting evaluation. None implies publication-ready causal evidence.
+OBSERVED labels a captured event; VERIFIED labels independently checked scope-bound evidence; HYPOTHESIS is falsifiable but untested; PLANNED is prospective; CONDITIONALLY_ACCEPTED admits the design without live authority; BLOCKED identifies missing admission/capability; NOT_EVALUATED means no supporting evaluation. None implies publication-ready causal evidence.

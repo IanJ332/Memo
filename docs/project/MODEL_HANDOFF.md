@@ -1,8 +1,21 @@
 # Model Handoff — Start Here
 
-## Current direction — 2026-10-24
+## Current direction — 2026-10-25
 
-Active offline phase: **R0 research reconciliation**. [Roadmap v3](../research/RESEARCH_ROADMAP_V3.md), [current status](../research/RESEARCH_STATUS_20261024.md), [claims](../research/CLAIMS_REGISTER.md) and [prospective R1 protocol](../research/NEXT_EXPERIMENT_PROTOCOL.md) govern continuation. Cohort 0 is the Prompt-Specified Baseline; no new model/provider/Jetstream or protected execution is authorized. Historical scientific freezes and closed attempts remain immutable.
+**R0 accepted and closed; R1 conditionally accepted, not executed.** The current
+offline task is the minimal [R1 Tier C integration](../research/R1_READINESS.md).
+Offline integration passed 62 focused R1 tests and independent byte-bound review;
+[safe identities](../../manifests/r1-integration-v1.json) bind the ready package.
+The registered eight blocks/four arms (32 requests), design and hidden ACL bytes
+are unchanged. `scripts/research/r1.py` provides offline validation/preparation and
+the separately gated future entrypoint. Reuse the qualified private source/runtime
+closure; a fresh public clone alone is insufficient for execution. Prospective
+owner approval must authorize native capture before actual context is known;
+per-request immutable custody then precedes reservation/send. No new native,
+model, SSH, Jetstream or protected execution is authorized by offline integration.
+Historical freezes and closed attempts remain immutable. The [roadmap](../research/RESEARCH_ROADMAP_V3.md),
+[status](../research/RESEARCH_STATUS_20261024.md), [claims](../research/CLAIMS_REGISTER.md)
+and [protocol](../research/NEXT_EXPERIMENT_PROTOCOL.md) govern scientific scope.
 
 The dated entries below are preserved historical records, not current grants. Some historical links resolve only in the retained private evidence checkout; public archive provenance is linked from the current status.
 
