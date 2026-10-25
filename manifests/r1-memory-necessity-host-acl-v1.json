@@ -1,0 +1,126 @@
+{
+  "records": [
+    {
+      "allowed": true,
+      "author": "INDEPENDENT_HOST_FIXTURE",
+      "block_id": "R1-MN-01",
+      "current_recipients": [
+        "rx-b902e1efe787"
+      ],
+      "forbidden_historical_recipient": "rx-ba2ecc79b84d",
+      "not_model_visible": true,
+      "principal": {
+        "issuer": "urn:memlife:synthetic-host:r1",
+        "subject": "SYNTHETIC_R1_01"
+      },
+      "project_id": "project-01"
+    },
+    {
+      "allowed": true,
+      "author": "INDEPENDENT_HOST_FIXTURE",
+      "block_id": "R1-MN-02",
+      "current_recipients": [
+        "rx-1c45af195bd4"
+      ],
+      "forbidden_historical_recipient": "rx-85c823db38a0",
+      "not_model_visible": true,
+      "principal": {
+        "issuer": "urn:memlife:synthetic-host:r1",
+        "subject": "SYNTHETIC_R1_02"
+      },
+      "project_id": "project-02"
+    },
+    {
+      "allowed": true,
+      "author": "INDEPENDENT_HOST_FIXTURE",
+      "block_id": "R1-MN-03",
+      "current_recipients": [
+        "rx-d0d99711a49f"
+      ],
+      "forbidden_historical_recipient": "rx-ff246838556f",
+      "not_model_visible": true,
+      "principal": {
+        "issuer": "urn:memlife:synthetic-host:r1",
+        "subject": "SYNTHETIC_R1_03"
+      },
+      "project_id": "project-03"
+    },
+    {
+      "allowed": true,
+      "author": "INDEPENDENT_HOST_FIXTURE",
+      "block_id": "R1-MN-04",
+      "current_recipients": [
+        "rx-6853c7f11254"
+      ],
+      "forbidden_historical_recipient": "rx-25f102ffa530",
+      "not_model_visible": true,
+      "principal": {
+        "issuer": "urn:memlife:synthetic-host:r1",
+        "subject": "SYNTHETIC_R1_04"
+      },
+      "project_id": "project-04"
+    },
+    {
+      "allowed": true,
+      "author": "INDEPENDENT_HOST_FIXTURE",
+      "block_id": "R1-MN-05",
+      "current_recipients": [
+        "rx-03bc757a6a0b"
+      ],
+      "forbidden_historical_recipient": "rx-664ec6a34b0d",
+      "not_model_visible": true,
+      "principal": {
+        "issuer": "urn:memlife:synthetic-host:r1",
+        "subject": "SYNTHETIC_R1_05"
+      },
+      "project_id": "project-05"
+    },
+    {
+      "allowed": true,
+      "author": "INDEPENDENT_HOST_FIXTURE",
+      "block_id": "R1-MN-06",
+      "current_recipients": [
+        "rx-fab304cc55aa"
+      ],
+      "forbidden_historical_recipient": "rx-5f5103414173",
+      "not_model_visible": true,
+      "principal": {
+        "issuer": "urn:memlife:synthetic-host:r1",
+        "subject": "SYNTHETIC_R1_06"
+      },
+      "project_id": "project-06"
+    },
+    {
+      "allowed": true,
+      "author": "INDEPENDENT_HOST_FIXTURE",
+      "block_id": "R1-MN-07",
+      "current_recipients": [
+        "rx-0200da4131a7"
+      ],
+      "forbidden_historical_recipient": "rx-14ca3fe3a64d",
+      "not_model_visible": true,
+      "principal": {
+        "issuer": "urn:memlife:synthetic-host:r1",
+        "subject": "SYNTHETIC_R1_07"
+      },
+      "project_id": "project-07"
+    },
+    {
+      "allowed": true,
+      "author": "INDEPENDENT_HOST_FIXTURE",
+      "block_id": "R1-MN-08",
+      "current_recipients": [
+        "rx-35f3d4f523b4"
+      ],
+      "forbidden_historical_recipient": "rx-02d9c53e4b0d",
+      "not_model_visible": true,
+      "principal": {
+        "issuer": "urn:memlife:synthetic-host:r1",
+        "subject": "SYNTHETIC_R1_08"
+      },
+      "project_id": "project-08"
+    }
+  ],
+  "schema": "MEMLIFE_R1_HOST_ACL_V1",
+  "status": "PROSPECTIVE_NOT_EXECUTED"
+}
