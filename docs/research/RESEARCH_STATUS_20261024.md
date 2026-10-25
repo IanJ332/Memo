@@ -4,6 +4,12 @@ Working title: **When Memory Outlives Authority: Lifecycle Security and Host-Enf
 
 **R0 offline reconciliation complete; R1 prospective.** No new Qwen/provider/Jetstream/SSH or protected-tool execution occurred in this phase. Source/docs synchronization and private archival backup are separately owner-authorized.
 
+**2026-10-25 continuation:** R0 is accepted and closed. R1 has conditional
+scientific acceptance, unchanged registration and [offline Tier C integration](R1_READINESS.md).
+No native or model R1 observation has been collected. The owner grant must
+prospectively authorize bounded native capture; actual context/request bytes are
+then frozen immutably before each send. No R0 conclusion changes.
+
 ## OBSERVED / VERIFIED — Cohort 0
 
 TCEX-20261024-03 is **Cohort 0 — Prompt-Specified Baseline**. The active task supplied the correct recipient.55/60 planned responses are complete;54 contain native proposals. Unit034 has no native call and remains RESPONSE_FORMAT_ANOMALY. Unit056 has an ambiguous send/no response, consumes its slot and has UNKNOWN usage;057–060 were not started. No retries or replacements. Known55-response usage:37,967 prompt +25,039 completion =63,006 total;21,732 reasoning included in completion.
@@ -30,4 +36,11 @@ All54 temporary policy databases removed; no protected dispatches, deliveries, a
 
 [Reproduction and review](REPRODUCE_R0.md):22 focused source/statistics/negative-control tests pass in an existing repository Python3.12.8. Authentic replay uses preserved private source/evidence identities; fresh public clone alone is insufficient. Independent source, science, custody and public-diff review is recorded separately from GitHub branch approval.
 
-**Future authorization required:** a new bounded R1 live grant after exact native context/request freezing and independent review, binding32 POST maximum / 131,072 completion-token ceiling, no retries/internal LLM/dispatch, provider-local runtime, live model/TLS/context checks, remote-token uncertainty, any permitted remote access/routing/lifecycle and cleanup. Current authorization permits no new external experiment. Historical interrupted lifetime usage remains UNKNOWN; no global ordinals invented.
+**Future authorization required:** a new bounded R1 prospective live grant after
+offline source/scoring review, explicitly authorizing the native capture
+procedure before its context is known. Exact actual context/request custody is
+required before every dependent send. Limits remain32 POST maximum /131,072
+completion tokens, zero retries/internal LLM/dispatch, qualified local provider,
+live model/TLS/context checks, explicit Option B risk, exact access/lifecycle and
+cleanup. Current authority permits no live experiment. Historical interrupted
+lifetime usage remains UNKNOWN; no global ordinals are invented.

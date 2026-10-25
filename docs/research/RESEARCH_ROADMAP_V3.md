@@ -6,7 +6,7 @@ Governing rule: **Retrieved != Authoritative**.
 
 ## Decision and phase
 
-Owner-approved direction: Memory-Necessary Authority Drift, Native Memory Lifecycle Security, Provider-Independent Host Authorization. R0 is the active offline reconciliation phase. R1 is PLANNED, not executed. This roadmap supersedes earlier static-note expansion and deployment plans for active navigation; their original bytes and dated conclusions remain historical evidence in the private archive. No expired grant is reusable.
+Owner-approved direction: Memory-Necessary Authority Drift, Native Memory Lifecycle Security, Provider-Independent Host Authorization. R0 is accepted and closed. R1 is conditionally accepted, not executed; its [offline Tier C integration](R1_READINESS.md) is qualified and awaits one new exact owner grant. This roadmap supersedes earlier static-note expansion and deployment plans for active navigation; their original bytes and dated conclusions remain historical evidence in the private archive. No expired grant is reusable.
 
 | Question | Falsifiable target | Evidence boundary |
 | --- | --- | --- |

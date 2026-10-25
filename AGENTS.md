@@ -14,6 +14,12 @@ Authoritative**.
 4. Read the experiment or provider documents linked from those files only when
    needed.
 
+Current continuation (2026-10-25): R0 is accepted and closed. R1 is conditionally
+accepted and unexecuted. [R1 readiness](docs/research/R1_READINESS.md) governs its
+minimal offline integration and prospective owner-grant boundary. Current research
+documents supersede the historical phase navigation below. No native provider,
+model, SSH, Jetstream or protected execution is authorized by offline integration.
+
 The active line is `phase-08c0-research-reconciliation`, based on authoritative
 `origin/main` `b1ff61b862a45df41405eb821d3a46318eb66c29`. Candidate10 attempt
 `20261007T165110Z-19d0ccd6b106` is scientifically complete and its frozen Honcho

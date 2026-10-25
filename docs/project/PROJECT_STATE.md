@@ -1,8 +1,14 @@
 # Project State
 
-## Current direction — 2026-10-24
+## Current direction — 2026-10-25
 
-Active offline phase: **R0 research reconciliation**. [Roadmap v3](../research/RESEARCH_ROADMAP_V3.md), [current status](../research/RESEARCH_STATUS_20261024.md), [claims](../research/CLAIMS_REGISTER.md) and [prospective R1 protocol](../research/NEXT_EXPERIMENT_PROTOCOL.md) govern continuation. Cohort 0 is the Prompt-Specified Baseline; no new model/provider/Jetstream or protected execution is authorized. Historical scientific freezes and closed attempts remain immutable.
+R0 is accepted and closed. R1's registered 32-request design is conditionally
+accepted and unexecuted; the [offline integration](../research/R1_READINESS.md)
+reuses qualified Tier C infrastructure with fresh grant/slot identities and
+deterministic scoring. Native capture and generation require a new prospective
+owner grant followed by per-request immutable custody. No live provider, model,
+SSH, Jetstream or protected execution is currently authorized. Historical
+scientific freezes and closed attempts remain immutable.
 
 The dated entries below are preserved historical records, not current grants. Some historical links resolve only in the retained private evidence checkout; public archive provenance is linked from the current status.
 
