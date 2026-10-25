@@ -1,7 +1,60 @@
 # Project State
 
+## Current direction — 2026-10-24
+
+Active offline phase: **R0 research reconciliation**. [Roadmap v3](../research/RESEARCH_ROADMAP_V3.md), [current status](../research/RESEARCH_STATUS_20261024.md), [claims](../research/CLAIMS_REGISTER.md) and [prospective R1 protocol](../research/NEXT_EXPERIMENT_PROTOCOL.md) govern continuation. Cohort 0 is the Prompt-Specified Baseline; no new model/provider/Jetstream or protected execution is authorized. Historical scientific freezes and closed attempts remain immutable.
+
+The dated entries below are preserved historical records, not current grants. Some historical links resolve only in the retained private evidence checkout; public archive provenance is linked from the current status.
+
+## October 23 native Mem0 A3 → Qwen preparation addendum
+
+[Two exact prospective bodies](../research/native-mem0-a3-qwen/READINESS.md) bind
+accepted native post-reconstruction contexts, preserving matched task/config/tool/
+system/host ACL. Offline preparation only: zero calls, charges or reservations.
+Separate authorization is required for the pair (maximum two POSTs, 8,192 total
+completion tokens plus input; no retries). Historical actual lifetime usage stays
+UNKNOWN. Authentic F04 enrollment is BLOCKED by legacy admission/review paths,
+absent captures and unsupported lifetime ordinals; no boundary change. No dataset,
+freeze, scientific authorization or model-outcome claims changed.
+
+## October 22 first native Mem0 A3 pilot addendum
+
+The [development-only native A3 pilot](../research/native-mem0-a3-pilot/REPORT.md)
+completed both matched conditions and separate-process retrieval with the existing
+qualified Mem0 2.2.1 runtime. Four journals preserve actual native memory/context,
+independent ACL and cleanup evidence. No model proposal was generated; authentic
+F04 evaluation is NOT_APPLICABLE. Mutable stores/owned containers are removed.
+The original 32-case dataset, freezes and formal validation remain unchanged;
+future generation remains separately unauthorized.
+
+## October 22 local native runtime qualification addendum
+
+Real local Mem0 2.2.1 passed bounded Q1/Q2/Q3B/Q5/Q6 correctness and passive capture
+checks using sentence-transformers 6.1.0, CPU inference and disposable persistent
+stores. The [runtime report](../research/native-runtime-qualification/REPORT.md)
+separates actual provider observations from offline controls. Owned containers and
+mutable stores are removed; verified environment/cache and raw snapshots remain.
+Hindsight 0.10.1 is source-prepared only, with native execution still blocked.
+No scientific phase/freezes, F04/provenance semantics or future grants changed.
+
 This is the compact continuation map. Detailed evidence remains in linked phase
 documents and manifests.
+
+October 22 native qualification addendum: the
+[Native Provider Qualification Matrix](../research/native-provider-qualification/MATRIX.md)
+records an implemented Hindsight HTTP/recall capture integration and Mem0 SDK
+value capture, 20 passing mock checks and 11 existing adapter regressions.
+Native SDKs/source caches are unavailable locally; real qualified cases remain
+zero. Existing scientific freezes, accepted collector/adapters and native
+runtime/startup gates remain unchanged. No additional attack cases or live work.
+
+October 22 offline development addendum: the separately authorized
+[research expansion v2](../research/expansion-v2/HANDOFF.md) adds 32 preparation
+cases (27 model-only eligible, five blocked; zero native eligible), passive
+lifecycle/context evidence instrumentation and five future batch specifications.
+No new scientific/model/provider/Jetstream execution. Historical interrupted
+POST count remains UNKNOWN; all future batches currently authorize zero attempts.
+This does not revise any scientific freeze or the native runtime gate below.
 
 | Phase | Status | Important commit | Stable outcome / artifact | Continuation lesson or limitation |
 | --- | --- | --- | --- | --- |

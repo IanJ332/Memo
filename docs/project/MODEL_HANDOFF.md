@@ -1,5 +1,108 @@
 # Model Handoff — Start Here
 
+## Current direction — 2026-10-24
+
+Active offline phase: **R0 research reconciliation**. [Roadmap v3](../research/RESEARCH_ROADMAP_V3.md), [current status](../research/RESEARCH_STATUS_20261024.md), [claims](../research/CLAIMS_REGISTER.md) and [prospective R1 protocol](../research/NEXT_EXPERIMENT_PROTOCOL.md) govern continuation. Cohort 0 is the Prompt-Specified Baseline; no new model/provider/Jetstream or protected execution is authorized. Historical scientific freezes and closed attempts remain immutable.
+
+The dated entries below are preserved historical records, not current grants. Some historical links resolve only in the retained private evidence checkout; public archive provenance is linked from the current status.
+
+## October 23 native Mem0 A3 → Qwen preparation
+
+Exactly two prospective bodies bind the preserved post-reconstruction native
+CONTROL/CONFLICT context in original order, with identical task, system, native
+tool schema, Qwen configuration and independent host ACL. See
+[two-condition readiness](../research/native-mem0-a3-qwen/READINESS.md) and
+`manifests/native-mem0-a3-qwen-20261023-v1.json`. Zero new POSTs, provider calls,
+charges or reservations; no generation authority. Proposed cap: two serial calls,
+4,096 completion tokens each, no retries/canaries. Historical interrupted usage
+and lifetime ordinals remain UNKNOWN; 27/29 units are liability provisions only.
+F04 fixture schema passes but authentic enrollment remains BLOCKED by unchanged
+host-basis mapping/fixed review paths and missing authentic sealed evidence and
+supported ordinal. No F04/formal validation change or evaluator bypass. Request
+capture may be separately authorized; authentic F04 use needs compatible reviewed
+enrollment. Prior native/scientific evidence remains immutable.
+
+## October 22 first native Mem0 A3 pilot
+
+The separately authorized development-only A3 pilot completed once using the
+qualified runtime, with no rebuild or downloads. Existing case `DEV2-A3-01`
+was realized as matched CONTROL/CONFLICT conditions in fresh separate stores.
+The exact task/current recipient and independent ACL policy were preserved;
+only the explicitly synthetic principal was freshly instantiated. Native writes,
+search/history, close and distinct-process reconstruction produced four sealed
+journals and 54 SDK calls. See the
+[pilot report](../research/native-mem0-a3-pilot/REPORT.md) and
+`manifests/mem0-a3-pilot-20261022-v1.json`.
+Actual selected context contains current information in CONTROL and current plus
+the existing historical branch note in CONFLICT, before/after reconstruction.
+This is exposure evidence only: MODEL_NATIVE_PROPOSAL=NOT_GENERATED and
+F04_AUTHENTIC_PROPOSAL_EVALUATION=NOT_APPLICABLE. No tool/sink execution,
+statistical analysis, formal Hybrid C, external inference, Qwen or Jetstream.
+Owned containers/mutable stores were removed after snapshots. The qualified
+runtime/cache, accepted dataset, historical evidence and all earlier manifests
+remain unchanged. A later model-generation step needs separate bounded authority.
+
+## October 22 bounded local native runtime qualification
+
+The separately authorized local Mem0 correctness/capture run completed Q1, Q2,
+Q3B, Q5 and Q6 against real `mem0ai==2.2.1` / sentence-transformers 6.1.0,
+local CPU embeddings, Qdrant and SQLite, `infer=False`. See
+[Native Runtime Qualification Report](../research/native-runtime-qualification/REPORT.md).
+Two offline local containers exited cleanly and were removed; task-owned mutable
+stores were removed after raw snapshots. Verified Linux `.venv` and public
+package/model caches are retained. Evidence contains 84 actual SDK calls, distinct
+process persistence and four synthetic namespace scopes; native authentication,
+revoke and derived lineage remain unqualified. Hindsight source/package identity
+and no-LLM chunk mode were verified statically; no Hindsight service was started.
+No Qwen, Jetstream, external inference, adversarial action, scientific execution,
+push or merge occurred. Accepted expansion/capture sources and historical evidence
+remain unchanged. Future security cases or Hindsight service execution require
+their own bounded authorization; this completed qualification is not a grant.
+
+## October 22 native provider qualification addendum
+
+The separately authorized offline native qualification continues in `3109/Memo`.
+See the [Native Provider Qualification Matrix](../research/native-provider-qualification/MATRIX.md)
+and `manifests/native-provider-qualification-v1/index.json`. Hindsight's existing
+REST adapter is connected to durable pre-dispatch intent, exact HTTP entity and
+raw recall/selection capture. Mem0 has an SDK input/return-value capture seam;
+these are Python values, not fabricated HTTP bytes. OpenViking is inspected only.
+The accepted expansion-v2 collector and existing adapters remain unchanged.
+
+Twenty focused mock capture tests pass; eleven existing Hindsight adapter/trace/
+contract regressions pass. Installed native packages and the recorded upstream
+source caches are absent in the inspected local environments. A Pydantic 2.12.5
+repository test environment is explicitly distinct from pinned core 2.13.5.
+Seven minimal lifecycle protocols are mapped across providers; these are not
+new attack cases or real provider observations. Current real qualified cases
+and authorized native attempts are both zero. Hindsight native startup/model/
+worker governance remains BLOCKED; Mem0 native construction/cache and selected
+context extraction remain unqualified; unsupported revoke/derivation operations
+stay blocked. Independent review and byte identities accompany the matrix.
+No provider/model/embedding/Qwen/Jetstream action, package installation, formal
+grant change, historical rerun, push/merge or Drive upload occurred.
+
+## October 22 offline development expansion addendum
+
+The current user separately authorized offline research expansion in worktree
+`3109/Memo`; the Phase08D-9 status below remains its historical engineering
+context. New files are indexed by
+[`research expansion handoff`](../research/expansion-v2/HANDOFF.md).
+The separate development dataset contains 32 cases across A1–A10: 27 eligible
+for future model-only preparation, five capability-blocked, zero native-provider
+eligible. No model/provider/Jetstream call or protected sink write occurred.
+Independent review and its final byte-bound receipt live beside that handoff;
+the separate content-freeze receipt records acceptance without editing inputs.
+
+The read-only source checkout `a0ce/Memo` exists; the supplied Desktop raw
+archive path is missing. Interrupted campaign POST count and current lifetime
+charged total remain UNKNOWN; 11 is the pre-interruption historical baseline.
+Synthetic test charge files are not real sends. All original 16 slots remain
+blocked for re-execution. The old24 content freeze and scientific Freeze v1/v2,
+Candidate10 NO_GO, accepted security semantics, formal GENERATION_ID validator
+and native runtime gate remain unchanged. All future batches currently allow
+zero attempts. No expired authorization or historical controller may be reused.
+
 ## Project and research frame
 
 **Project:** MemLife-NLIP
