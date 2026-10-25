@@ -1,7 +1,80 @@
 # Experiment Ledger
 
+## Current direction — 2026-10-24
+
+Active offline phase: **R0 research reconciliation**. [Roadmap v3](../research/RESEARCH_ROADMAP_V3.md), [current status](../research/RESEARCH_STATUS_20261024.md), [claims](../research/CLAIMS_REGISTER.md) and [prospective R1 protocol](../research/NEXT_EXPERIMENT_PROTOCOL.md) govern continuation. Cohort 0 is the Prompt-Specified Baseline; no new model/provider/Jetstream or protected execution is authorized. Historical scientific freezes and closed attempts remain immutable.
+
+The dated entries below are preserved historical records, not current grants. Some historical links resolve only in the retained private evidence checkout; public archive provenance is linked from the current status.
+
+## October 23 native Mem0 A3 → Qwen prospective pair
+
+Offline preparation only. `NATIVE-MEM0-A3-01-CONTROL` and
+`NATIVE-MEM0-A3-01-CONFLICT` preserve actual accepted reopened native contexts.
+Fresh prospective IDs `EXP-QWEN-NATIVE-MEM0-A3-20261023-CONTROL-01` and
+`EXP-QWEN-NATIVE-MEM0-A3-20261023-CONFLICT-01` are PREPARED_NOT_ATTEMPTED.
+New POSTs/charges/reservations: 0/0/0. No outcome or denominator entry. Current
+lifetime usage remains UNKNOWN, no interrupted slot rerun. Future requested cap
+is two serial attempts with 4,096 completion tokens each and no retry/canary.
+TEST_ONLY host fixtures are schema-valid, NOT_ENROLLED; authentic evaluation
+blocked by unchanged legacy admission and absent capture/accounting evidence.
+[Manifest](../../manifests/native-mem0-a3-qwen-20261023-v1.json) and
+[readiness/review](../research/native-mem0-a3-qwen/READINESS.md). No live/formal grant.
+
+## October 22 — first native Mem0 A3 development pilot
+
+`mem0-a3-pilot-20261022-v1` realizes existing `DEV2-A3-01` as CONTROL and CONFLICT
+in separate disposable local stores. Four processes completed once; 54 SDK calls
+and four sealed context/state journals preserve native writes/retrieval/history,
+independent host ACL, reconstructed-client evidence and closed-store snapshots.
+No model request/proposal or protected action occurred; authentic F04 evaluation
+is NOT_APPLICABLE. No model/defense effectiveness or statistical analysis follows.
+See the [pilot report](../research/native-mem0-a3-pilot/REPORT.md). These are bounded
+development records, not additional dataset rows, formal Hybrid C execution or
+changes to historical attempts/freezes/denominators. Owned mutable resources were
+removed; the qualified runtime/cache and all earlier evidence remain unchanged.
+
+## October 22 — separately authorized local correctness qualification
+
+`artifacts/native-runtime-qualification-20261022-v1/` contains two completed local
+Mem0 processes: native Q1/Q2/Q3B exercise and Q5/Q6 reopen/scope continuation.
+These are synthetic-data provider correctness/capture checks, not formal
+scientific executions or additions to any historical experiment denominator.
+The original exercise/source receipt and corrected continuation-v3 identity are
+separate and preserved. Eight native adds, one update and one delete were observed;
+84 total SDK calls and closed-store snapshots are indexed. Both clients/containers
+closed; task mutable stores were removed. No decision-model, external inference,
+Qwen, Jetstream or protected-action execution occurred. See the
+[runtime report](../research/native-runtime-qualification/REPORT.md). Historical
+attempts/freezes/discovery manifests and accounting remain unchanged.
+
 This is the canonical compact provenance ledger. It links to evidence rather
 than copying raw logs.
+
+## October 22 native provider capture qualification (offline only)
+
+The [Native Provider Qualification Matrix](../research/native-provider-qualification/MATRIX.md)
+maps seven requested lifecycle protocols to the three existing providers and
+records the tested Hindsight/Mem0 capture seams. Its 21 parameterized provider
+specifications are preparation records, not executed scientific repetitions.
+Twenty focused mock tests and eleven existing Hindsight regressions pass.
+Real provider qualified cases, provider/model/embedding calls and Jetstream
+operations are all zero. Accepted expansion-v2's 149 sealed files are unchanged.
+No historical attempt, charge ledger, formal generation or grant is modified.
+
+## October 22 offline development preparation (separate stratum)
+
+New development inputs and passive instrumentation are documented in
+[`expansion-v2/HANDOFF.md`](../research/expansion-v2/HANDOFF.md). There are
+32 prepared cases, 27 model-only eligible and five capability-blocked; zero
+native-provider cases eligible and zero new model/provider/scientific attempts.
+The saved local synthetic instrumentation demonstration has zero model
+reservations. It is not an empirical repetition or formal Hybrid C generation.
+
+The original24 discovery content freeze verifies unchanged. The interrupted
+16-case campaign's exact real POST count and current lifetime charge total
+remain UNKNOWN; 11 is its historical pre-interruption baseline. Local test
+charge files are synthetic. No historical ledger is reopened or reconciled to
+zero. See [local reconciliation](../research/expansion-v2/RECONCILIATION.md).
 
 ## Experiment Freeze v1
 

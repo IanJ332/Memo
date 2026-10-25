@@ -1,7 +1,91 @@
 # Debugging Ledger
 
+## Current direction — 2026-10-24
+
+Active offline phase: **R0 research reconciliation**. [Roadmap v3](../research/RESEARCH_ROADMAP_V3.md), [current status](../research/RESEARCH_STATUS_20261024.md), [claims](../research/CLAIMS_REGISTER.md) and [prospective R1 protocol](../research/NEXT_EXPERIMENT_PROTOCOL.md) govern continuation. Cohort 0 is the Prompt-Specified Baseline; no new model/provider/Jetstream or protected execution is authorized. Historical scientific freezes and closed attempts remain immutable.
+
+The dated entries below are preserved historical records, not current grants. Some historical links resolve only in the retained private evidence checkout; public archive provenance is linked from the current status.
+
+## October 23 native A3 request binding and F04 admission invariants
+
+- Bind only the actual sealed reopened SDK selection: count/order/ID/user scope/
+  literal contents and raw return/envelope/task must agree before serialization.
+- Pair must differ only in user-context `retrieved_notes`; preserve validated
+  system, native send_report schema and 4,096-token Qwen configuration.
+- Verify the accepted historical F04 review receipt and all reviewed source hashes
+  before loading even its pure fixture validator. Capture before/after source
+  hashes. Schema-valid fixtures do not confer authentic enrollment.
+- Unchanged legacy CLI does not admit this A3 host basis/package path. Do not
+  alias families, bypass the validator, use synthetic admission for authentic
+  responses or invent lifetime ordinals from conservative liability provisions.
+- Eleven offline controls and independent review are linked from the
+  [readiness report](../research/native-mem0-a3-qwen/READINESS.md). No POST/evaluation.
+
+## October 22 — matched native A3 capture
+
+- Reusing a qualified source list must compare each current hash with the old
+  expected hash before adding new pilot files. Replacing expected hashes with
+  current values silently repins drift and defeats qualification reuse.
+- Match the task, current-recipient policy, fresh host principal and current
+  note across CONTROL/CONFLICT, while separating physical Qdrant/SQLite stores.
+  Historical role labels are host fixtures, never native age/lineage assertions.
+- Preserve actual search order and literal selected content. A host context
+  envelope is not a model request/proposal. Without authentic generation, mark
+  MODEL_NATIVE_PROPOSAL=NOT_GENERATED and authentic F04 evaluation NOT_APPLICABLE.
+
+## October 22 — local native runtime/capture qualification
+
+- Intel macOS resolves Torch 2.2.2 for the requested stack, but the resolved
+  Transformers 5.20.2 requires Torch ≥2.6. Keep Mem0/ST pins unchanged and use
+  the separately hash-locked local Linux CPU closure; never disable that check.
+- A reopen gate must bind the successful exercise, archived/current source
+  identities, expectation hash/size, exact four cases, native history and full
+  inventory membership before constructing the client. Empty expectations or
+  unindexed event files must fail closed. Preserve original exercise bytes.
+- SDK candidate selection binds count, original order, UUID, literal content and
+  native user_id. Namespace filtering does not establish native authentication.
+- Record cleanup errors independently of operation errors. Propagate exact-owned
+  Docker removal failures; store/container removal requires a separate receipt.
+- Expansion tests import a separate historical `memlife` tree and auth runtime.
+  Run their accepted command separately; combined discovery can select the wrong
+  package. Preserve failed logs and do not modify accepted sources to mask it.
+
 This ledger records project-specific failures and the invariant that prevents
 each regression. It is not generic troubleshooting advice.
+
+## Native qualification capture ownership and immutable callbacks
+
+- Preserve transport intent before dispatch, including exact encoded query URL;
+  normalized adapter views cannot stand in for native HTTP or SDK evidence.
+- A transport exception must halt later dispatch; setting a halt flag without
+  checking it on entry is insufficient. Preserve response/partial bytes where
+  observed; missing response and post-mutation capture failure retain UNKNOWN.
+- Candidate callbacks must check collector phase and hold its lock before the
+  existing sink writes; a callback after finalization must not modify the sealed
+  artifact inventory. Native journal construction requires linked adapter,
+  transport/SDK, candidate sink and record identities.
+- Acquire collector lock before transport lock consistently with lifecycle
+  operations. Capture serialization is not provider concurrency qualification.
+- Protection: `src/memlife/native_provider_capture.py`,
+  `tests/research/test_native_provider_capture.py` and the independent native
+  qualification review. Accepted expansion-v2 files remain byte-identical.
+
+## Offline development v2 capture phase and response-shape guards
+
+- Independent review found that the initial NoteStore wrapper appended before
+  checking whether a model request had already been bound/reserved. It could
+  mutate storage and then reject without a lifecycle receipt.
+- Correction: check phase before mutation under the capture lock; persist
+  lifecycle intent before the existing append; record completion separately.
+  Unresolved intents block request binding. This adds instrumentation only,
+  without changing the accepted NoteStore or host authorization code.
+- A malformed object-valued refusal was initially treated as complete no-call.
+  Require string/null content and refusal; retain original native call objects
+  before validating other message metadata. Malformed/truncated data remains
+  UNKNOWN and never becomes an attack failure or F04 admission.
+- Protection: `tests/research/test_expansion_v2.py`, independent review receipts,
+  and `src/memlife/research_collection.py`. Synthetic fixture charge records
+  remain distinct from actual interrupted-campaign send evidence.
 
 ## Freeze CRLF/LF mismatch
 

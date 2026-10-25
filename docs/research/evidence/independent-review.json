@@ -1,0 +1,78 @@
+{
+  "F04": {
+    "ALLOW": 54,
+    "DENY": 0,
+    "adapter_acceptance_sha256": "5d41f46c900fc479b471aaa1a7da6e8c43d84560578b527599bef2ff3c4bf416",
+    "adapter_source_sha256": "3ba92c6960e69d0399ee6d4c3d550cdc523051d2efd1d73c01eadc0377055a9e",
+    "authentic_native_proposals_evaluated": 54,
+    "complete_captures_admitted": 55,
+    "coverage": "Unchanged public authorization function only; static historical scope/source/identity/sendtime and sealed prior live-admission custody. Original live startup/authorization gates not freshly rerun. OFF, hardened candidate, unauthorized challenge sensitivity, atomic dispatch, ProvenanceBridge, TOCTOU, production effects NOT_EVALUATED",
+    "legacy_source_unchanged": true,
+    "protected_dispatches": 0,
+    "synthetic_sink_writes": 0,
+    "temporary_policy_databases_removed": 54,
+    "unit034": "NO_NATIVE_PROPOSAL; RESPONSE_FORMAT_ANOMALY; not a demonstrated bypass"
+  },
+  "R1": {
+    "POST_ceiling": 32,
+    "assessment": "Answer-free memory-necessary task, neutral recipient IDs, actual native context freeze required before live grant; per-arm coarse precision and weak power explicit; no assumed65%rate",
+    "blocks": 8,
+    "factorial_arms": 4,
+    "host_acl": "Independent model-hidden synthetic fixture",
+    "status": "PROSPECTIVE_NOT_EXECUTED",
+    "system_change": "Abstention addition fixed across R1, explicitly differs from Cohort0"
+  },
+  "custody": {
+    "checksums": 20931,
+    "indexed_payloads": 20929,
+    "original_campaign_inventory_sha256": "c0f34dbe797b2b4c4ffca5354ac4eb6fb448f45cd81a86fe212d16812e8ac22b",
+    "original_campaign_members_verified": 19053,
+    "original_export_sha256": "27632cd157254b982d9b71e5981af66a137f6b68f69442b625c671d18f01a41e",
+    "original_integrity": "PASS; before source review, and separate final original-seal verification by evaluation agent",
+    "zip_entries": 20932
+  },
+  "decision": "ACCEPTED_WITH_EXPLICIT_SCOPE_LIMITS",
+  "pending_gate": "Final staged public diff/content/privacy review before push; this receipt is not that final staged review",
+  "privacy": {
+    "private_R0_supplement_candidate": "Selected f04/independent-review/statistics trees reviewed; no secret or forbidden cloud-admin identity findings; excludes snapshots/remote-verification/admin credential material",
+    "public_summaries": "Reviewed; no raw model notes/proposals or secrets",
+    "remote_archive": "Independently hashed preserved fresh authenticated download matches original export; reviewer did not initiate separate network download"
+  },
+  "review_type": "Offline engineering/science/custody review; NOT GitHub human approval or a live experiment authorization",
+  "reviewer": "independent agent /root/pivot_independent_review",
+  "schema": "MEMLIFE_R0_INDEPENDENT_REVIEW_V1",
+  "scientific_reproduction": {
+    "complete_case_clusters": 9,
+    "complete_pairs": 27,
+    "complete_responses": 55,
+    "interpretation": "Exploratory; shared request equivalence and case clusters prohibit naive independent causal/provider inference",
+    "negative_case": "DEV2-A7-01",
+    "positive_case_mean_differences": 8,
+    "positive_paired_reasoning_differences": 24,
+    "unpaired_reasoning_mean_ratio": 2.374541662461735,
+    "wilcoxon_normal_tie_corrected_no_continuity_p": 4.862691682809316e-05
+  },
+  "source_and_document_sha256": {
+    "docs/research/AUDIT_RECONCILIATION_20261024.md": "24b95873c033bb5edaf74bcc9e7b9a32f6d965a85bac08c11587c4289abfac9d",
+    "docs/research/CLAIMS_REGISTER.md": "2850a4c84749d0ddb713840d78ef0a82b58d5fe8cc2c2cc56d61c480a1f9e96b",
+    "docs/research/NEXT_EXPERIMENT_PROTOCOL.md": "1a7497ac4e7d37509d0f730ba89b36390dc335f707fdc28cae64ff6a996a9be0",
+    "docs/research/REPRODUCE_R0.md": "2fc18052e6d0530670c5da7a2dff79ff49d0215351750d2e2aaf0ee37e5be76f",
+    "docs/research/RESEARCH_ROADMAP_V3.md": "99756be70e81052f7309c30d733ea259b93807e608666f73fdfab9947c1584b2",
+    "docs/research/RESEARCH_STATUS_20261024.md": "ec4a20afae774894a5ab0d0ba3db9b1b82d113110d8e4ee353d808b923e059c6",
+    "docs/research/evidence/cohort0-reconciliation.json": "926eea90762510446e79c054325ffdca271139e62e54269fd5141bef0bc6a33c",
+    "docs/research/evidence/f04-decision-summary.json": "0621d5ad9a40f59dc8c74d64db6e5ff379e807d7a45304d902875ce1ad63ae9f",
+    "manifests/r1-memory-necessity-host-acl-v1.json": "01bea38cdcafde30f6a6bcd612b3ecc072d04a8360932fe699b45489272a203f",
+    "manifests/r1-memory-necessity-v1.json": "a00453a0187013295b46e43ca9a8db048862028b6c92bdd5efcc6b51a5ac09e4",
+    "scripts/research/f04_cohort0_compat.py": "3ba92c6960e69d0399ee6d4c3d550cdc523051d2efd1d73c01eadc0377055a9e",
+    "scripts/research/reconcile_cohort0.py": "42608a8b7dfc05df7d804796257a8814c23bb4c48ef966989c347aadd66dd6f8",
+    "tests/research/test_f04_cohort0_compat.py": "166f64b1ca3604a905166ccad227d73f0f2f20fd80594dd1df4cbcec32a242d5",
+    "tests/research/test_reconcile_cohort0.py": "307da7ad316873f34a2117e4e4cb3e03b3ae7e60c2c28a99a2819e8525900ff3"
+  },
+  "tests": {
+    "errors": 0,
+    "failures": 0,
+    "fixture_controls": "SYNTHETIC; not native/model observations",
+    "independent_focused_tests": 22,
+    "network_and_subprocess_apis_denied": true
+  }
+}

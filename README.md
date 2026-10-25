@@ -6,10 +6,18 @@ This repository hosts the development environment, tooling, and artifacts for th
 - Jetstream2 Linux VM (cloud experiment runtime)
 - Clean Linux reproduction environments
 
-**Current research direction:** MemLife-NLIP
+**Current research direction:** When Memory Outlives Authority — memory necessity, native lifecycle security and independent host authorization. **Retrieved != Authoritative.**
 
-**Current implementation status:** Phase 06B-S0 — missing-run supplement
-design; Jetstream remains shelved and live execution is not authorized.
+**Current phase:** R0 offline audit reconciliation; R1 is prospective. Cohort0 is a Prompt-Specified Baseline, not evidence of general memory immunity. No new inference/provider/Jetstream or protected execution is authorized.
+
+- [Roadmap v3](docs/research/RESEARCH_ROADMAP_V3.md)
+- [Current status](docs/research/RESEARCH_STATUS_20261024.md)
+- [Audit reconciliation](docs/research/AUDIT_RECONCILIATION_20261024.md)
+- [Claims register](docs/research/CLAIMS_REGISTER.md)
+- [Next experiment protocol](docs/research/NEXT_EXPERIMENT_PROTOCOL.md)
+- [Evidence provenance and reproduction](docs/research/REPRODUCE_R0.md)
+
+The phase links below are historical engineering navigation; their dated authorization statements do not grant current execution.
 
 - Phase 01: **PASS** — [MemLife Bootstrap](docs/phases/PHASE_01_MEMLIFE_BOOTSTRAP.md)
 - Phase 02: **PASS** — [Provider Bring-up](docs/phases/PHASE_02_PROVIDER_BRINGUP.md)

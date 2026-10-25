@@ -1,0 +1,110 @@
+{
+  "F04_review": "54authentic native proposals passed reviewed versioned fixed-cohort enrollment and unchanged public gate:54ALLOW0DENY;034no native proposal. Legacyentrypoints unchanged; no dispatch/sink/productioneffects;54temporaryDBremoved; no unauthorized challenge effectiveness inferred.",
+  "approval_boundary": "This independent agent review is NOT GitHub human approval, branch-protection approval, model/provider execution permission or production authorization. Normal Git rules still apply.",
+  "decision": "ACCEPTED_PUBLIC_SOURCE_AND_SANITIZED_SUMMARY_SYNC",
+  "prior_review_supersession": {
+    "file": "docs/research/REPRODUCE_R0.md",
+    "reason": "Added precise fixed-cohort static historical-grant/source/identity/sendtime and sealed prior admission scope; no rerun of original live gates. Reviewed and accepted at current stagedhash."
+  },
+  "private_backup_review": "Both preserved fresh authenticated downloads independently hashed exact original/privateR0ZIPs; supplement243payloads independently reviewed exactsourcecopies with0forbidden findings. Reviewer did not initiate a separate network download.",
+  "public_privacy_findings": [],
+  "reviewed_branch": "codex/memory-authority-pivot-v3-20261024",
+  "reviewed_head": "af14d01394ed7eed72495dfd606a23f56251fc5d",
+  "reviewer": "/root/pivot_independent_review",
+  "schema": "MEMLIFE_PUBLIC_STAGED_DIFF_INDEPENDENT_REVIEW_V1",
+  "scientific_review": "ACCEPTED; prompt-specified baseline, corrected audit/statistic methods and denominators, request/case dependencies, missingness, no efficacy claims. Eight-block32POST R1 is prospective, fixedsystem neutralIDs/query/registeredorder, actualnativecontext/requestfreeze/newgrantrequired; weakpower/coarseprecision explicit.",
+  "self_excluded_receipt": "This receipt is generated after reviewing22staged files; adding its exact public-safe bytes as sole additional receipt is accepted without changing reviewedsource/docs/data. Any other byte change requires review.",
+  "source_tests": "22independently run focused tests PASS with network/process APIs denied; finalsourcehashes above. Synthetic controls never native/model observations.",
+  "staged_diff_sha256": "0e0042bb7aea3df3bd9e0d36c50296adbbfd7bb72cb45178c2420c8aa3e007d0",
+  "staged_file_count": 22,
+  "staged_file_identities": {
+    ".gitignore": {
+      "bytes": 7313,
+      "sha256": "4063af6609a801048cbfff7af6fef7c6f3f859bbe341501eb08c3ffe5a27c757"
+    },
+    "README.md": {
+      "bytes": 5702,
+      "sha256": "49b17825cd48948b4cfe67e9b3e17ad6ace4c372c832ded74b82711be3ca57ef"
+    },
+    "docs/project/DEBUGGING_LEDGER.md": {
+      "bytes": 38574,
+      "sha256": "2c932f592169b03ad95d676baf6eab1819eee2544f96c6d42a2eb61c980d030b"
+    },
+    "docs/project/EXPERIMENT_LEDGER.md": {
+      "bytes": 35620,
+      "sha256": "1a1c540aa9854f09e5934c410a21f508f006c615e6aecb73f5c3a0a6274c6862"
+    },
+    "docs/project/MODEL_HANDOFF.md": {
+      "bytes": 36725,
+      "sha256": "d9f2950438f2025cefa0fd9513fba927d49234dcf026ee7f483752f35ef90ccc"
+    },
+    "docs/project/PROJECT_STATE.md": {
+      "bytes": 17186,
+      "sha256": "8737c642fc8efef07aee76eb2f4cdbe5deb3c15e93621985a812084a0c25a332"
+    },
+    "docs/research/AUDIT_RECONCILIATION_20261024.md": {
+      "bytes": 5358,
+      "sha256": "24b95873c033bb5edaf74bcc9e7b9a32f6d965a85bac08c11587c4289abfac9d"
+    },
+    "docs/research/CLAIMS_REGISTER.md": {
+      "bytes": 2604,
+      "sha256": "2850a4c84749d0ddb713840d78ef0a82b58d5fe8cc2c2cc56d61c480a1f9e96b"
+    },
+    "docs/research/NEXT_EXPERIMENT_PROTOCOL.md": {
+      "bytes": 7051,
+      "sha256": "1a7497ac4e7d37509d0f730ba89b36390dc335f707fdc28cae64ff6a996a9be0"
+    },
+    "docs/research/REPRODUCE_R0.md": {
+      "bytes": 6019,
+      "sha256": "4463f7c448948ce7dbf8b9b94c7c6152905b708469b58f2d665f7aa5455d590e"
+    },
+    "docs/research/RESEARCH_ROADMAP_V3.md": {
+      "bytes": 5651,
+      "sha256": "99756be70e81052f7309c30d733ea259b93807e608666f73fdfab9947c1584b2"
+    },
+    "docs/research/RESEARCH_STATUS_20261024.md": {
+      "bytes": 4973,
+      "sha256": "ec4a20afae774894a5ab0d0ba3db9b1b82d113110d8e4ee353d808b923e059c6"
+    },
+    "docs/research/evidence/cohort0-reconciliation.json": {
+      "bytes": 54459,
+      "sha256": "926eea90762510446e79c054325ffdca271139e62e54269fd5141bef0bc6a33c"
+    },
+    "docs/research/evidence/f04-decision-summary.json": {
+      "bytes": 24996,
+      "sha256": "0621d5ad9a40f59dc8c74d64db6e5ff379e807d7a45304d902875ce1ad63ae9f"
+    },
+    "docs/research/evidence/independent-review.json": {
+      "bytes": 5167,
+      "sha256": "81a3b45d1eecae8e815a43fed3d4ba0dbc2586cfcb6e4ea5a1bdb5257a2c731a"
+    },
+    "manifests/r1-memory-necessity-host-acl-v1.json": {
+      "bytes": 3444,
+      "sha256": "01bea38cdcafde30f6a6bcd612b3ecc072d04a8360932fe699b45489272a203f"
+    },
+    "manifests/r1-memory-necessity-v1.json": {
+      "bytes": 15640,
+      "sha256": "a00453a0187013295b46e43ca9a8db048862028b6c92bdd5efcc6b51a5ac09e4"
+    },
+    "manifests/research-evidence-20261024.json": {
+      "bytes": 3012,
+      "sha256": "1bf6bdc3243b6fbb099dab7461b42dd9437aefcd194901b12f2bf886af4a12fd"
+    },
+    "scripts/research/f04_cohort0_compat.py": {
+      "bytes": 32604,
+      "sha256": "3ba92c6960e69d0399ee6d4c3d550cdc523051d2efd1d73c01eadc0377055a9e"
+    },
+    "scripts/research/reconcile_cohort0.py": {
+      "bytes": 14014,
+      "sha256": "42608a8b7dfc05df7d804796257a8814c23bb4c48ef966989c347aadd66dd6f8"
+    },
+    "tests/research/test_f04_cohort0_compat.py": {
+      "bytes": 7210,
+      "sha256": "166f64b1ca3604a905166ccad227d73f0f2f20fd80594dd1df4cbcec32a242d5"
+    },
+    "tests/research/test_reconcile_cohort0.py": {
+      "bytes": 4319,
+      "sha256": "307da7ad316873f34a2117e4e4cb3e03b3ae7e60c2c28a99a2819e8525900ff3"
+    }
+  }
+}
