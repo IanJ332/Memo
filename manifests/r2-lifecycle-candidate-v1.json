@@ -1,0 +1,35 @@
+{
+  "schema": "MEMLIFE_R2_LIFECYCLE_CANDIDATE_V1",
+  "status": "DRAFT_NOT_EXECUTED_NO_EXECUTION_AUTHORITY",
+  "principal": {"issuer": "r2-host-fixture", "subject": "routing-operator", "project": "routing-project-01"},
+  "records": {
+    "target": {"before": "Routing assignment for routing-project-01: deliver the synthetic status report to recipient-17.", "after": "Routing assignment for routing-project-01: deliver the synthetic status report to recipient-42.", "metadata": {"fixture_role": "target", "project": "routing-project-01", "basis": "HOST_SYNTHETIC_FIXTURE"}},
+    "sentinel": {"before": "The unchanged sentinel for routing-project-01 records the report format as plain text.", "metadata": {"fixture_role": "sentinel", "project": "routing-project-01", "basis": "HOST_SYNTHETIC_FIXTURE"}}
+  },
+  "host_state_schedule": [
+    {"checkpoint": "baseline", "authorized_recipient": "recipient-17"},
+    {"checkpoint": "after", "authorized_recipient": "recipient-42"},
+    {"checkpoint": "reopened", "authorized_recipient": "recipient-42"}
+  ],
+  "retrieval": {"query": "What is the routing assignment for the synthetic status report in routing-project-01?", "limit": 10, "score_threshold": null, "selector": "ALL_NATIVE_RESULTS_IN_NATIVE_ORDER_NO_INSERTION_V1"},
+  "phases": ["UPDATE-initial", "UPDATE-reopen", "DELETE-initial", "DELETE-reopen"],
+  "initial_order": ["INSPECT_EMPTY", "ADD_TARGET", "ADD_SENTINEL", "BASELINE", "MUTATE_TARGET", "AFTER", "CLOSE"],
+  "reopen_order": ["VERIFY_SEALED_STATE", "RECONSTRUCT", "REOPENED", "CLOSE"],
+  "checkpoint_order": ["GET_TARGET", "GET_SENTINEL", "GET_ALL", "SEARCH", "HISTORY_TARGET", "HISTORY_SENTINEL"],
+  "runtime": {
+    "image_id": "sha256:2199a62885a12290dc9c5be3ca0681d367576ab7bf037da120e564723292a2f0",
+    "versions": {"mem0ai": "2.2.1", "sentence-transformers": "6.1.0", "torch": "2.14.0+cpu", "transformers": "5.20.2", "qdrant-client": "1.20.0", "pydantic": "2.13.5"},
+    "embedding_revision": "4ca70771034acceecb2e72475f72050fcdde4ddc",
+    "infer": false,
+    "network": "NONE",
+    "model_exposure": "NOT_SENT",
+    "model_proposal": "NOT_GENERATED"
+  },
+  "bounds": {
+    "stores": 2, "processes": 4, "concurrency": 1, "cpus": 2, "ram_gib": 8,
+    "pids": 256, "tmpfs_gib": 1, "working_disk_gib_proposed": 5,
+    "sdk_calls": {"add": 4, "update": 1, "delete": 1, "get": 19, "get_all": 36, "search": 6, "history": 12},
+    "sdk_total": 79, "retries": 0, "internal_llm_calls": 0, "hosted_model_calls": 0,
+    "ssh": 0, "jetstream": 0, "protected_dispatch": 0
+  }
+}
