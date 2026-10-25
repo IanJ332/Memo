@@ -9,6 +9,11 @@ remain unobserved. The sealed attempt must not be replayed. See the
 [R1 closeout](../research/r1-live-20261025/REPORT.md). The offline readiness
 paragraph below records the accepted pre-execution state, not fresh authority.
 
+**R1 Docker recovery:** Docker Desktop was restored without changing the R1
+implementation or starting a provider. A fresh unapproved `R1EX-20261025-02`
+package passed focused offline validation; see the
+[recovery readiness record](../research/R1_DOCKER_RECOVERY_READINESS_20261025.md).
+
 **R0 accepted and closed; R1 conditionally accepted, not executed.** The current
 offline task is the minimal [R1 Tier C integration](../research/R1_READINESS.md).
 Offline integration passed 62 focused R1 tests and independent byte-bound review;
