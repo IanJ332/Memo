@@ -1,5 +1,14 @@
 # Project State
 
+## R2 package preparation — 2026-10-25
+
+**BLOCKED / NOT EXECUTED.** Current Docker effective RAM is approximately
+7.65 GiB, below the accepted 8 GiB proposal. No supported reduced bound was
+established from existing qualification evidence. The accepted candidate, source
+and caches are unchanged; 28 synthetic controls pass. No execution package,
+live entrypoint or owner grant was prepared. See the
+[resource-first preparation record](../research/R2_EXECUTION_PREPARATION_20261025.md).
+
 ## Current direction — 2026-10-25
 
 **Current continuation: offline admission governance repair.** Follow the dated

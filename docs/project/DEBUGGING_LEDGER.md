@@ -1,5 +1,16 @@
 # Debugging Ledger
 
+## R2 memory feasibility — 2026-10-25
+
+- Docker reports 8,215,871,488 bytes effective VM memory; an 8 GiB container
+  ceiling is 8,589,934,592 bytes. Host RAM and accepted Docker arguments cannot
+  substitute for actual daemon capacity and headroom.
+- Historical `OOMKilled=false` and successful exits under an 8 GiB configured
+  limit do not establish a measured peak or qualify a smaller memory ceiling.
+- Fail the resource-first package gate rather than silently changing the
+  accepted candidate or presenting an unreviewed grant. See the
+  [blocked preparation](../research/R2_EXECUTION_PREPARATION_20261025.md).
+
 ## Current direction — 2026-10-24
 
 Active offline phase: **R0 research reconciliation**. [Roadmap v3](../research/RESEARCH_ROADMAP_V3.md), [current status](../research/RESEARCH_STATUS_20261024.md), [claims](../research/CLAIMS_REGISTER.md) and [prospective R1 protocol](../research/NEXT_EXPERIMENT_PROTOCOL.md) govern continuation. Cohort 0 is the Prompt-Specified Baseline; no new model/provider/Jetstream or protected execution is authorized. Historical scientific freezes and closed attempts remain immutable.

@@ -1,5 +1,18 @@
 # Model Handoff — Start Here
 
+## R2 package preparation — 2026-10-25
+
+**BLOCKED at resource feasibility; no native execution or package/grant.**
+Read-only Docker inspection reports 8,215,871,488 bytes effective VM RAM, below
+the accepted candidate's 8 GiB ceiling. Existing qualification evidence does not
+justify a smaller cap. All 28 R2 synthetic controls and 111 source pins pass;
+retained acquired artifacts and installed RECORD hashes reverify. See the
+[preparation blocker](../research/R2_EXECUTION_PREPARATION_20261025.md).
+The candidate is unchanged. Resolve resource feasibility under separately
+appropriate authority before preparing the independently reviewed execution
+package and unapproved owner grant. Do not resume R1 approval debugging or
+invoke historical callers. Historical directions below remain context.
+
 ## Current direction — 2026-10-25
 
 **Current continuation: offline admission governance repair.** The dated
