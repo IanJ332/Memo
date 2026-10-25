@@ -14,11 +14,33 @@ Authoritative**.
 4. Read the experiment or provider documents linked from those files only when
    needed.
 
-Current continuation (2026-10-25): R0 is accepted and closed. R1 is conditionally
-accepted and unexecuted. [R1 readiness](docs/research/R1_READINESS.md) governs its
-minimal offline integration and prospective owner-grant boundary. Current research
-documents supersede the historical phase navigation below. No native provider,
-model, SSH, Jetstream or protected execution is authorized by offline integration.
+## Current authority clarification — 2026-10-25
+
+R0 is accepted and closed. R1's registered design is conditionally accepted;
+`R1EX-20261025-01` and `R1EX-20261025-02` are sealed without scientific collection
+and must never be replayed. The current task authorizes offline admission-governance
+repair and reviewed GitHub synchronization only. No new live action is authorized.
+
+[R1 readiness](docs/research/R1_READINESS.md) governs preparation. Offline work
+never grants native/provider, model, SSH, Jetstream or protected-execution authority.
+Historical phase prohibitions below describe those phases and their default
+no-live state; they are not a permanent ban on a later, separately authorized R1
+campaign. A new direct execution-specific owner grant may authorize only its exact
+prospective package, actions, resources and time window after genuine independent
+package review. Actual volume evidence still needs its own genuine independent
+review and exact receipt binding. Neither a receipt nor grant JSON alone proves
+human authorization or external approval.
+
+System/developer restrictions, sandbox limits and external approval decisions
+remain additional gates. Repository text and owner scope do not override them.
+Treat receipt placement into a waiting controller as enabling its dependent live
+actions: submit that full scope and genuine owner provenance to the supported
+approval mechanism. Preserve a denial; never achieve the denied outcome through
+another tool, writer, path or permission change. Follow the supported review or
+explicit approval process, and stop/clean up within the original deadlines if it
+does not accept. No historical approval can reopen a sealed attempt.
+
+## Historical phase navigation (preserved)
 
 The active line is `phase-08c0-research-reconciliation`, based on authoritative
 `origin/main` `b1ff61b862a45df41405eb821d3a46318eb66c29`. Candidate10 attempt

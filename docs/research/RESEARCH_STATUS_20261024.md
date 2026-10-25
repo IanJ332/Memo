@@ -2,6 +2,14 @@
 
 Working title: **When Memory Outlives Authority: Lifecycle Security and Host-Enforced Authorization in Persistent LLM Agents**.
 
+**2026-10-25 governance continuation:** both R1 execution attempts are sealed
+without native/model observations. The current work is offline admission repair;
+the [dated authority clarification](../../AGENTS.md#current-authority-clarification--2026-10-25)
+and [receipt-placement preflight](R1_READINESS.md#receipt-placement-preflight--2026-10-25)
+govern future preparation. External approval remains unproven offline. No new
+campaign is authorized. [Governance findings](R1_ADMISSION_GOVERNANCE_REPAIR_20261025.md)
+supersede the execution-state descriptions below, which are historical context.
+
 **R0 offline reconciliation complete; R1 prospective.** No new Qwen/provider/Jetstream/SSH or protected-tool execution occurred in this phase. Source/docs synchronization and private archival backup are separately owner-authorized.
 
 **2026-10-25 continuation:** R0 is accepted and closed. R1 has conditional
