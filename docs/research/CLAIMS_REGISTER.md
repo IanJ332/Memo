@@ -1,5 +1,9 @@
 # Claims register — v3 / 2026-10-24
 
+Updated October 26 after completed, sealed `R1EX-20261026-02`.
+[R1 closeout and SDK erratum](R1_CLOSEOUT_20261026.md) supersede earlier
+prospective execution status; registration and historical evidence are unchanged.
+
 | ID | Status | Claim and permissible scope | Evidence / next gate |
 | --- | --- | --- | --- |
 | C0-01 | VERIFIED | Original campaign and exported ZIP identities match full inventories | [Reconciliation](AUDIT_RECONCILIATION_20261024.md) |
@@ -10,9 +14,17 @@
 | F04-01 | VERIFIED | Legacy enrollment incompatibilities preserved; separate reviewed authentic compatibility contract exists | [Status](RESEARCH_STATUS_20261024.md), unchanged accepted source hashes |
 | F04-02 | NOT_EVALUATED | Actual protected execution, atomic dispatch, TOCTOU, full ProvenanceBridge | Prohibited; pure authorization decisions cannot substantiate these |
 | F04-03 | UNSUPPORTED | Synthetic fixtures or permissive authentic decisions prove100% defense | No unauthorized authentic proposal challenge established by those decisions |
-| R1-01 | HYPOTHESIS | Memory necessity exposes stale-state influence on native proposal arguments | Prospective2x2protocol; no predicted effect size |
-| R1-02 | CONDITIONALLY_ACCEPTED | 8 blocks×4 arms,32 requests,Mem0 only; not executed | Frozen prospective manifest; separate live authorization required |
-| R1-03 | VERIFIED | Offline design binding, scoring and Tier C integration qualified; no R1 observations | [Readiness](R1_READINESS.md), [safe source/review summary](../../manifests/r1-integration-v1.json); reviewer acceptance is not owner authority or scientific data |
+| R1-01 | HYPOTHESIS | Memory necessity exposes stale-state influence on native proposal arguments | Tested in this pilot with no observed interaction: all eight contrasts zero; broader hypothesis unresolved, not disproved |
+| R1-02 | VERIFIED | `R1EX-20261026-02` COMPLETE: frozen 8 blocks×4 arms,32/32 requests,Mem0 only | [Closeout](R1_CLOSEOUT_20261026.md); historical conditional acceptance and registration preserved; no replay |
+| R1-03 | VERIFIED | Offline design binding, scoring and Tier C integration qualified | [Readiness](R1_READINESS.md), [original source/review summary](../../manifests/r1-integration-v1.json); preparation review distinct from owner/platform authority and subsequent actual evidence |
+| R1-04 | OBSERVED | 32 authorized current-recipient native proposals; zero unauthorized, abstentions/no proposal, malformed/multiple or UNKNOWN responses; utility 8/8 in each arm | All 32 original request/response bodies and native arguments independently audited against the hidden ACL |
+| R1-05 | OBSERVED | Current-memory exposure 32/32; historical exposure 16/16 CONFLICT and 0/16 CONTROL | Actual reopened native selection/order retained; zero unresolved inputs, so unresolved-state abstention is not estimable |
+| R1-06 | VERIFIED | Eight registered block contrasts all zero; aggregate 0.0; registered UNKNOWN bounds [0.0,0.0] | Eight shared-template blocks, not 32 independent population samples; missing-outcome bounds are not statistical confidence intervals |
+| R1-07 | OBSERVED | Service-reported usage 21,124 prompt +10,092 completion =31,216 tokens; 7,713 reasoning tokens already included in completion | Not independent tokenizer/billing attestation; deployed prompt ceiling remains NOT_GUARANTEED |
+| R1-08 | VERIFIED | Original journal contains 432 SDK invocations and 432 matched returns: add24/get24/search32/history48/get_all304 | [SDK reconciliation](R1_CLOSEOUT_20261026.md#sdk-journal-reconciliation); earlier derived 424 is corrected without changing original audit/raw/Release bytes |
+| R1-09 | VERIFIED | Original seal and independent audit preserved; private scientific subset byte-verified; 80/80 task-owned resources absent and VM ACTIVE → ACTIVE at closeout | [Custody scope and hashes](R1_CLOSEOUT_20261026.md#evidence-custody); no complete administrative-backup claim or fresh remote probe in this offline closeout |
+| R1-10 | NOT_EVALUATED | General attack resistance, host denial/dispatch effectiveness, arm equivalence, native authentication and derived-state lineage | No unauthorized challenge or protected dispatch; all inputs exposed current information; infer=False mode and pilot scope do not establish these properties |
+| R1-11 | UNSUPPORTED | Zero unauthorized outcomes prove memory immunity, population safety, provider superiority or equivalence | Limited synthetic assignments, fixed model/system and shared template; negative observed interaction is scope-bound |
 | R2-01 | VERIFIED | Qualified no-LLM/direct-memory modes expose native persistent state | Provider modes and limitations in roadmap; no fullarchitecture inference |
 | R2-02 | BLOCKED | Derived-memory revocation/lineage across all providers | Requires actual supported native transitions and separately costed internal inference if needed |
 | LC12-01 | VERIFIED | Run `lc12-20261026-live01`: exact 12 units, 36 checkpoints, 72 queries; original capture/selection/reopen/snapshot bindings independently checked | [Independent audit](LC12_EVIDENCE_AUDIT_20261026.md), [safe identities and counts](evidence/lc12-audit-summary.json); 3 stores per arm, not 6 independent queries |
@@ -23,4 +35,4 @@
 | R3-01 | PLANNED | Compare reviewed decision semantics while preserving utility | Authentic challenge coverage, OFF/legacy/hardened kept separate |
 | STD-01 | NOT_EVALUATED | ECMA-430/434 protocol conformance | Requires explicit conformance evidence |
 
-OBSERVED labels a captured event; VERIFIED labels independently checked scope-bound evidence; HYPOTHESIS is falsifiable but untested; PLANNED is prospective; CONDITIONALLY_ACCEPTED admits the design without live authority; BLOCKED identifies missing admission/capability; NOT_EVALUATED means no supporting evaluation. None implies publication-ready causal evidence.
+OBSERVED labels a captured event; VERIFIED labels independently checked scope-bound evidence; HYPOTHESIS is a falsifiable proposition, with any scoped test result stated in its evidence column; PLANNED is prospective; CONDITIONALLY_ACCEPTED admits the design without live authority; BLOCKED identifies missing admission/capability; NOT_EVALUATED means no supporting evaluation. None implies publication-ready causal evidence.

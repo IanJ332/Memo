@@ -1,5 +1,21 @@
 # Debugging Ledger
 
+## R1 SDK total reconciliation — October 26, 2026
+
+- Original sealed capture journals contain 432 SDK intents and 432 matched
+  returns: add 24, get 24, search 32, history 48, get_all 304. Zero SDK error
+  events or unmatched intents. The original independent audit already says 432.
+- The earlier REPORT/SAFE_SUMMARY and derived safe analysis hard-coded 424;
+  their operation categories correctly sum to 432. No eight-call exclusion or
+  alternate completed-operation denominator is supported. Preserve those earlier
+  artifacts and the private Release; publish a separately dated derived erratum.
+- Count one invocation per SDK intent, not input + return artifacts as two
+  calls, nor lifecycle/view/identity/binding events as extra SDK calls. Repeated
+  get_all captures are not evidence of retries. SDK-internal retry behavior is
+  not independently inferred from this journal.
+- [Reconciliation and custody identities](../research/R1_CLOSEOUT_20261026.md)
+  preserve all raw observations, the original scientific analysis and audit.
+
 ## R1 inherited flavor admission — October 26, 2026
 
 - Public resource fields alone cannot amend a hash-pinned verifier. Preserve the

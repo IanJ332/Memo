@@ -6,7 +6,7 @@ Governing rule: **Retrieved != Authoritative**.
 
 ## Decision and phase
 
-Owner-approved direction: Memory-Necessary Authority Drift, Native Memory Lifecycle Security, Provider-Independent Host Authorization. R0 is accepted and closed. R1 is conditionally accepted, not executed; its [offline Tier C integration](R1_READINESS.md) is qualified and awaits one new exact owner grant. This roadmap supersedes earlier static-note expansion and deployment plans for active navigation; their original bytes and dated conclusions remain historical evidence in the private archive. No expired grant is reusable.
+Owner-approved direction: Memory-Necessary Authority Drift, Native Memory Lifecycle Security, Provider-Independent Host Authorization. R0 is accepted and closed. R1 is complete and sealed as `R1EX-20261026-02`: 32/32 authorized proposals, eight zero interaction contrasts; see the [closeout](R1_CLOSEOUT_20261026.md). This roadmap supersedes earlier static-note expansion and deployment plans for active navigation; their original bytes and dated conclusions remain historical evidence in the private archive. No expired grant or sealed execution is reusable. Current work authorizes offline closeout only.
 
 | Question | Falsifiable target | Evidence boundary |
 | --- | --- | --- |
@@ -21,6 +21,14 @@ Reproduce Cohort 0 from original TCEX-20261024-03 records; correct audit hashes/
 ## R1 — memory necessity
 
 [Prospective protocol](NEXT_EXPERIMENT_PROTOCOL.md): eight synthetic operational-state blocks × four fixed-system arms = 32 registered requests, Mem0 only. This is a precision-limited falsifiability pilot; it neither assumes a 65% effect nor estimates population vulnerability. Native selection is observed before request binding. No inference, provider restart or deployment is authorized now.
+
+Completed October 26: every arm had 8/8 authorized current-recipient proposals,
+including all memory-necessary conflict requests with actual historical exposure.
+No necessity-by-conflict effect was observed. Since all 32 inputs exposed current
+information, separately preregister a current-state-availability × historical-
+conflict experiment across independently authored task templates, measuring
+abstention and ACL-valid proposals when current information is absent. This is
+one future design recommendation, not a campaign, sample-size decision or grant.
 
 ## R2 — native lifecycle security
 
@@ -46,12 +54,13 @@ per checkpoint. This closes the registered LC12 question within those modes;
 untested derived state and downstream behavior remain NOT_EVALUATED. The earlier
 admission-stop record is separate and unchanged. See [claims](CLAIMS_REGISTER.md).
 
-Prioritize the already implemented, registered **R1 memory-necessity pilot**:
-evaluate its eight block interaction contrasts in native proposal correctness,
-with abstention, utility and UNKNOWN outcomes retained. LC12 never sent selected
-context to a decision model, so R1 addresses a nonredundant gap. Both sealed R1
-attempts stay closed; any future collection requires a new exact prospective
-grant and supported approval. No live action is authorized by this audit.
+The LC12 audit originally prioritized the registered **R1 memory-necessity pilot**.
+That recommendation was subsequently completed: its eight interaction contrasts
+are zero, with abstention, utility and UNKNOWN outcomes retained in the closeout.
+LC12 itself never exposed a decision model; R1 adds the separately bounded
+proposal evidence without establishing downstream safety. All sealed R1 attempts
+stay closed. Any future collection requires separate preregistration, a new exact
+prospective grant and supported approval; none is authorized here.
 
 Historical mixed-lineage/current-content evidence can support offline host-authority
 eligibility analysis, but cannot stand in for unauthorized authentic proposals or

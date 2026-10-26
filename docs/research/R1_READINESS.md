@@ -1,5 +1,11 @@
 # R1 offline integration — 2026-10-25
 
+**October 26 closeout:** `R1EX-20261026-02` is COMPLETE and sealed, with 32/32
+registered requests and independent evidence audit PASS. See the
+[completed research record and SDK correction](R1_CLOSEOUT_20261026.md).
+The readiness/preparation descriptions below preserve historical engineering and
+general admission rules; they do not request another R1 package, grant or replay.
+
 October 26 compatibility amendment: prospective packages now use the versioned
 [m3.quad access contract](R1_ACCESS_AMENDMENT_20261026.md), preserving original
 Tier C source pins and historical packages. Package schema V2 and independent
@@ -140,9 +146,11 @@ binds 111 retained source files without publishing those private source bodies.
 The existing offline verifier also checks its original dependency/cache/source
 receipts. No provider or infrastructure qualification is rerun.
 
-The bridge loads those exact sources in a separate R1 namespace. Its only textual
-adaptations change the supervisor entrypoint, add the package argument to child
-commands, and change the runner's completion labels/count from 60 to 32. Legacy
+The bridge loads those exact sources in a separate R1 namespace. The initial
+integration changed the supervisor entrypoint, added the package argument to child
+commands, and changed the runner's completion labels/count from 60 to 32. The
+subsequent [versioned access amendment](R1_ACCESS_AMENDMENT_20261026.md) additionally
+replaces only flavor admission in memory and binds all effective source hashes. Legacy
 module globals, source files, frozen manifests and campaign evidence are unchanged.
 R1 supplies a fresh owner contract and the R1-specific unit binding. Original
 native capture/source checks, TLS, usage validation, one-use send accounting and

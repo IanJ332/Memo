@@ -1,5 +1,10 @@
 # R1 access compatibility amendment — October 26, 2026
 
+Operational disposition: the single replacement package was independently
+accepted and executed as sealed `R1EX-20261026-02`. The
+[research closeout](R1_CLOSEOUT_20261026.md) supersedes prospective preparation
+directions in this historical amendment; no replacement or replay is authorized.
+
 The engineered R1 access amendment v1 admits only the intended `jisheng3`
 instance, UUID `5baeeae7-4c29-4903-89fe-2e9df0a8eced`, on **m3.quad / 4 vCPUs /
 15,360 MiB**. The retained cloud inspection contains both exact flavor metadata

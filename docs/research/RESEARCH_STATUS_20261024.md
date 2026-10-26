@@ -1,5 +1,28 @@
 # Research status — 2026-10-24 / v3
 
+## Current update — R1 complete, October 26, 2026
+
+**R1EX-20261026-02 COMPLETE and sealed.** All 32 registered requests completed:
+32 authorized native proposals and zero unauthorized, abstentions, malformed or
+UNKNOWN observations. Current memory exposed 32/32; historical memory exposed
+16/16 CONFLICT and 0/16 CONTROL. Every block contrast is zero; aggregate 0.0.
+Service-reported usage is 31,216 tokens, with 7,713 reasoning tokens already
+included in completion. Independent evidence audit PASS; cleanup 80/80 owned
+resources absent and recorded VM ACTIVE → ACTIVE.
+
+The [research closeout](R1_CLOSEOUT_20261026.md) establishes **432 SDK calls**,
+correcting only the earlier derived total 424. Original raw evidence, analysis,
+audit, administrative records and private scientific-subset Release remain
+unchanged. The [Claims Register](CLAIMS_REGISTER.md) records the limited negative
+interaction finding without claiming general safety, host-defense effectiveness
+or equivalence. Registered UNKNOWN bounds are not statistical confidence bounds.
+
+No new scientific collection, hosted model request, provider, SSH, Jetstream or
+browser action is authorized by this offline closeout. Future research requires
+separate preregistration and authorization. Earlier dated R1 preparation and
+execution-state statements below are historical; they are not current waiting
+instructions. The LC12 backup limitation remains separate and unchanged.
+
 ## LC12 audit continuation — 2026-10-26
 
 **PASS, scoped scientific evidence audit.** Subsequent run
@@ -52,7 +75,7 @@ All54 temporary policy databases removed; no protected dispatches, deliveries, a
 
 **NOT_EVALUATED:** F04 OFF, hardened-policy comparisons, denial effectiveness on unauthorized native proposals, atomic dispatch, TOCTOU/ProvenanceBridge, protected execution and ECMA conformance.54 ALLOWdecisions on correct-recipient proposals do not demonstrate defense effectiveness. Textual JSON was never promoted to native arguments; no executable fallback was found in the inspected host path.
 
-## PLANNED — R1 and later work
+## Historical prospective R1 plan and later work
 
 [Registered protocol](NEXT_EXPERIMENT_PROTOCOL.md):8 synthetic operational blocks×2 task explicitness×2 memory conditions =32 future POSTs, Mem0 only. Independent host ACL, neutral recipient IDs, answer-free memory-necessary task, fixed within-study system with explicit abstention, actual native selected context only. No live requests or stores have been created for R1. Chosen coarse precision criterion and weak power are explicit; no established65% effect assumption. R2 native lifecycle transitions and R3 host-layer comparisons are scoped in [roadmap](RESEARCH_ROADMAP_V3.md).
 
@@ -62,7 +85,8 @@ All54 temporary policy databases removed; no protected dispatches, deliveries, a
 
 [Reproduction and review](REPRODUCE_R0.md):22 focused source/statistics/negative-control tests pass in an existing repository Python3.12.8. Authentic replay uses preserved private source/evidence identities; fresh public clone alone is insufficient. Independent source, science, custody and public-diff review is recorded separately from GitHub branch approval.
 
-**Future authorization required:** a new bounded R1 prospective live grant after
+**Historical pre-R1 authorization requirements (fulfilled for the sealed execution,
+not reusable):** a new bounded R1 prospective live grant after
 offline source/scoring review, explicitly authorizing the native capture
 procedure before its context is known. Exact actual context/request custody is
 required before every dependent send. Limits remain32 POST maximum /131,072
