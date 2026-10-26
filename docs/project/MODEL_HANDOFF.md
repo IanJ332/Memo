@@ -1,5 +1,19 @@
 # Model Handoff — Start Here
 
+## R1 access amendment — October 26, 2026
+
+The owner authorized autonomous offline engineering and independent review of the
+[versioned m3.quad compatibility amendment](../research/R1_ACCESS_AMENDMENT_20261026.md).
+It preserves original qualified source pins and scientific bytes; V2 packages
+bind original/effective source maps. The exact flavor is 4 vCPUs / 15,360 MiB;
+the provider remains 2 CPUs / 6 GiB / network none / one container. No live grant,
+native observation or model request is supplied by this amendment. Preserve the
+original `R1EX-20261026-01` package and both sealed October 25 attempts. Continue
+through independent source acceptance, reviewed synchronization, one replacement
+offline package and independent exact-package review before asking for a direct
+owner execution decision. Historical restrictions below retain their original
+scope; current readiness sequencing governs new preparation.
+
 ## LC12 independent audit — October 26, 2026
 
 **PASS, scoped scientific evidence audit.** Subsequent run

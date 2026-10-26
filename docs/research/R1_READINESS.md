@@ -1,5 +1,10 @@
 # R1 offline integration — 2026-10-25
 
+October 26 compatibility amendment: prospective packages now use the versioned
+[m3.quad access contract](R1_ACCESS_AMENDMENT_20261026.md), preserving original
+Tier C source pins and historical packages. Package schema V2 and independent
+review bind both original/effective bridge hashes and the amendment identity.
+
 **Conditionally accepted design; no scientific collection.** R1EX-20261025-01
 and R1EX-20261025-02 are sealed and cannot be replayed. The integration binds the existing
 qualified Tier C pipeline to the unchanged [32-slot registration](../../manifests/r1-memory-necessity-v1.json)
@@ -210,10 +215,12 @@ Local reference input bound and observed prompt stop threshold remain 32,768.
 The deployed hard prompt cap is NOT_GUARANTEED under Option B. The original live
 model/TLS/capacity check is required, without extra generations. The window is at
 most four hours including startup/cleanup, with at least 30 minutes reserved for
-cleanup. The existing 2-vCPU/6,144-MiB access VM is the only remote target; at its
-existing 2-SU/hour rate, four hours is a conditional 8-SU provision, not a hard
-billing cap or a current cloud quote. Raw inherited diagnostics may still contain
-their historical 24-hour reference label. Restore observed initial lifecycle;
+cleanup. The exact existing access VM must be m3.quad with 4 vCPUs and 15,360 MiB
+configured RAM; the conditional four-hour compute estimate is 16 SU at the
+published 4-SU/hour planning rate. This is not a hard billing cap. Owner-controlled
+uptime outside the window and storage charges remain separate. The versioned
+verifier reports this four-hour estimate; historical diagnostics retain their
+original labels. Restore observed initial lifecycle;
 never automatically shelve an initially ACTIVE instance. Preserve protected
 volume identity, Exosphere resources and existing routing.
 

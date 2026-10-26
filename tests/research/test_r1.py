@@ -126,7 +126,9 @@ class RegistrationTests(Temp):
     def test_qualified_transform_is_narrow_and_fails_on_frontier(self):
         with self.assertRaisesRegex(ValueError, 'TRANSFORM_FRONTIER'):
             bridge.transformations('runner', 'changed upstream body')
-        self.assertEqual(bridge.transformations('access', 'unchanged source'), 'unchanged source')
+        self.assertEqual(bridge.transformations('volume', 'unchanged source'), 'unchanged source')
+        with self.assertRaises(ValueError):
+            bridge.transformations('access', 'changed upstream body')
 
 
 class ScoringTests(Temp):
@@ -372,6 +374,7 @@ class GrantTests(Temp):
             design=p.identity(p.DESIGN), acl=p.identity(p.ACL), native_procedure={'synthetic': True},
             access={'synthetic': True}, bounded_risk_acknowledgment={'synthetic': True},
             resource_contract=contract.RESOURCE_CONTRACT, runtime_identity={'synthetic': True},
+            access_amendment={'synthetic': True}, effective_sources={'synthetic': True},
             expected_keystone_project_id='SYNTHETIC_PROJECT', expected_project_name='SYNTHETIC',
             expected_keystone_user_id='SYNTHETIC_OWNER', authenticated_identity_receipt={'synthetic': True},
             public_sources={'synthetic': '0' * 64}, accepted_sources={'synthetic': '0' * 64})
@@ -394,6 +397,7 @@ class GrantTests(Temp):
         review = self.root / 'SYNTHETIC-REVIEW-NOT-LIVE.json'
         p.save(review, dict(schema='MEMLIFE_R1_INDEPENDENT_OFFLINE_REVIEW_V1', accepted=True,
             independent_review=True, package=p.identity(self.package),
+            effective_sources=self.package_data['effective_sources'], access_amendment=self.package_data['access_amendment'],
             public_sources=self.package_data['public_sources'], accepted_sources=self.package_data['accepted_sources']))
         self.grant['source_review'] = p.identity(review)
 
@@ -475,7 +479,8 @@ class TierCIntegrationTests(Temp):
         # This fixture package is never a valid live contract or grant.
         cls.package_temp = tempfile.TemporaryDirectory()
         cls.package_path = Path(cls.package_temp.name).resolve() / 'package.json'
-        p.save(cls.package_path, {'accepted_sources': contract.source_files(cls.accepted), 'synthetic': True})
+        p.save(cls.package_path, {'accepted_sources': contract.source_files(cls.accepted),
+                                'effective_sources': bridge.effective_sources(cls.accepted), 'synthetic': True})
         contract.PACKAGE = cls.package_path
         cls.runner = bridge.install()
         cls.legacy = importlib.import_module('memlife.r1._accepted_collection')

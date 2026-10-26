@@ -1,0 +1,28 @@
+{
+  "schema": "MEMLIFE_R1_ACCESS_AMENDMENT_V1",
+  "qualification": "ENGINEERED_R1_DERIVATIVE_REQUIRES_INDEPENDENT_REVIEW_NOT_ORIGINAL_TIER_C",
+  "original_pinset_sha256": "9780fc908fae6edd613377f1248463d69d3cda3b6216de73e5c39ee105fc5fa4",
+  "original_access_sha256": "f1a233f99d3539186baadf183efe3b2609d83a7bd68967df8063e329aa780196",
+  "transformation": "Replace only verify_flavor definition with R1 access_compat.verify_flavor; existing R1 supervision/runner adaptations retained. Package binds original and effective SHA-256 for all six bridged modules and full public source map.",
+  "amended_function": "src/memlife/r1/access_compat.py::verify_flavor",
+  "instance_name": "jisheng3",
+  "instance_UUID": "5baeeae7-4c29-4903-89fe-2e9df0a8eced",
+  "flavor": "m3.quad",
+  "vcpus": 4,
+  "RAM_MiB": 15360,
+  "retained_metadata": {
+    "kind": "LC12 cloud inspection, 2026-10-26; retained observation, not current availability",
+    "sha256": "fe69beffa06fca2a9a7acef97f0a13737dfad49e1e9860deae771413fdf17bd8",
+    "bytes": 8272,
+    "fields": "desired_flavor.name/vcpus/ram and server.id"
+  },
+  "billing_reference": "https://docs.jetstream-cloud.org/general/vmsizes/",
+  "billing_reference_checked": "2026-10-26",
+  "rate_SU_per_hour": 4,
+  "four_hour_SU_estimate_conditional_on_cleanup": 16,
+  "billing_hard_cap": false,
+  "initially_ACTIVE": "Restore ACTIVE; owner-controlled uptime before/after window and storage charges excluded from window estimate",
+  "provider": {"cpus_max": 2, "memory": "6g", "network": "none", "concurrent_max": 1},
+  "preserved": ["original source files and pinset", "project/user/server identity", "allocation and unshelve quota checks", "volume and custody checks", "TLS and endpoint", "cleanup and initial lifecycle", "frozen 32-request scientific design", "independent review and new owner/external approval gates"],
+  "authority": "OFFLINE_ONLY_NO_LIVE_GRANT"
+}

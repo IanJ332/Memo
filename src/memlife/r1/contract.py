@@ -22,8 +22,8 @@ NATIVE_PROCEDURE = dict(stores_max=16, writes_max=24, queries_max=32, query_limi
     mode='INFER_FALSE_LOCAL_EMBEDDINGS', provider='mem0ai', version='2.2.1',
     sentence_transformers='6.1.0', operations_are_harness_bounds_not_sdk_attempt_telemetry=True)
 RESOURCE_CONTRACT = dict(window_seconds_max=14400, cleanup_reserve_seconds_min=1800,
-    access_VM_flavor='m3.small', access_VM_vcpus=2, access_VM_RAM_MiB=6144,
-    existing_rate_SU_per_hour=2, four_hour_SU_ceiling_conditional_on_cleanup=8,
+    access_VM_flavor='m3.quad', access_VM_vcpus=4, access_VM_RAM_MiB=15360,
+    existing_rate_SU_per_hour=4, four_hour_SU_ceiling_conditional_on_cleanup=16,
     cloud_billing_hard_cap=False, local_provider_container_memory='6g', local_provider_cpus=2,
     local_provider_network='none', maximum_concurrent_provider_containers=1,
     startup_metadata_GETs_max=1, protected_volume='PRESERVE_DYNAMIC_IDENTITY_VALIDATION_BEFORE_USE',
@@ -57,7 +57,9 @@ def source_files(accepted_root):
 
 def public_sources():
     paths = [*sorted((PUBLIC_ROOT / 'src/memlife/r1').glob('*.py')),
-             PUBLIC_ROOT / 'scripts/research/r1.py', PUBLIC_ROOT / 'tests/research/test_r1.py', QUALIFIED_PINS]
+             PUBLIC_ROOT / 'scripts/research/r1.py', PUBLIC_ROOT / 'tests/research/test_r1.py',
+             PUBLIC_ROOT / 'tests/research/test_r1_access_compat.py', QUALIFIED_PINS,
+             PUBLIC_ROOT / 'manifests/r1-access-amendment-v1.json']
     return {str(p.relative_to(PUBLIC_ROOT)): sha(raw(p)) for p in paths}
 
 
@@ -85,10 +87,13 @@ def prepare(accepted_root, directory, execution_id):
         'access': old.ACCESS})
     output = accepted_root / '.local/r1-campaigns-v1' / execution_id
     need(not output.exists(), 'PROSPECTIVE_OUTPUT_ALREADY_EXISTS')
-    package = dict(schema='MEMLIFE_R1_OFFLINE_PACKAGE_V1', execution_id=execution_id, batch_id=execution_id,
+    from .bridge import effective_sources
+    package = dict(schema='MEMLIFE_R1_OFFLINE_PACKAGE_V2', execution_id=execution_id, batch_id=execution_id,
                    public_root=str(PUBLIC_ROOT), accepted_root=str(accepted_root), output_root=str(output),
                    design=identity(DESIGN), acl=identity(ACL), slots=slots, limits=LIMITS,
                    public_sources=public_sources(), accepted_sources=source_files(accepted_root),
+                   effective_sources=effective_sources(accepted_root),
+                   access_amendment=identity(PUBLIC_ROOT / 'manifests/r1-access-amendment-v1.json'),
                    accepted_scientific_manifest=identity(old.MANIFEST),
                    accepted_runtime_manifest=identity(old.strict_policy.MANIFEST),
                    runtime_identity={k: previous[k] for k in ('reference_sources', 'local_dependencies', 'reference_profile')},
@@ -117,7 +122,7 @@ def configure(path):
     global HOST, DEST, HOST_ALIAS, HOST_KEY, INSTANCE, KEY, CREDENTIALS
     PACKAGE = Path(path).resolve()
     p = strict(raw(PACKAGE))
-    need(p['schema'] == 'MEMLIFE_R1_OFFLINE_PACKAGE_V1' and p['public_root'] == str(PUBLIC_ROOT), 'PACKAGE_ROOT')
+    need(p['schema'] == 'MEMLIFE_R1_OFFLINE_PACKAGE_V2' and p['public_root'] == str(PUBLIC_ROOT), 'PACKAGE_ROOT')
     ROOT = Path(p['accepted_root'])
     BATCH = EXECUTION = p['execution_id']
     OUT = Path(p['output_root'])
@@ -131,11 +136,14 @@ def configure(path):
 def verify(path=None):
     need(PACKAGE is not None and (path is None or Path(path) == PACKAGE), 'EXACT_PACKAGE_REQUIRED')
     p = strict(raw(PACKAGE))
+    from .bridge import effective_sources
     m, a, slots = registration()
     for key, expected in (('design', identity(DESIGN)), ('acl', identity(ACL)), ('slots', slots),
                           ('limits', LIMITS), ('public_sources', public_sources()), ('endpoint', ENDPOINT),
                           ('native_procedure', NATIVE_PROCEDURE), ('resource_contract', RESOURCE_CONTRACT)):
         need(canonical(p[key]) == canonical(expected), 'R1_PACKAGE_DRIFT:' + key)
+    need(p['access_amendment'] == identity(PUBLIC_ROOT / 'manifests/r1-access-amendment-v1.json')
+         and p['effective_sources'] == effective_sources(ROOT), 'R1_ACCESS_AMENDMENT_DRIFT')
     for name, digest in p['accepted_sources'].items():
         need(sha(raw(ROOT / name)) == digest, 'ACCEPTED_SOURCE_DRIFT:' + name)
     old = connect_sources(ROOT)
@@ -173,6 +181,7 @@ def grant_candidate(path):
                 execution_id=p['execution_id'], output_root=p['output_root'], endpoint=ENDPOINT,
                 design=p['design'], acl=p['acl'], limits=LIMITS, native_procedure=p['native_procedure'],
                 resource_contract=p['resource_contract'], runtime_identity=p['runtime_identity'],
+                access_amendment=p['access_amendment'], effective_sources=p['effective_sources'],
                 access=p['access'], bounded_risk_acknowledgment=p['bounded_risk_acknowledgment'],
                 window_seconds=14400, cleanup_reserve_seconds=1800, startup_seconds=600,
                 local_reference_token_bound=32768, observed_prompt_stop_threshold_each=32768,
@@ -213,6 +222,7 @@ def check_grant(p, grant, *, clock=None):
     need(r['schema'] == 'MEMLIFE_R1_INDEPENDENT_OFFLINE_REVIEW_V1' and r['accepted'] is True
          and r['independent_review'] is True and r['package'] == identity(PACKAGE)
          and r['public_sources'] == p['public_sources'] and r['accepted_sources'] == p['accepted_sources']
+         and r['effective_sources'] == p['effective_sources'] and r['access_amendment'] == p['access_amendment']
          and r.get('synthetic', False) is False and r.get('test_scope', False) is False,
          'INDEPENDENT_EXACT_SOURCE_REVIEW_REQUIRED')
     return grant
