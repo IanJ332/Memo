@@ -23,23 +23,46 @@ the unchanged offline admission contract before any campaign claim or live work.
 ## Receipt-placement preflight — 2026-10-25
 
 Exact package review and owner admission are necessary but insufficient for an
-operational handoff. Before consuming another execution identity, establish the
-current [authoritative instruction context](../../AGENTS.md#current-authority-clarification--2026-10-25),
-the supported external approval route, and the feasibility of installing the
-future actual-volume receipt within the unchanged startup deadline. If that
-approval route cannot be meaningfully cleared offline, report
-`PARTIAL — OFFLINE VERIFIED, LIVE APPROVAL PATH UNPROVEN`; do not prepare another
-package or describe the campaign as ready for live execution. Synthetic controller
-tests and a non-live copy do not demonstrate external acceptance of a live gate.
+operational handoff. Before offline preparation, establish the current
+[authoritative instruction context](../../AGENTS.md#current-authority-clarification--2026-10-25),
+whether a supported external exact-action review route exists, and the proposed
+receipt-placement scope and deadline. Availability of an exact-action review
+route is not approval of any action. Where the platform exposes no policy-only
+advance clearance, that absence does not bar creation of one **offline-only
+prospective package**: the exact package, execution binding and placement command
+are prerequisites for a meaningful later exact-action request.
 
-The prospective owner decision must explicitly cover receipt installation and
-its dependent bounded native/access/model actions for the exact new package,
-along with the existing Option B acknowledgment and resource/window limits.
-Preserve genuine direct-message provenance privately. An external reviewer must
-receive that scope, the dated current instructions, exact proposed operation,
-source/destination identities, independent review provenance and remaining
-deadline. An offline source review, a volume review, a human owner grant and an
-external tool approval are distinct decisions; none substitutes for another.
+Offline preparation must neither claim a campaign nor create a live receipt,
+remote resource, native store, model request or owner authorization. It must use
+the existing offline `prepare`/`verify` path only; keep the grant unapproved and
+all owner provenance/times unset; and preserve the prospective identity as
+unexecuted. A prepared package is `OFFLINE PACKAGE PREPARED — LIVE APPROVAL PATH
+UNPROVEN`, not READY FOR LIVE EXECUTION. Synthetic controller tests, a non-live
+copy, package review, or the mere availability of Auto-review do not demonstrate
+external acceptance of any live gate.
+
+The sequence is strict and each step is a separate gate:
+
+1. Prepare one offline-only prospective package and execution binding, then
+   obtain genuine independent package acceptance bound to their exact bytes and
+   both source maps. This is not owner or platform permission.
+2. Obtain a direct owner decision for that accepted package. It must bind receipt
+   installation and dependent bounded native/access/model actions, Option B, and
+   resource/window limits. Preserve genuine direct-message provenance privately.
+3. Before each non-generating external diagnosis/access command, obtain the
+   required exact-command approval. Capture actual volume evidence only under the
+   valid owner window and accepted command scope, then obtain its genuine
+   independent actual-volume review.
+4. Submit the exact receipt-installation operation and its dependent effects to
+   the supported external approval mechanism. Only if that exact operation is
+   accepted, receipt bytes/provenance, identity, deadline and custody checks all
+   pass, may the unchanged controller admit native/model execution.
+
+An offline package review, a direct owner grant, an actual-volume review and an
+external exact-action approval are distinct decisions; none substitutes for
+another. An external reviewer must receive the dated current instructions, exact
+proposed operation, source/destination identities, independent-review provenance
+and remaining deadline.
 
 The unchanged qualified `tier_c_bounded/access.py::volume_diagnosis` writes
 `access/volume-diagnosis.json` then waits for
@@ -76,18 +99,17 @@ The available execution tool exposes escalation of actual commands, not a
 policy-only dry run. [Official Auto-review documentation](https://learn.chatgpt.com/docs/sandboxing/auto-review)
 describes exact-action review and, in the open-source TUI, `/approve` for one
 denied-action retry that still undergoes review. This does not establish that
-the desktop session exposes that control. No such external approval was
-fabricated or exercised by this offline repair. A supported exact-action review
-or operator-provided supported preflight clearance is still required; a generic
-grant field is insufficient.
+the desktop session exposes that control. No external approval is fabricated or
+inferred from offline preparation. A generic grant field is insufficient.
 
-Only after that boundary is resolved or explicitly cleared may preparation
-confirm Docker via the established non-generating checks, preserve the protocol,
-create one fresh identity/package, obtain a genuine exact-package independent
-receipt and prepare an unapproved owner grant. A new direct owner authorization
-is required before any live action; actual future volume evidence needs a new
-independent review. Neither sealed attempt supplies current observations,
-approvals, timestamps, journals or output directories for a future campaign.
+Only the exact-command approval described in the sequence above can clear its
+corresponding external-action boundary. If no supported exact-action route is
+available when it is needed, or the route rejects the action, report `PARTIAL —
+OFFLINE PACKAGE PREPARED, LIVE APPROVAL PATH UNPROVEN`; do not claim a campaign
+or invoke live admission. A denial remains effective until the supported approval
+mechanism accepts that same action while the original identity and deadlines
+remain valid. Neither sealed attempt supplies current observations, approvals,
+timestamps, journals or output directories for a future campaign.
 
 **Offline integration PASS.** The independent focused review accepted the exact
 package after 62 R1 tests passed. The parent also passed 22 R0 regression controls
