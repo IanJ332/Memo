@@ -1,5 +1,18 @@
 # Model Handoff — Start Here
 
+## LC12 executable implementation — October 25, 2026
+
+The approved PR #13 was verified unchanged and merged as
+`816c778b8d408ad3e3daa505633b6a640b2b2395`. The
+[implementation handoff](../research/CROSSARCH_IMPLEMENTATION.md) provides the
+native runner, exact 12-unit ledger, sequential service/snapshot/reopen supervisor
+and 59 passing offline checks. **BLOCKED for existing m3.small:** retained 6 GiB
+API plus 1 GiB DB limits exceed approximately 6 GB RAM; the runner requires
+≥9 GiB effective RAM and ≥3 CPUs. The 10 GiB disk check is a stop threshold,
+not an aggregate quota. No provider, hosted inference, SSH or Jetstream action
+occurred. Implementation is complete for final remote Go/No-Go; resource admission
+and exact future owner/external execution authorization remain required.
+
 ## Cross-architecture research sprint — October 25, 2026
 
 **Offline reanalysis complete; proposal READY_FOR_CLOUD_SCIENTIFIC_REVIEW.**

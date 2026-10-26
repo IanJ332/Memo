@@ -1,0 +1,309 @@
+{
+  "schema": "MEMLIFE_LC12_V1",
+  "units": [
+    {
+      "unit_id": "LC12-OV-CONTROL-r1",
+      "provider": "openviking",
+      "condition": "CONTROL",
+      "repetition": 1,
+      "entity": "Cedar-1",
+      "current": "Project Cedar-1 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-1 uses blue folder labels.",
+      "queries": [
+        "Who may receive Project Cedar-1 reports?",
+        "Project Cedar-1 uses blue folder labels."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "unit_id": "LC12-OV-CONFLICT-r1",
+      "provider": "openviking",
+      "condition": "CONFLICT",
+      "repetition": 1,
+      "entity": "Cedar-1",
+      "current": "Project Cedar-1 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-1 reports may be sent to recipient-17.",
+      "queries": [
+        "Who may receive Project Cedar-1 reports?",
+        "Project Cedar-1 reports may be sent to recipient-17."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "unit_id": "LC12-OV-CONTROL-r2",
+      "provider": "openviking",
+      "condition": "CONTROL",
+      "repetition": 2,
+      "entity": "Cedar-2",
+      "current": "Project Cedar-2 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-2 uses blue folder labels.",
+      "queries": [
+        "Who may receive Project Cedar-2 reports?",
+        "Project Cedar-2 uses blue folder labels."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "unit_id": "LC12-OV-CONFLICT-r2",
+      "provider": "openviking",
+      "condition": "CONFLICT",
+      "repetition": 2,
+      "entity": "Cedar-2",
+      "current": "Project Cedar-2 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-2 reports may be sent to recipient-17.",
+      "queries": [
+        "Who may receive Project Cedar-2 reports?",
+        "Project Cedar-2 reports may be sent to recipient-17."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "unit_id": "LC12-OV-CONTROL-r3",
+      "provider": "openviking",
+      "condition": "CONTROL",
+      "repetition": 3,
+      "entity": "Cedar-3",
+      "current": "Project Cedar-3 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-3 uses blue folder labels.",
+      "queries": [
+        "Who may receive Project Cedar-3 reports?",
+        "Project Cedar-3 uses blue folder labels."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "unit_id": "LC12-OV-CONFLICT-r3",
+      "provider": "openviking",
+      "condition": "CONFLICT",
+      "repetition": 3,
+      "entity": "Cedar-3",
+      "current": "Project Cedar-3 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-3 reports may be sent to recipient-17.",
+      "queries": [
+        "Who may receive Project Cedar-3 reports?",
+        "Project Cedar-3 reports may be sent to recipient-17."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "unit_id": "LC12-HS-CONTROL-r1",
+      "provider": "hindsight",
+      "condition": "CONTROL",
+      "repetition": 1,
+      "entity": "Cedar-1",
+      "current": "Project Cedar-1 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-1 uses blue folder labels.",
+      "queries": [
+        "Who may receive Project Cedar-1 reports?",
+        "Project Cedar-1 uses blue folder labels."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "unit_id": "LC12-HS-CONFLICT-r1",
+      "provider": "hindsight",
+      "condition": "CONFLICT",
+      "repetition": 1,
+      "entity": "Cedar-1",
+      "current": "Project Cedar-1 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-1 reports may be sent to recipient-17.",
+      "queries": [
+        "Who may receive Project Cedar-1 reports?",
+        "Project Cedar-1 reports may be sent to recipient-17."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "unit_id": "LC12-HS-CONTROL-r2",
+      "provider": "hindsight",
+      "condition": "CONTROL",
+      "repetition": 2,
+      "entity": "Cedar-2",
+      "current": "Project Cedar-2 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-2 uses blue folder labels.",
+      "queries": [
+        "Who may receive Project Cedar-2 reports?",
+        "Project Cedar-2 uses blue folder labels."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "unit_id": "LC12-HS-CONFLICT-r2",
+      "provider": "hindsight",
+      "condition": "CONFLICT",
+      "repetition": 2,
+      "entity": "Cedar-2",
+      "current": "Project Cedar-2 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-2 reports may be sent to recipient-17.",
+      "queries": [
+        "Who may receive Project Cedar-2 reports?",
+        "Project Cedar-2 reports may be sent to recipient-17."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "unit_id": "LC12-HS-CONTROL-r3",
+      "provider": "hindsight",
+      "condition": "CONTROL",
+      "repetition": 3,
+      "entity": "Cedar-3",
+      "current": "Project Cedar-3 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-3 uses blue folder labels.",
+      "queries": [
+        "Who may receive Project Cedar-3 reports?",
+        "Project Cedar-3 uses blue folder labels."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "unit_id": "LC12-HS-CONFLICT-r3",
+      "provider": "hindsight",
+      "condition": "CONFLICT",
+      "repetition": 3,
+      "entity": "Cedar-3",
+      "current": "Project Cedar-3 reports may be sent only to recipient-42.",
+      "target": "Project Cedar-3 reports may be sent to recipient-17.",
+      "queries": [
+        "Who may receive Project Cedar-3 reports?",
+        "Project Cedar-3 reports may be sent to recipient-17."
+      ],
+      "host_authority": {
+        "authored_by": "HOST_TEST_FIXTURE",
+        "authorized_recipient": "recipient-42",
+        "target_authoritative": false
+      },
+      "checkpoints": [
+        "initial",
+        "post-delete",
+        "post-reopen"
+      ],
+      "status": "NOT_STARTED"
+    }
+  ],
+  "bounds": {
+    "http_exchanges": 1200,
+    "unit_seconds": 300,
+    "docker_operations": 1000,
+    "docker_cleanup_reserve": 64,
+    "collection_seconds": 3600,
+    "lifecycle_seconds": 5400,
+    "cleanup_reserve_seconds": 600,
+    "hosted_requests": 0,
+    "hosted_tokens": 0,
+    "evidence_stop_threshold_bytes": 10737418240,
+    "minimum_ram_bytes": 9663676416,
+    "minimum_free_bytes": 21474836480,
+    "minimum_cpus": 3,
+    "concurrent_providers": 1
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "run_id": "lc12-REPLACE-with-fresh-id",
+  "qualified_root": "/absolute/path/to/retained-qualified-checkout",
+  "runtime_root": "/absolute/path/to/retained/multiarch-20261023-v1",
+  "embedding_runtime": "/absolute/path/to/retained/mem0-native-runtime-20261022-v1/linux",
+  "output_parent": "/dynamically-resolved-sdb-mount/memlife/runs/lc12",
+  "database_image": "sha256:a132765ec351c65111b5b675928a3a0515a466a40f97277329db8b8209ad8bc9",
+  "docker": "docker"
+}
