@@ -1,5 +1,15 @@
 # Project State
 
+## R2 owner authorization — 2026-10-26 UTC / October 25 local
+
+**STOPPED PRE-ADMISSION / native NOT EXECUTED.** Genuine exact owner scope and
+fixed receipt-relative window were preserved; package and resource checks pass.
+The required accepted external-approval reference is missing. The execution ID
+remains unclaimed, prospective grant inactive, all four phases unperformed and
+all native scientific observations UNKNOWN. See the
+[admission closeout](../research/R2_NATIVE_ADMISSION_STOP_20261026.md). Accepted
+implementation, protocol, package and historical evidence are unchanged.
+
 ## R2 resource recovery and offline package — 2026-10-25
 
 **Resource PASS / native NOT EXECUTED.** Effective Docker RAM is now

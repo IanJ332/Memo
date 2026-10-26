@@ -1,5 +1,17 @@
 # Debugging Ledger
 
+## R2 exact-owner intake — 2026-10-26 UTC / October 25 local
+
+- Genuine owner receipt is 00:55:34.210 UTC; its at-most-60-minute window ends
+  01:55:34.210 UTC. Preserve the original timestamped record and attachment,
+  rather than substituting a later clock reading for message receipt.
+- Owner permission and exact-package review do not supply the separately
+  required accepted external native-approval reference. Read-only tool success,
+  inferred dispatch acceptance and self-written references are insufficient.
+- Stop before the exclusive execution claim if that evidence is unavailable;
+  record UNPERFORMED/UNKNOWN rather than provider failure or a consumed attempt.
+  See the [pre-admission closeout](../research/R2_NATIVE_ADMISSION_STOP_20261026.md).
+
 ## R2 execution integration invariants — 2026-10-25
 
 - Read-only recovery reports 12,536,020,992 bytes effective VM RAM; retain the

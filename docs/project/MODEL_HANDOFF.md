@@ -1,5 +1,17 @@
 # Model Handoff — Start Here
 
+## R2 owner authorization — 2026-10-26 UTC / October 25 local
+
+**STOPPED BEFORE ADMISSION; execution identity remains unclaimed.** Genuine
+owner authorization for `R2EX-20261026-c84c24fa5f0e` was received at
+00:55:34.210 UTC, with a maximum end of 01:55:34.210 UTC. Exact package/review/
+source/runtime and read-only resource checks pass. The required accepted
+external native-approval reference was not obtained; read-only permission and
+inferred dispatch acceptance cannot substitute. No execution command, native
+operation, provider container or model request occurred. No grant was activated.
+See the [pre-admission closeout](../research/R2_NATIVE_ADMISSION_STOP_20261026.md).
+Do not claim this record consumed an attempt or produced a provider result.
+
 ## R2 resource recovery and offline package — 2026-10-25
 
 **Resource PASS; native execution NOT AUTHORIZED / NOT EXECUTED.** Docker now
