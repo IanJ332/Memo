@@ -1,5 +1,15 @@
 # Project State
 
+## LC12 authorized campaign — October 26, 2026
+
+**STOPPED / native UNPERFORMED.** Actual m3.quad resources passed admission;
+required qualified images/runtime availability failed. Zero units and zero
+provider/model operations; all 36 checkpoints UNKNOWN. No run ID was allocated.
+VM remains initially ACTIVE, existing volume/IP/containers preserved. Private
+admission archive and same-host/filesystem backup verify byte-identically.
+See the [closeout](../research/LC12_ADMISSION_STOP_20261026.md). This is an
+operational stop, not a provider result; prior evidence/freezes are unchanged.
+
 ## LC12 implementation complete — October 25, 2026
 
 See the [executable engineering handoff](../research/CROSSARCH_IMPLEMENTATION.md).

@@ -1,5 +1,17 @@
 # Model Handoff — Start Here
 
+## LC12 owner-authorized admission stop — October 26, 2026
+
+**STOPPED before campaign claim; zero native observations.** Approved source and
+final review bindings passed. The exact VM was already ACTIVE on m3.quad;
+4 CPUs, 14.624 GiB RAM and 41.081 GiB free persistent-volume space passed.
+Both required cached image identities were absent, as were expected retained
+runtime paths. The owner STOP policy applied without installation, deployment
+or collection. All 36 checkpoints remain UNKNOWN. No run ID or unit was consumed.
+Initial ACTIVE state, preexisting IP/containers and the 50 GiB `/dev/sdb` volume
+were preserved. See the [sealed admission closeout](../research/LC12_ADMISSION_STOP_20261026.md).
+No second campaign or historical replay is authorized by this record.
+
 ## LC12 executable implementation — October 25, 2026
 
 The approved PR #13 was verified unchanged and merged as
