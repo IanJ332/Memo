@@ -1,0 +1,18 @@
+{
+  "schema": "MEMLIFE_R2_EXECUTION_CONTRACT_V1",
+  "protocol_sha256": "518a7ae2ed953663f774a3d17d5f95908b20a63e080245e302010f47db6bd33d",
+  "container": {"cpus": 2, "memory_bytes": 8589934592, "pids": 256, "tmpfs_bytes": 1073741824, "memory_swap_bytes": 17179869184},
+  "admission": {"minimum_vm_bytes": 9663676416, "minimum_disk_bytes": 5368709120, "unrelated_running_containers": 0},
+  "limits": {"phase_seconds": 300, "execution_seconds": 1200, "cleanup_seconds": 120, "working_bytes": 5368709120, "docker_command_seconds": 20},
+  "phases": ["UPDATE-initial", "UPDATE-reopen", "DELETE-initial", "DELETE-reopen"],
+  "phase_sdk_totals": [32, 8, 31, 8],
+  "sdk_calls": {"add": 4, "update": 1, "delete": 1, "get": 19, "get_all": 36, "search": 6, "history": 12},
+  "sdk_total": 79,
+  "retries": 0,
+  "network": "none",
+  "internal_llm_calls": 0,
+  "hosted_requests": 0,
+  "ssh": 0,
+  "jetstream": 0,
+  "protected_dispatch": 0
+}

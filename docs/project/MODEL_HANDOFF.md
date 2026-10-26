@@ -1,5 +1,18 @@
 # Model Handoff — Start Here
 
+## R2 resource recovery and offline package — 2026-10-25
+
+**Resource PASS; native execution NOT AUTHORIZED / NOT EXECUTED.** Docker now
+reports 12,536,020,992 bytes effective VM RAM, above the unchanged 9 GiB admission
+threshold and 8 GiB container ceiling. The separate
+[execution integration](../research/R2_EXECUTION_PACKAGE.md) reuses the accepted
+scenario and qualified source/runtime closure; 48 focused synthetic controls
+pass. Exact package/review identities and the unapproved prospective owner grant
+remain private and are bound in the preparation closeout. Review acceptance
+confers no human or external authorization. Require a new direct owner grant
+and supported external approval for the full dependent scope before any native
+action. The preceding blocker is retained below as historical evidence.
+
 ## R2 package preparation — 2026-10-25
 
 **BLOCKED at resource feasibility; no native execution or package/grant.**
