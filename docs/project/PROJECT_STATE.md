@@ -1,5 +1,12 @@
 # Project State
 
+October 26 R1 engineering: the owner authorizes the narrow offline
+[m3.quad access amendment](../research/R1_ACCESS_AMENDMENT_20261026.md) and reviewed
+GitHub synchronization. Original Tier C pins, historical preparations and frozen
+scientific design remain unchanged. A replacement package requires independent
+source and exact-package acceptance; no new live authority or collection follows
+from offline engineering.
+
 ## LC12 independent evidence accepted — October 26, 2026
 
 **PASS, scoped scientific evidence audit.** Subsequent run

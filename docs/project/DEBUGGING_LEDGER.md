@@ -1,5 +1,21 @@
 # Debugging Ledger
 
+## R1 inherited flavor admission — October 26, 2026
+
+- Public resource fields alone cannot amend a hash-pinned verifier. Preserve the
+  original Tier C files/pins and explicitly identify the engineered R1 derivative.
+- Retained authoritative flavor metadata specifies m3.quad / 4 CPUs / 15,360 MiB;
+  guest effective RAM and approximate 16 GiB descriptions are different quantities.
+- Package V2 binds original/effective bridge hashes and the public amendment;
+  grants and package review bind the same maps. Changed bytes reject before load.
+- Preserve allocation/unshelve quota and exact server/project/user checks, all
+  original volume/SSH/custody/lifecycle restrictions, and provider 2 CPU / 6 GiB /
+  network-none / one-container limits. A conditional 16 SU window estimate does
+  not bound total billing for an initially ACTIVE instance.
+- The [amendment](../research/R1_ACCESS_AMENDMENT_20261026.md) and focused tests
+  establish offline compatibility only. Original `R1EX-20261026-01` is immutable;
+  genuine package, owner, actual-volume and external approvals stay separate.
+
 ## R2 exact-owner intake — 2026-10-26 UTC / October 25 local
 
 - Genuine owner receipt is 00:55:34.210 UTC; its at-most-60-minute window ends
