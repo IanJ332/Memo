@@ -1,5 +1,16 @@
 # Project State
 
+## R2 resource recovery and offline package — 2026-10-25
+
+**Resource PASS / native NOT EXECUTED.** Effective Docker RAM is now
+12,536,020,992 bytes; the accepted 8 GiB ceiling and 9 GiB initial admission
+threshold are unchanged. A separate R2 wrapper and 48 passing synthetic controls
+prepare the exact-package review/owner-grant boundary without changing accepted
+science or qualified Tier C/R1 source. See the
+[package guide](../research/R2_EXECUTION_PACKAGE.md). Private review and grant
+artifacts supply no live authority; owner and applicable external approval remain
+required. The earlier resource BLOCKED record is historical.
+
 ## R2 package preparation — 2026-10-25
 
 **BLOCKED / NOT EXECUTED.** Current Docker effective RAM is approximately

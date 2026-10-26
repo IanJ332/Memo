@@ -1,5 +1,26 @@
 # Debugging Ledger
 
+## R2 execution integration invariants — 2026-10-25
+
+- Read-only recovery reports 12,536,020,992 bytes effective VM RAM; retain the
+  8 GiB container ceiling and 9 GiB admission threshold. Headroom is a planning
+  margin, never measured R2 consumption or free RAM.
+- Freeze exact source-capsule membership, not just expected-file hashes; an
+  additional module can shadow a qualified import. Mount only mapped runtime
+  trees and the lock file, not unpinned sibling artifacts or owner grants.
+- Recheck deadlines before create/start and bound start/inspect by the phase
+  deadline, including an exited observation. Unknown create outcomes use only
+  the pre-bound owned name for cleanup; never retry create.
+- Pin completed seals in read-only host custody before reopen. Count SDK intents
+  before delegation and cross-check them against captured native input files.
+- Validate package/root/store ownership and closed-process evidence before
+  preserving, sealing and deleting owned stores; retain bytes on uncertainty.
+- Preserve bounded, durable Docker console bytes before removal. Failed console
+  custody retains the stopped owned container and stores; a superseded review
+  receipt cannot authorize an earlier development package.
+- [Implementation and offline qualification](../research/R2_EXECUTION_PACKAGE.md)
+  supply no owner or external approval and no native observations.
+
 ## R2 memory feasibility — 2026-10-25
 
 - Docker reports 8,215,871,488 bytes effective VM memory; an 8 GiB container
