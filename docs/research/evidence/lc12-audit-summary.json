@@ -1,0 +1,463 @@
+{
+  "schema": "MEMLIFE_LC12_INDEPENDENT_AUDIT_V1",
+  "run_id": "lc12-20261026-live01",
+  "audit_date": "2026-10-26",
+  "audit": "PASS",
+  "repository_commit": "a8a7dba20f617b360168d0274c06a74d315f81d7",
+  "original_files": 2687,
+  "original_bytes": 645304533,
+  "original_inventory_canonical_sha256": "dc29ad65977d42f6d975f67b0ceceaf4cf64bc202134488b9ac71ed137c6fa00",
+  "two_read_passes_identical": true,
+  "source_files_verified": 29,
+  "capture_inventories_verified": 24,
+  "capture_inventory_members_verified": 2280,
+  "units": 12,
+  "checkpoints": 36,
+  "queries": 72,
+  "phase_results": 24,
+  "closed_snapshots_verified": 24,
+  "reopen_receipts_verified": 12,
+  "captured_scenario_http_exchanges": 264,
+  "scenario_http_statuses": {
+    "200": 240,
+    "404": 24
+  },
+  "readiness_intents": 341,
+  "startup_health_errors": 305,
+  "api_health_intents": 605,
+  "docker_operations_reported": 418,
+  "resource_intents": 42,
+  "scientific_unknowns": 0,
+  "scientific_errors": 0,
+  "current_task_resources_remaining": {
+    "containers": "",
+    "volumes": "",
+    "networks": ""
+  },
+  "audit_access": "READ_ONLY_MANAGED_SSH_NO_PROVIDER_OR_MODEL_EXECUTION",
+  "vm_initial_state": "ACTIVE",
+  "vm_final_state": "ACTIVE",
+  "negative_control": "RAW_ENTITY_MUTATION_IN_AUDIT_COPY_REJECTED_INVENTORY_DRIFT_ORIGINAL_BYTES_RESTORED",
+  "groups": {
+    "openviking/CONTROL/initial": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "200": 3
+      },
+      "raw_target": 6,
+      "selected_target": 6,
+      "raw_current": 6,
+      "selected_current": 6
+    },
+    "openviking/CONTROL/post-delete": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "404": 3
+      },
+      "raw_target": 0,
+      "selected_target": 0,
+      "raw_current": 6,
+      "selected_current": 6
+    },
+    "openviking/CONTROL/post-reopen": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "404": 3
+      },
+      "raw_target": 0,
+      "selected_target": 0,
+      "raw_current": 6,
+      "selected_current": 6
+    },
+    "openviking/CONFLICT/initial": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "200": 3
+      },
+      "raw_target": 6,
+      "selected_target": 6,
+      "raw_current": 6,
+      "selected_current": 6
+    },
+    "openviking/CONFLICT/post-delete": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "404": 3
+      },
+      "raw_target": 0,
+      "selected_target": 0,
+      "raw_current": 6,
+      "selected_current": 6
+    },
+    "openviking/CONFLICT/post-reopen": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "404": 3
+      },
+      "raw_target": 0,
+      "selected_target": 0,
+      "raw_current": 6,
+      "selected_current": 6
+    },
+    "hindsight/CONTROL/initial": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "200": 3
+      },
+      "raw_target": 6,
+      "selected_target": 6,
+      "raw_current": 6,
+      "selected_current": 6
+    },
+    "hindsight/CONTROL/post-delete": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "404": 3
+      },
+      "raw_target": 0,
+      "selected_target": 0,
+      "raw_current": 6,
+      "selected_current": 6
+    },
+    "hindsight/CONTROL/post-reopen": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "404": 3
+      },
+      "raw_target": 0,
+      "selected_target": 0,
+      "raw_current": 6,
+      "selected_current": 6
+    },
+    "hindsight/CONFLICT/initial": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "200": 3
+      },
+      "raw_target": 6,
+      "selected_target": 6,
+      "raw_current": 6,
+      "selected_current": 6
+    },
+    "hindsight/CONFLICT/post-delete": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "404": 3
+      },
+      "raw_target": 0,
+      "selected_target": 0,
+      "raw_current": 6,
+      "selected_current": 6
+    },
+    "hindsight/CONFLICT/post-reopen": {
+      "stores": 3,
+      "queries": 6,
+      "current_lookup": {
+        "200": 3
+      },
+      "target_lookup": {
+        "404": 3
+      },
+      "raw_target": 0,
+      "selected_target": 0,
+      "raw_current": 6,
+      "selected_current": 6
+    }
+  },
+  "accepted_artifacts": {
+    "ledger.json": {
+      "bytes": 7313,
+      "sha256": "6f26f4eb892ef910888d7c7612439c0bb85f23bf5c41c5b61d2ce05c4a45419c"
+    },
+    "source-identities.json": {
+      "bytes": 3127,
+      "sha256": "eb909afda1bdfcbb0a7f9965ba174c686c353ba0b9ce9241dc9246bf1a7074f9"
+    },
+    "collection-result.json": {
+      "bytes": 224473,
+      "sha256": "cffcc16160d0619689689e62fea451e313c8cc2bef1d5ac4f9092facda05a189"
+    },
+    "http-intents.jsonl": {
+      "bytes": 25753,
+      "sha256": "7f820aff8b8606b7052223953aa35c8ae3265e2d816ec141d144c265107a403c"
+    }
+  },
+  "capture_inventory_identities": {
+    "LC12-HS-CONFLICT-r1/initial-capture/inventory.json": {
+      "bytes": 25779,
+      "sha256": "ec417d834467ca3f567d640e1009def261f5ed0eef257395621ea8375bb6b60e"
+    },
+    "LC12-HS-CONFLICT-r1/reopen-capture/inventory.json": {
+      "bytes": 6711,
+      "sha256": "e1821b2fb0e3ab9b34381dff7ece0249a1e4ec505949e8c53d943ffce303fd6a"
+    },
+    "LC12-HS-CONFLICT-r2/initial-capture/inventory.json": {
+      "bytes": 25779,
+      "sha256": "971635b14b122b73417f816a848b525812445b71568bdc8c3ddb7d7bc48e9645"
+    },
+    "LC12-HS-CONFLICT-r2/reopen-capture/inventory.json": {
+      "bytes": 6711,
+      "sha256": "b89d7bc515081b1799dda1c5fff22f4d9754f68737a782f294056af7ae39cbfb"
+    },
+    "LC12-HS-CONFLICT-r3/initial-capture/inventory.json": {
+      "bytes": 25779,
+      "sha256": "28a25f2f198cd2cde163d6b6e94615bd91ed5c61b13a8b88fa087f5dc8a7d2e7"
+    },
+    "LC12-HS-CONFLICT-r3/reopen-capture/inventory.json": {
+      "bytes": 6711,
+      "sha256": "527b79aca2a00a33299af69c42d032668c2864ffb2a47d86b14a4fbba067d21f"
+    },
+    "LC12-HS-CONTROL-r1/initial-capture/inventory.json": {
+      "bytes": 25777,
+      "sha256": "252e8721fe7f31779ff5ed3592dfa8f8f172b716865cfb9db275a14be323cf29"
+    },
+    "LC12-HS-CONTROL-r1/reopen-capture/inventory.json": {
+      "bytes": 6709,
+      "sha256": "a7cf07ba11782992ba12f52b9b95b41ef2cfc2196e64c3262b5145f1bec69d35"
+    },
+    "LC12-HS-CONTROL-r2/initial-capture/inventory.json": {
+      "bytes": 25777,
+      "sha256": "42e584deb08f66bcd87a51e32bc727faa8882b1842591dfe8fb37876b2321732"
+    },
+    "LC12-HS-CONTROL-r2/reopen-capture/inventory.json": {
+      "bytes": 6709,
+      "sha256": "1fe39453cdbefa4d911fc710183c59db0bef051f38d823e1db1b73e80d618035"
+    },
+    "LC12-HS-CONTROL-r3/initial-capture/inventory.json": {
+      "bytes": 25777,
+      "sha256": "bfefe543983c28faa9deb57b7667cc4ab3b863f903014fb2d4b0506908a783ab"
+    },
+    "LC12-HS-CONTROL-r3/reopen-capture/inventory.json": {
+      "bytes": 6709,
+      "sha256": "0dfc81337f6353dacd3de0294c6011f06a3ee6e3343c177126222d2fb071e757"
+    },
+    "LC12-OV-CONFLICT-r1/initial-capture/inventory.json": {
+      "bytes": 12766,
+      "sha256": "a25f5d92c24eb13a839226e30fcadede7e681c4d6f30ac393c60b0c55eadaa07"
+    },
+    "LC12-OV-CONFLICT-r1/reopen-capture/inventory.json": {
+      "bytes": 5372,
+      "sha256": "946138585edd7755f3a8e9c6e6021495d161d529f9209938cd6973bd71b32a08"
+    },
+    "LC12-OV-CONFLICT-r2/initial-capture/inventory.json": {
+      "bytes": 12766,
+      "sha256": "e08bb41ff36136602236d5d9549bfe5336403f75d187f94ca269a56a23e8b40b"
+    },
+    "LC12-OV-CONFLICT-r2/reopen-capture/inventory.json": {
+      "bytes": 5372,
+      "sha256": "ae5f49a956d4b5f8ab88401fc4b337c4e3d9c0a2637ec988b54a206873b3bbd5"
+    },
+    "LC12-OV-CONFLICT-r3/initial-capture/inventory.json": {
+      "bytes": 12766,
+      "sha256": "b7b521e70d466c56a8c5590c27b0b18cc032a6ecb7edf36db76a951850f2d0f4"
+    },
+    "LC12-OV-CONFLICT-r3/reopen-capture/inventory.json": {
+      "bytes": 5372,
+      "sha256": "b35702813b88daefe1478e3ba0897e36408ca0d8a22ad4b2a2f946e06c7d10c4"
+    },
+    "LC12-OV-CONTROL-r1/initial-capture/inventory.json": {
+      "bytes": 12761,
+      "sha256": "0aa9c02d1a6f7352fc76de52eb49af5ebb39a854501ed32e5c4c925f4ee43086"
+    },
+    "LC12-OV-CONTROL-r1/reopen-capture/inventory.json": {
+      "bytes": 5370,
+      "sha256": "8feb7d2d38c77cd14629c9a655f7ca95d31f90aa590507c62178c18015ba9900"
+    },
+    "LC12-OV-CONTROL-r2/initial-capture/inventory.json": {
+      "bytes": 12761,
+      "sha256": "101e52eceadcfb5fd022b034fb218dd5f56bb2f158acbbfd0a9bfe230ee56da9"
+    },
+    "LC12-OV-CONTROL-r2/reopen-capture/inventory.json": {
+      "bytes": 5370,
+      "sha256": "82aad7b95ed1159bcf51f31a4b64e735ddfbfbc0bf284c47a73cdc7720f89ea7"
+    },
+    "LC12-OV-CONTROL-r3/initial-capture/inventory.json": {
+      "bytes": 12761,
+      "sha256": "3a9a96d7b4d7206f61cafe5ffdb70e67063088fdfe80af57c1630ae165442682"
+    },
+    "LC12-OV-CONTROL-r3/reopen-capture/inventory.json": {
+      "bytes": 5370,
+      "sha256": "9d0d77039d81e58d1b8e10f078a36e34411704e8b98a00598b7137fc0cec1120"
+    }
+  },
+  "closed_snapshot_identities": [
+    {
+      "path": "LC12-OV-CONTROL-r1/initial-state.tar",
+      "bytes": 2457600,
+      "sha256": "15ccd39785de1f76e282667ac14be4ae13ed1d39019a8d890cccd08310507678"
+    },
+    {
+      "path": "LC12-OV-CONTROL-r1/reopen-state.tar",
+      "bytes": 2457600,
+      "sha256": "7494eca3a8dbaa721487e78ed5a025c5ae1c245351727aad450531e4db365d8f"
+    },
+    {
+      "path": "LC12-OV-CONFLICT-r1/initial-state.tar",
+      "bytes": 2447360,
+      "sha256": "28a9f4b2ca0cec2a9a1778ecca6cc8c1fa6b9420731b7c383f784a7add3c609c"
+    },
+    {
+      "path": "LC12-OV-CONFLICT-r1/reopen-state.tar",
+      "bytes": 2457600,
+      "sha256": "528b26a36a6ed6d942944c409e41330408c0ec81473652e55312b6db0ea41fce"
+    },
+    {
+      "path": "LC12-OV-CONTROL-r2/initial-state.tar",
+      "bytes": 2467840,
+      "sha256": "b3d54ff3fc24b31c52d81cc14b32302f11174e2f5627bed80ff25723fb5b69f8"
+    },
+    {
+      "path": "LC12-OV-CONTROL-r2/reopen-state.tar",
+      "bytes": 2478080,
+      "sha256": "f8c4866764e00fe20f5cb56e47bf75b577766951fb7bbce94ab8faf320accddb"
+    },
+    {
+      "path": "LC12-OV-CONFLICT-r2/initial-state.tar",
+      "bytes": 2478080,
+      "sha256": "3a4c20c6f2c9c577ea2ea13fea1881d8347ebd51bea10e3c93182a09b5d626ef"
+    },
+    {
+      "path": "LC12-OV-CONFLICT-r2/reopen-state.tar",
+      "bytes": 2478080,
+      "sha256": "7fa9046de705146186e09b222d8913d8be61158f76e6e66d38360ebb9bb6dfef"
+    },
+    {
+      "path": "LC12-OV-CONTROL-r3/initial-state.tar",
+      "bytes": 2529280,
+      "sha256": "023ef5dd3ba4e9888b224f637b63ec09ee6dd94ae94269b494605faa6b0546de"
+    },
+    {
+      "path": "LC12-OV-CONTROL-r3/reopen-state.tar",
+      "bytes": 2529280,
+      "sha256": "69cb41678d542d87cd4589336a5537c3e273dc3fc41449bd0eecfd94413a3861"
+    },
+    {
+      "path": "LC12-OV-CONFLICT-r3/initial-state.tar",
+      "bytes": 2519040,
+      "sha256": "2cf0e4a14f177985ad9dee38582d814b2f5968db087827def5f080062bd46d3c"
+    },
+    {
+      "path": "LC12-OV-CONFLICT-r3/reopen-state.tar",
+      "bytes": 2519040,
+      "sha256": "35663a905e983256caa0bceec99ec19aa4815064f711ea8751c7c3e35962f62b"
+    },
+    {
+      "path": "LC12-HS-CONTROL-r1/initial-database.tar",
+      "bytes": 50998784,
+      "sha256": "10e079222223e8b24deb22926d293e3db09b1940b4e1be2a6389db24c898451b"
+    },
+    {
+      "path": "LC12-HS-CONTROL-r1/reopen-database.tar",
+      "bytes": 51035648,
+      "sha256": "9776949fb8c099f895096a44e87b76a5c840b101372e25420a186d5241a944fc"
+    },
+    {
+      "path": "LC12-HS-CONFLICT-r1/initial-database.tar",
+      "bytes": 50998784,
+      "sha256": "c73e79fbe168aa8a220d09b16a181ff329739fc8254770b83e1370ac53ba3fc6"
+    },
+    {
+      "path": "LC12-HS-CONFLICT-r1/reopen-database.tar",
+      "bytes": 51064320,
+      "sha256": "1dc721c4cf8a123aa1c1a98eba21a6d76d9824e3c66ea13dd76ab6c5887d214d"
+    },
+    {
+      "path": "LC12-HS-CONTROL-r2/initial-database.tar",
+      "bytes": 50998784,
+      "sha256": "4e1e5d136fd2ef26afb444ebc4d6bb32728d15db92aa3d0cbbb456d40cc75cd7"
+    },
+    {
+      "path": "LC12-HS-CONTROL-r2/reopen-database.tar",
+      "bytes": 51064320,
+      "sha256": "a72e85ffc65f4e231cc21a1d94c559a5ab8e94a9fbe7aa0d719af686cf5304a7"
+    },
+    {
+      "path": "LC12-HS-CONFLICT-r2/initial-database.tar",
+      "bytes": 50998784,
+      "sha256": "170d3e922bcd5515557fb2145f451d842fb09f01a11e2be0c18e151310b8ae97"
+    },
+    {
+      "path": "LC12-HS-CONFLICT-r2/reopen-database.tar",
+      "bytes": 51064320,
+      "sha256": "e3262e6eb03fb3f84e7283acae108f8d2094051f2adebf0e4d922d85adb1f482"
+    },
+    {
+      "path": "LC12-HS-CONTROL-r3/initial-database.tar",
+      "bytes": 50998784,
+      "sha256": "b2cd1fe40fe102eccded6168d3686878976b4ba5071ce7ce1278cf76a40fb4ea"
+    },
+    {
+      "path": "LC12-HS-CONTROL-r3/reopen-database.tar",
+      "bytes": 51064320,
+      "sha256": "a3a733d8f88b5595357286ddb1355547d4a75c3f78537190387f14f40c93ff61"
+    },
+    {
+      "path": "LC12-HS-CONFLICT-r3/initial-database.tar",
+      "bytes": 50998784,
+      "sha256": "e2185f5808e3282c16494b8b5fe0e727da6358abbc0fdad3abec115a677efd18"
+    },
+    {
+      "path": "LC12-HS-CONFLICT-r3/reopen-database.tar",
+      "bytes": 51064320,
+      "sha256": "b03466429b7d16fd7122f9a43a5bcf31d5fce286a92b4f03fdf097ce0639b6cd"
+    }
+  ],
+  "audit_utilities": {
+    "validate.py": "12a0d7e5ff9e4bf50c5a8bad76ad22e7eb6912688d2fed89c2b52f46ecc9faeb",
+    "extra_checks.py": "cd2b5f7331abab9fe9071db25fec6b00e6388a88c5c9f160bad883e9536461de",
+    "copy_small.py": "2b1b5c7798af37acda43778344e78731ad52a35182cdbb92f9228e3b858c60aa",
+    "final_check.py": "e284b7eeafc5f765942c583ffb775dc8010fbe0a158cf206ee70d862ac17190f"
+  },
+  "private_validation_receipt_sha256": "1c84d2590244c13d0353ac92d88916897439042c4672b2bd0a0364c327da58f2",
+  "limitations": [
+    "Captured HTTP entities and process/config receipts are not provider attestations or a complete network wire trace.",
+    "No independent offsite or full-run backup verified; original snapshots remain on preserved volume.",
+    "Historical preservation utility scientific_collection=NOT_EXECUTED is a stale literal, contradicted by original scientific captures; original retained.",
+    "No historical authorization or external approval is inferred from prospective JSON.",
+    "No secure physical erasure, complete forgetting, derived-state deletion or downstream safety evaluated."
+  ]
+}

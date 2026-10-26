@@ -1,5 +1,18 @@
 # Research status — 2026-10-24 / v3
 
+## LC12 audit continuation — 2026-10-26
+
+**PASS, scoped scientific evidence audit.** Subsequent run
+`lc12-20261026-live01` has 12/12 completed units and 36/36 raw-validated
+checkpoints. Initially exposed targets disappear after deletion and remain absent
+after reopen in both tested native modes; current content survives. See the
+[independent audit](LC12_EVIDENCE_AUDIT_20261026.md)
+and updated [claims](CLAIMS_REGISTER.md).
+The earlier admission stop below remains a separate unchanged record. Next
+priority is the existing registered R1 memory-necessity pilot under new exact
+authorization; no new experiment is authorized by this audit. Derived-state
+forgetting and downstream safety remain NOT_EVALUATED.
+
 Working title: **When Memory Outlives Authority: Lifecycle Security and Host-Enforced Authorization in Persistent LLM Agents**.
 
 **2026-10-25 governance continuation:** both R1 execution attempts are sealed

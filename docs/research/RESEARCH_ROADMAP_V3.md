@@ -34,6 +34,33 @@ Transition plan below is PLANNED; counts depend on R1 and verified capabilities.
 
 Each transition requires a fresh disposable store, native identifiers, exact arguments/returns, raw candidates and selected order, before/after hashes, scope mapping, persistence receipt and cleanup. Rank/top-k eviction is a retrieval treatment, never deletion proof. Scope isolation tests compare explicit foreign namespace queries against the host identity map; namespace filtering is not provider authentication. Do not infer transitive lineage from isolated source IDs.
 
+## LC12 closure and next research decision — 2026-10-26
+
+[Independent raw audit](LC12_EVIDENCE_AUDIT_20261026.md) accepts
+`lc12-20261026-live01`: 12 fresh stores, 36 checkpoints and 72 query observations.
+For OpenViking direct-memory and Hindsight none/chunks, native deletion removes
+the initially exposed target from direct lookup, inventory, raw retrieval and
+literal selection, including after reopen, while current content survives.
+Each provider/condition arm has three stores and six correlated query observations
+per checkpoint. This closes the registered LC12 question within those modes;
+untested derived state and downstream behavior remain NOT_EVALUATED. The earlier
+admission-stop record is separate and unchanged. See [claims](CLAIMS_REGISTER.md).
+
+Prioritize the already implemented, registered **R1 memory-necessity pilot**:
+evaluate its eight block interaction contrasts in native proposal correctness,
+with abstention, utility and UNKNOWN outcomes retained. LC12 never sent selected
+context to a decision model, so R1 addresses a nonredundant gap. Both sealed R1
+attempts stay closed; any future collection requires a new exact prospective
+grant and supported approval. No live action is authorized by this audit.
+
+Historical mixed-lineage/current-content evidence can support offline host-authority
+eligibility analysis, but cannot stand in for unauthorized authentic proposals or
+a denial-effectiveness test. Defer a new derived-state experiment until a specific
+supported propagation hypothesis requires it; it is not necessary to close LC12
+or to proceed scientifically to R1. Reuse completed code/evidence; no broad new
+provider matrix. Earlier transition tables remain prospective historical planning
+where not resolved by this scoped LC12 result.
+
 ## R3 — independent enforcement
 
 Three categories remain separate: native proposal correctness; host decision correctness; actual protected execution (PROHIBITED). F04 OFF is NOT_EVALUATED unless a separate non-dispatch decision comparator is explicitly defined. Original legacy enrollment remains BLOCKED for this capture schema. Current compatibility only enrolls authentic captures and calls the unchanged authorization function; it does not exercise atomic dispatcher, ProvenanceBridge, TOCTOU defenses or a new hardened policy. A hardened candidate needs its own reviewed semantics, legitimate preservation, unauthorized denial, coverage and measured decision latency. ECMA-430/434 conformance is a separate NOT_EVALUATED claim.
