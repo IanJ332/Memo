@@ -1,5 +1,20 @@
 # Project State
 
+## Current: R1 COMPLETE — October 26, 2026
+
+`R1EX-20261026-02`: **32/32 requests, 32 authorized proposals**, zero unauthorized,
+abstentions, malformed or UNKNOWN outcomes. Current exposure 32/32; historical
+exposure 16/16 CONFLICT; eight zero contrasts, aggregate 0.0. Reported usage
+31,216 tokens includes 7,713 reasoning tokens within completion. Independent
+evidence audit PASS, cleanup 80/80 owned resources absent, VM ACTIVE → ACTIVE.
+The [closeout](../research/R1_CLOSEOUT_20261026.md) reconciles the native SDK
+journal to **432 calls** and documents unchanged original evidence and the
+verified private scientific-subset backup. No new collection or replay is
+authorized. The root AGENTS.md routing/browser policy is the single policy.
+
+Earlier dated phase and preparation entries below are historical records;
+their prospective R1 instructions are superseded by the completed closeout.
+
 October 26 R1 engineering: the owner authorizes the narrow offline
 [m3.quad access amendment](../research/R1_ACCESS_AMENDMENT_20261026.md) and reviewed
 GitHub synchronization. Original Tier C pins, historical preparations and frozen

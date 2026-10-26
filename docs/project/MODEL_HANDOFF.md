@@ -1,5 +1,26 @@
 # Model Handoff — Start Here
 
+## Current: R1 complete and sealed — October 26, 2026
+
+`R1EX-20261026-02` completed **32/32** registered requests: 32 authorized native
+proposals, zero unauthorized, abstentions, malformed or UNKNOWN outcomes. Current
+memory was exposed 32/32; historical memory 16/16 CONFLICT. All eight registered
+block contrasts and their mean are zero. Independent evidence audit PASS;
+80/80 owned resources absent, recorded VM ACTIVE → ACTIVE. No new collection is
+authorized and no sealed attempt may be replayed.
+
+The [closeout](../research/R1_CLOSEOUT_20261026.md) and
+[Claims Register](../research/CLAIMS_REGISTER.md) are current. The sealed SDK
+journals contain **432** invocations/returns; the earlier derived total 424 was a
+summary error. Original evidence, audit, analysis and private Release remain
+unchanged; the verified backup is a scientific subset, not all administration.
+Routing and the separate local-browser permission boundary are authoritative in
+the root [AGENTS.md](../../AGENTS.md). Next research needs a separate registration
+and authorization; this closeout launches none.
+
+All dated preparation and execution-state entries below are historical context,
+superseded for current R1 status by this closeout.
+
 ## R1 access amendment — October 26, 2026
 
 The owner authorized autonomous offline engineering and independent review of the
@@ -8,11 +29,9 @@ It preserves original qualified source pins and scientific bytes; V2 packages
 bind original/effective source maps. The exact flavor is 4 vCPUs / 15,360 MiB;
 the provider remains 2 CPUs / 6 GiB / network none / one container. No live grant,
 native observation or model request is supplied by this amendment. Preserve the
-original `R1EX-20261026-01` package and both sealed October 25 attempts. Continue
-through independent source acceptance, reviewed synchronization, one replacement
-offline package and independent exact-package review before asking for a direct
-owner execution decision. Historical restrictions below retain their original
-scope; current readiness sequencing governs new preparation.
+original `R1EX-20261026-01` package and both sealed October 25 attempts. The
+replacement preparation and exact review sequence described by this historical
+entry was subsequently completed for `R1EX-20261026-02`; see the closeout above.
 
 ## LC12 independent audit — October 26, 2026
 

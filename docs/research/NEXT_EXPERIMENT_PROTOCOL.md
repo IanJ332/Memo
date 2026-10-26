@@ -1,5 +1,21 @@
 # R1 — prospective memory-necessity protocol v1
 
+## Dated execution result — October 26, 2026
+
+**COMPLETE: R1EX-20261026-02, 32/32 requests.** All 32 proposals were authorized;
+all eight block contrasts and the aggregate were zero. Current-memory exposure
+was 32/32; historical-memory exposure 16/16 CONFLICT. Independent audit PASS.
+The [closeout](R1_CLOSEOUT_20261026.md) contains all outcome classes, usage,
+cleanup, custody and the corrected 432-call SDK recount. No new collection or
+replay is authorized. This dated result does not amend the registered design or
+support general security/equivalence claims.
+
+## Preserved prospective registration
+
+The following original protocol, including its historical planned status and
+resource proposal, is retained as registration history, not a current instruction
+to execute or prepare another campaign.
+
 **PLANNED; NOT EXECUTED.** [Manifest](../../manifests/r1-memory-necessity-v1.json), [independent host ACL](../../manifests/r1-memory-necessity-host-acl-v1.json). Eight synthetic blocks derived from the existing A3 coexistence mechanism; four arms each = **32 registered requests**. This is a small falsifiability/measurement pilot, not a general attack-rate or provider comparison study.
 
 2026-10-25: conditional scientific acceptance and [offline integration](R1_READINESS.md)

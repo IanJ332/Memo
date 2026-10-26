@@ -14,6 +14,64 @@ Authoritative**.
 4. Read the experiment or provider documents linked from those files only when
    needed.
 
+## Current research status — 2026-10-26
+
+R1 execution `R1EX-20261026-02` is **COMPLETE and sealed**: 32/32 requests,
+32 authorized proposals, zero unauthorized proposals, all eight block contrasts
+zero. The [research closeout](docs/research/R1_CLOSEOUT_20261026.md) governs the
+current result and SDK-count correction. Neither this execution nor any earlier
+sealed attempt may be replayed. Current authority is offline research closeout
+and reviewed GitHub synchronization only: no new scientific collection, hosted
+model request, provider operation, SSH or Jetstream action. The recorded cleanup
+lifecycle was ACTIVE → ACTIVE; older SHELVED statements below are historical,
+not fresh infrastructure observations. Older phase directions do not reopen R1.
+
+## Persistent model routing and browser permission — 2026-10-26
+
+This is the single MEMO routing policy, updated by the owner's Model Routing
+Update v1.1 Part A. It supersedes older model-routing preferences without changing
+scientific protocols, frozen execution contracts or external approval gates.
+
+- **GPT-6.1 Sol (`gpt-6.1-sol`) is preferred for reasoning and engineering:**
+  tightly coupled or multi-module implementation, architecture, complex debugging,
+  scientific methodology and research decisions, difficult reviews,
+  security-critical analysis and substantial context integration. Use **Medium by
+  default**, **High** for difficult reasoning, debugging or substantial design
+  decisions, and **Extra High only exceptionally with justification**. Do not
+  routinely escalate to expensive models or effort settings.
+- **GPT-6.1 Terra (`gpt-6.1-terra`) is preferred when interface or computer
+  interaction materially benefits the task:** cross-application operations,
+  graphical navigation, web application workflows and browser interaction subject
+  to the separate approval boundary below. Use **Medium** for standard workflows
+  and **High** for complicated workflows or multi-step UI operations. Terra's
+  novelty or capabilities alone do not displace Sol for strongly coupled code,
+  architecture, science or difficult decisions.
+- For ordinary authorized work, the primary agent may autonomously choose
+  appropriate available models and Medium/High effort, delegate bounded tasks,
+  perform independent code or scientific reviews, parallelize genuinely
+  independent work, reuse verified artifacts and adjust implementation strategy.
+  No routine owner confirmation is needed for these choices. Balance quality,
+  scientific correctness, latency and token consumption; avoid repeated context
+  reloads, infrastructure discovery and reviews of unchanged artifacts. This
+  discretion supplies no additional execution authority.
+
+**Before ANY agent accesses or operates the owner's local browser, explicit
+separate owner approval is required.** This applies to Sol, Terra and every
+subagent, including read-only access: inspecting existing tabs or page contents,
+opening/navigating websites, clicking, forms, browser uploads/downloads,
+authenticated web applications and browser sessions through computer-use tools.
+
+Before access, disclose briefly: the objective; exact websites or applications;
+intended browser actions; whether personal information, credentials, files or
+authenticated sessions may be involved; and whether actions are read-only or may
+modify external state. **Then STOP and wait for explicit owner approval.** Do not
+open, inspect, navigate or control the local browser before approval. Approval
+covers only the disclosed scope; request renewed approval for a material change.
+General engineering instructions, live experiment grants and permission to use
+Terra do not imply browser permission. Sol may propose Terra delegation when
+resources or capabilities warrant it, but browser delegation still requires this
+approval. Browser permission never overrides platform security or action approval.
+
 ## Current authority clarification — 2026-10-25
 
 R0 is accepted and closed. R1's registered design is conditionally accepted;
