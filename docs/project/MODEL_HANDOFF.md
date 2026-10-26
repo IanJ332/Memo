@@ -1,5 +1,18 @@
 # Model Handoff — Start Here
 
+## Cross-architecture research sprint — October 25, 2026
+
+**Offline reanalysis complete; proposal READY_FOR_CLOUD_SCIENTIFIC_REVIEW.**
+The [consolidated handoff](../research/CROSS_ARCHITECTURE_SPRINT_20261025.md)
+reproduces 42 historical rows (41 SUCCESS, one preserved OpenViking ERROR),
+distinguishes exact-string visibility from lineage/content, and incorporates
+the retained authentic three-provider native qualifications. Zero new native
+observations. Proposed next collection: OpenViking direct-memory and Hindsight
+none/chunks, two conditions × three fresh stores each, deletion and reopen,
+zero hosted tokens. Review readiness is not execution readiness. No remote
+action/grant is authorized or activated; the stopped R2 identity and sealed R1
+attempts remain unchanged. The dated entries below are historical context.
+
 ## R2 owner authorization — 2026-10-26 UTC / October 25 local
 
 **STOPPED BEFORE ADMISSION; execution identity remains unclaimed.** Genuine

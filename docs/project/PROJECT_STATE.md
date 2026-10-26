@@ -1,5 +1,15 @@
 # Project State
 
+## Cross-architecture research sprint — October 25, 2026
+
+**Historical reanalysis complete / new native observations: zero.** See the
+[scientific handoff and remote proposal](../research/CROSS_ARCHITECTURE_SPRINT_20261025.md).
+The 42-row historical coverage retains 41 SUCCESS and the frozen OpenViking
+ERROR. A 12-unit OpenViking/Hindsight deletion/restart comparison is ready for
+Cloud scientific evaluation, with zero hosted requests/tokens. Execution remains
+unauthorized pending final implementation, exact owner/external permissions and
+resource admission. No R1 restart, blocked R2 reattempt or Jetstream action.
+
 ## R2 owner authorization — 2026-10-26 UTC / October 25 local
 
 **STOPPED PRE-ADMISSION / native NOT EXECUTED.** Genuine exact owner scope and
