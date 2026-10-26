@@ -1,5 +1,15 @@
 # Project State
 
+## LC12 implementation complete — October 25, 2026
+
+See the [executable engineering handoff](../research/CROSSARCH_IMPLEMENTATION.md).
+All twelve units and three checkpoints each are implemented; 59 focused offline
+tests pass. **BLOCKED on m3.small resource evidence**, not on scientific design
+or missing runner code. PR #13 is normally merged; no native/remote collection
+occurred. Disk peak remains UNKNOWN beyond the checked 10 GiB stop threshold.
+Final remote execution needs a resource-admitted target and exact owner/external
+authorization. Historical attempts/freezes remain unchanged.
+
 ## Cross-architecture research sprint — October 25, 2026
 
 **Historical reanalysis complete / new native observations: zero.** See the

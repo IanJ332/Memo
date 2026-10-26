@@ -1,0 +1,31 @@
+{
+  "basis": "RETAINED_20261023_QUALIFIED_CLIENTS_NO_HISTORICAL_CALLER_INVOCATION",
+  "files": {
+    "requirements/providers/mem0.txt": "e8ac9811f1bd379792a233ee9962a29c53d8a302ead491a3c1c5d6325affc718",
+    "scripts/native_qualification/mem0_a3_pilot.py": "1ab3041b78f431878cba8afbfea1b06c66e449e393ec00972430a878924a0b8f",
+    "scripts/native_qualification/mem0_a3_pilot_local.py": "ea1985827d3fd8b529a7076fd1be79e0842d2baea1a566f5a1c75876aff7bd75",
+    "scripts/native_qualification/qualify_mem0_runtime.py": "a93450cf364f5d6bc919b553f460af4c99fcb4ab1471444cb64fb768d1178de1",
+    "scripts/research/batch_embedding_service.py": "d92e27b023a9290d911a559662d2a104c94f001610e8cf1a54fd7490c03b1b59",
+    "scripts/research/batch_native_worker.py": "dc299988c51f7aba0cb4d1b2030f81ca87f15c9447a4f3191b9f2ea42053d721",
+    "scripts/research/batch_service_entry.py": "ac458a9d213898fb77a7d53baf0d162c8ebf32a2b47c2d09ae0d7376f91bd1a2",
+    "src/memlife/__init__.py": "6fba79e29e57cdaa90de01609eac4a4b2877646741349a5bedc8e09c036d7267",
+    "src/memlife/adapters/__init__.py": "0f2ec966134928eb40dad276b02599c79bdd040e344f48b6bdb4c0b299df006a",
+    "src/memlife/adapters/hindsight.py": "0ca0919c616774480c8326730dfe3cff4961a644ce429760945551fa4a3f0646",
+    "src/memlife/adapters/mem0.py": "cf244d7896a1787b0bac7fb2cc0f4fa59b5ba7070411bf1f8b458ba6f0a84d16",
+    "src/memlife/batch/__init__.py": "2ad853a35da62085cf1ce9d194c44915c511aabe6d1c3de9b26071618934f777",
+    "src/memlife/batch/binding.py": "c75abb6267e5e1de975516861628178a75b4817740b7e55f9f77778cd2e8d48d",
+    "src/memlife/batch/evidence.py": "822b806c979c69e558aaabdccd45f5f69f3ac87bc8775ac1466f1aca05bb2978",
+    "src/memlife/batch/jobs.py": "df84221a856e2c037785fe8b77c098c1eb8090299aa55a8a364951678b005a55",
+    "src/memlife/batch/ledger.py": "e93770f15b51cb53efcacc345f6fb0fbd6811c85fbcf6fff5f5a24badad335a1",
+    "src/memlife/batch/openviking_capture.py": "d0840e7544bceca256f4171b8d179b62316d9baafbab3a06da33b5fb77232367",
+    "src/memlife/batch/runtime.py": "c44f7c309942fb6890bfcd5b7f927db690ac167a8d6f5c92f5deca39b7c36be2",
+    "src/memlife/models/lifecycle.py": "cd24203fd6e1a67aa9102721aab7b5d183c482d3510fa0fe1e853dd61ab12d34",
+    "src/memlife/models/memory.py": "6b8faf4e5a497a9d76a39624f7b346dfd5a165b53f6ef3cb1ff55daeeadc10ea",
+    "src/memlife/native_provider_capture.py": "082a1ea240db639e3a8435435dfbfdf4fa284440cc66ca6b11355036adf505a9",
+    "src/memlife/research_collection.py": "a7b6bbe6d8ea8d35c8d88bb90e9f1a7f26f71808c9704bd25be402100e47c0a7",
+    "src/memlife/runner/phase08d3.py": "d7d6a28e92e1fcb894173cce9117899cb9c8a75e97469c54fb1915483d8b7749",
+    "tests/research/test_mem0_a3_pilot.py": "b674358b2850954c3b625b460051e0ec4671839beff444e3f832a80199de424e",
+    "tests/research/test_mem0_runtime_extraction.py": "7ed9896d0868d43c21264d3590d5978d7e1dd1d8f81b8dc59e72e8ab9e533809",
+    "tests/research/test_mem0_runtime_persistence_gate.py": "e6459acebf8706f1458b03e9f5e48acc6579d21fed9af7e95cc04e2db61eb98c"
+  }
+}
