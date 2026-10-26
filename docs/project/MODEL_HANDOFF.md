@@ -1,5 +1,22 @@
 # Model Handoff — Start Here
 
+## LC12 independent audit — October 26, 2026
+
+**PASS, scoped scientific evidence audit.** Subsequent run
+`lc12-20261026-live01` has 12/12 completed units and 36/36 raw-validated
+checkpoints. Initially exposed targets disappear after deletion and remain absent
+after reopen in both tested native modes; current content survives. See the
+[independent audit](../research/LC12_EVIDENCE_AUDIT_20261026.md)
+and updated [claims](../research/CLAIMS_REGISTER.md).
+The earlier admission stop below remains a separate unchanged record. Next
+priority is the existing registered R1 memory-necessity pilot under new exact
+authorization; no new experiment is authorized by this audit. Derived-state
+forgetting and downstream safety remain NOT_EVALUATED.
+
+**R1 continuation, October 26:** [offline verification and positioning](../research/R1_CONTINUATION_20261026.md)
+passed 62 focused controls; live approval path remains unproven. No new execution
+identity/package was created. Full independent LC12 backup remains outstanding.
+
 ## LC12 owner-authorized admission stop — October 26, 2026
 
 **STOPPED before campaign claim; zero native observations.** Approved source and

@@ -15,6 +15,11 @@
 | R1-03 | VERIFIED | Offline design binding, scoring and Tier C integration qualified; no R1 observations | [Readiness](R1_READINESS.md), [safe source/review summary](../../manifests/r1-integration-v1.json); reviewer acceptance is not owner authority or scientific data |
 | R2-01 | VERIFIED | Qualified no-LLM/direct-memory modes expose native persistent state | Provider modes and limitations in roadmap; no fullarchitecture inference |
 | R2-02 | BLOCKED | Derived-memory revocation/lineage across all providers | Requires actual supported native transitions and separately costed internal inference if needed |
+| LC12-01 | VERIFIED | Run `lc12-20261026-live01`: exact 12 units, 36 checkpoints, 72 queries; original capture/selection/reopen/snapshot bindings independently checked | [Independent audit](LC12_EVIDENCE_AUDIT_20261026.md), [safe identities and counts](evidence/lc12-audit-summary.json); 3 stores per arm, not 6 independent queries |
+| LC12-02 | OBSERVED | In both providers and conditions, target raw/selected exposure 6/6 → 0/6 → 0/6; direct target lookup 200 → 404 → 404 in 3/3 stores | Authentic HTTP entities and native inventories; OpenViking direct-memory and Hindsight none/chunks only; initial → post-delete → post-reopen |
+| LC12-03 | OBSERVED | Current content survives: 36/36 direct lookups and 72/72 raw/selected query observations; no measured reopen reappearance | [Audit results](LC12_EVIDENCE_AUDIT_20261026.md#recomputed-results); preservation of fixture-authorized content, not provider authority enforcement |
+| LC12-04 | NOT_EVALUATED | Derived-memory deletion/propagation, full lineage, model behavior, host denial effectiveness and downstream safety | No inference-derived state or decision-model exposure; historical Hindsight mixed lineage remains separate |
+| LC12-05 | UNSUPPORTED | LC12 proves secure physical erasure, complete forgetting, general provider security or downstream safety | Only bounded native deletion/nonvisibility and reopen persistence were tested |
 | R3-01 | PLANNED | Compare reviewed decision semantics while preserving utility | Authentic challenge coverage, OFF/legacy/hardened kept separate |
 | STD-01 | NOT_EVALUATED | ECMA-430/434 protocol conformance | Requires explicit conformance evidence |
 
