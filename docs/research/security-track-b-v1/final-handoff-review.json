@@ -1,0 +1,43 @@
+{
+  "schema": "memo-track-b-final-handoff-review-v1",
+  "reviewed_at_utc": "2026-10-27 14:59:03 UTC",
+  "conversation": "MEMO Track B bounded independent final handoff review, delegated by root",
+  "model": "GPT-6.1 Sol",
+  "execution_target": "/Users/ian/.codex/worktrees/memo-security-track-b/Memo; offline document and local identity review",
+  "jetstream_action": "NONE",
+  "accepted_revision": "effda0c053bf03723b8089bc331e6b152ef9ab31",
+  "decision": "ACCEPT",
+  "scope": "Only the new README.md, TRACK_A_ADMISSION_STOP.md, SOURCE_BINDING.json and four top-only project-navigation additions. This supplements and preserves the prior scientific review; it does not replace or reopen it.",
+  "prior_review": {
+    "path": "docs/research/security-track-b-v1/INDEPENDENT_SCIENTIFIC_REVIEW.json",
+    "sha256": "8a463b8a8e54e6bd466cbc198e66aee95e738f70ca2e61b19c08455fd03971b5",
+    "all_18_bound_hashes_unchanged": true,
+    "accepted_test_evidence": "Existing 40 passing cases: 24 source probes and 16 independent defense cases; zero failures/skips. No tests rerun during this bounded handoff review."
+  },
+  "checks": {
+    "scientific_overclaim": "PASS. B1/B2 remain measurement-integrity defects; metadata control and known-ID preconditions are explicit. B3 remains a synthetic normalizer hazard. TAG/selection behavior and scripted message data are not promoted into native/model/delegation exploits. RQ4 context mediation is separate from proposal ACL classification and zero dispatch. Missing bindings retain their utility cost; population inference and broad novelty claims are rejected.",
+    "track_a_status": "PASS against root-supplied administrative status. Owner authorization followed by owner-ordered pre-admission stop is distinguished from unapproved/inactive grant candidates. All 32 slots remain unobserved, point estimates not estimable, vacuous bounds not effects or confidence intervals, window expired, output unclaimed. No current VM observation or cleanup is invented. Future live gates remain separate.",
+    "privacy": "PASS for the reviewed public-facing text. No original owner messages, grants, credentials, administrative receipt payloads or archive contents are embedded. Package/execution/archive identities and content digests are disclosed as bounded provenance. Same-host/filesystem backup is explicitly not independent disaster backup.",
+    "source_binding_local_identity": "PASS. For each of the four entries, locally computed Git blob SHA-1 and UTF-8 character count match SOURCE_BINDING.json. Accepted src/manifests have no working-tree changes.",
+    "source_binding_external_provenance_limit": "Root reports actual GitHub connector fetches at the accepted revision and byte comparisons. This offline reviewer checked their local content identities but did not independently refetch GitHub or access the network.",
+    "administrative_evidence_limit": "Private Track A archive and roster-analysis payloads were not reopened. Their status and exact digests were compared to root-provided facts. This review is not a scientific evidence audit of uncollected data.",
+    "navigation_preservation": "PASS. Four diffs contain only new current top sections: DEBUGGING_LEDGER +19/-0, EXPERIMENT_LEDGER +13/-0, MODEL_HANDOFF +18/-0, PROJECT_STATE +16/-0, total +66/-0. Historical sections remain intact.",
+    "whitespace": "git diff --check: PASS",
+    "unchanged_source": "git diff --exit-code -- src manifests: PASS"
+  },
+  "track_a_root_supplied_administrative_digests": {
+    "archive_and_same_host_backup_sha256": "24d30a415edc31882024311534cc1c1768725114e5ff4b33fc87744efeea411e",
+    "derived_unobserved_roster_analysis_sha256": "5c47c6bf06fd9a366696da4db1a0386a935897289fdd6fdc11355f08004022c3"
+  },
+  "remaining_findings": [],
+  "authorization": "Document review only; no live/native/model/network/browser/infra action, grant activation, package admission, historical reclassification or production repair is authorized. Track A stop remains in force.",
+  "reviewed_sha256": {
+    "docs/research/security-track-b-v1/README.md": "33fab420a141cd770c2b4a151fcdc467fe680c31d2401fded5b80e6e161de5e5",
+    "docs/research/security-track-b-v1/TRACK_A_ADMISSION_STOP.md": "b89dbf649cd3926556fd3436b04fc1017da1f2138b5ad8535b786f6b8727a549",
+    "docs/research/security-track-b-v1/SOURCE_BINDING.json": "e78236be5e9506ebf7c3ea89de1f7ec1bbe760c1061f0cd722cacc520a7cdb53",
+    "docs/project/MODEL_HANDOFF.md": "fbd5d2f1b7b6926edcc7d1f9900e8d9e9b07d43fbcd5bb58fb010df4e9735bf1",
+    "docs/project/PROJECT_STATE.md": "901097e6542f9fe63f5521f57591957589b043bda07db704daacefe1846f7369",
+    "docs/project/EXPERIMENT_LEDGER.md": "2e602dc8e4fa4d91833bd583c4b4c74b36712c6da02014af82f0b1ee0e2a46fc",
+    "docs/project/DEBUGGING_LEDGER.md": "1a27851049452c53cec278d0d5782457b1774b5632c9e68b3e619dbee11b6e2b"
+  }
+}

@@ -1,5 +1,23 @@
 # Model Handoff — Start Here
 
+## Current: Track B research complete; Track A stopped — October 27, 2026
+
+Track A `R1AVEX-20261026-01` is **STOPPED PRE-ADMISSION** by direct owner decision:
+no genuine supported external approval reference was available. Its local
+non-generating runtime check passed, but zero scientific/native/remote operations
+followed; grant candidates remain unapproved and output unclaimed. All 32 slots
+are unobserved. The original window has expired; do not restart or replace it
+without fresh authorization. [Admission closeout](../research/security-track-b-v1/TRACK_A_ADMISSION_STOP.md).
+
+[Independent Track B research](../research/security-track-b-v1/README.md) is
+complete offline: two verified authority-exposure measurement defects, one
+conditional normalization hazard, **40 tests passed**, independent review ACCEPT.
+These are not demonstrated protected-action exploits. Production/frozen source
+and R1/R2/LC12 evidence are unchanged; the defects are documented, not repaired.
+Next proposed work is the bounded offline NEXT-LP-01 correlation-completeness
+experiment. No new native/model/provider/SSH/Jetstream/browser action is authorized.
+Earlier dated current headings below retain their historical scope.
+
 ## Current: R1-AV-v1 offline architecture — October 26, 2026
 
 The separately registered **R1-AV-v1** architecture is implemented and accepted

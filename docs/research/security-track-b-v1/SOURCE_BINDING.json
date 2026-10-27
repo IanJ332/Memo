@@ -1,0 +1,31 @@
+{
+  "source_revision": "effda0c053bf03723b8089bc331e6b152ef9ab31",
+  "repository": "IanJ332/Memo",
+  "retrieval": "GitHub connector fetch_file at exact revision; UTF-8 actual content byte-for-byte comparison to isolated accepted checkout",
+  "files": [
+    {
+      "path": "src/memlife/models/authority.py",
+      "github_blob_sha": "8479f5f7ff42d5a61a46f68f06f391bdbd550825",
+      "utf8_content_matches": true,
+      "characters": 5038
+    },
+    {
+      "path": "src/memlife/runner/provenance.py",
+      "github_blob_sha": "c8f13badfd2640b7b296eed8e1d9ce4f02546075",
+      "utf8_content_matches": true,
+      "characters": 13418
+    },
+    {
+      "path": "src/memlife/runner/storage_batch.py",
+      "github_blob_sha": "f4861bc2406a1d0aa69afac700d4062de05d14ec",
+      "utf8_content_matches": true,
+      "characters": 41358
+    },
+    {
+      "path": "src/memlife/enforcement/filters.py",
+      "github_blob_sha": "a9a9ad1914883f1ff1fbb94b03da5b864bfca758",
+      "utf8_content_matches": true,
+      "characters": 4095
+    }
+  ]
+}

@@ -1,5 +1,21 @@
 # Project State
 
+## Current: independent security research complete — October 27, 2026
+
+Track B found two reproducible correlation/authority-exposure scoring defects:
+provider metadata can claim host event identity, and incomplete lineage can lose
+its uncertainty. **40 deterministic offline tests passed; independent review
+ACCEPT.** No protected-action bypass or native/model exploit was demonstrated;
+production source was not repaired. See the [research handoff](../research/security-track-b-v1/README.md).
+
+Track A is owner-ordered **STOPPED PRE-ADMISSION / SCIENTIFIC COLLECTION
+NOT_EXECUTED** because supported external approval was unavailable. Zero requests
+or native/remote operations; unchanged package, unapproved grants, unclaimed
+output, 32 unobserved slots. Its original window expired. Preserved private
+administrative evidence is distinct from scientific evidence; local backup is
+not independent disaster backup. No attempt may be replayed or replaced without
+fresh authorization. Earlier R1/R2/LC12 evidence and dated entries remain intact.
+
 ## Current: R1-AV-v1 implemented offline — October 26, 2026
 
 [Offline architecture](../research/r1-av/README.md): independent scientific and
