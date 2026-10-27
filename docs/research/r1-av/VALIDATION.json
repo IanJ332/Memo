@@ -1,0 +1,28 @@
+{
+  "experiment": "R1-AV-v1",
+  "status": "OFFLINE_IMPLEMENTATION_ACCEPTED_SCIENTIFIC_NOT_EXECUTED",
+  "validation": {
+    "passed": 131,
+    "subtests_passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "log_sha256": "fc0989dac0bef3f9e947ee70bf35a26878373fb6968c21df0a623bd29ff12f6b"
+  },
+  "scientific_review": "ACCEPT",
+  "engineering_review": "ACCEPT",
+  "exact_package_review": "ACCEPT",
+  "prospective_execution_id": "R1AVEX-20261026-01",
+  "package_sha256": "9caa4892861d44e20c1478b37b59326224361a3d307e222c5f3e5a3a800abdf1",
+  "owner_grant": "UNAPPROVED",
+  "campaign_claimed": false,
+  "live_execution": "NOT_AUTHORIZED",
+  "scientific_collection": "NOT_EXECUTED",
+  "hosted_scientific_model_requests": 0,
+  "provider_operations": 0,
+  "Jetstream_actions": 0,
+  "SSH_actions": 0,
+  "browser_access": false,
+  "protected_dispatches": 0,
+  "Freeze_v1_canonical_sha256": "0e02a86deb1864ecfc0627d4f313642454101b73fa02acdbe6bbc34479fd349b",
+  "frozen_history_modified": false
+}

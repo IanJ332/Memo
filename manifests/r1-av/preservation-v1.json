@@ -1,0 +1,30 @@
+{
+  "baseline": "4c4481ec20aa40c08b48bc882b8c4eb16a98faff",
+  "files": {
+    "manifests/r1-access-amendment-v1.json": "d55ffacbb6283304bccae3139cc2feabd78e62575965bb8ca36f2c738d1cb3b2",
+    "manifests/r1-integration-v1.json": "e1e00df0a735741c3884973f8a4dfa1ab102637dab95c06b289c5b6e5acc2dc2",
+    "manifests/r1-live-backup-20261025-02.json": "f799e52730b9de6b7da4f77f7ac806d441c0057e05416952054c05a8f0813d73",
+    "manifests/r1-live-backup-20261025.json": "558cc6cb9c5a54698f0c34c4492b967427e57f1a695570ae3bffacf36dab9470",
+    "manifests/r1-memory-necessity-host-acl-v1.json": "01bea38cdcafde30f6a6bcd612b3ecc072d04a8360932fe699b45489272a203f",
+    "manifests/r1-memory-necessity-v1.json": "a00453a0187013295b46e43ca9a8db048862028b6c92bdd5efcc6b51a5ac09e4",
+    "manifests/r1-qualified-source-pins-v1.json": "9780fc908fae6edd613377f1248463d69d3cda3b6216de73e5c39ee105fc5fa4",
+    "manifests/r2-execution-contract-v1.json": "31a7440d9c561f24752fd6367514a99461756bf357bca859858d0bf6227b2c50",
+    "manifests/r2-lifecycle-candidate-v1.json": "518a7ae2ed953663f774a3d17d5f95908b20a63e080245e302010f47db6bd33d",
+    "scripts/research/r1.py": "3a30812cd64a576d7c7dd951f894a8a8681039da7f64c6f720500df93b3b9b12",
+    "scripts/research/r2.py": "236fbedd0bbff05d6191bb365bb085a5c6f2399bd61b50b80560fe84509a9c84",
+    "scripts/research/r2_execution.py": "dc634b6cec307ca180d118d4890d142cb8e003ff8d44131d03fc4350e701d6bd",
+    "src/memlife/r1/__init__.py": "b8f7132bdfe545a8a0df4a83c886af4bbebe6bd406c88d715367c21bc3a0f49c",
+    "src/memlife/r1/access_compat.py": "79ecf0493790268ef740908d724882173b0f500635a24f3e97a1e1b0fccc365f",
+    "src/memlife/r1/bridge.py": "0c7424112e9b291a27857b01469ca0141acf73bf0a1ce52caa17ca97fd445d58",
+    "src/memlife/r1/collection.py": "3e0e8d08fc87f99676506f012ee52582d53f15bc7f12b023c8a27b1c94b44732",
+    "src/memlife/r1/contract.py": "9c79e88d993166cab76165cfec45b735d27bc2341a31574e971bee96a5adf2f0",
+    "src/memlife/r1/protocol.py": "7949c12f25dfff5b5e954778d9d8330453a1972cfa295b0f6133b0d3f65ec69e",
+    "src/memlife/r2.py": "0fcc528b072fc9f012a6ef2ba895cf5f1a9dca15b20f758ab6f0e900bcb888ef",
+    "src/memlife/r2_execution.py": "1e182ccbe21542c223ec20efab018d5c5b5b3fbdf99fa8b4c738ddb3c0614966",
+    "tests/research/test_r1.py": "5cb2920ecd53cd7a2978d2e3fb096a91c2af4e052c7f6098cdc2a838ab63f412",
+    "tests/research/test_r1_access_compat.py": "7d1594645804337b9381cb623706b798143417c420cfd7f345151fc84fcaf023",
+    "tests/research/test_r1_volume_admission.py": "740b3be8c8d1c4c41b935cd70bdbf4e8822d3f91b90eed659140ec75df1a0c96",
+    "tests/research/test_r2.py": "ea027ff816a5d580adf9afc1d8016e39d39cf0d69965c607624c0a41bf31cc70",
+    "tests/research/test_r2_execution.py": "ce881c5fd214523cf912756c7d5f895ff05df7babce979ab887057c11ba1473c"
+  }
+}

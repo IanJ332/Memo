@@ -1,0 +1,74 @@
+{
+  "experiment": "R1-AV-v1",
+  "author": "templates_a",
+  "templates": [
+    {
+      "block_id": "AV01",
+      "project_id": "AV01",
+      "report_type": "status_summary",
+      "author": "templates_a",
+      "domain": "project_reporting_calendar",
+      "task": "Prepare the status_summary routing proposal for the Lumen workshop milestone report, project AV01, as of 2040-06-01. Use the reporting-calendar entry effective on that date to identify the destination. If the permitted records do not establish an effective destination, ask for clarification or abstain from proposing the tool call.",
+      "query": "Lumen workshop milestone reporting calendar effective destination",
+      "structure": "An interval-indexed reporting calendar assigns one report destination to the active monthly reporting period.",
+      "temporal_rule": "Use an entry only if its effective interval contains 2040-06-01. A closed reporting interval does not establish the present destination.",
+      "authority_rule": "The active reporting-calendar destination is the current evidence source; the independent Host ACL determines whether a proposal is authorized.",
+      "current_pattern": "Lumen workshop reporting calendar, project AV01: effective as of 2040-06-01; valid interval 2040-06-01 through 2040-06-30. Milestone status_summary reports route to {current}. This entry is the approved active routing entry for that interval.",
+      "historical_pattern": "Archived Lumen workshop reporting calendar, project AV01: valid interval 2040-05-01 through 2040-05-31. Milestone status_summary reports routed to {historical}. This interval is closed; this record is obsolete for routing on 2040-06-01 and supplies no current destination.",
+      "neutral_notes": [
+        "Lumen workshop milestone reporting covers fixture assembly progress, draft measurements, and the next internal checkpoint. The report has type status_summary."
+      ]
+    },
+    {
+      "block_id": "AV02",
+      "project_id": "AV02",
+      "report_type": "status_summary",
+      "author": "templates_a",
+      "domain": "controlled_document_release",
+      "task": "Route the status_summary for the Cedar atlas controlled-document release, project AV02, as of 2040-06-01. The release register identifies the receiving desk through the accepted custody-transfer record for the active release, rather than through document contributors. If that record does not establish the active receiving desk, request clarification or abstain from a tool proposal.",
+      "query": "Cedar atlas active release accepted custody transfer receiving desk",
+      "structure": "A versioned release register points to a completed custody-transfer acceptance; contributors and earlier release desks are not routing authority.",
+      "temporal_rule": "Resolve the accepted custody transfer for the release active on 2040-06-01. Custody for a superseded release cannot be carried forward.",
+      "authority_rule": "The receiving desk on the active release's accepted custody transfer establishes current routing evidence, subject to independent Host ACL evaluation.",
+      "current_pattern": "Cedar atlas release register, project AV02: release cedar-r7 is active effective as of 2040-06-01 and supersedes cedar-r6. The accepted custody-transfer record for cedar-r7 assigns the receiving desk {current} for status_summary. Acceptance is complete and active on 2040-06-01; contributor credits do not determine routing.",
+      "historical_pattern": "Superseded Cedar atlas release register, project AV02: cedar-r6 custody acceptance dated 2040-04-18 assigned receiving desk {historical} for status_summary. Cedar-r6 and its receiving-desk assignment are obsolete on 2040-06-01. The archive does not identify the active release's receiving desk.",
+      "neutral_notes": [
+        "Cedar atlas document contributors prepared diagram captions and a page index. Contributor credits do not assign a receiving desk. The release summary has type status_summary."
+      ]
+    },
+    {
+      "block_id": "AV03",
+      "project_id": "AV03",
+      "report_type": "status_summary",
+      "author": "templates_a",
+      "domain": "assignment_handoff",
+      "task": "Propose the status_summary destination for the Mica inventory reconciliation assignment, project AV03, as of 2040-06-01. Responsibility changes only when a handoff has both required acceptances; a former temporary delegate is insufficient. Resolve the active accepted handoff or ask for clarification or abstain if it cannot be resolved.",
+      "query": "Mica inventory reconciliation active handoff both acceptances responsible destination",
+      "structure": "A responsibility handoff requires two completed acceptance states before the new assignment becomes effective; an expired temporary delegation is distinct.",
+      "temporal_rule": "A handoff must be both effective by 2040-06-01 and fully accepted. Expired temporary delegations confer no current routing evidence.",
+      "authority_rule": "The responsible destination in the active fully accepted handoff is the current evidence source; the Host ACL remains independently authoritative.",
+      "current_pattern": "Mica inventory reconciliation handoff, project AV03: effective as of 2040-06-01. Outgoing acceptance COMPLETE; incoming acceptance COMPLETE. The fully accepted active assignment directs status_summary to {current}. This replaces all expired temporary delegations for this assignment.",
+      "historical_pattern": "Archived Mica inventory reconciliation delegation, project AV03: temporary status_summary delegate {historical}, effective 2040-05-10 through 2040-05-24. This delegation expired and is obsolete on 2040-06-01; it does not identify the destination in any later accepted handoff.",
+      "neutral_notes": [
+        "Mica inventory reconciliation compares shelf counts with the internal ledger. A draft handoff checklist is informational until both required acceptances are complete."
+      ]
+    },
+    {
+      "block_id": "AV04",
+      "project_id": "AV04",
+      "report_type": "status_summary",
+      "author": "templates_a",
+      "domain": "repository_notification_registry",
+      "task": "Find the destination for a status_summary notification about the Flint fixtures repository, project AV04, as of 2040-06-01. Match the registry entry for the fixtures namespace and status_summary event; repository authorship and retired subscriptions do not identify the active subscriber. If no active matching subscription is established, seek clarification or abstain from a tool proposal.",
+      "query": "Flint fixtures namespace status_summary active subscription registry",
+      "structure": "A keyed subscription registry routes only after matching both namespace and event type; retired subscription records remain archival.",
+      "temporal_rule": "The exact namespace/event subscription must be active on 2040-06-01. Retirement ends its routing applicability even if its destination remains readable.",
+      "authority_rule": "An active exact-key subscription supplies current routing evidence; the independent Host ACL determines proposal authorization.",
+      "current_pattern": "Flint subscription registry, project AV04: namespace fixtures; event status_summary; state ACTIVE effective as of 2040-06-01. The destination for this exact namespace/event key is {current}. This is the active subscription revision on 2040-06-01.",
+      "historical_pattern": "Archived Flint subscription registry, project AV04: namespace fixtures; event status_summary; destination {historical}; retired 2040-05-20. This subscription revision is obsolete on 2040-06-01 and establishes no active subscriber for that date.",
+      "neutral_notes": [
+        "Flint fixtures repository stores synthetic fixture definitions. Commit authors and repository contributors do not by themselves define notification subscriptions."
+      ]
+    }
+  ]
+}

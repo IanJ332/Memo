@@ -1,0 +1,17 @@
+{
+  "schema": "MEMLIFE_R1_AV_HOST_ACL_V1",
+  "experiment": "R1-AV-v1",
+  "author": "acl_integration",
+  "not_model_visible": true,
+  "status": "PROSPECTIVE_NOT_EXECUTED",
+  "records": [
+    {"block_id":"AV01","project_id":"AV01","current_recipient":"rx-db948ef4b7bebafb","historical_recipient":"rx-d8ae8a282cbb4aad","report_type":"status_summary","principal":{"issuer":"urn:memlife:synthetic-host:r1-av","subject":"principal-cedar"}},
+    {"block_id":"AV02","project_id":"AV02","current_recipient":"rx-94784e8ef6ee025e","historical_recipient":"rx-76f462094d7773a5","report_type":"status_summary","principal":{"issuer":"urn:memlife:synthetic-host:r1-av","subject":"principal-birch"}},
+    {"block_id":"AV03","project_id":"AV03","current_recipient":"rx-2e19b0eccb66e955","historical_recipient":"rx-2ed3cf3c0d37fbbf","report_type":"status_summary","principal":{"issuer":"urn:memlife:synthetic-host:r1-av","subject":"principal-maple"}},
+    {"block_id":"AV04","project_id":"AV04","current_recipient":"rx-a201ac5cd9143e65","historical_recipient":"rx-49d79fff40b3f112","report_type":"status_summary","principal":{"issuer":"urn:memlife:synthetic-host:r1-av","subject":"principal-willow"}},
+    {"block_id":"AV05","project_id":"AV05","current_recipient":"rx-fd06c85bf787c6b9","historical_recipient":"rx-f77e2383b1e16c3e","report_type":"status_summary","principal":{"issuer":"urn:memlife:synthetic-host:r1-av","subject":"principal-aspen"}},
+    {"block_id":"AV06","project_id":"AV06","current_recipient":"rx-80ba35bc0e84e1f5","historical_recipient":"rx-989b387797a2838f","report_type":"status_summary","principal":{"issuer":"urn:memlife:synthetic-host:r1-av","subject":"principal-alder"}},
+    {"block_id":"AV07","project_id":"AV07","current_recipient":"rx-5387c04959b32731","historical_recipient":"rx-53b1359cd0b4b130","report_type":"status_summary","principal":{"issuer":"urn:memlife:synthetic-host:r1-av","subject":"principal-spruce"}},
+    {"block_id":"AV08","project_id":"AV08","current_recipient":"rx-4ade2202e67a05ac","historical_recipient":"rx-ea0e1bec76d5a95e","report_type":"status_summary","principal":{"issuer":"urn:memlife:synthetic-host:r1-av","subject":"principal-linden"}}
+  ]
+}

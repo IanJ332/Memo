@@ -1,0 +1,89 @@
+{
+  "accepted": true,
+  "effective_sources": {
+    "public:src/memlife/r1/collection.py": {
+      "effective_sha256": "c0a517e4d7e4b687c7b8dd0ed9b3f83a0abfcc7900923ae4020ad8f854375121",
+      "original_sha256": "3e0e8d08fc87f99676506f012ee52582d53f15bc7f12b023c8a27b1c94b44732"
+    },
+    "public:src/memlife/r1/contract.py": {
+      "effective_sha256": "0f993c948d62414deaf5f065b65fe48c17f46dceec6244e23e0ee5f584ab5c45",
+      "original_sha256": "9c79e88d993166cab76165cfec45b735d27bc2341a31574e971bee96a5adf2f0"
+    },
+    "src/memlife/tier_c_bounded/access.py": {
+      "effective_sha256": "681abac6347a57d194cf3ad25789ecb093f88ad04e175ae335e44ab4b31e37a9",
+      "original_sha256": "f1a233f99d3539186baadf183efe3b2609d83a7bd68967df8063e329aa780196"
+    },
+    "src/memlife/tier_c_bounded/collection.py": {
+      "effective_sha256": "4343457f10147decdf381f210c60c2bb568698b9924e527b80076d7970780b39",
+      "original_sha256": "4343457f10147decdf381f210c60c2bb568698b9924e527b80076d7970780b39"
+    },
+    "src/memlife/tier_c_bounded/policy.py": {
+      "effective_sha256": "3c77ea6f667c69acd3b19f45883439226886b7d06faa1811a1188b6b9242f33a",
+      "original_sha256": "3c77ea6f667c69acd3b19f45883439226886b7d06faa1811a1188b6b9242f33a"
+    },
+    "src/memlife/tier_c_bounded/runner.py": {
+      "effective_sha256": "f0bc788d2e56b6b00e3c2498b21d843e59e71c751416943750db65076990a271",
+      "original_sha256": "1b187aa4c81afa558753055c0679db5ed717b5b70ce13b24016bc88e72b963ea"
+    },
+    "src/memlife/tier_c_bounded/supervision.py": {
+      "effective_sha256": "6a34a4005747d94877771875d6fb3ad6144ea24f94a89bd1c236f409737de4a2",
+      "original_sha256": "ec0f373f2d8e117f76b4f4d5e1b06b2204246cf7fdae4a8c7856fe489c45c1f3"
+    },
+    "src/memlife/tier_c_bounded/volume.py": {
+      "effective_sha256": "c6a9e5a61c925561cab6786c2ff36f3e26ecce8fdd5b68b4bc431f2fffe77925",
+      "original_sha256": "c6a9e5a61c925561cab6786c2ff36f3e26ecce8fdd5b68b4bc431f2fffe77925"
+    }
+  },
+  "experiment": "R1-AV-v1",
+  "independent_review": true,
+  "limitations": [
+    "External approval reference and JSON owner provenance are binding checks, not issuers of genuine authority. Future exact owner/platform approvals remain required.",
+    "Synthetic doubles do not qualify current provider, Docker, endpoint, VM or billing availability.",
+    "Exact-package review remains separate and has not been performed by this source receipt."
+  ],
+  "model": "GPT-6.1 Sol",
+  "preservation_sha256": "40faf03d5277f2845e758fbc5ab9df0a8040c66956f98c95a110fbce1ecd8dce",
+  "public_sources": {
+    "manifests/r1-access-amendment-v1.json": "d55ffacbb6283304bccae3139cc2feabd78e62575965bb8ca36f2c738d1cb3b2",
+    "manifests/r1-av/design-v1.json": "b81cb15d203ce566097ec6695cc5172079cb639fa0e031ed96bac867af34b5dc",
+    "manifests/r1-av/diversity-review-v1.json": "9c02be4c6c350845f650790015b92da45d9071d642e72e928d22ea8e26fdc3ab",
+    "manifests/r1-av/host-acl-v1.json": "0eef86dd50d75a4a6ed35b0ba8ab5aca58f08137d2e4a9595da5d4a152313275",
+    "manifests/r1-av/preservation-v1.json": "40faf03d5277f2845e758fbc5ab9df0a8040c66956f98c95a110fbce1ecd8dce",
+    "manifests/r1-av/registration-v1.json": "846b933926fb4aa8218aaaa8a1500547a3c97d95aabee227b47d776f6e10f29d",
+    "manifests/r1-av/templates-a.json": "2f7fda740b35976551893c4c4bbe8b3840d4a546c9660b71c93a427fea30f7b9",
+    "manifests/r1-av/templates-b.json": "2dc0979637c94dc8e3670cb6704b7079377956dffc87ff70609a70c75781fc46",
+    "manifests/r1-qualified-source-pins-v1.json": "9780fc908fae6edd613377f1248463d69d3cda3b6216de73e5c39ee105fc5fa4",
+    "scripts/research/r1_av.py": "dccac8a561861ac40cce165fa41279db6e7ec48e48c40877b9b2707fdb85388c",
+    "src/memlife/r1/__init__.py": "b8f7132bdfe545a8a0df4a83c886af4bbebe6bd406c88d715367c21bc3a0f49c",
+    "src/memlife/r1/access_compat.py": "79ecf0493790268ef740908d724882173b0f500635a24f3e97a1e1b0fccc365f",
+    "src/memlife/r1/bridge.py": "0c7424112e9b291a27857b01469ca0141acf73bf0a1ce52caa17ca97fd445d58",
+    "src/memlife/r1/collection.py": "3e0e8d08fc87f99676506f012ee52582d53f15bc7f12b023c8a27b1c94b44732",
+    "src/memlife/r1/contract.py": "9c79e88d993166cab76165cfec45b735d27bc2341a31574e971bee96a5adf2f0",
+    "src/memlife/r1/protocol.py": "7949c12f25dfff5b5e954778d9d8330453a1972cfa295b0f6133b0d3f65ec69e",
+    "src/memlife/r1_av/__init__.py": "d07e86fd0218ee249d68a4e80f37f41d1724873bb78964bd5d0c488aa4fa61e7",
+    "src/memlife/r1_av/audit.py": "8d9ca4970bd7e25da1514deca8f00c583a5066da615c1142b23b371e7ba9700b",
+    "src/memlife/r1_av/contract.py": "1490710772beba7796e24c93244e9568843ec1d2e2ca3baa7b922d254d285f3d",
+    "src/memlife/r1_av/native.py": "d1084283c4929e3e4b77f2775a477ca144dab945d538dab8261194cbb8743c48",
+    "src/memlife/r1_av/protocol.py": "beb518488f387dafc566e25b5e8e55dd49079dd1c0270a41eb583d9a0b337e47",
+    "src/memlife/r1_av/review.py": "389ff8b22a110839637622d20f7291b705430b6d8ba3606a2712cb52465db633",
+    "src/memlife/r1_av/runtime.py": "c3629260741a808ffd95a781f8647ef6cb6481cf499be9fd7735995b4bbc84c8",
+    "src/memlife/r1_av/synthetic.py": "a55e76f2193074ea8bec26430c4c3514f410f73157d27217a4b38b6c2c276889",
+    "tests/research/test_r1_av.py": "a369fbf01761d70c48d14c3aa84c01c4bcc616f678eceaf5d4065e1eab3ea5f3",
+    "tests/research/test_r1_av_runtime.py": "883e60eb52fe1920e0c8a918e5c43bb932e3e20fbff2ce51ad490c90e077be17"
+  },
+  "registration_sha256": "846b933926fb4aa8218aaaa8a1500547a3c97d95aabee227b47d776f6e10f29d",
+  "reviewer": "/root/engineering_review",
+  "schema": "MEMLIFE_R1_AV_ENGINEERING_SOURCE_REVIEW_V1",
+  "scientific_collection": "NOT_EXECUTED",
+  "scope": "OFFLINE_SOURCE_AND_ENGINEERING_ONLY_NO_SCIENTIFIC_OR_LIVE_AUTHORITY",
+  "unresolved_substantive_defects": [],
+  "validation": {
+    "after_final_change_affected_tests": 2,
+    "distinct_tests_covered": 131,
+    "errors": 0,
+    "failed": 0,
+    "full_focused_before_final_audit_assertion": 130,
+    "skipped": 0,
+    "subtests": 20
+  }
+}

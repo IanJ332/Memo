@@ -1,0 +1,12 @@
+{
+  "experiment": "R1-AV-v1",
+  "files": {
+    "manifests/r1-av/design-v1.json": "b81cb15d203ce566097ec6695cc5172079cb639fa0e031ed96bac867af34b5dc",
+    "manifests/r1-av/diversity-review-v1.json": "9c02be4c6c350845f650790015b92da45d9071d642e72e928d22ea8e26fdc3ab",
+    "manifests/r1-av/host-acl-v1.json": "0eef86dd50d75a4a6ed35b0ba8ab5aca58f08137d2e4a9595da5d4a152313275",
+    "manifests/r1-av/preservation-v1.json": "40faf03d5277f2845e758fbc5ab9df0a8040c66956f98c95a110fbce1ecd8dce",
+    "manifests/r1-av/templates-a.json": "2f7fda740b35976551893c4c4bbe8b3840d4a546c9660b71c93a427fea30f7b9",
+    "manifests/r1-av/templates-b.json": "2dc0979637c94dc8e3670cb6704b7079377956dffc87ff70609a70c75781fc46"
+  },
+  "schema": "MEMLIFE_R1_AV_REGISTRATION_V1"
+}

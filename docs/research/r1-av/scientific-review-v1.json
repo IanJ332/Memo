@@ -1,0 +1,54 @@
+{
+  "schema": "MEMLIFE_R1_AV_SCIENTIFIC_REVIEW_V1",
+  "experiment": "R1-AV-v1",
+  "decision": "ACCEPT",
+  "accepted": true,
+  "independent_review": true,
+  "reviewer": "/root/scientific_review",
+  "reviewer_model": "GPT-6.1 Sol",
+  "date_local": "2026-10-26",
+  "scope": "Scientific registration, templates, independent ACL, treatment/exposure semantics, outcomes, estimands, missing bounds, diversity limits and source implementation of measurement. Engineering and exact-package admission are separate.",
+  "files": {
+    "manifests/r1-av/registration-v1.json": "846b933926fb4aa8218aaaa8a1500547a3c97d95aabee227b47d776f6e10f29d",
+    "manifests/r1-av/design-v1.json": "b81cb15d203ce566097ec6695cc5172079cb639fa0e031ed96bac867af34b5dc",
+    "manifests/r1-av/templates-a.json": "2f7fda740b35976551893c4c4bbe8b3840d4a546c9660b71c93a427fea30f7b9",
+    "manifests/r1-av/templates-b.json": "2dc0979637c94dc8e3670cb6704b7079377956dffc87ff70609a70c75781fc46",
+    "manifests/r1-av/host-acl-v1.json": "0eef86dd50d75a4a6ed35b0ba8ab5aca58f08137d2e4a9595da5d4a152313275",
+    "manifests/r1-av/diversity-review-v1.json": "9c02be4c6c350845f650790015b92da45d9071d642e72e928d22ea8e26fdc3ab",
+    "manifests/r1-av/preservation-v1.json": "40faf03d5277f2845e758fbc5ab9df0a8040c66956f98c95a110fbce1ecd8dce",
+    "src/memlife/r1_av/protocol.py": "beb518488f387dafc566e25b5e8e55dd49079dd1c0270a41eb583d9a0b337e47",
+    "src/memlife/r1_av/native.py": "d1084283c4929e3e4b77f2775a477ca144dab945d538dab8261194cbb8743c48",
+    "src/memlife/r1_av/audit.py": "f511f70a315d793c8beea35c6daa1341c5d1bf65139dd7c621321c71386bc1f3",
+    "src/memlife/r1/protocol.py": "7949c12f25dfff5b5e954778d9d8330453a1972cfa295b0f6133b0d3f65ec69e",
+    "tests/research/test_r1_av.py": "bbcb94f5e98e564e0c7119d20bee540836ac480d16ed26bf1680662627c2daf0"
+  },
+  "report": {
+    "path": "docs/research/r1-av/SCIENTIFIC_REVIEW_03.md",
+    "sha256": "3e9e5792fcbff46cde5b8343028ebebc06f08f871d69f84b2d029d8b477e99bf"
+  },
+  "registration_sha256": "846b933926fb4aa8218aaaa8a1500547a3c97d95aabee227b47d776f6e10f29d",
+  "independent_checks": {
+    "pure_protocol_assertions_passed": 137,
+    "exhaustive_bound_equivalences_passed": 405,
+    "failed": 0,
+    "counts_are_not_pytest_tests": true
+  },
+  "limitations": [
+    "Fixed eight blocks with two author clusters; no IID/population sampling or confirmatory power.",
+    "One current answer-bearing note, often explicit conclusion; varied workflow framing does not prove multi-step reasoning.",
+    "Repeated AV05/AV07 relational join and shared broader families remain.",
+    "Exact sentinel is a controlled abstention endpoint; other unresolved no-native prose is unadjudicated.",
+    "No protected dispatch; host-defense effectiveness NOT_EVALUATED."
+  ],
+  "rejection_history": [
+    "docs/research/r1-av/SCIENTIFIC_REVIEW_01.md",
+    "docs/research/r1-av/SCIENTIFIC_REVIEW_02.md"
+  ],
+  "scientific_collection": "NOT_EXECUTED",
+  "hosted_scientific_requests": 0,
+  "native_provider_operations": 0,
+  "execution_authorized": false,
+  "owner_approval": false,
+  "external_platform_approval": false,
+  "exact_package_review": "SEPARATE_REQUIRED"
+}

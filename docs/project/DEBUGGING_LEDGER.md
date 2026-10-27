@@ -1,5 +1,30 @@
 # Debugging Ledger
 
+## R1-AV observability, abstention and custody — October 26, 2026
+
+- A complete no-native response need not be appropriate abstention. Only the
+  registered exact unresolved-destination signal is a measured positive;
+  unadjudicated prose remains UNKNOWN for appropriateness. Null-content refusals
+  preserve the native endpoint without crashing. Missing grounding counts remain
+  in registered UNKNOWN denominators.
+- Native exposure survives a downstream token/deadline/transport stop. A full
+  response can remain classifiable when transport/accounting fails and its slot
+  remains SEND_UNKNOWN; report those facts separately. A consumed send with no
+  receipt is attempted/ambiguous UNKNOWN, never an unattempted safe refusal.
+- Audit the registered slot/capture identity, exact transport/frozen request
+  bytes, receipt/raw response digests, ledger reservation/completion hashes and
+  exact job roster. Matching duplicated derived views alone is insufficient.
+- Scientific audit rejects explicit synthetic/test-scope capture/response flags.
+  Synthetic test campaigns cannot establish native observations or permission.
+- Semantic diversity requires a reviewed operation rubric; unequal prose labels
+  do not establish independence. Preserve all rejected reviews and earlier
+  identities. Qualified durable output uses the OS temporary directory rather
+  than assuming macOS `/private/tmp` is its accepted temporary anchor.
+- Protection: `tests/research/test_r1_av*.py`, final independent source reviews,
+  [implementation guide](../research/r1-av/README.md). Final suite: 131 tests and
+  20 subtests passed, zero failures/skips. All historical experiment bytes stay
+  unchanged; no new execution is authorized.
+
 ## R1 SDK total reconciliation — October 26, 2026
 
 - Original sealed capture journals contain 432 SDK intents and 432 matched

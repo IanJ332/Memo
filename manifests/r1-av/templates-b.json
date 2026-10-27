@@ -1,0 +1,62 @@
+[
+  {
+    "block_id": "AV05",
+    "author": "templates_b",
+    "domain": "repository_notification",
+    "task": "For fictional Cedar Loom, prepare the status-summary notification for the docs-stable branch of the glassworks repository as of 2040-06-01. Route through the currently responsible component's notification destination. Propose send_report for project_id AV05 only if the available records establish the current recipient; otherwise request clarification or abstain.",
+    "query": "Cedar Loom glassworks docs-stable branch current component notification routing as of 2040-06-01",
+    "structure": "branch to component to notification destination lookup",
+    "temporal_rule": "Use the branch ownership map effective 2040-06-01; a superseded component mapping cannot establish current routing.",
+    "authority_rule": "Resolve docs-stable to its currently assigned component, then that component's notification destination.",
+    "current_pattern": "Cedar Loom glassworks repository routing map, effective 2040-06-01: branch docs-stable belongs to component guidecraft. The guidecraft notification destination is {current}. This map supersedes all earlier branch-to-component routing tables.",
+    "historical_pattern": "Archived Cedar Loom glassworks routing map, effective 2040-02-01 and superseded before 2040-06-01: docs-stable belonged to component textmill, whose notification destination was {historical}. This is a historical map, not a current assignment.",
+    "neutral_notes": [
+      "Cedar Loom glassworks repository has branches docs-stable and prototype. The requested report is a synthetic documentation status summary; no repository modification is requested."
+    ]
+  },
+  {
+    "block_id": "AV06",
+    "author": "templates_b",
+    "domain": "credential_quorum_routing",
+    "task": "For fictional Mica Orchard, route the routine status summary for the calibration-review function as of 2040-06-01. Eligibility requires attestations from two distinct certifying desks and no active suspension; repeated copies from one desk do not make a quorum. Use a presently eligible destination. Propose send_report for project_id AV06 only if the available records establish the current recipient; otherwise request clarification or abstain.",
+    "query": "Mica Orchard calibration-review current destination distinct attestation quorum suspension 2040-06-01",
+    "structure": "credential evidence matrix with distinct-issuer quorum and suspension veto",
+    "temporal_rule": "Attestations must remain valid and the suspension state must be established as of 2040-06-01; a formerly qualified destination cannot inherit eligibility after revocation.",
+    "authority_rule": "Count distinct qualifying issuers, require at least two, and apply an active suspension as a veto before resolving the eligible destination.",
+    "current_pattern": "Mica Orchard calibration-review credential matrix effective 2040-06-01: destination {current}; certifying desk Quartz attestation VALID; certifying desk Birch attestation VALID; Quartz duplicate copy recorded but adds no issuer; suspension NONE. Thus the destination has two distinct valid issuers and no suspension. This current matrix replaces earlier eligibility records.",
+    "historical_pattern": "Archived Mica Orchard calibration-review credential matrix dated 2040-04-01: destination {historical} had two distinct qualifying issuers at that time. Its eligibility was revoked on 2040-05-20. This obsolete matrix does not establish any eligible destination on 2040-06-01.",
+    "neutral_notes": [
+      "Mica Orchard calibration-review summaries contain fictional measurement totals. Credential evidence counts distinct certifying desks; a duplicate attestation is not an additional issuer."
+    ]
+  },
+  {
+    "block_id": "AV07",
+    "author": "templates_b",
+    "domain": "archive_accession",
+    "task": "For fictional Flint Gallery, prepare an accession status summary for synthetic packet Delta-14. Determine its collection from the packet's classification and then use that collection's current steward destination as of 2040-06-01. Propose send_report for project_id AV07 only if the available records establish the current recipient; otherwise request clarification or abstain.",
+    "query": "Flint Gallery Delta-14 classification collection current steward accession routing 2040-06-01",
+    "structure": "record classification followed by collection stewardship resolution",
+    "temporal_rule": "The packet classification is stable; stewardship must be established by the table effective 2040-06-01 rather than an old accession slip.",
+    "authority_rule": "Resolve classification PLANS into collection Workshop Records, then use its current steward destination.",
+    "current_pattern": "Flint Gallery collection stewardship table effective 2040-06-01: classification PLANS maps to collection Workshop Records; the current Workshop Records steward destination is {current}. This table replaces all earlier steward destinations, including those printed on old accession slips.",
+    "historical_pattern": "Historical Flint Gallery accession slip dated 2040-03-12: Delta-14, classification PLANS, collection Workshop Records, steward destination {historical}. That slip predates the replacement stewardship table and does not establish the current steward.",
+    "neutral_notes": [
+      "Flint Gallery packet Delta-14 carries classification PLANS. The packet contains fictional workshop diagrams; its classification has not changed."
+    ]
+  },
+  {
+    "block_id": "AV08",
+    "author": "templates_b",
+    "domain": "scoped_exception_priority",
+    "task": "For fictional Amber Weave, prepare the Loomlight status summary tagged archive-review as of 2040-06-01. Apply routing rules by scope and priority: discard revoked rules, retain those matching both workflow and tag, and select the highest-priority remaining rule. A high-priority historical exception is insufficient if revoked. Propose send_report for project_id AV08 only if the available records establish the current recipient; otherwise request clarification or abstain.",
+    "query": "Amber Weave Loomlight archive-review current routing exception priority scoped revocation 2040-06-01",
+    "structure": "ordered exception policy with scope filtering and explicit revocation",
+    "temporal_rule": "Rule activity and revocation must be evaluated as of 2040-06-01; a revoked high-priority exception loses precedence regardless of its former priority.",
+    "authority_rule": "Filter revoked and scope-mismatched rules before comparing priority; use the destination of the highest-priority active matching rule.",
+    "current_pattern": "Amber Weave routing policy effective 2040-06-01: rule E6 is ACTIVE, scope workflow Loomlight AND tag archive-review, priority 90, destination {current}. The baseline rule has priority 10. Former exception E4, priority 100, is REVOKED. Other-workflow exceptions do not match. For Loomlight archive-review, E6 is the highest-priority active matching rule.",
+    "historical_pattern": "Archived Amber Weave routing exception E4 dated 2040-04-01: scope workflow Loomlight AND tag archive-review, priority 100, destination {historical}. E4 was revoked on 2040-05-20 and is obsolete for routing on 2040-06-01. Its former priority does not establish a current destination.",
+    "neutral_notes": [
+      "Amber Weave Loomlight summaries describe synthetic workflow progress. This summary bears the archive-review tag; policy comparison considers only rules matching both the workflow and the tag."
+    ]
+  }
+]
