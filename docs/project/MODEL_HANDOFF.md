@@ -1,5 +1,25 @@
 # Model Handoff — Start Here
 
+## Current: NEXT-LP-NATIVE-01 offline investigation — October 27, 2026
+
+[Evidence-first native applicability report](../research/next-lp-native-01/README.md):
+original 4,666-member R1 inventory verified; 24 host add bindings support 48/48
+direct native record correlations across 32 exercise/reopen retrieval observations
+and 16 stores. All 32 current-record instances have complete V2 correlation.
+These associations are explicitly retrospective, not preexisting capture-time V2
+custody or a historical production defense. Independent source/evidence review
+accepted the bounded conclusions; 71 focused tests passed, zero failures/skips.
+
+Pinned Mem0 source verifies arbitrary metadata's route into the original storage
+correlator; exact hostile event-ID roundtrip remains unobserved. Earlier authentic
+same-ID update changes bytes, so a persistent ID is insufficient for fresh host
+binding. Hindsight derived applicability and deployed host custody remain UNKNOWN.
+Legacy storage/trace/calibration callers are unchanged; V2 remains opt-in.
+Next decision NARROW: optional one-store/18-SDK-call protocol, no live runner or
+exact authorization-ready package yet. No new scientific collection, provider,
+browser, SSH or Jetstream operation occurred. Track A and sealed studies remain
+unchanged. Earlier dated entries retain their historical scope.
+
 ## Current: NEXT-LP-01 complete offline — October 27, 2026
 
 [Study handoff](../research/next-lp-01/README.md): **48/48 paired deterministic

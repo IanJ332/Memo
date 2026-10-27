@@ -1,0 +1,37 @@
+{
+  "basis": "RETROSPECTIVE_HOST_RECONSTRUCTION_NOT_PREEXISTING_V2_CUSTODY",
+  "counts": {
+    "complete_direct_correlations": 48,
+    "current_records_with_complete_authority_correlation": 32,
+    "host_add_bindings": 24,
+    "reopened_stores": 16,
+    "retrieval_observations": 32,
+    "retrieved_records": 48
+  },
+  "deployed_callers": "NOT_MIGRATED",
+  "exact_metadata_substitution_treatment": "NOT_OBSERVED",
+  "exposure_counts": {
+    "AUTHORITATIVE_AND_NONAUTHORITATIVE": 16,
+    "AUTHORITATIVE_ONLY": 16
+  },
+  "host_authority_acl_sha256": "01bea38cdcafde30f6a6bcd612b3ecc072d04a8360932fe699b45489272a203f",
+  "host_authority_design_sha256": "a00453a0187013295b46e43ca9a8db048862028b6c92bdd5efcc6b51a5ac09e4",
+  "jetstream_actions": 0,
+  "mem0_adapter_sha256": "cf244d7896a1787b0bac7fb2cc0f4fa59b5ba7070411bf1f8b458ba6f0a84d16",
+  "new_hosted_model_requests": 0,
+  "new_native_operations": 0,
+  "observed_metadata_keys": [
+    "_mem0_created_at",
+    "_mem0_role",
+    "_mem0_score",
+    "_mem0_updated_at",
+    "batch_role",
+    "case",
+    "memlife_namespace"
+  ],
+  "original_inventory_sha256": "2f5c7d44d3c8b1a0e3a12a61e048a65efe7438c9e8b3977346e7b90222daba83",
+  "reconstructed_association_set_sha256": "135c6c6b1e925d87a717d631bf79f09d3ef5d9396aa7866abbf15ae215f49ea2",
+  "study": "NEXT-LP-NATIVE-01",
+  "v2_correction_sha256": "e0c400040a16c4018cf7eb8bc13df4bc153d8a9e5cf7327d8efda8db6d752362",
+  "verified_original_members": 4666
+}

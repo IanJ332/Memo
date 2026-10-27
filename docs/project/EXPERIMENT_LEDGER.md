@@ -1,5 +1,18 @@
 # Experiment Ledger
 
+## NEXT-LP-NATIVE-01 retrospective investigation — October 27, 2026
+
+- No new scientific collection. New derived analysis verifies original R1
+  inventory4,666members and joins24hostaddbindings to48native record instances
+  in32retrieval observations/16reopened stores. V2 resolves48/48; current32/32.
+- Exact hostile event-ID treatment and capture-time V2 custody remain unobserved;
+  pinned source route verified, benign metadata/reopen behavior authentic.
+- 71 focused tests pass,0failures/skips; independent original source/evidence
+  review accepted. Production/frozen sources and historical classifications intact.
+- [Report](../research/next-lp-native-01/README.md). NARROW optional future scope:
+  one Mem0 store,18top-level SDKcalls,zero hosted inference. Design only; no exact
+  live runner/package qualified or grant activated. Zero Jetstream/browser actions.
+
 ## NEXT-LP-01 offline execution — October 27, 2026
 
 - Exactly 12 frozen synthetic coverage records × 2 actual original producer paths

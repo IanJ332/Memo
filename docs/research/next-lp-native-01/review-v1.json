@@ -1,0 +1,84 @@
+{
+  "schema": "NEXT_LP_NATIVE_01_INDEPENDENT_REVIEW_V1",
+  "study": "NEXT-LP-NATIVE-01",
+  "reviewer": "/root/native_evidence_review",
+  "reviewer_role": "independent scientific/security source and retained-evidence reviewer",
+  "model_context": "Inherited Sol context; effective runtime model/effort not separately introspected",
+  "verdict": "ACCEPT_SCOPED_OFFLINE_REANALYSIS_AND_NARROW_DESIGN_ONLY",
+  "baseline_commit": "a89ffb0015fa01ea6be137193a94c64c3161c77b",
+  "checks": {
+    "independently_executed_reanalysis": true,
+    "original_members_verified": 4666,
+    "host_add_bindings": 24,
+    "retrieval_observations": 32,
+    "native_record_instances": 48,
+    "complete_direct_correlations": 48,
+    "current_records_with_complete_authority_correlation": 32,
+    "reopened_stores": 16,
+    "authoritative_only": 16,
+    "mixed": 16,
+    "focused_tests_passed": 71,
+    "focused_tests_failed": 0,
+    "focused_tests_skipped": 0
+  },
+  "findings": [
+    {
+      "id": "IR-01",
+      "finding": "Authority snapshot should be checked explicitly against independent host ACL, not only current-record identity.",
+      "resolution": "Resolved: registered expected ACL compared with host job and both phase results; original ACL hash emitted."
+    },
+    {
+      "id": "IR-02",
+      "finding": "Current retention should be based on complete projected authoritative correlations, not input presence.",
+      "resolution": "Resolved: count derives from V2 observations and independently authoritative ledger entries; metric renamed."
+    },
+    {
+      "id": "IR-03",
+      "finding": "Full-set MIXED can conceal unsupported CURRENT attribution on a nonauthoritative treatment record.",
+      "resolution": "Resolved before prospective execution: preserve full baseline provider_events; primary endpoint is per-record unsupported source attribution, separate from aggregate and secondary AUTHORITATIVE_ONLY."
+    }
+  ],
+  "private_evidence_bindings": {
+    "r1_original_inventory": "2f5c7d44d3c8b1a0e3a12a61e048a65efe7438c9e8b3977346e7b90222daba83",
+    "earlier_mem0_exercise_inventory": "664e54459a4fc6a8768cf789b66709f7b61cce5e41bd2fc7ed0e0cfe5b48b0e4",
+    "earlier_mem0_reopen_inventory": "bb9952d626ab9b56d840769272968ded9d47d3a455633dfd79465978288a9f9c",
+    "mem0_2_2_1_wheel": "fe91bb91ac8926231993a4aa58df00a60c6c74c709e6a338fe399500776eef4d",
+    "wheel_memory_main_py": "f329ca4a17af1fbefb32ac10d4cc7ae7ddbdb7435a87eb74c30915cff98b8b7c",
+    "lc12_hs_conflict_r1_initial_checkpoint": "92054b534c82cc693217e2c3a8800d659dbd7a961df3b769cfa740437ecb9f00",
+    "lc12_hs_conflict_r1_postdelete_checkpoint": "4871cd6d25f534dfbc6f5e0872c080427bf581c16d39d5201d6786d4cae85764",
+    "lc12_hs_conflict_r1_reopen_checkpoint": "3e59cdedb35c3fb55272389af6abc5ccdb061319bb269880219e1ede0c5be836"
+  },
+  "limitations": [
+    "Retrospective host reconstruction is not historical capture-time authenticated V2 custody.",
+    "Exact hostile event-ID metadata was not observed in retained native treatments.",
+    "No native derived-lineage completeness, task utility, deployed enforcement or protected-action safety established.",
+    "Prospective protocol is design only, not a ready execution package or live authorization."
+  ],
+  "new_native_operations": 0,
+  "new_hosted_model_requests": 0,
+  "jetstream_actions": 0,
+  "source_bindings": {
+    "scripts/research/next_lp_native01.py": "889e141f86111fa7ec9e6af1a53c5f709ffcbbffe2faa10ae352da72ed30de57",
+    "tests/research/test_next_lp_native01.py": "bd8f1e7efc418fbd3c909baad7b5bc61d033ff68016744d9cf90c85d1191068d",
+    "docs/research/next-lp-native-01/retrospective-summary-v1.json": "399a6775138a250ef7b7696d74a0115aa2069f46a0cafa380e0d5f54a9472ffb",
+    "docs/research/next-lp-native-01/README.md": "9789957307afc59353270027994af9dece540e01605782d2e93a1d6de3dc60c8",
+    "docs/research/next-lp-native-01/PROSPECTIVE_PROTOCOL.md": "ce3ad4fd5d662c96229613dffe5e76691e17b33c85c545df2585513902e8118c",
+    ".gitattributes": "26fe701e9fa3d806fdbc6241762b09b8fe3488f83b9587cd1349fb55ab8ab6f8",
+    "docs/project/MODEL_HANDOFF.md": "dbf6d7136cc14699c0c6f6111e878afbc43d1f1a45f074e6e9ad9828b9e62384",
+    "docs/project/PROJECT_STATE.md": "0c373961a1cc26ba749296c914a27388129298797d1bcc411b809a7be76401b7",
+    "docs/project/DEBUGGING_LEDGER.md": "f191f2d9b6526f3cf70515232ea4bab2454420681e3c1e500e7a159d6857d2b0",
+    "docs/project/EXPERIMENT_LEDGER.md": "599b63a3ad1a3c594d24523876730bd4b91b97fb4785632263197c2e943ab6db",
+    "docs/research/CLAIMS_REGISTER.md": "657bd57d315413de05373bec1ffe77608e77c0463f1776273e9a83ea263001b0",
+    "src/memlife/adapters/mem0.py": "cf244d7896a1787b0bac7fb2cc0f4fa59b5ba7070411bf1f8b458ba6f0a84d16",
+    "src/memlife/adapters/hindsight.py": "0ca0919c616774480c8326730dfe3cff4961a644ce429760945551fa4a3f0646",
+    "src/memlife/runner/authority_correlation_v2.py": "e0c400040a16c4018cf7eb8bc13df4bc153d8a9e5cf7327d8efda8db6d752362",
+    "src/memlife/runner/storage_batch.py": "fce4f1f7772b2f547ed27ab890c4ccbdb1ee8bb9737421a5315f0bceb46e0d23",
+    "src/memlife/runner/provenance.py": "acd33ab2d537a2f46e20c1d2aa209ae46869e00073ce3c6c10ae3ef490213364",
+    "src/memlife/runner/calibration.py": "7936a0b74dc9c9a54c770b2dd4f3c838c53f5d8aef2bba19ae7e850125449998",
+    "src/memlife/models/authority.py": "fa4632dc953b0f08c63a7bf4b081b956bc4c0683747aa95c170dbf7a60c08d3f",
+    "src/memlife/r1/protocol.py": "7949c12f25dfff5b5e954778d9d8330453a1972cfa295b0f6133b0d3f65ec69e",
+    "manifests/r1-memory-necessity-v1.json": "a00453a0187013295b46e43ca9a8db048862028b6c92bdd5efcc6b51a5ac09e4",
+    "manifests/r1-memory-necessity-host-acl-v1.json": "01bea38cdcafde30f6a6bcd612b3ecc072d04a8360932fe699b45489272a203f"
+  }
+}
+
