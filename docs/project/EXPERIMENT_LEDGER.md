@@ -1,5 +1,17 @@
 # Experiment Ledger
 
+## R1-AV-v1 offline registration — October 26, 2026
+
+- Eight fixed synthetic blocks × four current-state-availability/history cells:
+  32 prospective requests, zero collected scientific responses.
+- Scientific, engineering and exact-package independent reviews ACCEPT.
+- Final focused validation: 131 tests + 20 subtests passed, zero failures/skips.
+- One private prospective execution package `R1AVEX-20261026-01`; owner grant
+  UNAPPROVED, campaign unclaimed, no native/model/SSH/Jetstream/browser action.
+- [Implementation, limits and reproduction](../research/r1-av/README.md),
+  [package review](../research/r1-av/PACKAGE_REVIEW.md). R1/R2 history remains
+  unchanged; this registration is not execution authorization.
+
 ## Current direction — 2026-10-24
 
 Active offline phase: **R0 research reconciliation**. [Roadmap v3](../research/RESEARCH_ROADMAP_V3.md), [current status](../research/RESEARCH_STATUS_20261024.md), [claims](../research/CLAIMS_REGISTER.md) and [prospective R1 protocol](../research/NEXT_EXPERIMENT_PROTOCOL.md) govern continuation. Cohort 0 is the Prompt-Specified Baseline; no new model/provider/Jetstream or protected execution is authorized. Historical scientific freezes and closed attempts remain immutable.

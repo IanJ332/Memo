@@ -1,5 +1,22 @@
 # Project State
 
+## Current: R1-AV-v1 implemented offline — October 26, 2026
+
+[Offline architecture](../research/r1-av/README.md): independent scientific and
+engineering **ACCEPT**, exact-package **ACCEPT**, **131 focused tests + 20
+subtests passed**, zero failures/skips. Registration is eight fixed synthetic
+workflow blocks × four current-availability/history cells = 32 future requests.
+Grounding, ACL validity, abstention, manipulation failure and missing outcomes
+are measured separately; workflow framing diversity is not statistical
+independence or demonstrated multi-step inference.
+
+One private prospective `R1AVEX-20261026-01` package is verified, owner grant
+**UNAPPROVED**, output unclaimed. **Scientific collection NOT_EXECUTED; live
+execution NOT_AUTHORIZED.** Direct exact owner permission and all applicable
+independent volume/external approvals remain required. Sealed R1, historical R2,
+Freeze v1 and earlier raw evidence are unchanged. Older entries retain their
+dated scope; they do not reopen collection.
+
 ## Current: R1 COMPLETE — October 26, 2026
 
 `R1EX-20261026-02`: **32/32 requests, 32 authorized proposals**, zero unauthorized,

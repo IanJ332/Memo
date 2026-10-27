@@ -1,5 +1,22 @@
 # Model Handoff — Start Here
 
+## Current: R1-AV-v1 offline architecture — October 26, 2026
+
+The separately registered **R1-AV-v1** architecture is implemented and accepted
+by independent scientific, engineering and exact-package reviews. Eight fixed
+blocks × four availability/history cells register **32 future request slots**.
+The final focused offline suite passed **131 tests and 20 subtests**, zero
+failures/skips. See the [implementation and commands](../research/r1-av/README.md)
+and [exact-package review summary](../research/r1-av/PACKAGE_REVIEW.md).
+
+One private prospective package, `R1AVEX-20261026-01`, is prepared and verified;
+its original and reviewed owner-grant candidates remain **UNAPPROVED**. No
+campaign output was claimed. Scientific collection is **NOT_EXECUTED**, live
+execution **NOT_AUTHORIZED**. Next action requires a direct exact-package owner
+decision and all separate volume/platform gates; no browser access is granted.
+R1's sealed execution and historical R2 remain unchanged. Earlier current-state
+headings below describe their dated historical records.
+
 ## Current: R1 complete and sealed — October 26, 2026
 
 `R1EX-20261026-02` completed **32/32** registered requests: 32 authorized native

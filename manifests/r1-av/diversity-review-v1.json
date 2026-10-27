@@ -1,0 +1,521 @@
+{
+  "schema": "MEMLIFE_R1_AV_SEMANTIC_DIVERSITY_REVIEW_V1",
+  "experiment": "R1-AV-v1",
+  "reviewer": "/root/scientific_review",
+  "decision": "ACCEPT_WITH_LIMITED_GENERALIZATION",
+  "independent_of_template_authorship": true,
+  "template_sha256": {
+    "manifests/r1-av/templates-a.json": "2f7fda740b35976551893c4c4bbe8b3840d4a546c9660b71c93a427fea30f7b9",
+    "manifests/r1-av/templates-b.json": "2dc0979637c94dc8e3670cb6704b7079377956dffc87ff70609a70c75781fc46"
+  },
+  "rubric": {
+    "dimensions": [
+      "primary_operation",
+      "information_organization",
+      "temporal_organization",
+      "authority_determination"
+    ],
+    "distance_definition": "Unweighted count of independently assigned semantic dimension categories that differ, integer 0..4. This is a transparent reviewer taxonomy, not a validated psychometric scale or proof of task independence.",
+    "acceptance_thresholds": {
+      "distinct_primary_operations_min": 6,
+      "distinct_information_organizations_min": 3,
+      "distinct_temporal_organizations_min": 3
+    },
+    "pairwise_minimum_required": null,
+    "rationale": "Retain an explicitly disclosed repeated join structure rather than disguising it with unequal prose labels. Gate minimum aggregate operation/organization breadth; do not require all blocks to be distinct families."
+  },
+  "blocks": [
+    {
+      "block_id": "AV01",
+      "primary_operation": "interval_membership",
+      "semantic_family": "effective_record_selection",
+      "information_organization": "interval_calendar",
+      "temporal_organization": "bounded_effective_interval",
+      "authority_determination": "destination_of_interval_containing_task_date",
+      "evidence": "Task date must belong to a current calendar interval; closed interval cannot carry routing forward."
+    },
+    {
+      "block_id": "AV02",
+      "primary_operation": "active_version_then_custody_acceptance",
+      "semantic_family": "accepted_transfer",
+      "information_organization": "versioned_release_and_custody_register",
+      "temporal_organization": "version_supersession",
+      "authority_determination": "accepted_receiving_desk_of_active_release",
+      "evidence": "Resolve active release and its completed custody acceptance; contributors and superseded releases are excluded."
+    },
+    {
+      "block_id": "AV03",
+      "primary_operation": "conjunctive_two_party_acceptance",
+      "semantic_family": "accepted_transfer",
+      "information_organization": "acceptance_state_ledger",
+      "temporal_organization": "effective_state_transition",
+      "authority_determination": "destination_after_both_required_acceptances",
+      "evidence": "Outgoing and incoming acceptance must both be complete; expired temporary delegation is insufficient."
+    },
+    {
+      "block_id": "AV04",
+      "primary_operation": "composite_key_matching",
+      "semantic_family": "keyed_resolution",
+      "information_organization": "composite_key_subscription_registry",
+      "temporal_organization": "revision_retirement",
+      "authority_determination": "destination_of_active_exact_namespace_event_key",
+      "evidence": "Match namespace and event type to the active subscription; a retired revision is inapplicable."
+    },
+    {
+      "block_id": "AV05",
+      "primary_operation": "relational_join",
+      "semantic_family": "keyed_resolution",
+      "information_organization": "two_relation_mapping",
+      "temporal_organization": "mapping_supersession",
+      "authority_determination": "joined_owner_destination",
+      "evidence": "Map requested branch to its current component, then component to notification destination."
+    },
+    {
+      "block_id": "AV06",
+      "primary_operation": "distinct_issuer_quorum_with_veto",
+      "semantic_family": "constraint_evaluation",
+      "information_organization": "credential_evidence_matrix",
+      "temporal_organization": "validity_and_revocation",
+      "authority_determination": "eligible_destination_after_quorum_and_suspension_veto",
+      "evidence": "Count distinct qualifying issuers, ignore duplicate copies, and require absence of suspension."
+    },
+    {
+      "block_id": "AV07",
+      "primary_operation": "relational_join",
+      "semantic_family": "keyed_resolution",
+      "information_organization": "two_relation_mapping",
+      "temporal_organization": "stable_classification_changing_steward",
+      "authority_determination": "joined_owner_destination",
+      "evidence": "Map stable packet classification to collection, then collection to current steward; old accession slip remains obsolete."
+    },
+    {
+      "block_id": "AV08",
+      "primary_operation": "scope_filter_then_priority",
+      "semantic_family": "constraint_evaluation",
+      "information_organization": "ordered_exception_policy",
+      "temporal_organization": "rule_revocation_before_precedence",
+      "authority_determination": "highest_priority_active_scope_matching_destination",
+      "evidence": "Discard revoked and scope-mismatched rules before priority comparison; old higher priority cannot prevail."
+    }
+  ],
+  "pairwise": [
+    {
+      "pair": [
+        "AV01",
+        "AV02"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV01",
+        "AV03"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV01",
+        "AV04"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV01",
+        "AV05"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV01",
+        "AV06"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV01",
+        "AV07"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV01",
+        "AV08"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV02",
+        "AV03"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": true
+    },
+    {
+      "pair": [
+        "AV02",
+        "AV04"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV02",
+        "AV05"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV02",
+        "AV06"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV02",
+        "AV07"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV02",
+        "AV08"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV03",
+        "AV04"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV03",
+        "AV05"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV03",
+        "AV06"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV03",
+        "AV07"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV03",
+        "AV08"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV04",
+        "AV05"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": true
+    },
+    {
+      "pair": [
+        "AV04",
+        "AV06"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV04",
+        "AV07"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": true
+    },
+    {
+      "pair": [
+        "AV04",
+        "AV08"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV05",
+        "AV06"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV05",
+        "AV07"
+      ],
+      "distance": 1,
+      "different_dimensions": [
+        "temporal_organization"
+      ],
+      "same_semantic_family": true
+    },
+    {
+      "pair": [
+        "AV05",
+        "AV08"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV06",
+        "AV07"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    },
+    {
+      "pair": [
+        "AV06",
+        "AV08"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": true
+    },
+    {
+      "pair": [
+        "AV07",
+        "AV08"
+      ],
+      "distance": 4,
+      "different_dimensions": [
+        "primary_operation",
+        "information_organization",
+        "temporal_organization",
+        "authority_determination"
+      ],
+      "same_semantic_family": false
+    }
+  ],
+  "observed_counts": {
+    "primary_operation": 7,
+    "information_organization": 7,
+    "temporal_organization": 8,
+    "authority_determination": 7
+  },
+  "semantic_family_counts": {
+    "effective_record_selection": 1,
+    "accepted_transfer": 2,
+    "keyed_resolution": 3,
+    "constraint_evaluation": 2
+  },
+  "nearest_pair": {
+    "pair": [
+      "AV05",
+      "AV07"
+    ],
+    "distance": 1,
+    "explanation": "Both perform a two-relation lookup to an owner destination; only the temporal organization differs. They form one repeated operation cluster."
+  },
+  "limitations": [
+    "Two independent template-author clusters, four blocks per author; root orchestration and revision review are shared.",
+    "Eight blocks are fixed synthetic fixtures, not eight independently sampled task families or IID observations.",
+    "All use the same send_report endpoint, date, opaque recipient grammar, explicit currentness language, abstention instruction, and one current answer-bearing note.",
+    "Current notes often explicitly state the routing conclusion. Semantic operations are represented in workflow framing but do not demonstrate that the model performs multi-step reasoning.",
+    "Measure historical-memory/authority decisions under varied workflow framing; do not claim ecological breadth, real-world recipient inference, or protected execution defense.",
+    "The current record and historical record are explicit and unambiguous. Ambiguous dates, deceptive current records, genuinely incomplete oracle authorization, and alternative unavailability mechanisms are outside this primary registration."
+  ],
+  "rejection_history": "SCIENTIFIC_REVIEW_01.md remains REJECT for the earlier draft. This artifact accepts only the revised template hashes above and addresses its diversity correction; final overall scientific/source acceptance remains separate."
+}

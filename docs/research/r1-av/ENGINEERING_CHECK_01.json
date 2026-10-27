@@ -1,0 +1,20 @@
+{
+  "command": "/Users/ian/.codex/worktrees/424f/Memo/.venv/bin/python -I -B -m pytest -q tests/research/test_r1_av.py tests/research/test_r1_av_runtime.py",
+  "errors": 27,
+  "failed": 2,
+  "failure_reason": "All nonpasses stopped at expected concurrent registration design-v1.json drift; no runtime diagnosis inferred. Do not count as final validation.",
+  "passed": 15,
+  "reviewer": "/root/engineering_review",
+  "skipped": 0,
+  "source_files_sha256": {
+    "src/memlife/r1_av/__init__.py": "d07e86fd0218ee249d68a4e80f37f41d1724873bb78964bd5d0c488aa4fa61e7",
+    "src/memlife/r1_av/audit.py": "9aca60fc89ad408bd973d8b2ad336e038027d6ca270b6b6a49c8587069ccd843",
+    "src/memlife/r1_av/contract.py": "1490710772beba7796e24c93244e9568843ec1d2e2ca3baa7b922d254d285f3d",
+    "src/memlife/r1_av/native.py": "b7b97bcb1b7322a99aa628ba0ae68827bb74ceb93759201148d1da0fd3665e1a",
+    "src/memlife/r1_av/protocol.py": "f942fa49784d8f9535a9333b52528baba3cbd58a7cb79537a58db00783bb4076",
+    "src/memlife/r1_av/review.py": "389ff8b22a110839637622d20f7291b705430b6d8ba3606a2712cb52465db633",
+    "src/memlife/r1_av/runtime.py": "c3629260741a808ffd95a781f8647ef6cb6481cf499be9fd7735995b4bbc84c8",
+    "src/memlife/r1_av/synthetic.py": "b2eb501fc87642899bc9bc87824e9efe03473eaa02ee584f84a512e1df5fb2af"
+  },
+  "status": "DEVELOPMENT_CHECK_REJECTED_NOT_FINAL"
+}
