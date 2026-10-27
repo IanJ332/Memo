@@ -14,6 +14,35 @@ Authoritative**.
 4. Read the experiment or provider documents linked from those files only when
    needed.
 
+## Standing owner authorization and current scope — 2026-10-27
+
+The owner's Standing Authorization update authorizes ordinary MEMO work on the
+owner's local machine and existing Jetstream2 research environment: source edits,
+deterministic experiments, tests/debugging, necessary local runtime inspection
+and maintenance, read-only existing project-resource checks, bounded existing-
+instance administration when otherwise permitted, and reviewed GitHub workflows.
+Do not ask again for owner consent for an ordinary operation already in scope.
+This consent is distinct from scientific registration, independent review,
+platform-enforced exact-action approval and runtime admission evidence.
+
+NEXT-LP-01 is authorized as a bounded offline study: twelve frozen synthetic
+records, two producer paths and two classifier arms, forty-eight paired rows.
+No new hosted scientific model collection is authorized. Track A
+`R1AVEX-20261026-01` remains stopped before campaign claim, with an expired window
+and unchanged package/grants/registration. Do not reactivate it or reinterpret
+its thirty-two unobserved outcomes as scientific results.
+
+Standing consent does not authorize bypassing a platform denial, inventing an
+approval reference, unrelated-account access, destructive volume/evidence
+changes, VM resize/quota expansion/substantial new resources, protected dispatch
+or external sends, unregistered scientific collection, or unbounded cost. Preserve
+`/dev/sdb`, Exosphere resources, unrelated containers and credentials. Read-only
+success never supplies approval for a different state-changing action. Retain
+genuine unsupported platform prerequisites; never create a local approval flag
+as a substitute. Browser access retains its separate explicit approval boundary.
+Older dated phase directions below retain their historical scope; they do not
+withdraw this ordinary engineering consent or reopen a sealed campaign.
+
 ## Current research status — 2026-10-26
 
 R1 execution `R1EX-20261026-02` is **COMPLETE and sealed**: 32/32 requests,
@@ -26,10 +55,10 @@ model request, provider operation, SSH or Jetstream action. The recorded cleanup
 lifecycle was ACTIVE → ACTIVE; older SHELVED statements below are historical,
 not fresh infrastructure observations. Older phase directions do not reopen R1.
 
-## Persistent model routing and browser permission — 2026-10-26
+## Persistent model routing and browser permission — 2026-10-27
 
-This is the single MEMO routing policy, updated by the owner's Model Routing
-Update v1.1 Part A. It supersedes older model-routing preferences without changing
+This is the single MEMO routing policy, updated by the owner's Standing
+Authorization and Model Routing instruction. It supersedes older preferences without changing
 scientific protocols, frozen execution contracts or external approval gates.
 
 - **GPT-6.1 Sol (`gpt-6.1-sol`) is preferred for reasoning and engineering:**
@@ -46,6 +75,11 @@ scientific protocols, frozen execution contracts or external approval gates.
   and **High** for complicated workflows or multi-step UI operations. Terra's
   novelty or capabilities alone do not displace Sol for strongly coupled code,
   architecture, science or difficult decisions.
+- **Luna or another economical available model** is appropriate for bounded log
+  summaries, file inventories, deterministic administrative classification,
+  simple reporting and routine documentation. Do not use expensive reasoning
+  merely to wait for SSH, remote I/O or downloads. This routing does not authorize
+  scientific model requests or change registered scientific model identities.
 - For ordinary authorized work, the primary agent may autonomously choose
   appropriate available models and Medium/High effort, delegate bounded tasks,
   perform independent code or scientific reviews, parallelize genuinely
@@ -54,6 +88,9 @@ scientific protocols, frozen execution contracts or external approval gates.
   scientific correctness, latency and token consumption; avoid repeated context
   reloads, infrastructure discovery and reviews of unchanged artifacts. This
   discretion supplies no additional execution authority.
+- Do not use Astra or Ultra by default, or overengineer work to justify stronger
+  model selection. Prefer Medium for ordinary work and High for difficult
+  science, architecture, coupled debugging or security review.
 
 **Before ANY agent accesses or operates the owner's local browser, explicit
 separate owner approval is required.** This applies to Sol, Terra and every

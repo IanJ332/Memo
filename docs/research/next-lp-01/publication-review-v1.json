@@ -1,0 +1,65 @@
+{
+  "decision": "ACCEPT",
+  "files": {
+    ".gitattributes": {
+      "bytes": 2408,
+      "sha256": "9d6b3a0104e47322add1b699db63d64eaa197d369159b4feb99e2fcaf42c8d8c"
+    },
+    "AGENTS.md": {
+      "bytes": 10894,
+      "sha256": "572733ab05ff35528e47bf788cb1ccdda3cdc7408197fe604d1b5b15efa2aec4"
+    },
+    "docs/project/DEBUGGING_LEDGER.md": {
+      "bytes": 48033,
+      "sha256": "6aa0ad3d9e63ff0b6e68ff31c16584f0c8dfd9ffe7e1fe8e5def9fa2afad4996"
+    },
+    "docs/project/EXPERIMENT_LEDGER.md": {
+      "bytes": 38134,
+      "sha256": "3faad08b070d5b9fefe22fb0bf7fadad0c0c86bc0201c266c6d56049dc2eea6a"
+    },
+    "docs/project/MODEL_HANDOFF.md": {
+      "bytes": 50834,
+      "sha256": "9b5217eb84e0e2ac1ce3fdebf8d8ed7842e71f53b6527c99c07aa0540a72ccd6"
+    },
+    "docs/project/PROJECT_STATE.md": {
+      "bytes": 27744,
+      "sha256": "c01543154ed705a595c81957a75caf0607148fc8a92e24733310a56876acfa8e"
+    },
+    "docs/research/CLAIMS_REGISTER.md": {
+      "bytes": 9643,
+      "sha256": "1ba6aa18e19a1fba68fe502debc8dde250539f7a8ae7a3c6d4694a97110a03c3"
+    },
+    "docs/research/next-lp-01/PUBLICATION_REVIEW_01.md": {
+      "bytes": 2996,
+      "sha256": "a1446b56e32c8f7b30e180c6aab5ebbba58472c398a2b183298fa36b4d2ce765"
+    },
+    "docs/research/next-lp-01/README.md": {
+      "bytes": 9635,
+      "sha256": "1f0f62640e22ee4f1555815f623eee5f3e08d925251c2ea03044143dd2b7bdbd"
+    },
+    "docs/research/next-lp-01/final-review-v1.json": {
+      "bytes": 4849,
+      "sha256": "165a5174fbe3bede0612d62657ebbfeb60e9d19b2eff335ef21a7ab6849e1de9"
+    }
+  },
+  "independent_review": true,
+  "live_actions": 0,
+  "reviewer": "/root/nextlp_independent_review — GPT-6.1 Sol / Medium",
+  "schema": "NEXT_LP01_PUBLICATION_REVIEW_V1",
+  "scope": "Publication and handoff only; no science reevaluation or live authority",
+  "tracked_diff": {
+    "base_HEAD": "a6bc55057fbb901d141a14befc2370e8f474b937",
+    "bytes": 16156,
+    "git_diff_binary_sha256": "8b24cc22819fcfa4bd5cc40b5e493a2c7d4afda98799ab8f17fd160344dafa82",
+    "paths": [
+      ".gitattributes",
+      "AGENTS.md",
+      "docs/project/DEBUGGING_LEDGER.md",
+      "docs/project/EXPERIMENT_LEDGER.md",
+      "docs/project/MODEL_HANDOFF.md",
+      "docs/project/PROJECT_STATE.md",
+      "docs/research/CLAIMS_REGISTER.md"
+    ]
+  },
+  "unchanged_science": "Frozen source/fixture/oracle/implementation/inventory pins verified; no rerun"
+}

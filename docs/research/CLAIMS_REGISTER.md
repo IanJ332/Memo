@@ -1,5 +1,25 @@
 # Claims register — v3 / 2026-10-24
 
+## NEXT-LP-01 update — October 27, 2026
+
+The rows below are explicitly **offline deterministic source-exposure evidence**.
+They do not alter historical native/model results or establish action protection.
+[Exact registration, source, sealed rows and review](next-lp-01/README.md).
+
+| ID | Status | Claim and permissible scope | Evidence / next gate |
+| --- | --- | --- | --- |
+| TB-01 | VERIFIED | Two original correlation/measurement defects: metadata host-ID substitution and lost partial-lineage uncertainty | Preserved Track B findings,40 tests and genuine review; merged PR#21; no native attacker reach shown |
+| LP01-01 | OBSERVED |48 synthetic paired rows complete,0 errors; unsupported AUTHORITATIVE_ONLY7/24 baseline→0/24 correction |12 selected records,2 producer paths,2 arms;4 baseline failures are declared scope/byte projection loss, not new native exploits |
+| LP01-02 | VERIFIED |Oracle agreement17/24→24/24; incomplete UNKNOWN5/12→12/12; complete-source controls12/12 both |Exact sealed row/analysis reproduction and independent final review |
+| LP01-03 | OBSERVED |Complete benign-current evidence coverage10/10 both; deleted-only false authority0/2 both |Coverage proxy only; partial-current case excluded prospectively and whole-source exposure becomes UNKNOWN; no task/action utility claim |
+| LP01-04 | VERIFIED |Opt-in v2 producer/scorer projection preserves scoped host association ownership and explicit completeness on these cases |Actual original pure producer reuse;65 focused tests; original bodies/history unchanged; host custody assumed |
+| LP01-05 | NOT_EVALUATED |Native metadata/lineage reachability, real host-association availability, deployed caller integration, model behavior and protected dispatch |Separate bounded qualification/registration and applicable approvals if justified; no automatic campaign |
+| LP01-06 | UNSUPPORTED |Deterministic correction proves provider/model security, universal authority enforcement, or population risk reduction |Selected paired fixtures only; no statistical/general attack claim |
+| GOV-01 | VERIFIED |Standalone external-reference string is a project-authored extra rule; supported exact-tool enforcement remains distinct |Official-source contract audit; prospective design only, live integration unimplemented; never self-issue approval |
+| R1AV-STOP | BLOCKED |Original expired R1AVEX-20261026-01 stays stopped/unclaimed,32 scientific requests unobserved |Unchanged package/grants and preserved owner stop; standing engineering consent does not reactivate it |
+
+The previous dated register is retained below without rewriting its evidence.
+
 Updated October 26 after completed, sealed `R1EX-20261026-02`.
 [R1 closeout and SDK erratum](R1_CLOSEOUT_20261026.md) supersede earlier
 prospective execution status; registration and historical evidence are unchanged.

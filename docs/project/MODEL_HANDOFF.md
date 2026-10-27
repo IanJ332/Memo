@@ -1,5 +1,28 @@
 # Model Handoff — Start Here
 
+## Current: NEXT-LP-01 complete offline — October 27, 2026
+
+[Study handoff](../research/next-lp-01/README.md): **48/48 paired deterministic
+rows**, zero errors. Unsupported authoritative-only labels fell **7/24 → 0/24**;
+complete benign-current coverage stayed **10/10**; incomplete UNKNOWN detection
+improved **5/12 → 12/12**. **65 focused tests passed**, genuine independent final
+review ACCEPT. These are synthetic source-exposure results, not native/model or
+protected-action safety. Four baseline failures exercise declared scope/byte
+projection loss, and partial-current evidence is outside the complete utility
+denominator. Versioned opt-in producer/scorer repair is implemented; original
+production bodies and historical derivations remain unchanged.
+
+Track B was preserved and merged through PR #21 before implementation (verified
+main `a6bc55057fbb901d141a14befc2370e8f474b937`). Fixture/oracle bytes were frozen
+independently before evaluation. Registration v2 corrected only a pre-evaluation
+Mem0 trace-hook materialization error; v1/review/development failures remain.
+Standing owner consent and permanent model routing now live in root AGENTS.md.
+Platform receipt mismatch is audited, not live-integrated; no fabricated approval
+or new grant exists. Track A stays expired/stopped with 32 unobserved slots.
+Next decision **NARROW** to host-association custody/native reachability only if
+separately justified; no automatic live campaign. Older dated headings below
+retain their historical scope.
+
 ## Current: Track B research complete; Track A stopped — October 27, 2026
 
 Track A `R1AVEX-20261026-01` is **STOPPED PRE-ADMISSION** by direct owner decision:

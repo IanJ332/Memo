@@ -1,0 +1,16 @@
+{
+  "failed": 2,
+  "failure_reasons": [
+    "ReferenceMemoryAdapter generic provenance is KNOWN, contradicting intended Mem0 UNKNOWN materialization; prospective amendment required, fixtures/oracle unchanged",
+    "Evaluator helper used scenario.steps instead of actual lifecycle_steps; fix before source freeze"
+  ],
+  "passed": 63,
+  "registered_rows_executed": 0,
+  "scope": "SUPPLEMENTAL_UNIT_CONTROLS_ONLY_NOT_REGISTERED_STUDY_ROWS",
+  "skipped": 0,
+  "source_sha256": {
+    "src/memlife/next_lp01.py": "7d5aea368220570b3d174d683eac778fc5e3598eda25877b1df4c15bb7c40959",
+    "src/memlife/runner/authority_correlation_v2.py": "e0c400040a16c4018cf7eb8bc13df4bc153d8a9e5cf7327d8efda8db6d752362",
+    "tests/research/test_next_lp01.py": "c7242d14cde78926a2e29922bda371765e9f049fb046c48ac5111f941ea052ea"
+  }
+}

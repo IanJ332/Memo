@@ -1,5 +1,19 @@
 # Experiment Ledger
 
+## NEXT-LP-01 offline execution — October 27, 2026
+
+- Exactly 12 frozen synthetic coverage records × 2 actual original producer paths
+  × 2 classifier arms = **48 sealed rows**, zero evaluation errors.
+- Unsupported authoritative-only: baseline7/24, correction0/24. Oracle agreement:
+  17/24→24/24; incomplete UNKNOWN5/12→12/12; complete benign coverage10/10 both.
+- Source/fixture/registration custody and all rows independently reproduced;
+  final review ACCEPT;65 focused supplemental/TrackB tests passed,0 failures/skips.
+- Original v1 registration and initial unit failures preserved; prospective v2
+  hook-materialization amendment precedes all48rows; fixtures/oracle unchanged.
+- [Study/evidence/limits](../research/next-lp-01/README.md). No native/provider,
+  hosted model, protected dispatch, browser, SSH or Jetstream action. No new
+  Track A grant or replay; all historical scientific evidence remains unchanged.
+
 ## Track A admission stop and Track B research — October 27, 2026
 
 - R1-AV `R1AVEX-20261026-01`: owner-ordered pre-admission stop, zero model/native/

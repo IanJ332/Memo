@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "benign_current_evidence": true,
+      "expected_complete": true,
+      "expected_exposure": "AUTHORITATIVE_ONLY",
+      "fixture_id": "LP01-01",
+      "reason": "Both exposed source identities have unique independent child-byte and scope bindings to current authoritative host events."
+    },
+    {
+      "benign_current_evidence": true,
+      "expected_complete": true,
+      "expected_exposure": "AUTHORITATIVE_ONLY",
+      "fixture_id": "LP01-02",
+      "reason": "Semantically identical record and associations to LP01-01; only the fixed JSON round-trip representation differs."
+    },
+    {
+      "benign_current_evidence": false,
+      "expected_complete": false,
+      "expected_exposure": "UNKNOWN_PROVENANCE",
+      "fixture_id": "LP01-03",
+      "reason": "Provider metadata names a real current host event but no independently held association binds this record to that event."
+    },
+    {
+      "benign_current_evidence": true,
+      "expected_complete": false,
+      "expected_exposure": "UNKNOWN_PROVENANCE",
+      "fixture_id": "LP01-04",
+      "reason": "A current proposition is independently supported, but the exposed revoked-source identifier lacks a host association; whole-source exposure remains unresolved."
+    },
+    {
+      "benign_current_evidence": false,
+      "expected_complete": false,
+      "expected_exposure": "UNKNOWN_PROVENANCE",
+      "fixture_id": "LP01-05",
+      "reason": "Neither exposed source identifier is independently correlated; content resemblance cannot substitute for host evidence."
+    },
+    {
+      "benign_current_evidence": true,
+      "expected_complete": true,
+      "expected_exposure": "AUTHORITATIVE_AND_NONAUTHORITATIVE",
+      "fixture_id": "LP01-06",
+      "reason": "Complete lineage includes current and superseded source authority. Exposure is mixed; the independently supported current proposition remains valid evidence, without reviving the superseded proposition."
+    },
+    {
+      "benign_current_evidence": true,
+      "expected_complete": true,
+      "expected_exposure": "AUTHORITATIVE_AND_NONAUTHORITATIVE",
+      "fixture_id": "LP01-07",
+      "reason": "Complete lineage exposes one current and one revoked source. Mixed exposure retains the supported current proposition but grants no authority to the revoked source."
+    },
+    {
+      "benign_current_evidence": false,
+      "expected_complete": true,
+      "expected_exposure": "NONAUTHORITATIVE_ONLY",
+      "fixture_id": "LP01-08",
+      "reason": "A complete association identifies a deleted, nonauthoritative source despite the retrieved child ACTIVE hint."
+    },
+    {
+      "benign_current_evidence": false,
+      "expected_complete": false,
+      "expected_exposure": "UNKNOWN_PROVENANCE",
+      "fixture_id": "LP01-09",
+      "reason": "The only association belongs to a different namespace and cannot establish the synthetic record identity."
+    },
+    {
+      "benign_current_evidence": false,
+      "expected_complete": false,
+      "expected_exposure": "UNKNOWN_PROVENANCE",
+      "fixture_id": "LP01-10",
+      "reason": "The only host association binds earlier bytes, not these retrieved bytes; a native ID cannot borrow another content binding."
+    },
+    {
+      "benign_current_evidence": false,
+      "expected_complete": false,
+      "expected_exposure": "UNKNOWN_PROVENANCE",
+      "fixture_id": "LP01-11",
+      "reason": "The same scoped record/source key names conflicting host events. Do not select an arbitrary mapping or infer authority from textual equality."
+    },
+    {
+      "benign_current_evidence": true,
+      "expected_complete": true,
+      "expected_exposure": "AUTHORITATIVE_ONLY",
+      "fixture_id": "LP01-12",
+      "reason": "Independent host association fully binds the direct record identity. Generic provider-internal causal provenance UNKNOWN is separate and does not invalidate this direct current evidence."
+    }
+  ],
+  "experiment_id": "NEXT-LP-01",
+  "schema_version": "next-lp-oracle/1"
+}

@@ -1,0 +1,16 @@
+{
+  "evaluator_version": "v1",
+  "experiment_id": "NEXT-LP-01",
+  "files": {
+    "scripts/research/next_lp01.py": "0bf29f49c09c22182cd90f9bdbcc77e2421bc2ce62d518085226e6b535f1703f",
+    "src/memlife/next_lp01.py": "a1c22ae6a30110f845870a706d3c2ff02379ee0eccd9db7c4e9faa1e1c6bb25f",
+    "src/memlife/r1/protocol.py": "7949c12f25dfff5b5e954778d9d8330453a1972cfa295b0f6133b0d3f65ec69e",
+    "src/memlife/runner/authority_correlation_v2.py": "e0c400040a16c4018cf7eb8bc13df4bc153d8a9e5cf7327d8efda8db6d752362",
+    "tests/research/test_next_lp01.py": "cfa520295002b68719627f305c029741c03e8e34aa6d9789f8429e50fe12c859"
+  },
+  "original_production_sources": "Additional14pins retained in registration-v2",
+  "registered_rows_executed_before_freeze": 0,
+  "registration_sha256": "3217aa1c4853a9437f708a60f634c012905634d114a7634cbef927a9f6f88c46",
+  "schema": "NEXT_LP01_IMPLEMENTATION_V1",
+  "scope": "OFFLINE_ONLY_NO_PROVIDER_MODEL_OR_PROTECTED_DISPATCH"
+}
