@@ -1,0 +1,382 @@
+{
+  "authority_ledger": {
+    "authority_schema_version": "1.0",
+    "entries": [
+      {
+        "authoritative": false,
+        "authority_reason": "Independent synthetic host ledger final intent; never derived from provider metadata.",
+        "experiment_event_id": "host-superseded",
+        "lifecycle_state": "superseded",
+        "logical_fact_id": "fact-superseded",
+        "namespace": "synthetic",
+        "sequence": 1,
+        "source_content_sha256": "975fab72952d643bd4be739f4a354e2dfd49658455d08d3b68431c3290635ede",
+        "superseded_by": "fact-current",
+        "supersedes": null
+      },
+      {
+        "authoritative": true,
+        "authority_reason": "Independent synthetic host ledger final intent; never derived from provider metadata.",
+        "experiment_event_id": "host-current",
+        "lifecycle_state": "active",
+        "logical_fact_id": "fact-current",
+        "namespace": "synthetic",
+        "sequence": 2,
+        "source_content_sha256": "64adc232df575d693d2aa3bb5d0b4a541b0598b79608467b85aa7798301b287f",
+        "superseded_by": null,
+        "supersedes": "fact-superseded"
+      },
+      {
+        "authoritative": true,
+        "authority_reason": "Independent synthetic host ledger final intent; never derived from provider metadata.",
+        "experiment_event_id": "host-support",
+        "lifecycle_state": "active",
+        "logical_fact_id": "fact-support",
+        "namespace": "synthetic",
+        "sequence": 3,
+        "source_content_sha256": "36735ac33ad61110282580ded12c722b50e3f86510d1dc12dda87b4156b00073",
+        "superseded_by": null,
+        "supersedes": null
+      },
+      {
+        "authoritative": false,
+        "authority_reason": "Independent synthetic host ledger final intent; never derived from provider metadata.",
+        "experiment_event_id": "host-revoked",
+        "lifecycle_state": "revoked",
+        "logical_fact_id": "fact-revoked",
+        "namespace": "synthetic",
+        "sequence": 4,
+        "source_content_sha256": "d61e762fb2d2eadaec50464c64d2a0435dbcdfebb47514b8fd94f2f3658dc006",
+        "superseded_by": null,
+        "supersedes": null
+      },
+      {
+        "authoritative": false,
+        "authority_reason": "Independent synthetic host ledger final intent; never derived from provider metadata.",
+        "experiment_event_id": "host-deleted",
+        "lifecycle_state": "deleted",
+        "logical_fact_id": "fact-deleted",
+        "namespace": "synthetic",
+        "sequence": 5,
+        "source_content_sha256": "d5b2f45517d0e12c920c4b4c44abc0891dec5cdcb5843a911f24eb7113d635f8",
+        "superseded_by": null,
+        "supersedes": null
+      }
+    ]
+  },
+  "experiment_id": "NEXT-LP-01",
+  "fixtures": [
+    {
+      "content": "Synthetic project current destination is synthetic-destination-42. Synthetic audit support is current.",
+      "coverage_case": "complete_current_ancestry_object",
+      "fixture_id": "LP01-01",
+      "host_associations": [
+        {
+          "event_id": "host-current",
+          "namespace": "synthetic",
+          "provider": "hindsight",
+          "record_id": "current-derived-pair",
+          "record_sha256": "3c2b44f58d7908fd20c40df5ceb1882543c9e8f7493af1c2c0ca49e03eff37de",
+          "source_native_id": "src-current"
+        },
+        {
+          "event_id": "host-support",
+          "namespace": "synthetic",
+          "provider": "hindsight",
+          "record_id": "current-derived-pair",
+          "record_sha256": "3c2b44f58d7908fd20c40df5ceb1882543c9e8f7493af1c2c0ca49e03eff37de",
+          "source_native_id": "src-support"
+        }
+      ],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {},
+      "namespace": "synthetic",
+      "provider": "hindsight",
+      "record_id": "current-derived-pair",
+      "representation": "OBJECT",
+      "source_native_ids": [
+        "src-current",
+        "src-support"
+      ]
+    },
+    {
+      "content": "Synthetic project current destination is synthetic-destination-42. Synthetic audit support is current.",
+      "coverage_case": "complete_current_ancestry_json_pair",
+      "fixture_id": "LP01-02",
+      "host_associations": [
+        {
+          "event_id": "host-current",
+          "namespace": "synthetic",
+          "provider": "hindsight",
+          "record_id": "current-derived-pair",
+          "record_sha256": "3c2b44f58d7908fd20c40df5ceb1882543c9e8f7493af1c2c0ca49e03eff37de",
+          "source_native_id": "src-current"
+        },
+        {
+          "event_id": "host-support",
+          "namespace": "synthetic",
+          "provider": "hindsight",
+          "record_id": "current-derived-pair",
+          "record_sha256": "3c2b44f58d7908fd20c40df5ceb1882543c9e8f7493af1c2c0ca49e03eff37de",
+          "source_native_id": "src-support"
+        }
+      ],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {},
+      "namespace": "synthetic",
+      "provider": "hindsight",
+      "record_id": "current-derived-pair",
+      "representation": "JSON_ROUNDTRIP",
+      "source_native_ids": [
+        "src-current",
+        "src-support"
+      ]
+    },
+    {
+      "content": "Synthetic project former destination was synthetic-destination-17.",
+      "coverage_case": "provider_metadata_identity_substitution",
+      "fixture_id": "LP01-03",
+      "host_associations": [],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {
+        "experiment_event_id": "host-current",
+        "source_event_id": "host-current"
+      },
+      "namespace": "synthetic",
+      "provider": "mem0",
+      "record_id": "unrelated-provider-record",
+      "representation": "OBJECT",
+      "source_native_ids": []
+    },
+    {
+      "content": "Synthetic project current destination is synthetic-destination-42. Synthetic historical proposal named synthetic-destination-23.",
+      "coverage_case": "partial_current_revoked_lineage",
+      "fixture_id": "LP01-04",
+      "host_associations": [
+        {
+          "event_id": "host-current",
+          "namespace": "synthetic",
+          "provider": "hindsight",
+          "record_id": "partial-derived",
+          "record_sha256": "af480bcab5adc96cf75b1151d8520348b558ff709f6c06724bb7a2a1ef8d714d",
+          "source_native_id": "src-current"
+        }
+      ],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {},
+      "namespace": "synthetic",
+      "provider": "hindsight",
+      "record_id": "partial-derived",
+      "representation": "OBJECT",
+      "source_native_ids": [
+        "src-current",
+        "src-revoked"
+      ]
+    },
+    {
+      "content": "Synthetic project current destination is synthetic-destination-42. Synthetic historical proposal named synthetic-destination-23.",
+      "coverage_case": "missing_all_source_associations",
+      "fixture_id": "LP01-05",
+      "host_associations": [],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {},
+      "namespace": "synthetic",
+      "provider": "hindsight",
+      "record_id": "unmapped-derived",
+      "representation": "OBJECT",
+      "source_native_ids": [
+        "src-current",
+        "src-revoked"
+      ]
+    },
+    {
+      "content": "Synthetic project current destination is synthetic-destination-42. Synthetic project former destination was synthetic-destination-17.",
+      "coverage_case": "complete_current_superseded_lineage",
+      "fixture_id": "LP01-06",
+      "host_associations": [
+        {
+          "event_id": "host-current",
+          "namespace": "synthetic",
+          "provider": "hindsight",
+          "record_id": "supersession-derived",
+          "record_sha256": "12252ccab90b498f21519840b82043795e69be9ddea4ffc8d2830aedd504eafe",
+          "source_native_id": "src-current"
+        },
+        {
+          "event_id": "host-superseded",
+          "namespace": "synthetic",
+          "provider": "hindsight",
+          "record_id": "supersession-derived",
+          "record_sha256": "12252ccab90b498f21519840b82043795e69be9ddea4ffc8d2830aedd504eafe",
+          "source_native_id": "src-superseded"
+        }
+      ],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {},
+      "namespace": "synthetic",
+      "provider": "hindsight",
+      "record_id": "supersession-derived",
+      "representation": "OBJECT",
+      "source_native_ids": [
+        "src-current",
+        "src-superseded"
+      ]
+    },
+    {
+      "content": "Synthetic project current destination is synthetic-destination-42. Synthetic historical proposal named synthetic-destination-23.",
+      "coverage_case": "complete_current_revoked_lineage",
+      "fixture_id": "LP01-07",
+      "host_associations": [
+        {
+          "event_id": "host-current",
+          "namespace": "synthetic",
+          "provider": "hindsight",
+          "record_id": "revoked-derived",
+          "record_sha256": "af480bcab5adc96cf75b1151d8520348b558ff709f6c06724bb7a2a1ef8d714d",
+          "source_native_id": "src-current"
+        },
+        {
+          "event_id": "host-revoked",
+          "namespace": "synthetic",
+          "provider": "hindsight",
+          "record_id": "revoked-derived",
+          "record_sha256": "af480bcab5adc96cf75b1151d8520348b558ff709f6c06724bb7a2a1ef8d714d",
+          "source_native_id": "src-revoked"
+        }
+      ],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {},
+      "namespace": "synthetic",
+      "provider": "hindsight",
+      "record_id": "revoked-derived",
+      "representation": "OBJECT",
+      "source_native_ids": [
+        "src-current",
+        "src-revoked"
+      ]
+    },
+    {
+      "content": "Synthetic deleted proposal named synthetic-destination-09.",
+      "coverage_case": "complete_deleted_only_ancestry",
+      "fixture_id": "LP01-08",
+      "host_associations": [
+        {
+          "event_id": "host-deleted",
+          "namespace": "synthetic",
+          "provider": "hindsight",
+          "record_id": "deleted-derived",
+          "record_sha256": "d5b2f45517d0e12c920c4b4c44abc0891dec5cdcb5843a911f24eb7113d635f8",
+          "source_native_id": "src-deleted"
+        }
+      ],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {},
+      "namespace": "synthetic",
+      "provider": "hindsight",
+      "record_id": "deleted-derived",
+      "representation": "OBJECT",
+      "source_native_ids": [
+        "src-deleted"
+      ]
+    },
+    {
+      "content": "Synthetic project current destination is synthetic-destination-42.",
+      "coverage_case": "namespace_mismatch",
+      "fixture_id": "LP01-09",
+      "host_associations": [
+        {
+          "event_id": "host-current",
+          "namespace": "synthetic-other",
+          "provider": "mem0",
+          "record_id": "namespace-current",
+          "record_sha256": "64adc232df575d693d2aa3bb5d0b4a541b0598b79608467b85aa7798301b287f",
+          "source_native_id": "namespace-current"
+        }
+      ],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {},
+      "namespace": "synthetic",
+      "provider": "mem0",
+      "record_id": "namespace-current",
+      "representation": "OBJECT",
+      "source_native_ids": []
+    },
+    {
+      "content": "Synthetic project current destination is synthetic-destination-42. Changed unbound suffix.",
+      "coverage_case": "retrieved_content_digest_mismatch",
+      "fixture_id": "LP01-10",
+      "host_associations": [
+        {
+          "event_id": "host-current",
+          "namespace": "synthetic",
+          "provider": "mem0",
+          "record_id": "content-current",
+          "record_sha256": "64adc232df575d693d2aa3bb5d0b4a541b0598b79608467b85aa7798301b287f",
+          "source_native_id": "content-current"
+        }
+      ],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {},
+      "namespace": "synthetic",
+      "provider": "mem0",
+      "record_id": "content-current",
+      "representation": "OBJECT",
+      "source_native_ids": []
+    },
+    {
+      "content": "Synthetic project current destination is synthetic-destination-42.",
+      "coverage_case": "conflicting_duplicate_source_mapping",
+      "fixture_id": "LP01-11",
+      "host_associations": [
+        {
+          "event_id": "host-current",
+          "namespace": "synthetic",
+          "provider": "mem0",
+          "record_id": "conflicting-current",
+          "record_sha256": "64adc232df575d693d2aa3bb5d0b4a541b0598b79608467b85aa7798301b287f",
+          "source_native_id": "conflicting-current"
+        },
+        {
+          "event_id": "host-revoked",
+          "namespace": "synthetic",
+          "provider": "mem0",
+          "record_id": "conflicting-current",
+          "record_sha256": "64adc232df575d693d2aa3bb5d0b4a541b0598b79608467b85aa7798301b287f",
+          "source_native_id": "conflicting-current"
+        }
+      ],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {},
+      "namespace": "synthetic",
+      "provider": "mem0",
+      "record_id": "conflicting-current",
+      "representation": "OBJECT",
+      "source_native_ids": []
+    },
+    {
+      "content": "Synthetic project current destination is synthetic-destination-42.",
+      "coverage_case": "benign_direct_generic_provenance_unknown",
+      "fixture_id": "LP01-12",
+      "host_associations": [
+        {
+          "event_id": "host-current",
+          "namespace": "synthetic",
+          "provider": "mem0",
+          "record_id": "direct-current",
+          "record_sha256": "64adc232df575d693d2aa3bb5d0b4a541b0598b79608467b85aa7798301b287f",
+          "source_native_id": "direct-current"
+        }
+      ],
+      "lifecycle_state": "ACTIVE",
+      "metadata": {
+        "causal_provenance_note": "Provider-internal ancestry is not observed."
+      },
+      "namespace": "synthetic",
+      "provider": "mem0",
+      "record_id": "direct-current",
+      "representation": "OBJECT",
+      "source_native_ids": []
+    }
+  ],
+  "schema_version": "next-lp-fixtures/1"
+}

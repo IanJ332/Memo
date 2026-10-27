@@ -1,5 +1,27 @@
 # Debugging Ledger
 
+## NEXT-LP-01 versioned repair and reproducibility — October 27, 2026
+
+- Opt-in `authority_correlation_v2` replaces provider metadata identity claims
+  with independently held scope/child-byte/source-bound host associations and
+  explicit unresolved coordinates. It never reads candidate metadata as proof
+  of completeness. Host custody remains an external prerequisite.
+- Preserve generic provider causal provenance separately: legitimate direct
+  UNKNOWN with complete host identity remains authoritative. Complete current
+  plus superseded/revoked sources remain MIXED exposure, not action permission.
+- A pre-study unit control found ReferenceMemoryAdapter=KNOWN versus Mem0=UNKNOWN.
+  Preserve v1 artifacts; v2 registration forwards actual pure Mem0 properties
+  without native construction. No fixture/oracle or post-seal evaluator change.
+- Frozen implementation/evidence audit uses portable repository-relative content
+  bindings; these are not live platform approval tokens. Exact LF materialization
+  preserves raw source/evidence identities across checkout settings.
+- 48-row result: unsupported authoritative-only7→0, complete benign10/10 both;
+  partial-current LP01-04 remains diagnostically supported but whole UNKNOWN.
+  Four failures arise under the declared baseline scope/byte projection loss.
+- [Exact source, controls and independent review](../research/next-lp-01/README.md).
+  65 focused tests passed. Legacy bodies/TrackB probes remain untouched; no
+  historical observations were rescored and no protected action was evaluated.
+
 ## Unrepaired Track B correlation defects — October 27, 2026
 
 - `_correlated_event_ids` accepts matching host event IDs from provider metadata;

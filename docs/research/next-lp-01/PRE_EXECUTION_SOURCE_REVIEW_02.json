@@ -1,0 +1,21 @@
+{
+  "schema": "NEXT_LP01_PRE_EXECUTION_SOURCE_REVIEW_V1",
+  "decision": "ACCEPT_PRE_EXECUTION_SOURCE",
+  "independent_review": true,
+  "reviewer": "/root/nextlp_independent_review — GPT-6.1 Sol / Medium",
+  "implementation": {
+    "path": "manifests/next-lp-01/implementation-v1.json",
+    "sha256": "8cdcbb12078eebcf58cc38b37a1ba645c2171abf3ba0b82a20ebb5c831319205",
+    "bytes": 950
+  },
+  "registration": {
+    "path": "manifests/next-lp-01/registration-v2.json",
+    "sha256": "3217aa1c4853a9437f708a60f634c012905634d114a7634cbef927a9f6f88c46",
+    "bytes": 12589
+  },
+  "report": "docs/research/next-lp-01/PRE_EVALUATION_REVIEW_02.md",
+  "scope": "Exactly the frozen offline synthetic 48-row source-exposure comparison; not live/provider/model/platform approval",
+  "registered_study_executed_by_reviewer_before_decision": false,
+  "supplemental_unit_tests": {"passed": 25, "failed": 0, "skipped": 0},
+  "final_result_review": "REQUIRED_AFTER_FROZEN_EVALUATION"
+}

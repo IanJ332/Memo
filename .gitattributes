@@ -22,3 +22,27 @@ manifests/phase-08d9-stage1-static-verification.json text eol=lf
 manifests/phase-08d9-stage1-static-tests.json text eol=lf
 # Unified diff context for an empty source line is a single required space.
 patches/phase-08d9-provider-boundary-bootstrap.patch text eol=lf whitespace=-blank-at-eol
+
+# NEXT-LP-01 exact source/evidence custody uses LF across checkouts.
+# Existing Git blob bytes are unchanged; Freeze v1 retains its CRLF rule above.
+src/memlife/adapters/base.py text eol=lf
+src/memlife/adapters/hindsight.py text eol=lf
+src/memlife/adapters/mem0.py text eol=lf
+src/memlife/adapters/reference.py text eol=lf
+src/memlife/enforcement/filters.py text eol=lf
+src/memlife/models/authority.py text eol=lf
+src/memlife/models/lifecycle.py text eol=lf
+src/memlife/models/memory.py text eol=lf
+src/memlife/models/provenance.py text eol=lf
+src/memlife/runner/lifecycle.py text eol=lf
+src/memlife/runner/provenance.py text eol=lf
+src/memlife/runner/storage_batch.py text eol=lf
+src/memlife/scenarios/canonical.py text eol=lf
+src/memlife/scenarios/models.py text eol=lf
+src/memlife/r1/protocol.py text eol=lf
+src/memlife/runner/authority_correlation_v2.py text eol=lf
+src/memlife/next_lp01.py text eol=lf
+scripts/research/next_lp01.py text eol=lf
+tests/research/test_next_lp01.py text eol=lf
+manifests/next-lp-01/*.json text eol=lf
+docs/research/next-lp-01/** text eol=lf

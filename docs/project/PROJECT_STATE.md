@@ -1,5 +1,22 @@
 # Project State
 
+## Current: NEXT-LP-01 completed and reviewed — October 27, 2026
+
+**48 offline rows, 0 errors; independent ACCEPT; 65 tests passed.** The opt-in
+v2 correlation projection changes unsupported AUTHORITATIVE_ONLY from 7/24 to
+0/24, preserves 10/10 complete benign-current controls, and recognizes incomplete
+correlation in 12/12 versus baseline5/12. Generic causal UNKNOWN is separate from
+host association completeness. Complete mixed/superseded sources are not blanket
+UNKNOWN. These are deterministic coverage counts, not ASR or native/model results.
+[Report and exact evidence](../research/next-lp-01/README.md).
+
+Original scorer/producer bodies, historical R1/R2/LC12/Track B evidence, and
+Track A's stopped/expired package/grants remain unchanged. The standing owner
+policy authorizes ordinary scoped engineering but creates no platform receipt or
+new scientific model grant. The platform contract audit retains the old blocker;
+prospective tool-boundary design is not a live admission implementation.
+Follow-on decision: NARROW; no native/model/Jetstream action occurred.
+
 ## Current: independent security research complete — October 27, 2026
 
 Track B found two reproducible correlation/authority-exposure scoring defects:

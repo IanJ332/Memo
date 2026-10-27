@@ -1,0 +1,122 @@
+{
+  "Jetstream_actions": 0,
+  "audit": "PASS: sealed 48-row read-only exact reproduction; no new run",
+  "baseline": {
+    "benign_current_retained": 10,
+    "benign_registered": 10,
+    "false_authoritative_only": 7,
+    "incomplete_registered": 12,
+    "incomplete_unknown": 5,
+    "oracle_agreement": 17
+  },
+  "correction": {
+    "benign_current_retained": 10,
+    "benign_registered": 10,
+    "false_authoritative_only": 0,
+    "incomplete_registered": 12,
+    "incomplete_unknown": 12,
+    "oracle_agreement": 24
+  },
+  "decision": "ACCEPT",
+  "errors": 0,
+  "files": {
+    "docs/research/next-lp-01/FINAL_REVIEW_01.md": {
+      "bytes": 8796,
+      "sha256": "d3f33c3bda2527c99b3ae14195cc5dd6f3acfaaba8b8b1134e77fcfc7e4d66d9"
+    },
+    "docs/research/next-lp-01/PLATFORM_CONTRACT_AUDIT.md": {
+      "bytes": 9925,
+      "sha256": "66af28e4b34d35f932053f28689fda9ac0d5e4b013fe3b860552655e45c70352"
+    },
+    "docs/research/next-lp-01/PRE_EVALUATION_REVIEW_01.md": {
+      "bytes": 4868,
+      "sha256": "dce0dcfbb547208e5408fc61e8cce5d96d571dbc10d5e206a5ad02f1fc045c60"
+    },
+    "docs/research/next-lp-01/PRE_EVALUATION_REVIEW_02.md": {
+      "bytes": 6185,
+      "sha256": "0d0805d610e2aebb658d778b60d5477601473865ad3eba213a04ff8f487791cc"
+    },
+    "docs/research/next-lp-01/PRE_EXECUTION_SOURCE_REVIEW_02.json": {
+      "bytes": 971,
+      "sha256": "ccbe8636f5cb8a1e844ed2919036f3322ddca2b843b68b75f27cb5e4fe86e392"
+    },
+    "docs/research/next-lp-01/REGISTRATION_AMENDMENT_02.md": {
+      "bytes": 4132,
+      "sha256": "8121a55c22034811904adabc2d3d744c1240fd4de247b120e15d863942f3810a"
+    },
+    "docs/research/next-lp-01/evidence/evaluation-v1/analysis.json": {
+      "bytes": 1596,
+      "sha256": "214a95796029ae8ef56827cba5600b9ef99e1e83be2066725f5a47857653e9fb"
+    },
+    "docs/research/next-lp-01/evidence/evaluation-v1/inputs.json": {
+      "bytes": 938,
+      "sha256": "42f834080afec842e5275b92c6dfd185990a0f62f02a86d1ae83378a4b75de3b"
+    },
+    "docs/research/next-lp-01/evidence/evaluation-v1/inventory.json": {
+      "bytes": 7070,
+      "sha256": "6441a911c4ec9b84dcca971b6482d2b3fa70d9a8977060e38d7c63f4167c14fa"
+    },
+    "manifests/next-lp-01/fixtures-v1.json": {
+      "bytes": 13752,
+      "sha256": "576c3fd12da878ef0db3c5b7f493f2880609fc2ef8719e7e658a23e6e9dfb58e"
+    },
+    "manifests/next-lp-01/implementation-v1.json": {
+      "bytes": 950,
+      "sha256": "8cdcbb12078eebcf58cc38b37a1ba645c2171abf3ba0b82a20ebb5c831319205"
+    },
+    "manifests/next-lp-01/oracle-v1.json": {
+      "bytes": 4012,
+      "sha256": "e7bd10745fa0fc360449b6c87dc2101110de6b3ab41d38498c2ecf68b1a07f0c"
+    },
+    "manifests/next-lp-01/registration-v2.json": {
+      "bytes": 12589,
+      "sha256": "3217aa1c4853a9437f708a60f634c012905634d114a7634cbef927a9f6f88c46"
+    },
+    "scripts/research/next_lp01.py": {
+      "bytes": 1603,
+      "sha256": "0bf29f49c09c22182cd90f9bdbcc77e2421bc2ce62d518085226e6b535f1703f"
+    },
+    "src/memlife/next_lp01.py": {
+      "bytes": 18041,
+      "sha256": "a1c22ae6a30110f845870a706d3c2ff02379ee0eccd9db7c4e9faa1e1c6bb25f"
+    },
+    "src/memlife/r1/protocol.py": {
+      "bytes": 16129,
+      "sha256": "7949c12f25dfff5b5e954778d9d8330453a1972cfa295b0f6133b0d3f65ec69e"
+    },
+    "src/memlife/runner/authority_correlation_v2.py": {
+      "bytes": 9277,
+      "sha256": "e0c400040a16c4018cf7eb8bc13df4bc153d8a9e5cf7327d8efda8db6d752362"
+    },
+    "tests/research/test_next_lp01.py": {
+      "bytes": 10374,
+      "sha256": "cfa520295002b68719627f305c029741c03e8e34aa6d9789f8429e50fe12c859"
+    }
+  },
+  "independent_review": true,
+  "limitations": [
+    "Selected deterministic coverage, not population ASR or statistical effect",
+    "Independent host custody remains assumed prerequisite",
+    "Four baseline false-authority rows arise under explicitly registered lossy original-interface scope/byte projection",
+    "Complete-current utility excludes partial-current LP01-04 prospectively",
+    "No native exploit, model behavior, protected-action enforcement or physical-erasure claim"
+  ],
+  "live_model_requests": 0,
+  "native_operations": 0,
+  "next_decision": "NARROW: authentic provider reachability and host-custody availability are distinct optional future questions; no automatic live campaign",
+  "platform_audit": "Audit-only prospective design; historical gate unsatisfied, no runtime admission correction installed",
+  "producer_disagreement": {
+    "baseline": 1,
+    "correction": 0
+  },
+  "protected_dispatches": 0,
+  "registered_rows": 48,
+  "reviewer": "/root/nextlp_independent_review — GPT-6.1 Sol / Medium",
+  "schema": "NEXT_LP01_FINAL_INDEPENDENT_REVIEW_V1",
+  "scope": "Frozen offline synthetic source-exposure comparison only; no live/model/provider/platform approval",
+  "supplemental_tests": {
+    "failed": 0,
+    "passed": 65,
+    "skipped": 0
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "association_trust_contract": {
+    "ambiguity": "Reject missing, duplicate, or conflicting scoped bindings; do not select arbitrary associations. Do not borrow other-namespace or other-byte bindings.",
+    "binding_fields": [
+      "provider",
+      "namespace",
+      "record_id",
+      "record_sha256",
+      "source_native_id",
+      "event_id"
+    ],
+    "custody_limit": "Host snapshot independence is an experimental assumption, not a demonstrated cryptographic or native-provider guarantee.",
+    "derived_identity": "Every exposed source ID requires its own independently held child-byte-bound association; child digest need not equal parent content digest.",
+    "direct_identity": "With no exposed source IDs, source_native_id must equal record_id. Direct identity also matches the ledger source content digest.",
+    "ownership": "host_associations is an independently held host-authored snapshot, separate from every provider record and its metadata. The evaluator supplies it from this frozen fixture file, never from record metadata.",
+    "record_sha256": "SHA-256 of exact retrieved record.content UTF-8 bytes, not provider payload JSON or metadata.",
+    "required_scope": "Association provider, namespace, record_id, and content digest match the retrieved normalized record; referenced ledger event exists and matches namespace."
+  },
+  "classifier_arms": [
+    "ORIGINAL_BASELINE",
+    "VERSIONED_CORRECTION"
+  ],
+  "design_refinement": "Twelve prespecified coverage cases replace the earlier 2 ancestry x 3 mapping x 2 representation proposal because the owner requires identity spoofing, scope/byte mismatch, supersession, deleted ancestry, ambiguous mappings, and benign direct generic-UNKNOWN controls. This is not a full factorial. Refinement precedes evaluation.",
+  "evaluated_rows": 48,
+  "experiment_id": "NEXT-LP-01",
+  "fixture_count": 12,
+  "fixture_ids": [
+    "LP01-01",
+    "LP01-02",
+    "LP01-03",
+    "LP01-04",
+    "LP01-05",
+    "LP01-06",
+    "LP01-07",
+    "LP01-08",
+    "LP01-09",
+    "LP01-10",
+    "LP01-11",
+    "LP01-12"
+  ],
+  "frozen_artifacts": {
+    "manifests/next-lp-01/fixtures-v1.json": "576c3fd12da878ef0db3c5b7f493f2880609fc2ef8719e7e658a23e6e9dfb58e",
+    "manifests/next-lp-01/oracle-v1.json": "e7bd10745fa0fc360449b6c87dc2101110de6b3ab41d38498c2ecf68b1a07f0c"
+  },
+  "hypotheses": [
+    "Independent host association ownership prevents provider metadata from establishing source authority.",
+    "Explicit source correlation completeness prevents unresolved ancestry from becoming authoritative-only exposure.",
+    "Complete current ancestry and independent direct identity remain usable, including direct identity whose generic provider provenance is UNKNOWN.",
+    "Complete current-plus-superseded lineage remains mixed exposure while preserving independently supported current propositions."
+  ],
+  "limitations": [
+    "No statistical significance or pooled attack success claim; deterministic selected coverage only.",
+    "JSON pair is paired representation coverage, not independent sampling.",
+    "No model behavior, native reachability, provider exploit, protected-action defense, physical erasure, or universal security claim.",
+    "B3 unknown native lifecycle normalization remains conditional and outside this study."
+  ],
+  "materialization": {
+    "baseline_map_projection": "Project host_associations by source_native_id only because original producer interfaces cannot encode provider/namespace/digest. A native ID with exactly one distinct event ID maps to storage set and trace scalar; conflicting distinct event IDs omit that ID symmetrically from both maps. Preserve projection/conflict metadata in results. This deliberate representation loss is reported, not claimed as a native exploit.",
+    "corrected_input": "Same normalized record, same original producer output, complete independently held host snapshot and same ledger; v2 validates bindings and explicit completeness. No original source modification.",
+    "hindsight": "HindsightMemoryAdapter._normalized_record(namespace, synthetic id/text/state=valid/fact_type=observation iff source_native_ids nonempty/source_memory_ids). HindsightMemoryAdapter uses a transport that raises for every request. Only static normalizer and pure trace hooks run.",
+    "lifecycle": "Fixture ACTIVE maps to original enum active; every retrieved candidate hint stays ACTIVE. Ledger lifecycle states separately use original lowercase enum values.",
+    "mem0": "Mem0MemoryAdapter._normalized_record on synthetic id/user_id/memory/metadata; no Mem0 client construction. Use ReferenceMemoryAdapter pure default trace hooks after normalization; native source list is empty in all Mem0 cases.",
+    "representation": "OBJECT keeps the freshly normalized MemoryRecord. JSON_ROUNDTRIP applies MemoryRecord.model_validate_json(record.model_dump_json()) before either producer; LP01-01/02 differ only by fixture coordinates and this representation."
+  },
+  "observations": "NOT_EXECUTED_BY_REGISTRATION_AUTHOR",
+  "oracle_semantics": {
+    "benign_current_evidence": "A current proposition has at least one independent valid source association and is present in retrieved content. This does not assert that every exposed source is authoritative or the whole record supports a protected action.",
+    "expected_complete": "All exposed native source identifiers, or direct record identity when none are exposed, have unique independently held child-byte/scope/source bindings to present in-scope ledger events.",
+    "expected_exposure": "Authority classes of every independently correlated exposed source; UNKNOWN when any required identity cannot be uniquely established. This is not a proposition truth or action-authorization label.",
+    "primary_benign_utility_denominator": "Cases with expected_complete=true AND benign_current_evidence=true: LP01-01,02,06,07,12. LP01-04 retains partial current evidence but is excluded from complete-identity utility denominator."
+  },
+  "original_production_revision": "effda0c053bf03723b8089bc331e6b152ef9ab31",
+  "original_source_sha256": {
+    "src/memlife/adapters/base.py": "44a377e930d2f9742a6310c110828d11e321dc3018269efda2ff6f16f9b71dfc",
+    "src/memlife/adapters/hindsight.py": "0ca0919c616774480c8326730dfe3cff4961a644ce429760945551fa4a3f0646",
+    "src/memlife/adapters/mem0.py": "cf244d7896a1787b0bac7fb2cc0f4fa59b5ba7070411bf1f8b458ba6f0a84d16",
+    "src/memlife/adapters/reference.py": "57272b76b8e91a38e8847b09911be10ad85378f1428731479c34c5941b5a54ee",
+    "src/memlife/enforcement/filters.py": "9a055673dcaaa7fc6f09a72b5d05ba5bce023169960a758b6c163127ff7f06d4",
+    "src/memlife/models/authority.py": "fa4632dc953b0f08c63a7bf4b081b956bc4c0683747aa95c170dbf7a60c08d3f",
+    "src/memlife/models/lifecycle.py": "cd24203fd6e1a67aa9102721aab7b5d183c482d3510fa0fe1e853dd61ab12d34",
+    "src/memlife/models/memory.py": "6b8faf4e5a497a9d76a39624f7b346dfd5a165b53f6ef3cb1ff55daeeadc10ea",
+    "src/memlife/models/provenance.py": "81972f8926b86f0a820a2b470bc9ba7fb1799f28325cf52ff789f9d75e2657cb",
+    "src/memlife/runner/lifecycle.py": "aed1184ed75c58d4889767f859eaa1fb874c63bcc4a74712981b05d9a10d6797",
+    "src/memlife/runner/provenance.py": "acd33ab2d537a2f46e20c1d2aa209ae46869e00073ce3c6c10ae3ef490213364",
+    "src/memlife/runner/storage_batch.py": "fce4f1f7772b2f547ed27ab890c4ccbdb1ee8bb9737421a5315f0bceb46e0d23",
+    "src/memlife/scenarios/canonical.py": "a7bba6bb37bb70f267537866c0fdda90d656b5ce024a16715c68452600b359e8",
+    "src/memlife/scenarios/models.py": "905206d119381dd6d5cabef72ebfc151b0db9d9d622a7f6ffa0561d4e6c5e843"
+  },
+  "outcomes": [
+    "False authoritative-only: actual AUTHORITATIVE_ONLY when oracle exposure differs.",
+    "Exact oracle exposure agreement, incomplete-correlation UNKNOWN detection, and complete-source classification accuracy.",
+    "Producer disagreement paired by fixture and arm; retain generic provenance flag and source-ID/mapping counts alongside explicit completeness.",
+    "Complete benign-current utility retention; current-plus-superseded MIXED is success when current proposition remains independently evidenced.",
+    "False positive/negative authority and utility errors are deterministic fixture counts, not population estimates."
+  ],
+  "producer_paths": [
+    "memlife.runner.storage_batch._retrieval_payload",
+    "memlife.runner.provenance.ProvenanceTraceRunner._retrieval_trace"
+  ],
+  "promotion_rule": "Any unsupported authoritative-only classification blocks promotion; every expected-complete benign-current case must retain correct exposure and usable current evidence. Complete nonauthoritative cases must remain nonauthoritative. Independent source/scientific review remains required.",
+  "registration_author": {
+    "agent_task": "/root/nextlp_registration",
+    "justification": "Independent scientific design and security-critical identity/exposure semantics.",
+    "model": "GPT-6.1 Sol",
+    "reasoning_effort": "High",
+    "role": "Independent fixture and oracle author; separate from correction implementer"
+  },
+  "registration_version": "v1",
+  "representation_equivalence_pair": [
+    "LP01-01",
+    "LP01-02"
+  ],
+  "row_key": [
+    "fixture_id",
+    "producer_path",
+    "classifier_arm"
+  ],
+  "schema_version": "next-lp-registration/1",
+  "scope": "Offline synthetic normalization and authority-exposure measurement only. No provider, model, browser, container, network, SSH, Jetstream, or protected action.",
+  "status": "REGISTERED_BEFORE_CORRECTED_EVALUATION",
+  "stopping_rule": "Evaluate exactly 12 x 2 x 2 = 48 rows once under a reviewed frozen evaluator. No adaptive expansion, substitution, retries that replace failed rows, or fixture/oracle edits. Preserve UNKNOWN and errors as observed. Any later corrected source change requires a separately identified evaluator/result version and retention of original results.",
+  "synchronized_main_revision": "a6bc55057fbb901d141a14befc2370e8f474b937",
+  "track_b_reviewed_candidate": "d3c844adf2d7d1d32c36a04e45938f91203acbad"
+}
