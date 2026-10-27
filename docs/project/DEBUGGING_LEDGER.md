@@ -1,5 +1,20 @@
 # Debugging Ledger
 
+## Native direct association applicability and staleness — October 27, 2026
+
+- Retrospective R1 join: independently registered host bytes/ACL → SDK input →
+  unique add-return ID → exact raw retrieval scope/bytes. All 48 instances resolve;
+  authority comes from the host snapshot, never provider metadata or similarity.
+- Original evidence inventory is pinned and every consumed member rechecked.
+  Retrospective analytical event IDs are not historical V2 artifacts or native
+  authentication. Capture-time custody and atomic authority revision remain gaps.
+- Authentic same-ID Mem0 update changes content bytes. A stable native ID does
+  not keep an old exact-byte association valid; independently refresh after update.
+- V2 remains opt-in. Ordinary storage batch, provenance and calibration keep
+  legacy scoring; reports must not imply that these callers were migrated.
+- [Evidence and six new custody controls](../research/next-lp-native-01/README.md);
+  combined focused suite71passed. No original source or sealed evidence changed.
+
 ## NEXT-LP-01 versioned repair and reproducibility — October 27, 2026
 
 - Opt-in `authority_correlation_v2` replaces provider metadata identity claims

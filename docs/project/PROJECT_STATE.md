@@ -1,5 +1,18 @@
 # Project State
 
+## Current: native applicability investigated offline — October 27, 2026
+
+NEXT-LP-NATIVE-01 completes an evidence-first retrospective V2 projection:
+48/48 authentic direct record instances fully correlated, 32/32 current records
+preserved, 16 stores stable across reopen. Original evidence and production
+callers are untouched. Host custody is reconstructed from accepted independent
+design/ACL plus native SDK journals, not authenticated by metadata/hash alone.
+71 focused tests passed. [Report, classifications and protocol](../research/next-lp-native-01/README.md).
+Exact hostile metadata and capture-time V2 custody remain unobserved; Hindsight
+derived applicability UNKNOWN. Decision NARROW, not GO: an optional one-store,
+18-call proposal needs a frozen reviewed runner/package before authorization.
+Zero new native/model/provider/Jetstream operations; Track A remains stopped.
+
 ## Current: NEXT-LP-01 completed and reviewed — October 27, 2026
 
 **48 offline rows, 0 errors; independent ACCEPT; 65 tests passed.** The opt-in

@@ -46,3 +46,6 @@ scripts/research/next_lp01.py text eol=lf
 tests/research/test_next_lp01.py text eol=lf
 manifests/next-lp-01/*.json text eol=lf
 docs/research/next-lp-01/** text eol=lf
+scripts/research/next_lp_native01.py text eol=lf
+tests/research/test_next_lp_native01.py text eol=lf
+docs/research/next-lp-native-01/** text eol=lf

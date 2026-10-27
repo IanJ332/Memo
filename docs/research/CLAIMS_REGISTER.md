@@ -1,5 +1,21 @@
 # Claims register — v3 / 2026-10-24
 
+## NEXT-LP-NATIVE-01 update — October 27, 2026
+
+New retrospective analysis of authentic retained native captures, not new
+collection or a replacement original result. [Source/evidence/limits](next-lp-native-01/README.md).
+
+| ID | Status | Claim and permissible scope | Evidence / next gate |
+| --- | --- | --- | --- |
+| LPN-01 | VERIFIED | Pinned Mem02.2.1 arbitrary-metadata source route reaches original correlation path | SDK wheel/adapter original source; benign native roundtrip observed; exact hostile values and untrusted-writer access not established |
+| LPN-02 | OBSERVED | 24 reconstructed host bindings fully correlate48native direct-record instances across32retrieval observations/16stores; current32/32 | Independently retained host design/ACL and SDK input→add response→raw retrieval bytes; original4,666members verified; retrospective V2 only |
+| LPN-03 | OBSERVED | Native reopen preserves ID/bytes; earlier native same-ID update changes bytes and deletion persists | Authentic original journals; old digest becomes stale; no derived-state forgetting/native revocation claim |
+| LPN-04 | VERIFIED | Ordinary storage/trace/calibration callers remain legacy; V2 research wrappers opt-in | Original callers unchanged; this analysis adds no production migration |
+| LPN-05 | UNKNOWN | Capture-time V2 host custody, atomic authority snapshot binding, exact forged-key treatment, Hindsight derived V2 applicability | NARROW optional one-store18-call protocol; no authorization-ready runner/package or new scientific collection |
+| LPN-06 | UNSUPPORTED | Native projection establishes deployed enforcement, task utility, complete derived lineage or protected dispatch safety | Only retrospective direct-source correlation; no model or action experiment |
+
+Earlier dated entries below retain their original scope and evidence.
+
 ## NEXT-LP-01 update — October 27, 2026
 
 The rows below are explicitly **offline deterministic source-exposure evidence**.
