@@ -1,5 +1,19 @@
 # Experiment Ledger
 
+## NEXT-LP-NATIVE-01-Q1 full offline readiness — October 27, 2026
+
+- Independently frozen hypotheses/oracle and exact18SDKslots/3constructions,
+  onefreshstore/twosyntheticrecords, localcached Mem02.2.1 inferFalse; no native
+  scientific collection authorized or executed by this engineering instruction.
+- Full controller/Hostcustody/nativeworker/containertransport/package tooling
+  implemented. 140focusedtests pass; explicit SYNTHETIC CLI completes18slots and
+  readonlyaudit reproduces18rows. Scripted outcomes are not native observations.
+- Existing native runtime:27,613installedhashes/72distributions/11embeddingfiles
+  reverified read-only; zero containerstarts/modelrequests/Jetstreamactions.
+- Genuine source reviews precede exactlyone private prospective package; exact
+  package/owner-grant status belongs to its handoff. Historical sealed sources,
+  grants, successes/failures and raw evidence are unchanged.
+
 ## NEXT-LP-NATIVE-01 retrospective investigation — October 27, 2026
 
 - No new scientific collection. New derived analysis verifies original R1

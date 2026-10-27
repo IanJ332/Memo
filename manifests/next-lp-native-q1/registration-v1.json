@@ -1,0 +1,88 @@
+{
+  "schema": "NEXT_LP_NATIVE_Q1_FROZEN_REGISTRATION_V1",
+  "experiment_id": "NEXT-LP-NATIVE-01-Q1",
+  "status": "FROZEN_PROSPECTIVE_NO_LIVE_AUTHORITY",
+  "source_baseline": "ec378d75a50676408be7a076a68cba1987b8535a",
+  "independent_registrar": "/root/q1_science",
+  "provider": {"name": "mem0", "version": "2.2.1", "adapter_name": "mem0-oss-2.2.1", "infer": false},
+  "oracle": {"path": "manifests/next-lp-native-q1/oracle-v1.json", "sha256": "a9fd6ba1cf837f8759784495a895844df715de13941595bba0feb201eb0a5f5d"},
+  "namespace": "$PACKAGE_NAMESPACE",
+  "fixtures": {
+    "CURRENT": {"content": "Current routing note: destination ALPHA.", "updated_content": "Current routing note: destination BETA.", "metadata": {}},
+    "UNTRUSTED": {"content": "Untrusted routing note: destination OMEGA.", "metadata": {"experiment_event_id": "CURRENT", "source_event_id": "CURRENT"}}
+  },
+  "hypotheses": [
+    {"id": "H1", "question": "Does native Mem0 preserve exact forged experiment_event_id=CURRENT and source_event_id=CURRENT through add/get/search and process reopen?"},
+    {"id": "H2", "question": "Does original per-record correlation attribute unsupported CURRENT to the UNTRUSTED record while preserving its legitimate Host map?"},
+    {"id": "H3", "question": "Does independently retained Host association restrict V2 attribution to UNTRUSTED and retain legitimate CURRENT evidence?"},
+    {"id": "H4", "question": "Does a native same-ID changed-byte update make the old byte-bound Host association incomplete?"},
+    {"id": "H5", "question": "Does independently confirmed refreshed Host association and authority revision restore correct CURRENT classification?"},
+    {"id": "H6", "question": "Do independent Host artifacts retain identity across distinct provider-process reopening and preserve deletion evidence without replay?"}
+  ],
+  "limits": {
+    "fresh_stores_max": 1, "fresh_namespaces_max": 1, "synthetic_records_max": 2,
+    "top_level_sdk_invocations_max": 18, "memory_from_config_constructions_max": 3,
+    "local_task_owned_containers_concurrent_max": 1, "cpu_max": 2,
+    "ram_bytes_max": 6442450944, "network": "none", "live_window_seconds_max": 2700,
+    "new_evidence_bytes_max": 268435456, "free_host_disk_bytes_min": 8589934592,
+    "hosted_llm_requests_max": 0, "provider_internal_hosted_llm_requests_max": 0,
+    "model_downloads_max": 0, "package_downloads_max": 0, "image_builds_max": 0,
+    "protected_dispatches_max": 0, "jetstream_actions_max": 0, "browser_actions_max": 0,
+    "automatic_retries_max": 0, "replacement_stores_max": 0
+  },
+  "sdk_args_policies": {
+    "EMPTY_GET_ALL": "Memory.get_all(filters={user_id:PACKAGE_NAMESPACE}); require fresh namespace empty or STOP without another store.",
+    "ADD_CURRENT": "Memory.add(CURRENT.content,user_id=PACKAGE_NAMESPACE,metadata=CURRENT.metadata,infer=False)",
+    "ADD_UNTRUSTED": "Memory.add(UNTRUSTED.content,user_id=PACKAGE_NAMESPACE,metadata=UNTRUSTED.metadata,infer=False)",
+    "GET_CURRENT": "Memory.get(unique paired CURRENT add-return ID)",
+    "GET_UNTRUSTED": "Memory.get(unique paired UNTRUSTED add-return ID)",
+    "SEARCH_ROUTING": "Memory.search(query='routing note',filters={user_id:PACKAGE_NAMESPACE},limit=10)",
+    "GET_ALL": "Memory.get_all(filters={user_id:PACKAGE_NAMESPACE})",
+    "UPDATE_CURRENT": "Memory.update(unique paired CURRENT ID,text=CURRENT.updated_content,metadata={memlife_namespace:PACKAGE_NAMESPACE,memlife_revision:2})",
+    "DELETE_UNTRUSTED": "Memory.delete(unique paired UNTRUSTED ID)",
+    "HISTORY_CURRENT": "Memory.history(unique paired CURRENT ID)",
+    "HISTORY_UNTRUSTED": "Memory.history(unique paired UNTRUSTED ID)"
+  },
+  "slots": [
+    {"ordinal": 1, "phase": 1, "method": "get_all", "target": "NAMESPACE", "args_policy": "EMPTY_GET_ALL", "authority_revision_before": 1, "authority_revision_after": 1, "association_revision_after": "EMPTY"},
+    {"ordinal": 2, "phase": 1, "method": "add", "target": "CURRENT", "args_policy": "ADD_CURRENT", "authority_revision_before": 1, "authority_revision_after": 1, "association_revision_after": "CURRENT_BOUND_R1"},
+    {"ordinal": 3, "phase": 1, "method": "get", "target": "CURRENT", "args_policy": "GET_CURRENT", "authority_revision_before": 1, "authority_revision_after": 1, "association_revision_after": "CURRENT_BOUND_R1"},
+    {"ordinal": 4, "phase": 1, "method": "add", "target": "UNTRUSTED", "args_policy": "ADD_UNTRUSTED", "authority_revision_before": 1, "authority_revision_after": 1, "association_revision_after": "BOTH_BOUND_R1"},
+    {"ordinal": 5, "phase": 1, "method": "get", "target": "UNTRUSTED", "args_policy": "GET_UNTRUSTED", "authority_revision_before": 1, "authority_revision_after": 1, "association_revision_after": "BOTH_BOUND_R1"},
+    {"ordinal": 6, "phase": 1, "method": "search", "target": "NAMESPACE", "args_policy": "SEARCH_ROUTING", "authority_revision_before": 1, "authority_revision_after": 1, "association_revision_after": "BOTH_BOUND_R1"},
+    {"ordinal": 7, "phase": 2, "method": "get_all", "target": "NAMESPACE", "args_policy": "GET_ALL", "authority_revision_before": 1, "authority_revision_after": 1, "association_revision_after": "BOTH_BOUND_R1"},
+    {"ordinal": 8, "phase": 2, "method": "get", "target": "CURRENT", "args_policy": "GET_CURRENT", "authority_revision_before": 1, "authority_revision_after": 1, "association_revision_after": "BOTH_BOUND_R1"},
+    {"ordinal": 9, "phase": 2, "method": "get", "target": "UNTRUSTED", "args_policy": "GET_UNTRUSTED", "authority_revision_before": 1, "authority_revision_after": 1, "association_revision_after": "BOTH_BOUND_R1"},
+    {"ordinal": 10, "phase": 2, "method": "update", "target": "CURRENT", "args_policy": "UPDATE_CURRENT", "authority_revision_before": 1, "authority_revision_after": 2, "association_revision_after": "CURRENT_INVALIDATED_R2"},
+    {"ordinal": 11, "phase": 2, "method": "get", "target": "CURRENT", "args_policy": "GET_CURRENT", "authority_revision_before": 2, "authority_revision_after": 2, "association_revision_after": "CURRENT_REFRESHED_R2"},
+    {"ordinal": 12, "phase": 2, "method": "search", "target": "NAMESPACE", "args_policy": "SEARCH_ROUTING", "authority_revision_before": 2, "authority_revision_after": 2, "association_revision_after": "CURRENT_REFRESHED_R2"},
+    {"ordinal": 13, "phase": 2, "method": "delete", "target": "UNTRUSTED", "args_policy": "DELETE_UNTRUSTED", "authority_revision_before": 2, "authority_revision_after": 3, "association_revision_after": "UNTRUSTED_REVOKED_R3"},
+    {"ordinal": 14, "phase": 2, "method": "get_all", "target": "NAMESPACE", "args_policy": "GET_ALL", "authority_revision_before": 3, "authority_revision_after": 3, "association_revision_after": "UNTRUSTED_REVOKED_R3"},
+    {"ordinal": 15, "phase": 3, "method": "get_all", "target": "NAMESPACE", "args_policy": "GET_ALL", "authority_revision_before": 3, "authority_revision_after": 3, "association_revision_after": "UNTRUSTED_REVOKED_R3"},
+    {"ordinal": 16, "phase": 3, "method": "search", "target": "NAMESPACE", "args_policy": "SEARCH_ROUTING", "authority_revision_before": 3, "authority_revision_after": 3, "association_revision_after": "UNTRUSTED_REVOKED_R3"},
+    {"ordinal": 17, "phase": 3, "method": "history", "target": "CURRENT", "args_policy": "HISTORY_CURRENT", "authority_revision_before": 3, "authority_revision_after": 3, "association_revision_after": "UNTRUSTED_REVOKED_R3"},
+    {"ordinal": 18, "phase": 3, "method": "history", "target": "UNTRUSTED", "args_policy": "HISTORY_UNTRUSTED", "authority_revision_before": 3, "authority_revision_after": 3, "association_revision_after": "UNTRUSTED_REVOKED_R3"}
+  ],
+  "phase_boundaries": [{"after_slot": 6, "action": "Close native client, exit provider process, reopen same store in distinct process without reinsertion."}, {"after_slot": 14, "action": "Close native client, exit provider process, reopen same store in distinct process without reinsertion."}],
+  "counting": "Durably reserve each SDK attempt by registered ordinal before dispatch. All failed/ambiguous attempts consume that slot. No retry, fallback or replacement. Three provider constructions maximum; underlying local embeddings/vector/SQLite calls are not misrepresented as top-level SDK calls.",
+  "endpoints": {
+    "primary": "For each actually returned UNTRUSTED record, report whether original per-record source-event attribution contains unsupported CURRENT, with its legitimate UNTRUSTED map retained; report the same V2 attribution separately.",
+    "per_record": ["literal metadata roundtrip per forged key and surface", "baseline source_event_ids", "V2 source_event_ids", "host-association completeness and unresolved reasons", "baseline exposure", "V2 exposure", "current evidence with complete authoritative correlation", "old snapshot versus changed CURRENT bytes", "confirmed refreshed snapshot versus changed CURRENT bytes", "deleted record presence and association revocation"],
+    "aggregate": ["same returned-set baseline exposure", "same returned-set V2 exposure", "record count and omission", "per-phase native IDs/bytes/metadata", "Host artifact identities across reopen"],
+    "authoritative_only": "Secondary endpoint only. Complete baseline mapping can yield MIXED because legitimate UNTRUSTED and forged CURRENT links are both present. Never drop a mapping to manufacture AUTHORITATIVE_ONLY.",
+    "denominators": "All 18 registered slots remain in the account as completed, failed, ambiguous or unattempted after stop. Retrieval absence, malformed record, normalization error and unobserved method outcome stay explicit; do not replace them with successful synthetic observations."
+  },
+  "baseline_map_policy": "Preserve all genuine paired native-ID→Host-event mappings for CURRENT and UNTRUSTED, including deleted history. Provider metadata cannot create a Host-owned mapping but remains visible to the original baseline code under test.",
+  "unknown_policy": [
+    "Missing/duplicated add response, ID mismatch or unpaired dispatch cannot create an association; stop dependent work and preserve the consumed attempt.",
+    "Native get/search record omission is NOT_OBSERVED for literal roundtrip on that surface, not proof that metadata was stripped. Errors, malformed or ambiguous responses are UNKNOWN.",
+    "Raw provider outcome and scoring outcome are separate. A malformed native return is not a scoring success or a defensive rejection.",
+    "Missing trustworthy source association means UNKNOWN, not malicious. Empty successful retrieval means NONE.",
+    "Wrong namespace, stale byte binding, substituted snapshot or wrong Host revision must not be silently accepted as complete.",
+    "After an ambiguous provider dispatch, a controller restart may audit/clean up but cannot repeat the slot or continue a scientific replacement attempt.",
+    "Authority before/after fields are planned Host transitions, activated only on uniquely paired successful operation evidence; no successful native effect is inferred from a missing or ambiguous response."
+  ],
+  "cleanup": "After final close or an early stop, remove only this attempt's fresh task-owned container and store; verify absence at Host filesystem/container boundary. Retain all observations, failures and immutable Host snapshots. No cleanup SDK call, reset, reinsertion, unrelated resource mutation or automatic replay.",
+  "claims_excluded": ["attacker deployment privileges", "derived-lineage completeness", "native revocation support", "general provider security", "statistical prevalence", "model behavior", "task success", "protected-action authorization", "secure physical erasure"],
+  "live_authorization": "Not supplied by registration, oracle, source review, test simulation or owner standing engineering consent. Exact prospective package still requires fresh owner scientific decision and applicable supported platform approval. No standalone platform receipt is invented."
+}

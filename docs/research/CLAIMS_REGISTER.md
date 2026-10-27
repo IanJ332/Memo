@@ -1,5 +1,19 @@
 # Claims register — v3 / 2026-10-24
 
+## NEXT-LP-NATIVE-01-Q1 readiness update — October 27, 2026
+
+[Implementation and validation](next-lp-native-q1/README.md) are prospective
+engineering evidence only; native hypotheses remain unevaluated.
+
+| ID | Status | Claim and permissible scope | Evidence / next gate |
+| --- | --- | --- | --- |
+| Q1-01 | VERIFIED | Fixed18slot controller, Host-only capture-time association architecture, original/V2 attribution/exposure, stop/cleanup/audit implemented | 140focusedofflinecontrols and realguardedCLI scripted18/18, audit18/18; no native result |
+| Q1-02 | VERIFIED | Existing cached qualified runtime/image/model available with exactbyte continuity at readiness check |27,613installedhashes,72distributions,11embeddingfiles; launch rechecks required; no provider starts |
+| Q1-03 | NOT_EVALUATED | Exact native forged-key roundtrip, same-ID freshness/refreshed custody and native per-record attribution endpoints | Independent frozen18slot registration and oracle; fresh exactpackage owner decision plus supported tool approval before collection |
+| Q1-04 | UNSUPPORTED | Scripted controller results prove native efficacy, attacker privileges, task utility or protected-action safety | Offline simulation only; existing production callers and historical experiments untouched |
+
+Earlier dated entries retain their original evidence and scope.
+
 ## NEXT-LP-NATIVE-01 update — October 27, 2026
 
 New retrospective analysis of authentic retained native captures, not new
