@@ -1,5 +1,24 @@
 # Debugging Ledger
 
+## Unrepaired Track B correlation defects — October 27, 2026
+
+- `_correlated_event_ids` accepts matching host event IDs from provider metadata;
+  the tested generic storage path can mark unrelated records KNOWN and
+  AUTHORITATIVE_ONLY. Native attacker reach is not established.
+- Partial exposed parent mappings are discarded. The trace retains UNKNOWN but
+  the exposure scorer ignores it; storage instead labels the mapped subset
+  KNOWN. A scorer-only UNKNOWN rule would miss that producer's uncertainty loss.
+- Generic causal provenance and host-correlation completeness are different
+  facts; a blanket KNOWN-only rule can also overblock independently attested
+  direct identity. No production fix or historical reclassification was made.
+- Hindsight missing/unrecognized state defaults ACTIVE in synthetic schema
+  probes; honest pinned native schema reachability is unverified.
+- The 40 passing research tests intentionally reproduce current behavior. They
+  are not repaired-security invariants or native/model/dispatch observations.
+  Existing RQ4 byte/host-authority controls held in scoped counterexamples.
+- [Exact source and independent review](../research/security-track-b-v1/README.md).
+  Keep the stopped R1-AV package and all sealed evidence unchanged.
+
 ## R1-AV observability, abstention and custody — October 26, 2026
 
 - A complete no-native response need not be appropriate abstention. Only the

@@ -1,5 +1,18 @@
 # Experiment Ledger
 
+## Track A admission stop and Track B research — October 27, 2026
+
+- R1-AV `R1AVEX-20261026-01`: owner-ordered pre-admission stop, zero model/native/
+  remote operations, all 32 slots unobserved, grants unapproved, output unclaimed.
+  This is not a scientific zero-effect result; original window expired.
+- Track B: 24 pure source probes plus 16 separately authored defense-component
+  checks, **40 passed**, no failures/skips; independent scoped review ACCEPT.
+- Two verified measurement-integrity defects, conditional native-normalizer
+  hazard; no protected-action exploit demonstrated and no production repair.
+- [Source/evidence/novelty handoff](../research/security-track-b-v1/README.md).
+  Proposed NEXT-LP-01 remains unexecuted. Historical experiment evidence and
+  frozen package bytes are unchanged; further live work requires fresh gates.
+
 ## R1-AV-v1 offline registration — October 26, 2026
 
 - Eight fixed synthetic blocks × four current-state-availability/history cells:

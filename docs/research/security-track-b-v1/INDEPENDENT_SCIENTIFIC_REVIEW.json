@@ -1,0 +1,79 @@
+{
+  "schema": "memo-track-b-independent-scientific-review-v1",
+  "reviewed_at_utc": "2026-10-27 04:04:05 UTC",
+  "conversation": "MEMO Track B independent defense and methodology review, delegated by root",
+  "model": "GPT-6.1 Sol",
+  "execution_target": "/Users/ian/.codex/worktrees/memo-security-track-b/Memo; pure local Python",
+  "jetstream_action": "NONE",
+  "accepted_revision": "effda0c053bf03723b8089bc331e6b152ef9ab31",
+  "decision": "ACCEPT_SCOPED_OFFLINE_COMPONENT_AND_MEASUREMENT_EVIDENCE",
+  "independence": {
+    "source_probe_author": "track_b_source",
+    "reviewer_and_separate_defense_test_author": "track_b_defense_review",
+    "source_probe_tests_or_accepted_product_source_modified_by_reviewer": false,
+    "reviewer_authored_defense_report_and_tests": true,
+    "literature_primary_sources_independently_refetched_by_reviewer": false,
+    "literature_review_limit": "Reviewed local RELATED_WORK.md for methodological consistency and conservative novelty framing; primary-source retrieval and citation checks remain the literature agent's evidence, not this reviewer's independently replicated observation."
+  },
+  "verification": {
+    "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src /Users/ian/.codex/worktrees/424f/Memo/.venv/bin/python -m pytest -q -p no:cacheprovider tests/research/test_security_track_b_defenses_v1.py tests/research/test_security_track_b_v1.py",
+    "result": "40 passed in 0.36s",
+    "independent_defense_cases": 16,
+    "source_probe_cases": 24,
+    "failures": 0,
+    "skips": 0,
+    "warnings": 0,
+    "accepted_src_and_manifest_diff": "git diff --exit-code -- src manifests: PASS, no changes",
+    "whitespace": "git diff --check: PASS",
+    "containment_limit": "Both modules deny socket/DNS/process calls during tests; imports were inspected and precede the per-test guards. This is not a complete proof of native-runtime containment."
+  },
+  "accepted_claims": [
+    "B1 provider metadata can claim a matching host event identity at the tested pure normalization/storage/scoring boundary; impact is measurement integrity, contingent on writer control and event-ID knowledge.",
+    "B2 two producers can discard unresolved source mappings and the actual scorer can label the surviving active subset AUTHORITATIVE_ONLY; false resolution of uncertainty is the demonstrated defect.",
+    "Mapping completeness differs from generic causal-provenance certainty; a blanket KNOWN-only repair can overblock direct-identity controls and miss the storage producer's premature KNOWN.",
+    "Missing/out-of-schema Hindsight state maps to ACTIVE in synthetic normalizer probes; native schema reachability and exploitation remain UNKNOWN.",
+    "Scripted JSON summary/delegated-message composition reproduces B1 with no-claim UNKNOWN and RQ4 unbound-byte QUARANTINE controls; it is not an independent runtime delegation result.",
+    "Exact RQ4 fixtures permit independently bound current content, deny exact revoked content, and quarantine content lacking required independent bindings; missing bindings cause a measured legitimate-content availability cost.",
+    "The four requested defense conditions are test-only component compositions with fixed SCRIPTED proposals. R1 call_status/classify assesses ACL validity but does not implement an actual permission/dispatch decision.",
+    "NEXT-LP-01 is a bounded proposed next offline registration; exact fixture/oracle/candidate hashes still require freezing before execution."
+  ],
+  "rejected_claims": [
+    "Observed protected-action bypass or demonstrated production attacker access",
+    "Observed native summary/reflection/graph/cache/index revocation propagation",
+    "Filtering caused a changed or safer model response",
+    "ACL classification blocked an actual dispatch",
+    "Forty deterministic checks estimate a population attack rate, utility rate, false-positive rate or false-negative rate",
+    "R1's all-authorized campaign demonstrates defense effectiveness or zero underlying risk",
+    "LC12 native source nonvisibility demonstrates derived-state forgetting or downstream decision safety",
+    "Broad novelty for provenance, source-authority separation, lifecycle filtering, cross-agent laundering or reference monitors"
+  ],
+  "not_evaluated": [
+    "Any provider/model/live experiment or real protected dispatch",
+    "Native attacker metadata write capabilities",
+    "Authenticity of an arbitrary caller-supplied authority-bundle JSON",
+    "Crash/restart persistence, commit-time reauthorization, races and alternate dispatch paths",
+    "General semantic usefulness and abstention appropriateness",
+    "Independent replication of literature results or bibliographic retrieval"
+  ],
+  "authorization": "This is an offline scientific review, not an owner grant, external approval, execution receipt, package admission, source repair or permission to reopen any sealed attempt. Track A pre-admission stop remains in force.",
+  "reviewed_sha256": {
+    "src/memlife/adapters/mem0.py": "cf244d7896a1787b0bac7fb2cc0f4fa59b5ba7070411bf1f8b458ba6f0a84d16",
+    "src/memlife/adapters/hindsight.py": "0ca0919c616774480c8326730dfe3cff4961a644ce429760945551fa4a3f0646",
+    "src/memlife/runner/storage_batch.py": "fce4f1f7772b2f547ed27ab890c4ccbdb1ee8bb9737421a5315f0bceb46e0d23",
+    "src/memlife/models/authority.py": "fa4632dc953b0f08c63a7bf4b081b956bc4c0683747aa95c170dbf7a60c08d3f",
+    "src/memlife/runner/provenance.py": "acd33ab2d537a2f46e20c1d2aa209ae46869e00073ce3c6c10ae3ef490213364",
+    "src/memlife/runner/rq4_policy.py": "104734dd136d15a4360b1823e7f2efa2d560586e9f468baac2b48bb6a822f38e",
+    "src/memlife/enforcement/filters.py": "9a055673dcaaa7fc6f09a72b5d05ba5bce023169960a758b6c163127ff7f06d4",
+    "src/memlife/models/provenance.py": "81972f8926b86f0a820a2b470bc9ba7fb1799f28325cf52ff789f9d75e2657cb",
+    "src/memlife/r1/protocol.py": "7949c12f25dfff5b5e954778d9d8330453a1972cfa295b0f6133b0d3f65ec69e",
+    "src/memlife/r1/collection.py": "3e0e8d08fc87f99676506f012ee52582d53f15bc7f12b023c8a27b1c94b44732",
+    "src/memlife/r1/access_compat.py": "79ecf0493790268ef740908d724882173b0f500635a24f3e97a1e1b0fccc365f",
+    "src/memlife/r1_av/protocol.py": "beb518488f387dafc566e25b5e8e55dd49079dd1c0270a41eb583d9a0b337e47",
+    "src/memlife/crossarch.py": "1e4cf919e21517a4bd37ce86c845ee5c1c2a17f82cac2bb906a664d7cf4a31df",
+    "tests/research/test_security_track_b_v1.py": "13352c0d3dd3b3f93f0da7fe5217819a27fcb5b73127c4ee913fca83be8a5349",
+    "tests/research/test_security_track_b_defenses_v1.py": "35ec1e1b520e9f6ea1b86ebe64677d60381ebb6d1e58550339f304ca103aaebb",
+    "docs/research/security-track-b-v1/SOURCE_FINDINGS.md": "d0d64205f52a711f4ec68d7c1bb57e9d90b797ac3e0d25c4f53324872e775e69",
+    "docs/research/security-track-b-v1/DEFENSE_EVALUATION.md": "6e3a77c6e0a0ace0621f2c9b934efdc6558e4f6933839eeb3da1932369e6266f",
+    "docs/research/security-track-b-v1/RELATED_WORK.md": "972fe1e59893d27cc911759492b718aa82a96d77fedeb8ec508cda1eab3fdf0d"
+  }
+}
