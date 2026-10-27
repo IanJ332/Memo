@@ -78,4 +78,3 @@ It does not claim historical deployed V2, model effects, task success, authentic
 provider behavior, atomic authority snapshots or protected-action safety.
 All review work used local retained evidence and offline tests; zero new native,
 hosted scientific model, browser, SSH or Jetstream actions occurred.
-
