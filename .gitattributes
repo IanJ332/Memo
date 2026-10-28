@@ -55,3 +55,4 @@ tests/research/test_native_q1*.py text eol=lf
 tests/fakes/q1_scripted.py text eol=lf
 manifests/next-lp-native-q1/** text eol=lf
 docs/research/next-lp-native-q1/** text eol=lf
+docs/research/native-q1-live-20261028/** text eol=lf

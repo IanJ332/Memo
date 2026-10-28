@@ -1,5 +1,17 @@
 # Project State
 
+## Current: Q1 native qualification complete — October 28, 2026
+
+[Sealed native result](../research/native-q1-live-20261028/README.md): 18/18 SDK
+returns, zero failed/ambiguous; metadata roundtrip 5/5; unsupported CURRENT attribution
+baseline 5/5, V2 zero; benign current 9/9. Both-record aggregates MIXED in 3/3 in both arms.
+Old exact-byte binding rejects actual same-ID mutation; refreshed Host snapshot
+restores current authority. Two native reopen transitions preserve expected state;
+deleted UNTRUSTED absent at slots 14/15/16. Owned container/store cleanup verified before
+06:45 UTC. Zero scientific model/protected/browser/SSH/Jetstream activity. Exact package,
+registration,code and original evidence untouched; no replay/replacement. STOP
+additional Q1 native collection. No production caller migration or general exploit claim.
+
 ## Current: Q1 offline runner and readiness implemented — October 27, 2026
 
 [Full readiness](../research/next-lp-native-q1/README.md): frozen independent

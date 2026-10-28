@@ -1,5 +1,21 @@
 # Claims register — v3 / 2026-10-24
 
+## Q1 authentic native result — October 28, 2026
+
+[Original evidence identities, audit and limitations](native-q1-live-20261028/README.md)
+govern these new observations; historical results below remain unchanged.
+
+| ID | Status | Claim and permissible scope | Evidence / next gate |
+| --- | --- | --- | --- |
+| Q1N-01 | OBSERVED | Native Mem0 2.2.1 infer=False preserves both exact forged event-ID metadata keys in 5/5 eligible surfaces | One controlled store/two synthetic records, get/search/reopen; attacker access not established |
+| Q1N-02 | VERIFIED | Complete baseline map still adds unsupported CURRENT to UNTRUSTED in 5/5; V2 does so in 0/5 | Actual original normalizer/storage producer; UNTRUSTED baseline MIXED 5/5, V2 NONAUTH 5/5; false AUTHONLY 0; aggregate MIXED 3/3 in both arms |
+| Q1N-03 | OBSERVED | Independent capture-time Host association preserves current 9/9; genuine old byte binding rejects same-ID update, refreshed binding authoritative | Host oracle/snapshots outside provider write access; no remote attestation/atomic production policy claim |
+| Q1N-04 | OBSERVED | Reopen preserves original IDs/metadata, then updated current and deleted-target absence | Actual two reopens and histories; no physical erasure/derived forgetting claim |
+| Q1N-05 | VERIFIED | 18 intents/18 returns, zero errors/ambiguous/retries; original 100-member seal and owned cleanup verified | Frozen read-only audit 18/18; exact owner window respected; no scientific model/protected/browser/SSH/Jetstream actions |
+| Q1N-06 | UNSUPPORTED | Qualification establishes attacker privileges, model/task/tool safety, derived-lineage completeness or broad provider security | Direct records only, repeated observations not independent; optional BM25/NLP disabled; legacy production callers unchanged |
+
+Decision STOP further Q1 native collection; no replay or automatic campaign expansion.
+
 ## NEXT-LP-NATIVE-01-Q1 readiness update — October 27, 2026
 
 [Implementation and validation](next-lp-native-q1/README.md) are prospective

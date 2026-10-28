@@ -1,5 +1,21 @@
 # Debugging Ledger
 
+## Authentic Q1 confirms metadata attribution and byte freshness — October 28, 2026
+
+- With the complete legitimate Host map retained, native UNTRUSTED metadata
+  injects unsupported CURRENT into original per-record source attribution in 5/5.
+  That record is MIXED, not AUTHORITATIVE_ONLY; full-set MIXED is unchanged in
+  both arms in 3/3 and cannot expose this contamination alone.
+- Host-owned V2 association attributes only UNTRUSTED in 5/5 while current survives in 9/9.
+  Same-ID BETA bytes reject actual old ALPHA binding; refreshed snapshot restores
+  CURRENT. IDs alone do not carry a binding's byte freshness or policy revision.
+- Original 100-member native seal, 24 worker frames, 19 Host snapshots and 18 API returns
+  are immutable. [Closeout](../research/native-q1-live-20261028/README.md) preserves
+  scope: one local store/two controlled records, optional BM25/NLP disabled, no attacker
+  privilege/model/tool-effect proof. No old production path was silently repaired.
+- All 18 attempts returned, zero retry/failure/ambiguous; owned container/store absent.
+  Do not rerun/replay/replace this sealed execution.
+
 ## Q1 fixed controller readiness invariants — October 27, 2026
 
 - Host intent must be exclusive/durable before every attempted dispatch; failed
