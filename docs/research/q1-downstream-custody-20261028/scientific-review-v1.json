@@ -1,0 +1,112 @@
+{
+  "schema": "Q1_POST_CLOSEOUT_SCIENTIFIC_REVIEW_V1",
+  "baseline_main": "22fd438ffa85826e4635e37d0240c9a181b272c1",
+  "execution_id": "Q1EX-20261027-6d796fae",
+  "reviewer": "/root/postq1_consumers",
+  "role": "INDEPENDENT_PRIMARY_HELPER_TEST_REPORT_AND_PUBLICATION_REVIEW",
+  "model_context": "Inherited owner-selected configuration; runtime model/effort not separately introspected",
+  "authorship_disclosure": "Reviewer authored SOURCE_FINDINGS.md/source-binding-v1.json; independent of primary author of consumer helper, tests and final report. Not a second independent review of own source narrative.",
+  "verdict": "ACCEPT",
+  "interpretation": "NO_IMPLEMENTED_Q1_SECURITY_EDGE",
+  "strongest_supported_level": "NATIVE_PERSISTENCE_AND_FALSE_SOURCE_ATTRIBUTION_MEASUREMENT_INTEGRITY",
+  "security_decision_influence": "NOT_DEMONSTRATED_NO_IMPLEMENTED_CORRUPTED_Q1_ATTRIBUTION_CONSUMER_FOUND",
+  "model_behavior": "NOT_EVALUATED",
+  "protected_execution": "NO_CONNECTED_Q1_PATH_IMPLEMENTED_OR_ACTION_DISPATCHED",
+  "original_evidence": {
+    "inventory_sha256": "648d14e445d0d8b9b89105d30b05a1ce7e68b41b4999f53b14865c0e3ee52246",
+    "analysis_sha256": "c5fbdfd0848871cc6a3c18a44ef01c8fee52cc318f53f4ac07973515d90571ab",
+    "safe_summary_sha256": "72ccaec306779a52761450f85e4ba089a6de35eb490761779b99b1ef8bdae3cf",
+    "local_preservation_sha256": "1fc368547689d7499205936c9db26c51d65fcecc711eaa2bda13b4906aafac4c",
+    "originals_modified": false
+  },
+  "source_review": {
+    "source_binding_inventory_sha256": "430cd81f0afb891b24699b2f06688d612c4867280bd5dac47cb20eef503cf525",
+    "original_source_bindings_verified": 18,
+    "production_source_modified": false,
+    "actual_mem0_trace_uses_host_id_map": true,
+    "attribution_sensitive_concrete_filter_found": false,
+    "q1_to_rq4_converter_found": false,
+    "report_and_research_triage_consumers_found": true,
+    "external_deployment_attested": false
+  },
+  "independent_validation": {
+    "focused_tests": {
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0
+    },
+    "actual_sealed_cli_reproduced": true,
+    "exact_replay_sha256": "1d91e7431d471043a86c5fc8649851a9e1769ab4a61805f9ff0e02169a747832",
+    "actual_search_slots": [
+      6,
+      12,
+      16
+    ],
+    "returned_native_record_instances": 5,
+    "existing_filters": 2,
+    "preserved_comparisons": 6,
+    "preserved_decisions_and_delivered_ids_unchanged": true,
+    "missing_host_counterfactual_comparisons": 6,
+    "counterfactual_not_native_observation": true,
+    "authored_query_envelope_not_sdk_observation": true,
+    "no_artificial_storage_filter_rq4_bridge": true,
+    "model_tool_state": "NOT_RUN"
+  },
+  "custody_publication_review": {
+    "custody_review_sha256": "13529ed0ec4a61a8a48c4dc19607b2ee00a93535cdf25f9f4c9ecf5ea477cffa",
+    "custody_reviewer": "/root/postq1_backup_privacy",
+    "custody_verdict": "ACCEPT",
+    "scope": "Reviewed public custody report, accepted independent custody evidence and final report consistency. Relied on separate reviewer for exact private payload/remote asset verification; did not repeat network or claim second private-member scan.",
+    "export_sha256": "87e9d73c112a6b6857ee052ff6b1fbd72862fb0a49bb217bd06ef86b88e90f33",
+    "export_members": 150,
+    "unchanged_scientific_originals": 92,
+    "frozen_source_members": 45,
+    "admin_original_omissions": 8,
+    "safe_derived_package_distinguished_from_original_approved_package": true,
+    "full_local_archive_not_uploaded": true,
+    "published_credentials_grants_private_host_paths_or_raw_native_ids_found": false,
+    "current_asset_not_future_availability_guarantee": true
+  },
+  "publication_bindings": {
+    "README.md": "49b17825cd48948b4cfe67e9b3e17ad6ace4c372c832ded74b82711be3ca57ef",
+    ".gitattributes": "643351e137640e92ca7fa9c0780f4eb4d7fca5130d92638b3c57dc4bcf43a722",
+    "scripts/research/q1_downstream_audit.py": "e6ac28ce052b82e5603181b19659b0bec1ab408b164f157b00cef631ac99c6b0",
+    "tests/research/test_q1_downstream_audit.py": "16612bc809d3063520ebb13ff2b2c18de5fe2bb60e3260fa448e9a981c05b57b",
+    "docs/project/MODEL_HANDOFF.md": "4f28cbd6d5d681f4329fb024015afcfc507574e94f7b1b0cda5f795d5ae103a0",
+    "docs/project/PROJECT_STATE.md": "ee063c111936aaf33bf691aa8e9e83dca3c74f4b8e54984456d4acd6e5a30b98",
+    "docs/project/DEBUGGING_LEDGER.md": "695af23d591e83c2219b384a939e3f9a5564c4a10daf05150704c38fc3f52ba0",
+    "docs/project/EXPERIMENT_LEDGER.md": "084489ac1c14682583d75534fc01df9dbbedade2145a944683460cb81fa1c81e",
+    "docs/research/CLAIMS_REGISTER.md": "299df1773040b1c5140a80a24af7537802d2b9869d029330c5713770a9f8df2b",
+    "docs/research/q1-downstream-custody-20261028/CUSTODY_BACKUP_REVIEW.md": "575839e897ce86bed4b4ec40bb55281274e03e2e5a132b2e182bae806648386c",
+    "docs/research/q1-downstream-custody-20261028/DOWNSTREAM_REPLAY.json": "1d91e7431d471043a86c5fc8649851a9e1769ab4a61805f9ff0e02169a747832",
+    "docs/research/q1-downstream-custody-20261028/README.md": "6e852aae8d1e6e2d90d2a5121120fd14bcd9be3e49ea72d5658d422246535470",
+    "docs/research/q1-downstream-custody-20261028/SCIENTIFIC_REVIEW.md": "8d33f2e47917b58a9545da21e350bf1da6ca36207da0b57b8b27f2189253b77a",
+    "docs/research/q1-downstream-custody-20261028/SOURCE_FINDINGS.md": "0aaa1db8f68f81e0aef04ea7af0f9fe7a460080eb0af78b18f3decbe226e1002",
+    "docs/research/q1-downstream-custody-20261028/custody-backup-review-v1.json": "13529ed0ec4a61a8a48c4dc19607b2ee00a93535cdf25f9f4c9ecf5ea477cffa",
+    "docs/research/q1-downstream-custody-20261028/source-binding-v1.json": "430cd81f0afb891b24699b2f06688d612c4867280bd5dac47cb20eef503cf525"
+  },
+  "tracked_header_and_attributes_diff_sha256": "f126b95a818188e926171f644c019b1d3a2d2e92ab0a64fb82d09786a61322d1",
+  "resolved_findings": [
+    {
+      "severity": "MINOR_WORDING",
+      "file": "docs/project/DEBUGGING_LEDGER.md",
+      "resolution": "Replaced absolute prevent-provenance-laundering wording with auditable omissions and explicit derived-view distinction before binding."
+    }
+  ],
+  "unresolved_actionable_findings": [],
+  "research_decision": "STOP",
+  "next_experiment": "NONE_JUSTIFIED_UNTIL_ACTUAL_RELEVANT_INGRESS_OR_ATTRIBUTION_CONSUMING_POLICY_IDENTIFIED",
+  "authority_limitations": [
+    "Not a live-execution approval or deployment attestation",
+    "Q1 remains sealed; R1-AV stopped execution remains separate",
+    "No new model campaign or protected dispatch authorized"
+  ],
+  "reviewer_actions": {
+    "browser_actions": 0,
+    "network_operations": 0,
+    "native_provider_operations": 0,
+    "hosted_scientific_model_requests": 0,
+    "jetstream_actions": 0,
+    "protected_dispatches": 0
+  }
+}

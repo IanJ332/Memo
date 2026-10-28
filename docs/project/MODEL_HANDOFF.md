@@ -1,5 +1,23 @@
 # Model Handoff — Start Here
 
+## Current: Q1 custody/downstream audit complete offline — October 28, 2026
+
+[Evidence-first audit](../research/q1-downstream-custody-20261028/README.md)
+verifies the sealed Q1 originals, safe summaries and full local preservation
+copy. A privacy-reviewed minimal scientific subset is now genuinely off-host in
+the owned PRIVATE evidence repository, with fresh authenticated download,
+all 150-member verification and 18-row scientific replay. Grants/administration
+were excluded; this is not a full administrative/runtime backup.
+
+Source tracing finds no implemented connection from Q1's corrupted attribution
+to a security-policy decision, model proposal or protected dispatch. Existing
+trace filters ignore the changed fields; RQ4 has a separate exact-identity
+contract and no Q1 adapter. Six preserved native-query/filter comparisons keep
+decisions/delivery unchanged; six distinct missing-Host counterfactuals show
+UNKNOWN does not itself quarantine. Seven new tests pass. STOP the downstream
+exploit claim and further collection until a real consuming boundary exists.
+Q1, R1-AV's stopped record and all frozen source/data remain unchanged.
+
 ## Current: Q1 native execution complete and sealed — October 28, 2026
 
 `Q1EX-20261027-6d796fae` completed the unchanged registered 18 SDK attempts,

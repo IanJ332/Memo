@@ -1,5 +1,20 @@
 # Claims register — v3 / 2026-10-24
 
+## Q1 custody and downstream consequence update — October 28, 2026
+
+[Exact source graph, replay and backup review](q1-downstream-custody-20261028/README.md)
+govern these offline findings. No scientific collection or protected action occurred.
+
+| ID | Status | Claim and permissible scope | Evidence / next gate |
+| --- | --- | --- | --- |
+| Q1D-01 | VERIFIED | Original Q1 seal, safe summaries and 178-member local preservation copy retain exact identities | Independent custody review; originals immutable |
+| Q1D-02 | VERIFIED | New genuine PRIVATE off-host scientific subset freshly downloaded, all 150 members and 18 rows verified | 92 original science/45 source; eight admin originals omitted; privacy review before upload; not full administration/runtime backup |
+| Q1D-03 | VERIFIED | Current source exposes reporting/triage consumption but no corrupted-attribution→security-policy/model/dispatch edge | Exact source bindings; current trace producer ignores forged keys, filters read lifecycle/control only; RQ4 has separate contract/no adapter |
+| Q1D-04 | OBSERVED | Six preserved query/filter comparisons retain decisions/delivery; six explicit missing-association counterfactuals remain UNKNOWN without automatic quarantine | Read-only actual-input replay, authored query envelope, model/tool NOT_RUN; seven synthetic controls pass |
+| Q1D-05 | UNSUPPORTED | Q1 demonstrates an exploitable context/action-authorization vulnerability | Missing consuming code edge; native writer privileges, model influence and protected execution not established |
+
+STOP the impact claim and additional campaigns until an actual relevant boundary is identified.
+
 ## Q1 authentic native result — October 28, 2026
 
 [Original evidence identities, audit and limitations](native-q1-live-20261028/README.md)
