@@ -1,5 +1,17 @@
 # Project State
 
+## Current: custody verified; downstream security edge absent — October 28, 2026
+
+[Q1 post-closeout audit](../research/q1-downstream-custody-20261028/README.md):
+original seal/local copy PASS; privacy-reviewed scientific subset privately
+backed up off-host and freshly verified. No Q1 attribution-to-security-decision
+consumer was found in current source. Research diagnostics/triage are distinct;
+trace filters do not read those fields and RQ4 lacks the connecting adapter.
+Read-only comparisons preserve decisions/delivery and model/tool NOT_RUN;
+separate missing-association control is not a new native observation. Seven
+tests pass, zero failed/skipped. STOP the exploit claim and new campaign;
+no original source/evidence or stopped R1-AV record was changed.
+
 ## Current: Q1 native qualification complete — October 28, 2026
 
 [Sealed native result](../research/native-q1-live-20261028/README.md): 18/18 SDK

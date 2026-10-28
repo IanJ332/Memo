@@ -1,5 +1,18 @@
 # Experiment Ledger
 
+## Q1 post-closeout custody/consequence audit — October 28, 2026
+
+- No new scientific collection. Original Q1 seal and 178-member local copy verified.
+- New PRIVATE off-host scientific subset: 225429 bytes/150 members; 92 unchanged
+  scientific originals, 45 frozen source files, eight administrative original omissions.
+  Exact privacy acceptance precedes upload; fresh remote archive/member and
+  18-row scientific replay verification PASS. Not a full administrative backup.
+- Existing trace/filter APIs compared on three actual sealed search record sets under
+  two primitive filters: six preserved comparisons unchanged. Six separately labeled
+  missing-Host counterfactuals yield V2 UNKNOWN but no policy/delivery change.
+- Seven tests pass; no Q1→RQ4 bridge/model response/protected action was invented.
+  STOP security-impact claim and additional collection. [Report](../research/q1-downstream-custody-20261028/README.md).
+
 ## Q1 exact native collection — October 28, 2026
 
 - `Q1EX-20261027-6d796fae` ran once within 06:00–06:45 UTC under direct exact owner

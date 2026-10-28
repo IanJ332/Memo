@@ -1,5 +1,22 @@
 # Debugging Ledger
 
+## Q1 consequence audit: classification is not admission — October 28, 2026
+
+- Storage metadata contamination is proven, but current trace production uses
+  Host ID mapping and does not import those forged keys. Shared candidate types
+  do not establish a storage→filter application edge.
+- V2 trace projection occurs after the existing filter decisions. Withholding
+  the Host association yields UNKNOWN while primitive ALLOW/delivery remains;
+  this is a declared counterfactual/API division, not a native exploit.
+- RQ4's separate byte/proposition/lineage contract has test-only callers and no
+  Q1 converter. Do not invent an adapter or model response to claim impact.
+- Full local preservation archive includes grants/admin; only the independently
+  reviewed scientific subset was uploaded privately. Unchanged 92 scientific files,
+  eight explicit administrative omissions and derived-view labels keep omissions auditable
+  and derived views distinct from originals.
+- [Source, replay and custody review](../research/q1-downstream-custody-20261028/README.md);
+  seven focused tests pass; all original scientific data/source remain immutable.
+
 ## Authentic Q1 confirms metadata attribution and byte freshness — October 28, 2026
 
 - With the complete legitimate Host map retained, native UNTRUSTED metadata

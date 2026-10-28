@@ -1,0 +1,101 @@
+{
+  "baseline_main": "22fd438ffa85826e4635e37d0240c9a181b272c1",
+  "execution_id": "Q1EX-20261027-6d796fae",
+  "limitations": [
+    "Current private asset visibility/readability, not guaranteed future availability.",
+    "Excluded owner/grant/container administration remains local; off-host scientific replay does not reproduce those attestations.",
+    "Source/credential API identifiers and public unused loopback placeholder are not raw credentials.",
+    "Generated research namespace/native IDs/process IDs retained only for necessary synthetic evidence joins."
+  ],
+  "local_preservation": {
+    "all_members_compared": 178,
+    "approved_upload_payload": false,
+    "independent_disaster_backup": false,
+    "scientific_and_admin": true,
+    "sha256": "1fc368547689d7499205936c9db26c51d65fcecc711eaa2bda13b4906aafac4c"
+  },
+  "model_context": "Inherited owner-selected configuration; runtime model/effort not separately introspected",
+  "original_evidence": {
+    "analysis_sha256": "c5fbdfd0848871cc6a3c18a44ef01c8fee52cc318f53f4ac07973515d90571ab",
+    "indexed_members_verified": 100,
+    "inventory_sha256": "648d14e445d0d8b9b89105d30b05a1ce7e68b41b4999f53b14865c0e3ee52246",
+    "originals_modified": false,
+    "safe_summary_sha256": "72ccaec306779a52761450f85e4ba089a6de35eb490761779b99b1ef8bdae3cf"
+  },
+  "remote_copy": {
+    "asset_id": 685720611,
+    "asset_name": "MemLife_Q1EX-20261027-6d796fae_Scientific_Subset_v1.zip",
+    "fresh_authenticated_download_byte_identical": true,
+    "independent_metadata_read_complete_no_later_than_utc": "2026-10-28T17:11:19Z",
+    "original_upload_verified_at_utc": "2026-10-28T17:06:51.473842Z",
+    "owner_id": 100375941,
+    "private_backup_receipt_sha256": "fa0bb6b47db39e9555a0116b608f59c954d3d6c7f2fbd376aad7898c3312fa3a",
+    "release_url": "https://github.com/IanJ332/MemLife-Research-Evidence/releases/tag/q1ex-20261027-6d796fae-scientific-subset-v1",
+    "repository": "IanJ332/MemLife-Research-Evidence",
+    "server_digest": "sha256:87e9d73c112a6b6857ee052ff6b1fbd72862fb0a49bb217bd06ef86b88e90f33",
+    "state": "uploaded",
+    "tag": "q1ex-20261027-6d796fae-scientific-subset-v1",
+    "visibility": "PRIVATE"
+  },
+  "replay": {
+    "host_snapshots": 19,
+    "network_and_process_dispatch_guard": true,
+    "new_native_operations": 0,
+    "primary_and_benign_endpoints": true,
+    "raw_transport_frames": 24,
+    "reproduced_rows": 18,
+    "source_files": 45,
+    "status": "PASS",
+    "unchanged_scientific_originals": 92,
+    "verified_export_members": 150
+  },
+  "reviewer": "/root/postq1_backup_privacy",
+  "reviewer_actions": {
+    "authenticated_read_only_API_calls": 2,
+    "browser_actions": 0,
+    "external_mutations": 0,
+    "hosted_model_requests": 0,
+    "jetstream_actions": 0,
+    "native_provider_operations": 0,
+    "protected_dispatches": 0,
+    "uploads": 0
+  },
+  "role": "INDEPENDENT_CUSTODY_PRIVACY_AND_REMOTE_VERIFICATION",
+  "schema": "Q1_POST_CLOSEOUT_CUSTODY_BACKUP_REVIEW_V1",
+  "scientific_export": {
+    "all_member_bytes_and_24_decoded_frames_privacy_reviewed": true,
+    "bytes": 225429,
+    "derived_audit_inputs_explicitly_not_original_package": true,
+    "exact_privacy_review_sha256": "73dbf7505a09252d887a2ae03f8b7d8e7d8eb720fdd22219131f3d3132323c82",
+    "export_manifest_sha256": "63ef175a36f63b0f4fe2e7800c76458dda3a0ac4f179a8a1facac717896add77",
+    "frozen_source_members": 45,
+    "members": 150,
+    "original_admin_members_omitted": 8,
+    "original_scientific_members": 92,
+    "payload_bytes": 642765,
+    "raw_credentials_grants_private_admin_or_personal_host_paths_exported": false,
+    "scope": "Minimal scientific replay subset, not original full administrative seal or runtime/image/approval attestation",
+    "sha256": "87e9d73c112a6b6857ee052ff6b1fbd72862fb0a49bb217bd06ef86b88e90f33",
+    "unneeded_original_source_members_omitted": 25,
+    "verifier_sha256": "c5f2f0aabcddf94ab8b6a3638af13bc15a3628b70c9159af2a2ecb6d4b27658d"
+  },
+  "source_bindings": {
+    "docs/research/native-q1-live-20261028/README.md": "8435d2ada517416d55646f1794b7dea7c6aec6aaf2f02b0b892b0bb3102015e7",
+    "docs/research/native-q1-live-20261028/SAFE_SUMMARY.json": "72ccaec306779a52761450f85e4ba089a6de35eb490761779b99b1ef8bdae3cf",
+    "docs/research/native-q1-live-20261028/engineering-audit-v1.json": "227a86163f791572a2bdf37f4a48283ba3f6c43350f385f5e6c3052006b6acf4",
+    "docs/research/native-q1-live-20261028/publication-review-v1.json": "7c12e1f4b35f416fbb95ee9be6b11ed5e2dee88c6459418ec3d355a905fe0063",
+    "docs/research/native-q1-live-20261028/scientific-audit-v1.json": "091ebe2271d381d9a1a9a21f26165d55a6521a3ce950605b09b6ec6f82e131ac",
+    "docs/research/q1-downstream-custody-20261028/CUSTODY_BACKUP_REVIEW.md": "575839e897ce86bed4b4ec40bb55281274e03e2e5a132b2e182bae806648386c"
+  },
+  "verdict": "ACCEPT",
+  "workflow_checks": {
+    "broader_prewrite_inventory": "Reported by primary; no claim about arbitrary uninspected off-host storage elsewhere",
+    "fresh_authenticated_download_log_returncode": 0,
+    "new_release_create_log_returncode": 0,
+    "no_old_R1_launcher_or_grant_reuse": true,
+    "root_actor_and_destination_logs_inspected": true,
+    "root_exact_tag_prewrite_404_inspected": true,
+    "uploader_source_inspected": true,
+    "visibility_and_asset_readback_inspected": true
+  }
+}
