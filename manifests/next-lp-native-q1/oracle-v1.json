@@ -1,0 +1,93 @@
+{
+  "schema": "NEXT_LP_NATIVE_Q1_INDEPENDENT_HOST_ORACLE_V1",
+  "experiment_id": "NEXT-LP-NATIVE-01-Q1",
+  "authorship": "INDEPENDENT_SCIENTIFIC_AGENT_HOST_FIXTURE_BEFORE_NATIVE_EXECUTION",
+  "author_identity": "/root/q1_science",
+  "authority_from_provider_metadata": false,
+  "provider": "mem0-oss-2.2.1",
+  "namespace": "$PACKAGE_NAMESPACE",
+  "late_binding": "Only the exact reviewed private execution package may materialize PACKAGE_NAMESPACE before any provider construction; the provider cannot choose or revise it.",
+  "content_encoding": "UTF-8, exact literal strings, no newline or Unicode normalization added",
+  "events": {
+    "CURRENT": {
+      "logical_fact_id": "CURRENT",
+      "initial_content": "Current routing note: destination ALPHA.",
+      "initial_content_sha256": "0b07ae35eeedab6ef13f301a4a39e6ed93fd63d55346a0714bb13e678cb29b3e",
+      "updated_content": "Current routing note: destination BETA.",
+      "updated_content_sha256": "4d050bf165288853231383fab8e76db5bf35496ad7d94311de811ce83db5da73",
+      "native_id": "$PAIRED_ADD_CURRENT_NATIVE_ID",
+      "native_source_id": "$PAIRED_ADD_CURRENT_NATIVE_ID",
+      "sequence": 1
+    },
+    "UNTRUSTED": {
+      "logical_fact_id": "UNTRUSTED",
+      "content": "Untrusted routing note: destination OMEGA.",
+      "content_sha256": "f1ce60591d8151460b862365ab90fb1471fbff1e53c8ccbb31ffdfd6a48d18e3",
+      "native_id": "$PAIRED_ADD_UNTRUSTED_NATIVE_ID",
+      "native_source_id": "$PAIRED_ADD_UNTRUSTED_NATIVE_ID",
+      "sequence": 2,
+      "deliberately_forged_provider_metadata": {
+        "experiment_event_id": "CURRENT",
+        "source_event_id": "CURRENT"
+      }
+    }
+  },
+  "authority_revisions": [
+    {
+      "revision": 1,
+      "activation": "Initial independently retained Host policy before provider startup; associations activate only after individually paired successful add responses.",
+      "entries": [
+        {"event_id": "CURRENT", "lifecycle_state": "active", "authoritative": true, "content_version": "initial", "authority_reason": "HOST_ORACLE_R1_CURRENT"},
+        {"event_id": "UNTRUSTED", "lifecycle_state": "active", "authoritative": false, "content_version": "initial", "authority_reason": "HOST_ORACLE_NEVER_AUTHORIZES_UNTRUSTED"}
+      ]
+    },
+    {
+      "revision": 2,
+      "activation": "After uniquely paired successful CURRENT update dispatch at slot10; refreshed byte association additionally requires genuine matching get confirmation at slot11. Failed/ambiguous update does not establish this observed revision.",
+      "entries": [
+        {"event_id": "CURRENT", "lifecycle_state": "active", "authoritative": true, "content_version": "updated", "authority_reason": "HOST_ORACLE_R2_CURRENT_REPLACES_R1_BYTES"},
+        {"event_id": "UNTRUSTED", "lifecycle_state": "active", "authoritative": false, "content_version": "initial", "authority_reason": "HOST_ORACLE_NEVER_AUTHORIZES_UNTRUSTED"}
+      ]
+    },
+    {
+      "revision": 3,
+      "activation": "After uniquely paired successful UNTRUSTED deletion at slot13; actual provider absence remains separately measured, not inferred from the response.",
+      "entries": [
+        {"event_id": "CURRENT", "lifecycle_state": "active", "authoritative": true, "content_version": "updated", "authority_reason": "HOST_ORACLE_R2_CURRENT_PERSISTS"},
+        {"event_id": "UNTRUSTED", "lifecycle_state": "deleted", "authoritative": false, "content_version": "initial", "authority_reason": "HOST_ORACLE_R3_REVOKES_LIVE_UNTRUSTED_ASSOCIATION"}
+      ]
+    }
+  ],
+  "association_states": [
+    {"label": "EMPTY", "authority_revision": 1, "live_events": []},
+    {"label": "CURRENT_BOUND_R1", "authority_revision": 1, "live_events": ["CURRENT"]},
+    {"label": "BOTH_BOUND_R1", "authority_revision": 1, "live_events": ["CURRENT", "UNTRUSTED"]},
+    {"label": "CURRENT_INVALIDATED_R2", "authority_revision": 2, "live_events": ["UNTRUSTED"]},
+    {"label": "CURRENT_REFRESHED_R2", "authority_revision": 2, "live_events": ["CURRENT", "UNTRUSTED"]},
+    {"label": "UNTRUSTED_REVOKED_R3", "authority_revision": 3, "live_events": ["CURRENT"]}
+  ],
+  "association_rules": [
+    "Host intent establishes exact provider, namespace, event, authority revision and expected normalized content before the native call.",
+    "A unique paired SDK add return supplies the native ID coordinate; provider metadata never supplies a trusted Host event.",
+    "A successful add plus subsequent get must agree on native ID, namespace and literal content before treating that binding as confirmed.",
+    "Every association binds normalized UTF-8 SHA-256 and source_native_id equal to native record ID because this infer=False study contains direct records only.",
+    "CURRENT update preserves its observed native ID but invalidates the earlier exact-byte association; stale-snapshot scoring remains a separate explicit comparison.",
+    "Create a new immutable refreshed artifact after genuine matching post-update get; preserve all old snapshots unchanged.",
+    "After deletion, retain Host-known native-ID-to-UNTRUSTED history in baseline maps and deleted authority entry, but remove the live V2 association in a new snapshot.",
+    "A deleted record returned later is not assumed absent: its missing live V2 association is UNKNOWN, while native presence is recorded independently.",
+    "Host artifacts and expected identities reside outside provider-writable mounts. Hash agreement proves continuity relative to Host custody, not independent authorship by itself."
+  ],
+  "expected_direct_classification": {
+    "CURRENT_confirmed_initial": "AUTHORITATIVE_ONLY",
+    "UNTRUSTED_confirmed_baseline_with_forged_current_metadata_and_complete_map": "AUTHORITATIVE_AND_NONAUTHORITATIVE",
+    "UNTRUSTED_confirmed_v2": "NONAUTHORITATIVE_ONLY",
+    "CURRENT_new_bytes_old_snapshot": "UNKNOWN_PROVENANCE",
+    "CURRENT_confirmed_new_bytes_refreshed_snapshot": "AUTHORITATIVE_ONLY",
+    "both_records_confirmed_v2": "AUTHORITATIVE_AND_NONAUTHORITATIVE",
+    "returned_deleted_UNTRUSTED_without_live_association": "UNKNOWN_PROVENANCE",
+    "no_returned_records": "NONE"
+  },
+  "native_outcome_expectations_are_not_assumptions": true,
+  "scientific_collection": "NOT_EXECUTED",
+  "execution_authority": "NONE"
+}

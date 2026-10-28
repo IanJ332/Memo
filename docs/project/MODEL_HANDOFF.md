@@ -1,5 +1,25 @@
 # Model Handoff — Start Here
 
+## Current: Q1 full offline execution architecture — October 27, 2026
+
+NEXT-LP-NATIVE-01-Q1 now has a fixed eighteen-slot controller, independent frozen
+Host oracle/registration, one isolated container/three native-process transport,
+capture-time Host-only associations, paired raw returns, stale/refreshed byte
+tests, original/V2 per-record and aggregate scoring, owned cleanup, sealed
+evidence replay, and exact prospective package tooling. **140 focused tests
+passed**, zero failures/skips; the actual guarded CLI simulation/audit completed
+and reproduced all eighteen scripted slots. Synthetic validation is not native
+collection. [Readiness handoff](../research/next-lp-native-q1/README.md).
+
+The private prospective package is created only after genuine scientific and
+engineering source acceptance; its exact identity/decision is recorded in the
+package handoff. Owner grant remains UNAPPROVED. No live Mem0 collection, hosted
+model request, provider container start, browser or Jetstream action occurred.
+Next action is fresh exact-package owner scientific authorization with concrete
+UTC start/end plus the actual supported exact-tool approval; no standalone
+platform receipt is required or fabricated. All old campaigns, grants, frozen
+sources and evidence remain unchanged. Earlier dated entries remain historical.
+
 ## Current: NEXT-LP-NATIVE-01 offline investigation — October 27, 2026
 
 [Evidence-first native applicability report](../research/next-lp-native-01/README.md):

@@ -1,5 +1,24 @@
 # Debugging Ledger
 
+## Q1 fixed controller readiness invariants — October 27, 2026
+
+- Host intent must be exclusive/durable before every attempted dispatch; failed
+  or ambiguous slots are spent, never retried/resumed. Original raw returns,
+  malformed/partial transport bytes and errors remain beside derived results.
+- Add-return ID is provisional until get confirms raw native namespace and exact
+  bytes. Host oracle/snapshots are never provider-writable. Metadata/digests do
+  not authenticate Host authorship. Complete baseline history mapping is retained.
+- Update invalidates the old binding; get11 compares actual preserved old digest
+  only when eligible, then may confirm a distinct refreshed Host revision.
+- Independent development review found audit could accept a stopped attempt
+  relabeled COMPLETE after resealing. Final audit reconstructs phase/count/status,
+  stop, cleanup and immutable snapshots; rehashed semantic tamper tests reject it.
+- Pinned SDK uses top_k10 for semantic limit10. Same-ID persistence alone is not
+  byte freshness. Python -B alone permits oldpyc reads; /dev/null pycache prefix
+  prevents unverified cache reads in Host and provider processes.
+- [Architecture/tests](../research/next-lp-native-q1/README.md):140passed; actual
+  CLI scripted18slots/audit18rows. No live scientific result or old artifact changed.
+
 ## Native direct association applicability and staleness — October 27, 2026
 
 - Retrospective R1 join: independently registered host bytes/ACL → SDK input →

@@ -1,5 +1,17 @@
 # Project State
 
+## Current: Q1 offline runner and readiness implemented — October 27, 2026
+
+[Full readiness](../research/next-lp-native-q1/README.md): frozen independent
+registration/oracle; eighteen-call controller and one-container/three-process
+transport; Host-owned immutable associations outside provider mount; paired
+SDK journal, original/V2 attribution and exposure, stop/cleanup and read-only
+audit. 140 focused tests passed,0failed/skipped; scripted CLI18/18 and audit18/18.
+Qualified existing cached runtime verified without provider startup. Exact
+private package preparation follows genuine source reviews; its grant is
+UNAPPROVED and live collection NOT_EXECUTED. No new native/model/Jetstream action.
+Existing production callers and historical experiments remain untouched.
+
 ## Current: native applicability investigated offline — October 27, 2026
 
 NEXT-LP-NATIVE-01 completes an evidence-first retrospective V2 projection:
