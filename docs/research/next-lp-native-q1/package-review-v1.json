@@ -1,0 +1,85 @@
+{
+  "accepted_source_revision": "5c9c1eddef60069d182ed3a6b4b198d0651b2d9f",
+  "browser_actions": 0,
+  "candidate_sha256": "98d813f5fd4530c5d2fa64bf865d31e39593ab559bcaa20d949ad9aa66c40430",
+  "checks": {
+    "all_package_files_read_only": true,
+    "checkout_verify_package": "PASS",
+    "embedding_files": 11,
+    "engineering_review_bindings": 78,
+    "evidence_claimed": false,
+    "exact_launcher_and_effects": "PASS",
+    "frozen_source_git_blob_matches": 70,
+    "frozen_source_verify_package": "PASS",
+    "host_runtime_files": 148,
+    "indexed_members": 73,
+    "native_distributions": 72,
+    "native_installed_hashes": 27613,
+    "package_unchanged": true,
+    "same_destination_repreparation_rejected": "ONE_PROSPECTIVE_PACKAGE_ONLY",
+    "scientific_review_bindings": 24,
+    "store_claimed": false,
+    "unapproved_candidate_rejected": "FRESH_EXACT_OWNER_GRANT_REQUIRED"
+  },
+  "container_starts": 0,
+  "execution_id": "Q1EX-20261027-6d796fae",
+  "experiment": "NEXT-LP-NATIVE-01-Q1",
+  "hosted_model_requests": 0,
+  "inventory_sha256": "dca2938a7cca523b9201a6a13eb9aec782a65f467b29294d2cfdc625b16140de",
+  "jetstream_actions": 0,
+  "launcher_sha256": "cf056b6589479911503732c03b665053debee541c668b02f50b7f255836f8dd0",
+  "model_context": "Inherited owner-selected configuration; no independent runtime model introspection",
+  "new_native_operations": 0,
+  "oracle_sha256": "a9fd6ba1cf837f8759784495a895844df715de13941595bba0feb201eb0a5f5d",
+  "owner_grant": {
+    "approved": false,
+    "expires_at_utc": null,
+    "owner_message_present": false,
+    "starts_at_utc": null
+  },
+  "package_sha256": "04286c76ae23ed6265ebf0be198293616761fe86714b77c69d00735fd26be8ca",
+  "private_package_or_grant_modified": false,
+  "provider_imports_or_constructions": 0,
+  "registration_sha256": "7e5996de1d74dbe5430be2475c3d9a614a6a7284463496971e8638c8f3404382",
+  "remaining_gates": [
+    "Fresh genuine direct owner decision exact execution/package with concrete UTC start/expiry <=2700 seconds",
+    "Actual supported exact-tool approval for launcher and all dependent effects",
+    "Fresh fail-closed package/runtime/resource/namespace/store admission"
+  ],
+  "resource_envelope": {
+    "constructions_max": 3,
+    "containers_max": 1,
+    "cpu_max": 2,
+    "downloads_max": 0,
+    "evidence_bytes_max": 268435456,
+    "free_disk_bytes_min": 8589934592,
+    "hosted_inference_max": 0,
+    "image_builds_max": 0,
+    "jetstream_actions_max": 0,
+    "network": "none",
+    "ram_bytes_max": 6442450944,
+    "stores_max": 1,
+    "top_level_sdk_attempts_max": 18
+  },
+  "reviewer": "/root/q1_engineering",
+  "role": "ENGINEERING_EXACT_PACKAGE",
+  "runtime_receipt_sha256": "9b7303031b6c19b2e12867ee1b9e4ca4ab43b59224198f0b81c2c1af227da08b",
+  "schema": "NEXT_LP_NATIVE_Q1_EXACT_PACKAGE_REVIEW_V1",
+  "scope": "Exact prospective package readiness; not scientific execution authorization",
+  "source_bindings": {
+    "docs/research/next-lp-native-q1/PACKAGE_REVIEW.md": "169d289d63368c75682656858da0c52f90a750526a60cc795d7acd155b29b994",
+    "docs/research/next-lp-native-q1/engineering-review-v1.json": "818da174f3085e854aed2c45c61b9ba7f369b9821580d9ef6fc7b3a43f735f52",
+    "docs/research/next-lp-native-q1/scientific-review-v1.json": "12357af0c8386e513cb9e3f62005d99dfb583fca280b5a2e9331952d1fa28cd0"
+  },
+  "source_review_sha256": {
+    "ENGINEERING": "818da174f3085e854aed2c45c61b9ba7f369b9821580d9ef6fc7b3a43f735f52",
+    "SCIENTIFIC": "12357af0c8386e513cb9e3f62005d99dfb583fca280b5a2e9331952d1fa28cd0"
+  },
+  "time_policy": {
+    "absolute_window": "MUST_BE_FIXED_BY_FRESH_DIRECT_OWNER_GRANT_BEFORE_LAUNCH",
+    "cleanup_reserve_seconds": 60,
+    "maximum_total_seconds": 2700,
+    "scientific_seconds_max": 2640
+  },
+  "verdict": "ACCEPT"
+}
