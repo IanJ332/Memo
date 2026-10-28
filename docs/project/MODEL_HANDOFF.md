@@ -1,5 +1,23 @@
 # Model Handoff — Start Here
 
+## Current: Q1 native execution complete and sealed — October 28, 2026
+
+`Q1EX-20261027-6d796fae` completed the unchanged registered 18 SDK attempts,
+18 returns/0 errors/0 ambiguous, under the exact 06:00–06:45 UTC owner grant and direct
+supported launcher review. Original raw evidence and package remain immutable.
+[Native closeout and exact hashes](../research/native-q1-live-20261028/README.md).
+Forged metadata survived all five eligible native observations. Original per-record
+UNTRUSTED attribution falsely included CURRENT in 5/5; V2 did so in 0/5 and preserved
+current evidence in 9/9. Both-record aggregates remain MIXED in 3/3 in both arms, so attribution rather
+than aggregate label reveals the defect. Genuine same-ID new bytes invalidate
+the old binding; a separately confirmed refreshed snapshot restores authority.
+Deletion/nonvisibility persists after second reopen. Owned container/store absence
+verified; sealed evidence observed complete by 06:03:42 UTC. No hosted inference,
+protected dispatch, browser, SSH or Jetstream action. No attempt may be replayed.
+Decision STOP further Q1 native collection; ordinary production callers remain
+unchanged and attacker privileges/tool safety are not established. Earlier
+dated preparation statuses below retain their historical scope.
+
 ## Current: Q1 full offline execution architecture — October 27, 2026
 
 NEXT-LP-NATIVE-01-Q1 now has a fixed eighteen-slot controller, independent frozen

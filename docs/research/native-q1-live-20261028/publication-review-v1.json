@@ -1,0 +1,61 @@
+{
+  "schema": "NATIVE_Q1_CLOSEOUT_PUBLICATION_REVIEW_V1",
+  "role": "PUBLICATION",
+  "verdict": "ACCEPT",
+  "reviewer_identity": "/root/q1_science",
+  "scope": "Bounded final report/data/header/Claims consistency and privacy review against previously accepted audits; no repeat experiment/source audit/tests",
+  "baseline_commit": "4dc507eb2214470a8a3ed1be186d52833ae8f724",
+  "accepted_audits": {
+    "scientific_audit_sha256": "091ebe2271d381d9a1a9a21f26165d55a6521a3ce950605b09b6ec6f82e131ac",
+    "engineering_audit_sha256": "227a86163f791572a2bdf37f4a48283ba3f6c43350f385f5e6c3052006b6acf4"
+  },
+  "safe_summary_sha256": "72ccaec306779a52761450f85e4ba089a6de35eb490761779b99b1ef8bdae3cf",
+  "checks": {
+    "registered_attempts_and_returns": 18,
+    "failed_or_ambiguous": 0,
+    "primary_baseline_unsupported_CURRENT": 5,
+    "primary_v2_unsupported_CURRENT": 0,
+    "untrusted_baseline_exposure": "AUTHORITATIVE_AND_NONAUTHORITATIVE_NOT_AUTHORITATIVE_ONLY",
+    "both_record_aggregate_MIXED_each_arm": 3,
+    "benign_current_complete": 9,
+    "eligible_stale_and_refreshed_byte_binding_description_consistent": true,
+    "reopen_and_deletion_scope_preserved": true,
+    "configured_resource_caps_not_presented_as_measured_peaks": true,
+    "free_disk_numeric_value_not_claimed": true,
+    "no_per_sdk_timestamps_invented": true,
+    "optional_BM25_NLP_disabled_scope_disclosed": true,
+    "legacy_callers_unchanged": true,
+    "no_native_ids_namespace_actual_private_paths_credentials_or_grant_payloads_in_new_public_artifacts": true,
+    "historical_records_only_preceded_by_new_dated_headers": true,
+    "stop_further_Q1_native_collection_preserved": true
+  },
+  "publication_refinements": [
+    "Only fresh store is writable Host bind mount; bounded writable/tmp tmpfs also disclosed",
+    "Configured CPU/RAM caps distinguished from measured peaks; separately unretained numeric free-disk value acknowledged"
+  ],
+  "actions": {
+    "native_sdk_calls": 0,
+    "docker_operations": 0,
+    "tests_rerun": 0,
+    "experiment_replays": 0,
+    "hosted_model_requests": 0,
+    "browser_actions": 0,
+    "ssh_actions": 0,
+    "jetstream_actions": 0
+  },
+  "tracked_header_attributes_diff_sha256": "ae336f5723734fb78aafbffad4520254f341d5ff3f92cbf9080ab7d2eac2e542",
+  "source_bindings": {
+    ".gitattributes": "e048cbb042d0f62392eba3f090039cb021c3ec68975813715d99fd817a2a1ea1",
+    "docs/project/DEBUGGING_LEDGER.md": "93a2e6eac155c66cf9ef4ee3e6a6042ceb8ead8ddaac9c7e68900b332c3e5cf0",
+    "docs/project/EXPERIMENT_LEDGER.md": "de05f61c8a64b5a145c32b058cfa518b66c15e516dac441cd2b8495330e10629",
+    "docs/project/MODEL_HANDOFF.md": "52fceb6629766253d8ecfb0be24d0724168c7d372d276837f018ed34a3eba265",
+    "docs/project/PROJECT_STATE.md": "0e3ae145bf886727956706e027303ad892be28239f4a44ac46dfb7ffed4d7f85",
+    "docs/research/CLAIMS_REGISTER.md": "6158a0b89ce99d0126d6f952b996edbf27e4c562ea5b98f457ce9dee2555d5d2",
+    "docs/research/native-q1-live-20261028/ENGINEERING_AUDIT.md": "c7d0f669a98905d491eaf439898af47692abd4d8de8c9b7640aafb1046922651",
+    "docs/research/native-q1-live-20261028/README.md": "8435d2ada517416d55646f1794b7dea7c6aec6aaf2f02b0b892b0bb3102015e7",
+    "docs/research/native-q1-live-20261028/SAFE_SUMMARY.json": "72ccaec306779a52761450f85e4ba089a6de35eb490761779b99b1ef8bdae3cf",
+    "docs/research/native-q1-live-20261028/SCIENTIFIC_AUDIT.md": "cf29f428d4d22977faa9d243b273f2cb107668dd38db053c82a7c467f3d37420",
+    "docs/research/native-q1-live-20261028/engineering-audit-v1.json": "227a86163f791572a2bdf37f4a48283ba3f6c43350f385f5e6c3052006b6acf4",
+    "docs/research/native-q1-live-20261028/scientific-audit-v1.json": "091ebe2271d381d9a1a9a21f26165d55a6521a3ce950605b09b6ec6f82e131ac"
+  }
+}

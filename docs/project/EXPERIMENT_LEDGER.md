@@ -1,5 +1,21 @@
 # Experiment Ledger
 
+## Q1 exact native collection — October 28, 2026
+
+- `Q1EX-20261027-6d796fae` ran once within 06:00–06:45 UTC under direct exact owner
+  grant and supported interactive launcher review. 18 SDK intents/18 returns,
+  zero errors/ambiguous/retries; three processes with 6/8/4 calls in one owned container/store.
+- Both forged metadata keys persist in 5/5 eligible observations; baseline falsely
+  attributes CURRENT in 5/5, V2 zero; UNTRUSTED baseline MIXED, V2 NONAUTH. Aggregate MIXED
+  in 3/3 in both arms. Current 9/9 complete. Actual eligible old byte binding UNKNOWN,
+  refreshed binding authoritative; same ID retained, deleted UNTRUSTED absent at slots 14/15/16 after reopen.
+- [Exact originalseal and scope](../research/native-q1-live-20261028/README.md):
+  100 indexed files/352240 bytes, 19 Host snapshots, 24 worker frames. Original raw/private
+  authorization and administration remain excluded from public source.
+- Controller and independent ownedcleanup verification PASS; sealed completion
+  observed no later than 06:03:42 UTC. Zero hosted inference/protected/browser/SSH/Jetstream.
+  STOP further Q1 collection; no replacement or expansion authorized.
+
 ## NEXT-LP-NATIVE-01-Q1 full offline readiness — October 27, 2026
 
 - Independently frozen hypotheses/oracle and exact18SDKslots/3constructions,
