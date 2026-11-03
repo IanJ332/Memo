@@ -124,12 +124,14 @@ class ScriptedDirectIO:
 
 class JetstreamDirectTransport:
     """Single pinned direct request; network admission and live use are separate gates."""
-    def __init__(self, *, provider, model, offline_io=None):
+    def __init__(self, *, provider, model, offline_io=None, fixed_scripted_io=False):
+        if type(fixed_scripted_io) is not bool or (fixed_scripted_io and type(offline_io) is not ScriptedDirectIO): raise ValueError('INVALID_OFFLINE_IO')
         if provider != 'jetstream2_direct' or model != JETSTREAM_MODEL: raise ValueError('INVALID_PROVIDER_CONFIGURATION')
         if offline_io is not None and type(offline_io) is not ScriptedDirectIO: raise ValueError('INVALID_OFFLINE_IO')
         self.model = model
         self.offline_io = offline_io
-    def send(self, body, timeout, max_bytes):
+        self._fixed_scripted_io = fixed_scripted_io
+    def send(self, body, timeout, max_bytes, _scripted_read=ScriptedDirectIO.read):
         if type(body) is not bytes or not 0 < len(body) <= 65536: raise ModelError('REQUEST_LIMIT')
         if type(max_bytes) is not int or not 0 < max_bytes <= 65536: raise ModelError('RESPONSE_LIMIT')
         if type(timeout) not in (int,float) or not 0 < timeout <= 60: raise ModelError('TIMEOUT')
@@ -144,7 +146,8 @@ class JetstreamDirectTransport:
         result=None
         try:
             if self.offline_io is not None:
-                raw = self.offline_io.read(request, timeout, max_bytes)
+                raw = (_scripted_read(self.offline_io, request, timeout, max_bytes) if self._fixed_scripted_io
+                       else self.offline_io.read(request, timeout, max_bytes))
             else:
                 with urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect()).open(request,timeout=timeout) as response:
                     result=_response_envelope(b'', response.status, response.headers, max_bytes, complete=False)
