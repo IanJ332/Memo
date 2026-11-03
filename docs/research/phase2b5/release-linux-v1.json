@@ -1,0 +1,48 @@
+{
+  "archive_members": 89,
+  "archive_sha256": "abdb799fc308058e46e1cf2509b6d4ab74f31cf2d07a267988a2f5b54ba4454e",
+  "archive_size": 2232320,
+  "changed_original_files": {
+    "scripts/nlip_phase2b1_pilot.py": {
+      "new": "4e1110457af96f95514871cbe2f84c2ac7b909d2acb6d435c5a5498fa58e2cbf",
+      "old": "e86485754c6753927f34cf5d929a9671303a1799f7d86b39a7e66547e6256939"
+    },
+    "scripts/nlip_phase2b2_launcher.py": {
+      "new": "3d76c3d3973357ae555d870e001a46cc52b1dc178098dd3c5389e422803cd10c",
+      "old": "3ce259857f2d0b4b803209f9a4c5239c7819d76e010dd71407565c69bdce10c7"
+    },
+    "src/memlife/nlip/model_adapter.py": {
+      "new": "bb550169a0783f01cde5b48e24e3ecf4855a634cacef8214ff4cf05043d3eb8d",
+      "old": "9965aab4961a1f96be1611409441aea2b619141f0271b85f37a4547497508581"
+    },
+    "tests/nlip_phase2b2/test_jetstream_v2.py": {
+      "new": "a56a68157fcdced65dd2921c10d1da0006157c2bc1b2503601b902cf48f6bf1c",
+      "old": "1ab48fd3ae91cdeb04f132f558d72d77b5b5ff4bc8a8f70e4881c7a6c5a49b21"
+    },
+    "tests/nlip_phase2b2/test_phase2b3r_matrix.py": {
+      "new": "07891aaafeca17fdc3e83768f5baf9e883b740e976c4588ea178586867905fdb",
+      "old": "cdf330749f2717f48f014aa2004f721d71aafd48b19c60bcae76d9b2b0ce18d6"
+    },
+    "tests/nlip_phase2b2/test_r4_operator.py": {
+      "new": "fa5ff192e856d92677df3f5c318fe35e662626e89fb03d41064da27502667450",
+      "old": "60772b2dd11a7096c41dffa67a2bcc529d6fa18e02e65028f9d37865a6019586"
+    }
+  },
+  "manifest_sha256": "08a142369630fd8d80b49387d259677d9cf7455337dad726e881bb789a240685",
+  "new_files": [
+    "docs/research/phase2-provider-v2/inventory-phase2b5-macos-v1.json",
+    "scripts/nlip_phase2b5_bootstrap.py",
+    "scripts/nlip_phase2b5_execution.py",
+    "scripts/nlip_phase2b5_runtime.py",
+    "tests/nlip_phase2b5/test_execution_binding.py",
+    "tests/nlip_phase2b5/test_linux_runtime.py",
+    "tests/nlip_phase2b5/test_provider_evidence.py"
+  ],
+  "parent_archive_sha256": "602b14571e7bff6bab0fc9b9a4a97c69b86d69462c00f7b76f5591708e1b895a",
+  "preimport_checks": 3145,
+  "preimport_checksum_sha256": "723a08de1172f5666dfb3d8e008beaf995637491fa16613f80bfcd035b4ac814",
+  "runtime_qualification_sha256": "d5bb560abe3710645efc4611e7dd272129c3429a9464a42b67044a46c1395dbc",
+  "source_files": 87,
+  "source_inventory_sha256": "6cd701b6f1fbf2ab00a541dc87a978a0d68f84760d914f98e7fda712ef28b226",
+  "version": "phase2b5-linux-release-v1"
+}

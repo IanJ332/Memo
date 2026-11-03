@@ -1,0 +1,36 @@
+{
+  "entries": [
+    {
+      "historical_execution": "Q1EX-20261027-6d796fae",
+      "id": "REG-Q1",
+      "not_independent": "Five observations of controlled records, not five independent attacks; sealed native execution must not be replayed.",
+      "reuse": "slots 5/6/7/9/12 contamination; same-ID stale/refreshed binding at slot 11; known development regressions only"
+    },
+    {
+      "historical_execution": "NEXT-LP-01",
+      "id": "REG-LP01",
+      "not_independent": "12 known synthetic fixtures and 48 paired producer/classifier rows; representation pair and rereads do not increase independent case count.",
+      "reuse": "LP01-03 missing,09 scope,10 stale,11 conflict,12 current; LP01-04/06/07 audit-only semantic reminders"
+    }
+  ],
+  "executable_in_this_package": false,
+  "independent_evaluation_count": 0,
+  "schema": "nlip-phase0-development-regressions/1",
+  "source_bindings": [
+    {
+      "repository_relative_path": "manifests/next-lp-01/oracle-v1.json",
+      "sha256": "e7bd10745fa0fc360449b6c87dc2101110de6b3ab41d38498c2ecf68b1a07f0c",
+      "size_bytes": 4012
+    },
+    {
+      "repository_relative_path": "manifests/next-lp-native-q1/oracle-v1.json",
+      "sha256": "a9fd6ba1cf837f8759784495a895844df715de13941595bba0feb201eb0a5f5d",
+      "size_bytes": 6244
+    },
+    {
+      "repository_relative_path": "docs/research/q1-downstream-custody-20261028/SOURCE_FINDINGS.md",
+      "sha256": "0aaa1db8f68f81e0aef04ea7af0f9fe7a460080eb0af78b18f3decbe226e1002",
+      "size_bytes": 10679
+    }
+  ]
+}

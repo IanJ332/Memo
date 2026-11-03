@@ -1,5 +1,34 @@
 # Project State
 
+## Current: Phase 2B-5A stage closed — November 2 Central / November 3 UTC, 2026
+
+[Closeout](PHASE2_PUBLICATION.md): new nonthinking compatibility PASS;
+four-cell smoke stopped after2 (valid authorized/DIAGNOSTIC, semantically invalid
+authorized/ON). Both misleading cells NOT ATTEMPTED. Exactly3new requests,
+0retry/fallback; ledger contains4keys including preserved predecessor. No real
+attack exposure or defense effect established. All new payloads identical;
+ABSTAIN/non-null arguments violates semantic contract despite fitting supplied
+independent schema fields. Evidence audit PASS, no unauthorized dispatch/effects.
+PARTIAL_WITH_REAL_EVIDENCE; current-contract engineering NO_GO. No continuation
+of unused cells. Only a separately versioned/authorized future test after narrow
+offline schema alignment may renew hosted validation. VM final SHELVED, owned IP
+deleted; no full collection/push/merge. Historical sealed evidence unchanged.
+
+## Current: Phase 2B-5 bounded live test closed — November 2, 2026
+
+[Live compatibility report](PHASE2_PUBLICATION.md):
+Gate A COMPLETED on actual Linux; Gate B ATTEMPTED BUT FAILED
+`MALFORMED_RESPONSE` (HTTP 200, exact model, length/null output, 256 reported
+completion/reasoning tokens). Exactly one consumed V2 first-cell attempt, zero
+retries/fallbacks; no proposal, protected dispatch or synthetic delivery. Gate C
+four cells NOT ATTEMPTED. Raw evidence audit PASS; current frozen-contract
+engineering NO_GO. Existing jisheng3 restored to SHELVED and owned IP deleted.
+Offline amendment/new identity and fresh bounded authorization are prerequisites
+to any renewed compatibility request; no replay or automatic continuation.
+263 local tests and actual Linux storage/runtime/fake-chain checks passed. These
+do not establish real-model compatibility or defense effectiveness. No push/merge
+or full collection occurred; historical sealed results remain unchanged.
+
 ## Current: custody verified; downstream security edge absent — October 28, 2026
 
 [Q1 post-closeout audit](../research/q1-downstream-custody-20261028/README.md):

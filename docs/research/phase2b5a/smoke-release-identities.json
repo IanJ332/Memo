@@ -1,0 +1,46 @@
+{
+  "archive_bytes": 849920,
+  "archive_members": 8,
+  "archive_sha256": "9b97536ddf708006af5d4a35fc6820e10fc16eb56ac758adc5eff2c9c65d161c",
+  "binding_sha256": "0faf59dfdbf1b16001965f3eac2b5fc7da0f150d18ec13c497c1f18574c6c690",
+  "changed": {
+    "docs/research/phase2b5a/smoke-v2.json": {
+      "new": "ac94d2a732d604e03d45d0ec5e3ee9932303c26ea235820869aac43834613da7",
+      "old": null
+    },
+    "scripts/nlip_phase2b1_pilot.py": {
+      "new": "aa6d5fb8b581d1469f8a6967656c87cdead9f80bad82e2f100824865a3dd35b0",
+      "old": "47067aff65974ee0f7b72026cd9531d1afb74dc1257b35fb5a29712d42f89a60"
+    },
+    "scripts/nlip_phase2b2_launcher.py": {
+      "new": "cd783c87a3db26b8f2b9440b899b7080bdecf3481a280665329d46854d5c96a8",
+      "old": "4f1e4079335500e9b18ce803749d3d16187c7a71f1247325130f17af280b6776"
+    },
+    "scripts/nlip_phase2b5_bootstrap.py": {
+      "new": "335bce32c43279c72d75610d8efc13bd9cce95f9362cf0e275901f4caabd2622",
+      "old": "3cbc99d470cf077ba3d2acd3227b75404af64c4cb5a2a0fc755e38df97b73f21"
+    },
+    "scripts/nlip_phase2b5_execution.py": {
+      "new": "3d8a25e0f70afd3d733fd77d1245da5d1b5d09f55d7a8439fe3146c62295a773",
+      "old": "c479b0002129bd77929c30d5aa8cdf1d4cfb849b131faa5882c7983475f14904"
+    },
+    "tests/nlip_phase2b5a/test_smoke.py": {
+      "new": "ea5a402ccc834ffc34f60ce0d3341a45ac4fe1c3e47ffe20473487be52d27427",
+      "old": null
+    }
+  },
+  "end_utc_iso": "2026-11-03T00:24:00+00:00",
+  "manifest_sha256": "ac94d2a732d604e03d45d0ec5e3ee9932303c26ea235820869aac43834613da7",
+  "reuse_checks": 172,
+  "reuse_checks_sha256": "9d153f269a0d7fe9c5b8c15bb1009c49f6b712885a5ecb5c4564d17f88477964",
+  "runtime_reuse": {
+    "checks": "interpreter/configuration/native/trust/dependency metadata plus prior qualification identity; stop on mismatch",
+    "full_installed_file_rehash": false,
+    "mode": "PREVIOUSLY_QUALIFIED_UNCHANGED_ENVIRONMENT",
+    "previous_qualification_sha256": "d5bb560abe3710645efc4611e7dd272129c3429a9464a42b67044a46c1395dbc"
+  },
+  "source_files": 91,
+  "source_inventory_sha256": "6e45e1a818518401dcc2458def9dad574cc289f12ddf4dd1d6c2a8ec18aa2a4f",
+  "start_utc_iso": "2026-11-03T00:14:00+00:00",
+  "version": "phase2b5a-smoke-delta-v2"
+}

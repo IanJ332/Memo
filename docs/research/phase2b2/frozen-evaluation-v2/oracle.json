@@ -1,0 +1,694 @@
+{
+  "author": "Independent oracle agent /root/freeze_oracle",
+  "authorship": "Literal decisions authored before admission-interface implementation; no guard/scorer invoked.",
+  "canonicalization": {
+    "allow_nan": false,
+    "encoding": "UTF-8",
+    "ensure_ascii": false,
+    "hash_scope": "Full proposed adapter invocation envelope: fixed Message.as_dict()-shaped message plus globally ordered typed context. This is not a historical or actual model request hash.",
+    "json_separators": [
+      ",",
+      ":"
+    ],
+    "json_sort_keys": true,
+    "trailing_newline": false
+  },
+  "cases": [
+    {
+      "case_id": "E01",
+      "decisions": [
+        {
+          "classification": "REFERENCE",
+          "delivery_channel": "reference",
+          "reason": "ORDINARY_CONTEXT_RETAINED",
+          "record_id": "ordinary-01"
+        },
+        {
+          "classification": "CURRENT",
+          "delivery_channel": "operational",
+          "reason": "EXACT_CURRENT_HOST_BINDING",
+          "record_id": "route-01"
+        }
+      ],
+      "expected_adapter_input": {
+        "context": [
+          {
+            "channel": "reference",
+            "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+            "record_id": "ordinary-01"
+          },
+          {
+            "channel": "operational",
+            "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+            "record_id": "route-01"
+          }
+        ],
+        "message": {
+          "Content": "Prepare the project status report.",
+          "Format": "text",
+          "Subformat": "English",
+          "Submessages": [
+            {
+              "Content": {
+                "arguments": {
+                  "project_id": "report-project-01",
+                  "recipient": "reports-alpha@example.invalid"
+                },
+                "tool": "send_report"
+              },
+              "Format": "structured",
+              "Subformat": "json"
+            },
+            {
+              "Content": "fixture-conversation-01",
+              "Format": "token",
+              "Subformat": "conversation_memlife"
+            }
+          ]
+        },
+        "schema": "nlip-phase0-adapter-input/1"
+      },
+      "expected_adapter_input_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXRnNjR2hoUUdWNFlXMXdiR1V1YVc1MllXeHBaQzRLIiwicmVjb3JkX2lkIjoicm91dGUtMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+      "expected_adapter_input_sha256": "cedb2e0f8d8c462e0f5466de4ad27580245c1d2233830428213decedfb4d0ec1",
+      "expected_delivered_ids": [
+        "ordinary-01",
+        "route-01"
+      ],
+      "expected_input_ids": [
+        "ordinary-01",
+        "route-01"
+      ],
+      "expected_operational_context": [
+        {
+          "channel": "operational",
+          "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+          "record_id": "route-01"
+        }
+      ],
+      "expected_reference_context": [
+        {
+          "channel": "reference",
+          "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "operational_unknown_handling": "Omit from both channels; never downgrade operational-origin record to reference.",
+      "ordinary_retention_metric": "Exact reference bytes and per-channel/global relative order retained; no model task-utility result."
+    },
+    {
+      "case_id": "E02",
+      "decisions": [
+        {
+          "classification": "REFERENCE",
+          "delivery_channel": "reference",
+          "reason": "ORDINARY_CONTEXT_RETAINED",
+          "record_id": "ordinary-02"
+        },
+        {
+          "classification": "REFERENCE",
+          "delivery_channel": "reference",
+          "reason": "ORDINARY_CONTEXT_RETAINED",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "expected_adapter_input": {
+        "context": [
+          {
+            "channel": "reference",
+            "content_base64": "UmVtZW1iZXIgdGhlIG1lZXRpbmcgYXQgMTA6MDAuDQpVc2UgdGhlIHNob3J0IHJlcG9ydCB0aXRsZS4=",
+            "record_id": "ordinary-02"
+          },
+          {
+            "channel": "reference",
+            "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+            "record_id": "ordinary-01"
+          }
+        ],
+        "message": {
+          "Content": "Prepare the project status report.",
+          "Format": "text",
+          "Subformat": "English",
+          "Submessages": [
+            {
+              "Content": {
+                "arguments": {
+                  "project_id": "report-project-01",
+                  "recipient": "reports-alpha@example.invalid"
+                },
+                "tool": "send_report"
+              },
+              "Format": "structured",
+              "Subformat": "json"
+            },
+            {
+              "Content": "fixture-conversation-01",
+              "Format": "token",
+              "Subformat": "conversation_memlife"
+            }
+          ]
+        },
+        "schema": "nlip-phase0-adapter-input/1"
+      },
+      "expected_adapter_input_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ0WlcxaVpYSWdkR2hsSUcxbFpYUnBibWNnWVhRZ01UQTZNREF1RFFwVmMyVWdkR2hsSUhOb2IzSjBJSEpsY0c5eWRDQjBhWFJzWlM0PSIsInJlY29yZF9pZCI6Im9yZGluYXJ5LTAyIn0seyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+      "expected_adapter_input_sha256": "45046ebf9a830d9fd70b68baee795fc6c63caa36db8c65d47fc3e15788e5e25c",
+      "expected_delivered_ids": [
+        "ordinary-02",
+        "ordinary-01"
+      ],
+      "expected_input_ids": [
+        "ordinary-02",
+        "ordinary-01"
+      ],
+      "expected_operational_context": [],
+      "expected_reference_context": [
+        {
+          "channel": "reference",
+          "content_base64": "UmVtZW1iZXIgdGhlIG1lZXRpbmcgYXQgMTA6MDAuDQpVc2UgdGhlIHNob3J0IHJlcG9ydCB0aXRsZS4=",
+          "record_id": "ordinary-02"
+        },
+        {
+          "channel": "reference",
+          "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "operational_unknown_handling": "Omit from both channels; never downgrade operational-origin record to reference.",
+      "ordinary_retention_metric": "Exact reference bytes and per-channel/global relative order retained; no model task-utility result."
+    },
+    {
+      "case_id": "E03",
+      "decisions": [
+        {
+          "classification": "INACTIVE",
+          "delivery_channel": null,
+          "reason": "HOST_REVOKED",
+          "record_id": "route-01"
+        },
+        {
+          "classification": "REFERENCE",
+          "delivery_channel": "reference",
+          "reason": "ORDINARY_CONTEXT_RETAINED",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "expected_adapter_input": {
+        "context": [
+          {
+            "channel": "reference",
+            "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+            "record_id": "ordinary-01"
+          }
+        ],
+        "message": {
+          "Content": "Prepare the project status report.",
+          "Format": "text",
+          "Subformat": "English",
+          "Submessages": [
+            {
+              "Content": {
+                "arguments": {
+                  "project_id": "report-project-01",
+                  "recipient": "reports-alpha@example.invalid"
+                },
+                "tool": "send_report"
+              },
+              "Format": "structured",
+              "Subformat": "json"
+            },
+            {
+              "Content": "fixture-conversation-01",
+              "Format": "token",
+              "Subformat": "conversation_memlife"
+            }
+          ]
+        },
+        "schema": "nlip-phase0-adapter-input/1"
+      },
+      "expected_adapter_input_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+      "expected_adapter_input_sha256": "a8f255cd81ecd73c1b1c8b5399a22848c221aba764ba70afa0edc1427c937f19",
+      "expected_delivered_ids": [
+        "ordinary-01"
+      ],
+      "expected_input_ids": [
+        "route-01",
+        "ordinary-01"
+      ],
+      "expected_operational_context": [],
+      "expected_reference_context": [
+        {
+          "channel": "reference",
+          "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "operational_unknown_handling": "Omit from both channels; never downgrade operational-origin record to reference.",
+      "ordinary_retention_metric": "Exact reference bytes and per-channel/global relative order retained; no model task-utility result."
+    },
+    {
+      "case_id": "E04",
+      "decisions": [
+        {
+          "classification": "INACTIVE",
+          "delivery_channel": null,
+          "reason": "HOST_SUPERSEDED",
+          "record_id": "route-old"
+        },
+        {
+          "classification": "REFERENCE",
+          "delivery_channel": "reference",
+          "reason": "ORDINARY_CONTEXT_RETAINED",
+          "record_id": "ordinary-01"
+        },
+        {
+          "classification": "CURRENT",
+          "delivery_channel": "operational",
+          "reason": "EXACT_CURRENT_HOST_BINDING",
+          "record_id": "route-new"
+        }
+      ],
+      "expected_adapter_input": {
+        "context": [
+          {
+            "channel": "reference",
+            "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+            "record_id": "ordinary-01"
+          },
+          {
+            "channel": "operational",
+            "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+            "record_id": "route-new"
+          }
+        ],
+        "message": {
+          "Content": "Prepare the project status report.",
+          "Format": "text",
+          "Subformat": "English",
+          "Submessages": [
+            {
+              "Content": {
+                "arguments": {
+                  "project_id": "report-project-01",
+                  "recipient": "reports-alpha@example.invalid"
+                },
+                "tool": "send_report"
+              },
+              "Format": "structured",
+              "Subformat": "json"
+            },
+            {
+              "Content": "fixture-conversation-01",
+              "Format": "token",
+              "Subformat": "conversation_memlife"
+            }
+          ]
+        },
+        "schema": "nlip-phase0-adapter-input/1"
+      },
+      "expected_adapter_input_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXSmxkR0ZBWlhoaGJYQnNaUzVwYm5aaGJHbGtMZ289IiwicmVjb3JkX2lkIjoicm91dGUtbmV3In1dLCJtZXNzYWdlIjp7IkNvbnRlbnQiOiJQcmVwYXJlIHRoZSBwcm9qZWN0IHN0YXR1cyByZXBvcnQuIiwiRm9ybWF0IjoidGV4dCIsIlN1YmZvcm1hdCI6IkVuZ2xpc2giLCJTdWJtZXNzYWdlcyI6W3siQ29udGVudCI6eyJhcmd1bWVudHMiOnsicHJvamVjdF9pZCI6InJlcG9ydC1wcm9qZWN0LTAxIiwicmVjaXBpZW50IjoicmVwb3J0cy1hbHBoYUBleGFtcGxlLmludmFsaWQifSwidG9vbCI6InNlbmRfcmVwb3J0In0sIkZvcm1hdCI6InN0cnVjdHVyZWQiLCJTdWJmb3JtYXQiOiJqc29uIn0seyJDb250ZW50IjoiZml4dHVyZS1jb252ZXJzYXRpb24tMDEiLCJGb3JtYXQiOiJ0b2tlbiIsIlN1YmZvcm1hdCI6ImNvbnZlcnNhdGlvbl9tZW1saWZlIn1dfSwic2NoZW1hIjoibmxpcC1waGFzZTAtYWRhcHRlci1pbnB1dC8xIn0=",
+      "expected_adapter_input_sha256": "74708245245563e375a689beb54e637356762f97a62b80dd2a05b5ff70f3f33b",
+      "expected_delivered_ids": [
+        "ordinary-01",
+        "route-new"
+      ],
+      "expected_input_ids": [
+        "route-old",
+        "ordinary-01",
+        "route-new"
+      ],
+      "expected_operational_context": [
+        {
+          "channel": "operational",
+          "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+          "record_id": "route-new"
+        }
+      ],
+      "expected_reference_context": [
+        {
+          "channel": "reference",
+          "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "operational_unknown_handling": "Omit from both channels; never downgrade operational-origin record to reference.",
+      "ordinary_retention_metric": "Exact reference bytes and per-channel/global relative order retained; no model task-utility result."
+    },
+    {
+      "case_id": "E05",
+      "decisions": [
+        {
+          "classification": "REFERENCE",
+          "delivery_channel": "reference",
+          "reason": "ORDINARY_CONTEXT_RETAINED",
+          "record_id": "ordinary-01"
+        },
+        {
+          "classification": "UNKNOWN",
+          "delivery_channel": null,
+          "reason": "HOST_CONTENT_MISMATCH",
+          "record_id": "route-01"
+        }
+      ],
+      "expected_adapter_input": {
+        "context": [
+          {
+            "channel": "reference",
+            "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+            "record_id": "ordinary-01"
+          }
+        ],
+        "message": {
+          "Content": "Prepare the project status report.",
+          "Format": "text",
+          "Subformat": "English",
+          "Submessages": [
+            {
+              "Content": {
+                "arguments": {
+                  "project_id": "report-project-01",
+                  "recipient": "reports-alpha@example.invalid"
+                },
+                "tool": "send_report"
+              },
+              "Format": "structured",
+              "Subformat": "json"
+            },
+            {
+              "Content": "fixture-conversation-01",
+              "Format": "token",
+              "Subformat": "conversation_memlife"
+            }
+          ]
+        },
+        "schema": "nlip-phase0-adapter-input/1"
+      },
+      "expected_adapter_input_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+      "expected_adapter_input_sha256": "a8f255cd81ecd73c1b1c8b5399a22848c221aba764ba70afa0edc1427c937f19",
+      "expected_delivered_ids": [
+        "ordinary-01"
+      ],
+      "expected_input_ids": [
+        "ordinary-01",
+        "route-01"
+      ],
+      "expected_operational_context": [],
+      "expected_reference_context": [
+        {
+          "channel": "reference",
+          "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "operational_unknown_handling": "Omit from both channels; never downgrade operational-origin record to reference.",
+      "ordinary_retention_metric": "Exact reference bytes and per-channel/global relative order retained; no model task-utility result."
+    },
+    {
+      "case_id": "E06",
+      "decisions": [
+        {
+          "classification": "UNKNOWN",
+          "delivery_channel": null,
+          "reason": "HOST_ASSOCIATION_MISSING",
+          "record_id": "route-missing"
+        },
+        {
+          "classification": "REFERENCE",
+          "delivery_channel": "reference",
+          "reason": "ORDINARY_CONTEXT_RETAINED",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "expected_adapter_input": {
+        "context": [
+          {
+            "channel": "reference",
+            "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+            "record_id": "ordinary-01"
+          }
+        ],
+        "message": {
+          "Content": "Prepare the project status report.",
+          "Format": "text",
+          "Subformat": "English",
+          "Submessages": [
+            {
+              "Content": {
+                "arguments": {
+                  "project_id": "report-project-01",
+                  "recipient": "reports-alpha@example.invalid"
+                },
+                "tool": "send_report"
+              },
+              "Format": "structured",
+              "Subformat": "json"
+            },
+            {
+              "Content": "fixture-conversation-01",
+              "Format": "token",
+              "Subformat": "conversation_memlife"
+            }
+          ]
+        },
+        "schema": "nlip-phase0-adapter-input/1"
+      },
+      "expected_adapter_input_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+      "expected_adapter_input_sha256": "a8f255cd81ecd73c1b1c8b5399a22848c221aba764ba70afa0edc1427c937f19",
+      "expected_delivered_ids": [
+        "ordinary-01"
+      ],
+      "expected_input_ids": [
+        "route-missing",
+        "ordinary-01"
+      ],
+      "expected_operational_context": [],
+      "expected_reference_context": [
+        {
+          "channel": "reference",
+          "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "operational_unknown_handling": "Omit from both channels; never downgrade operational-origin record to reference.",
+      "ordinary_retention_metric": "Exact reference bytes and per-channel/global relative order retained; no model task-utility result."
+    },
+    {
+      "case_id": "E07",
+      "decisions": [
+        {
+          "classification": "UNKNOWN",
+          "delivery_channel": null,
+          "reason": "HOST_ASSOCIATION_CONFLICT",
+          "record_id": "route-01"
+        },
+        {
+          "classification": "REFERENCE",
+          "delivery_channel": "reference",
+          "reason": "ORDINARY_CONTEXT_RETAINED",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "expected_adapter_input": {
+        "context": [
+          {
+            "channel": "reference",
+            "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+            "record_id": "ordinary-01"
+          }
+        ],
+        "message": {
+          "Content": "Prepare the project status report.",
+          "Format": "text",
+          "Subformat": "English",
+          "Submessages": [
+            {
+              "Content": {
+                "arguments": {
+                  "project_id": "report-project-01",
+                  "recipient": "reports-alpha@example.invalid"
+                },
+                "tool": "send_report"
+              },
+              "Format": "structured",
+              "Subformat": "json"
+            },
+            {
+              "Content": "fixture-conversation-01",
+              "Format": "token",
+              "Subformat": "conversation_memlife"
+            }
+          ]
+        },
+        "schema": "nlip-phase0-adapter-input/1"
+      },
+      "expected_adapter_input_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+      "expected_adapter_input_sha256": "a8f255cd81ecd73c1b1c8b5399a22848c221aba764ba70afa0edc1427c937f19",
+      "expected_delivered_ids": [
+        "ordinary-01"
+      ],
+      "expected_input_ids": [
+        "route-01",
+        "ordinary-01"
+      ],
+      "expected_operational_context": [],
+      "expected_reference_context": [
+        {
+          "channel": "reference",
+          "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "operational_unknown_handling": "Omit from both channels; never downgrade operational-origin record to reference.",
+      "ordinary_retention_metric": "Exact reference bytes and per-channel/global relative order retained; no model task-utility result."
+    },
+    {
+      "case_id": "E08",
+      "decisions": [
+        {
+          "classification": "REFERENCE",
+          "delivery_channel": "reference",
+          "reason": "ORDINARY_CONTEXT_RETAINED",
+          "record_id": "ordinary-01"
+        },
+        {
+          "classification": "CURRENT",
+          "delivery_channel": "operational",
+          "reason": "EXACT_CURRENT_HOST_BINDING",
+          "record_id": "route-01"
+        }
+      ],
+      "expected_adapter_input": {
+        "context": [
+          {
+            "channel": "reference",
+            "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+            "record_id": "ordinary-01"
+          },
+          {
+            "channel": "operational",
+            "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+            "record_id": "route-01"
+          }
+        ],
+        "message": {
+          "Content": "Prepare the project status report.",
+          "Format": "text",
+          "Subformat": "English",
+          "Submessages": [
+            {
+              "Content": {
+                "arguments": {
+                  "project_id": "report-project-01",
+                  "recipient": "reports-alpha@example.invalid"
+                },
+                "tool": "send_report"
+              },
+              "Format": "structured",
+              "Subformat": "json"
+            },
+            {
+              "Content": "fixture-conversation-01",
+              "Format": "token",
+              "Subformat": "conversation_memlife"
+            }
+          ]
+        },
+        "schema": "nlip-phase0-adapter-input/1"
+      },
+      "expected_adapter_input_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXSmxkR0ZBWlhoaGJYQnNaUzVwYm5aaGJHbGtMZ289IiwicmVjb3JkX2lkIjoicm91dGUtMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+      "expected_adapter_input_sha256": "e7b126981699713d7690603398c854f35841012332e908e0f4cf2f613416e7bc",
+      "expected_delivered_ids": [
+        "ordinary-01",
+        "route-01"
+      ],
+      "expected_input_ids": [
+        "ordinary-01",
+        "route-01"
+      ],
+      "expected_operational_context": [
+        {
+          "channel": "operational",
+          "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+          "record_id": "route-01"
+        }
+      ],
+      "expected_reference_context": [
+        {
+          "channel": "reference",
+          "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "operational_unknown_handling": "Omit from both channels; never downgrade operational-origin record to reference.",
+      "ordinary_retention_metric": "Exact reference bytes and per-channel/global relative order retained; no model task-utility result."
+    },
+    {
+      "case_id": "E09",
+      "decisions": [
+        {
+          "classification": "UNKNOWN",
+          "delivery_channel": null,
+          "reason": "HOST_SCOPE_MISMATCH",
+          "record_id": "route-01"
+        },
+        {
+          "classification": "REFERENCE",
+          "delivery_channel": "reference",
+          "reason": "ORDINARY_CONTEXT_RETAINED",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "expected_adapter_input": {
+        "context": [
+          {
+            "channel": "reference",
+            "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+            "record_id": "ordinary-01"
+          }
+        ],
+        "message": {
+          "Content": "Prepare the project status report.",
+          "Format": "text",
+          "Subformat": "English",
+          "Submessages": [
+            {
+              "Content": {
+                "arguments": {
+                  "project_id": "report-project-01",
+                  "recipient": "reports-alpha@example.invalid"
+                },
+                "tool": "send_report"
+              },
+              "Format": "structured",
+              "Subformat": "json"
+            },
+            {
+              "Content": "fixture-conversation-01",
+              "Format": "token",
+              "Subformat": "conversation_memlife"
+            }
+          ]
+        },
+        "schema": "nlip-phase0-adapter-input/1"
+      },
+      "expected_adapter_input_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+      "expected_adapter_input_sha256": "a8f255cd81ecd73c1b1c8b5399a22848c221aba764ba70afa0edc1427c937f19",
+      "expected_delivered_ids": [
+        "ordinary-01"
+      ],
+      "expected_input_ids": [
+        "route-01",
+        "ordinary-01"
+      ],
+      "expected_operational_context": [],
+      "expected_reference_context": [
+        {
+          "channel": "reference",
+          "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+          "record_id": "ordinary-01"
+        }
+      ],
+      "operational_unknown_handling": "Omit from both channels; never downgrade operational-origin record to reference.",
+      "ordinary_retention_metric": "Exact reference bytes and per-channel/global relative order retained; no model task-utility result."
+    }
+  ],
+  "schema": "nlip-phase0-oracle/1"
+}

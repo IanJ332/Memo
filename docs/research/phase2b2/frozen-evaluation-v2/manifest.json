@@ -1,0 +1,49 @@
+{
+  "author_agent": "/root/freeze_oracle",
+  "frozen_before_guard_implementation": true,
+  "members": [
+    {
+      "path": "AUTHORSHIP.json",
+      "sha256": "a3a9cb78457ce6362ed8883cfad934de2c7f4c54f4d1e5829cf4b3f23de3c365",
+      "size_bytes": 1774
+    },
+    {
+      "path": "CORRECTION.json",
+      "sha256": "e52082f66226ade910927db80ace47e9fed1060a67a460ea24d728b0864eb96d",
+      "size_bytes": 1290
+    },
+    {
+      "path": "README.md",
+      "sha256": "8151be81fa2edeb505561b72c06dd8c4f1b4d71d50356b66a81535b8f574b196",
+      "size_bytes": 6547
+    },
+    {
+      "path": "cases.json",
+      "sha256": "eaf860d8c0fb9006a9e7b1d27da5437c1b92895f7a975405db032e73ef81a387",
+      "size_bytes": 57656
+    },
+    {
+      "path": "development-regressions.json",
+      "sha256": "185c2fab286b934397b7dd190f76986854ef929113711fbcdb74b04961e84999",
+      "size_bytes": 1531
+    },
+    {
+      "path": "host-source-catalog.json",
+      "sha256": "58936205c533a0905df9ff1c4d4630036604074b3ad33fe084f5aed1898fa900",
+      "size_bytes": 2345
+    },
+    {
+      "path": "oracle.json",
+      "sha256": "b7429b5315cf30217765f5e20a01ce817cae9a5ec1a7918b57a2c2f1e453b84f",
+      "size_bytes": 31772
+    },
+    {
+      "path": "validate.py",
+      "sha256": "239fe69717aa42310092ec4d3ea2c465306568c018d0b70556305da212fce845",
+      "size_bytes": 12074
+    }
+  ],
+  "schema": "nlip-phase0-evaluation-freeze/2",
+  "supersedes_manifest_sha256": "ca9b86c1ac573a71f359269fca988738a3120633f3e8a7e1eb6b74ed92b60924",
+  "version": "v2"
+}
