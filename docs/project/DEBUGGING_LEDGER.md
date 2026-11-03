@@ -1,5 +1,52 @@
 # Debugging Ledger
 
+## Phase 2B-5A: JSON Schema fields do not encode every semantic invariant — November 3 UTC, 2026
+
+- Adding only top-level chat_template_kwargs.enable_thinking=false yielded0
+  reported reasoning tokens in all3new returns and a valid compatibility result,
+  preserving256tokens/schema/task/sender. The original failed attempt stays consumed.
+- Second smoke cell returned valid JSON: ABSTAIN/toolnull with populated arguments.
+  Independent nullable schema fields permit that combination; separate adapter
+  semantics require argumentsnull. MALFORMED_RESPONSE is correct, but stored
+  schema_validity INVALID must not be advertised as malformed JSON, provider schema
+  rejection or disproven strict-schema enforcement. No normalization/retry.
+- Every actual amended request was byte-identical/empty-memory. No ON causal
+  claim or live memory-attack observation: both misleading cells were stopped
+  before reservation/send. Invalid output is not a valid abstention or safety win.
+- Failed cell stored task_utilitynull; registered otherwise0 rule derives0 from
+  known no delivery. Correct derived reporting only, preserve original fields.
+- Focused review caught inherited V2 predecessor digests in unexecuted smoke-v1.
+  Preserve it and candidate archive; corrected smoke-v2 binds actual V3 success
+  and explicit V2 ancestor fields. Never overwrite registration history to hide it.
+- [Closeout](PHASE2_PUBLICATION.md): evidence audit PASS,3new requests,
+  smoke stopped after2,0retry/fallback, current-contract NO_GO. Runtime reused with
+  limited identity checks; no repeat3038-file sweep/dependency rebuild. Final VM
+  SHELVED/task-owned IP deleted. Stage closed; no unused-cell continuation.
+
+## Phase 2B-5: completion reasoning can exhaust a valid request's budget — November 2, 2026
+
+- Actual registered Qwen first cell returned HTTP 200 and exact model ID, but
+  finish `length`, content null and 256/256 completion tokens reported as reasoning.
+  This is `MALFORMED_RESPONSE`, not a schema-rejection or model-alias finding.
+  No valid proposal/abstention exists to score; no dispatch/delivery occurred.
+- One manifest-keyed reservation is permanently consumed. Do not retry it or
+  spend the four conditional smoke requests to compensate. Any budget/reasoning
+  correction needs a versioned amendment and new experimental identity.
+- Linux normal Python startup loaded distro sitecustomize; preserve the initial
+  qualification STOP. Reviewed -I-S-B selection avoids site.main and records the
+  actual base process prefix separately from selected venv identity. Built-in
+  fcntl has no extension file; bind actual built-in registration to interpreter
+  bytes, never fabricate a file/hash or weaken extension checks.
+- Retain observed HTTP headers/status and bounded partial/late response bytes
+  on read/deadline failures, without accepting late dispatch. Raw response privacy
+  and evidence completeness differ from structured output validity. Capture
+  response evidence before protected dispatch and reconcile ledger plus all
+  request/context/response hashes before declaring evidence complete.
+- [Full closeout](PHASE2_PUBLICATION.md); 263 local tests,
+  actual Linux qualification/fake chain PASS; independent real-evidence audit PASS.
+  Original source/archive/inventory/scientific manifest and historical observations
+  remain preserved. VM final SHELVED, task-owned IP removed.
+
 ## Q1 consequence audit: classification is not admission — October 28, 2026
 
 - Storage metadata contamination is proven, but current trace production uses

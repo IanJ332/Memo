@@ -1,0 +1,19 @@
+{
+  "author_agent": "/root/freeze_oracle",
+  "changes": [
+    "E04 application-owned ID/use reservation, note append, Host persisted-byte confirmation, then CURRENT snapshot publication.",
+    "E08 explicit persisted-byte confirmation before refreshed CURRENT snapshot publication.",
+    "Validator checks reservation custody and confirmation-before-new-CURRENT order.",
+    "Authorship/README and correction provenance versioned."
+  ],
+  "prior_manifest_sha256": "ca9b86c1ac573a71f359269fca988738a3120633f3e8a7e1eb6b74ed92b60924",
+  "reason": "Independent reviewer found E04 published route-new CURRENT before NOTE_APPEND persisted it, contradicting required Host verification custody. Preserve v1 finding and bytes; v2 makes creation-before-verification executable.",
+  "schema": "nlip-phase0-correction-provenance/1",
+  "scientific_or_guard_execution_before_correction": false,
+  "supersedes": "../manifest.json",
+  "trust_limit": "Synthetic fixture role separation only; this does not establish deployed Host custody.",
+  "unchanged": [
+    "Every oracle classification, reason, exact delivered context and adapter-input hash.",
+    "Every initial and final application/Host state, note content, source catalog, development regression reference, case count and audit-only label."
+  ]
+}

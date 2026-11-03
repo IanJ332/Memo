@@ -172,3 +172,16 @@ unless infrastructure may have changed.
 For every execution prompt, declare `CONVERSATION`, `MODEL`, `EXECUTION
 TARGET`, and `JETSTREAM ACTION`. If automation opened Jetstream, clean up and
 shelve it; never automatically shelve an instance that was already active.
+
+## Phase 2 cross-agent handoff — 2026-11-02
+
+Phase 2B-5B is `OFFLINE_AMENDMENT_BLOCKED`: V4 schema candidates are offline,
+not live-integrated or authorized. No V4 hosted request has occurred. Historical
+experiment grants do not authorize a new live experiment. Preserve every frozen
+attempt and consumed reservation. See `docs/project/MODEL_HANDOFF.md` and
+`docs/project/AGENT_ONBOARDING.md`. After verified migration, develop from the
+canonical main checkout; keep machine-specific context ignored in `.local/`.
+Coding-agent model routing is independent of registered scientific inference:
+never silently change its model or endpoint. Prefer source-first, minimal,
+evidence-first changes and targeted tests; avoid redundant full-repository scans,
+overlapping general-purpose agents and unfocused reviews.

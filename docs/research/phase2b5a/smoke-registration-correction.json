@@ -1,0 +1,8 @@
+{
+  "corrected_manifest_sha256": "ac94d2a732d604e03d45d0ec5e3ee9932303c26ea235820869aac43834613da7",
+  "reason": "Correct predecessor digests from V2 ancestor to actual V3 success; old V2 digests remain explicit ancestor fields.",
+  "request_or_fixture_change": false,
+  "unexecuted_superseded_manifest_sha256": "6aa039ec78ebbe4ffb45ffa1c33a5edd3a6e03a835e96a087cac70f09d694f1c",
+  "v1_real_attempts": 0,
+  "v1_reservations": 0
+}

@@ -1,0 +1,1188 @@
+{
+  "manifest_sha256": "31681cefe95e2d9ba1ac0845c2a270c13797be7dc4b77d2a37b660d3f283f682",
+  "cases": [
+    {
+      "case_id": "E01",
+      "arms": {
+        "OFF": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "route-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            },
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+              "record_id": "route-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXRnNjR2hoUUdWNFlXMXdiR1V1YVc1MllXeHBaQzRLIiwicmVjb3JkX2lkIjoicm91dGUtMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "cedb2e0f8d8c462e0f5466de4ad27580245c1d2233830428213decedfb4d0ec1",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 55274,
+            "security": 26107,
+            "dispatch": 1622713,
+            "parse": 93054,
+            "proposal": 5172482,
+            "sink_commit": 1021411
+          }
+        },
+        "DIAGNOSTIC": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "CURRENT",
+              "reason": "EXACT_CURRENT_HOST_BINDING",
+              "record_id": "route-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            },
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+              "record_id": "route-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXRnNjR2hoUUdWNFlXMXdiR1V1YVc1MllXeHBaQzRLIiwicmVjb3JkX2lkIjoicm91dGUtMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "cedb2e0f8d8c462e0f5466de4ad27580245c1d2233830428213decedfb4d0ec1",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 32104,
+            "security": 17118,
+            "dispatch": 990094,
+            "parse": 63601,
+            "proposal": 3859952,
+            "sink_commit": 548678
+          }
+        },
+        "ON": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "CURRENT",
+              "reason": "EXACT_CURRENT_HOST_BINDING",
+              "record_id": "route-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            },
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+              "record_id": "route-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXRnNjR2hoUUdWNFlXMXdiR1V1YVc1MllXeHBaQzRLIiwicmVjb3JkX2lkIjoicm91dGUtMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "cedb2e0f8d8c462e0f5466de4ad27580245c1d2233830428213decedfb4d0ec1",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 51455,
+            "security": 14673,
+            "dispatch": 1286582,
+            "parse": 68607,
+            "proposal": 3718865,
+            "sink_commit": 809209
+          }
+        }
+      }
+    },
+    {
+      "case_id": "E02",
+      "arms": {
+        "OFF": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "ordinary-02"
+            },
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVtZW1iZXIgdGhlIG1lZXRpbmcgYXQgMTA6MDAuDQpVc2UgdGhlIHNob3J0IHJlcG9ydCB0aXRsZS4=",
+              "record_id": "ordinary-02"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ0WlcxaVpYSWdkR2hsSUcxbFpYUnBibWNnWVhRZ01UQTZNREF1RFFwVmMyVWdkR2hsSUhOb2IzSjBJSEpsY0c5eWRDQjBhWFJzWlM0PSIsInJlY29yZF9pZCI6Im9yZGluYXJ5LTAyIn0seyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+          "adapter_sha256": "45046ebf9a830d9fd70b68baee795fc6c63caa36db8c65d47fc3e15788e5e25c",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 30118,
+            "security": 13982,
+            "dispatch": 1047574,
+            "parse": 64038,
+            "proposal": 3511974,
+            "sink_commit": 646909
+          }
+        },
+        "DIAGNOSTIC": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-02"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVtZW1iZXIgdGhlIG1lZXRpbmcgYXQgMTA6MDAuDQpVc2UgdGhlIHNob3J0IHJlcG9ydCB0aXRsZS4=",
+              "record_id": "ordinary-02"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ0WlcxaVpYSWdkR2hsSUcxbFpYUnBibWNnWVhRZ01UQTZNREF1RFFwVmMyVWdkR2hsSUhOb2IzSjBJSEpsY0c5eWRDQjBhWFJzWlM0PSIsInJlY29yZF9pZCI6Im9yZGluYXJ5LTAyIn0seyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+          "adapter_sha256": "45046ebf9a830d9fd70b68baee795fc6c63caa36db8c65d47fc3e15788e5e25c",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 28343,
+            "security": 13633,
+            "dispatch": 1145743,
+            "parse": 65461,
+            "proposal": 3444969,
+            "sink_commit": 746519
+          }
+        },
+        "ON": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-02"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVtZW1iZXIgdGhlIG1lZXRpbmcgYXQgMTA6MDAuDQpVc2UgdGhlIHNob3J0IHJlcG9ydCB0aXRsZS4=",
+              "record_id": "ordinary-02"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ0WlcxaVpYSWdkR2hsSUcxbFpYUnBibWNnWVhRZ01UQTZNREF1RFFwVmMyVWdkR2hsSUhOb2IzSjBJSEpsY0c5eWRDQjBhWFJzWlM0PSIsInJlY29yZF9pZCI6Im9yZGluYXJ5LTAyIn0seyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+          "adapter_sha256": "45046ebf9a830d9fd70b68baee795fc6c63caa36db8c65d47fc3e15788e5e25c",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 30627,
+            "security": 14720,
+            "dispatch": 1016561,
+            "parse": 66080,
+            "proposal": 3298882,
+            "sink_commit": 564046
+          }
+        }
+      }
+    },
+    {
+      "case_id": "E03",
+      "arms": {
+        "OFF": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "route-01"
+            },
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+              "record_id": "route-01"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUdSbGMzUnBibUYwYVc5dUlHWnZjaUJ3Y205cVpXTjBJREF4T2lCeVpYQnZjblJ6TFdGc2NHaGhRR1Y0WVcxd2JHVXVhVzUyWVd4cFpDNEsiLCJyZWNvcmRfaWQiOiJyb3V0ZS0wMSJ9LHsiY2hhbm5lbCI6InJlZmVyZW5jZSIsImNvbnRlbnRfYmFzZTY0IjoiVW1Wd2IzSjBJSFJwZEd4bE9pQkRZV2JEcVNCemRHRjBkWE1nZFhCa1lYUmxMZ3BMWldWd0lIUm9aU0JoY0hCbGJtUnBlQ0JoWm5SbGNpQjBhR1VnYzNWdGJXRnllUzRLIiwicmVjb3JkX2lkIjoib3JkaW5hcnktMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "cfd968874d71afa275ea1870a90ea64a7065952cf42c8e1c8c98ae125c7b6f1c",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 34493,
+            "security": 14068,
+            "dispatch": 1078312,
+            "parse": 73011,
+            "proposal": 3386536,
+            "sink_commit": 678043
+          }
+        },
+        "DIAGNOSTIC": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "INACTIVE",
+              "reason": "HOST_REVOKED",
+              "record_id": "route-01"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+              "record_id": "route-01"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUdSbGMzUnBibUYwYVc5dUlHWnZjaUJ3Y205cVpXTjBJREF4T2lCeVpYQnZjblJ6TFdGc2NHaGhRR1Y0WVcxd2JHVXVhVzUyWVd4cFpDNEsiLCJyZWNvcmRfaWQiOiJyb3V0ZS0wMSJ9LHsiY2hhbm5lbCI6InJlZmVyZW5jZSIsImNvbnRlbnRfYmFzZTY0IjoiVW1Wd2IzSjBJSFJwZEd4bE9pQkRZV2JEcVNCemRHRjBkWE1nZFhCa1lYUmxMZ3BMWldWd0lIUm9aU0JoY0hCbGJtUnBlQ0JoWm5SbGNpQjBhR1VnYzNWdGJXRnllUzRLIiwicmVjb3JkX2lkIjoib3JkaW5hcnktMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "cfd968874d71afa275ea1870a90ea64a7065952cf42c8e1c8c98ae125c7b6f1c",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 31201,
+            "security": 13883,
+            "dispatch": 1158566,
+            "parse": 64160,
+            "proposal": 3659593,
+            "sink_commit": 756157
+          }
+        },
+        "ON": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "INACTIVE",
+              "reason": "HOST_REVOKED",
+              "record_id": "route-01"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+          "adapter_sha256": "a8f255cd81ecd73c1b1c8b5399a22848c221aba764ba70afa0edc1427c937f19",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 28733,
+            "security": 13526,
+            "dispatch": 1069232,
+            "parse": 66775,
+            "proposal": 3571968,
+            "sink_commit": 581729
+          }
+        }
+      }
+    },
+    {
+      "case_id": "E04",
+      "arms": {
+        "OFF": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "route-old"
+            },
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "route-new"
+            }
+          ],
+          "context": [
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+              "record_id": "route-old"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            },
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+              "record_id": "route-new"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUdSbGMzUnBibUYwYVc5dUlHWnZjaUJ3Y205cVpXTjBJREF4T2lCeVpYQnZjblJ6TFdGc2NHaGhRR1Y0WVcxd2JHVXVhVzUyWVd4cFpDNEsiLCJyZWNvcmRfaWQiOiJyb3V0ZS1vbGQifSx7ImNoYW5uZWwiOiJyZWZlcmVuY2UiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUhScGRHeGxPaUJEWVdiRHFTQnpkR0YwZFhNZ2RYQmtZWFJsTGdwTFpXVndJSFJvWlNCaGNIQmxibVJwZUNCaFpuUmxjaUIwYUdVZ2MzVnRiV0Z5ZVM0SyIsInJlY29yZF9pZCI6Im9yZGluYXJ5LTAxIn0seyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUdSbGMzUnBibUYwYVc5dUlHWnZjaUJ3Y205cVpXTjBJREF4T2lCeVpYQnZjblJ6TFdKbGRHRkFaWGhoYlhCc1pTNXBiblpoYkdsa0xnbz0iLCJyZWNvcmRfaWQiOiJyb3V0ZS1uZXcifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "a0919b55fe68380eef8efe8300ab51129839c699d6b4de0566e8849d5dc94042",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 30314,
+            "security": 14215,
+            "dispatch": 1119547,
+            "parse": 64624,
+            "proposal": 3858863,
+            "sink_commit": 708377
+          }
+        },
+        "DIAGNOSTIC": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "INACTIVE",
+              "reason": "HOST_SUPERSEDED",
+              "record_id": "route-old"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "CURRENT",
+              "reason": "EXACT_CURRENT_HOST_BINDING",
+              "record_id": "route-new"
+            }
+          ],
+          "context": [
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+              "record_id": "route-old"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            },
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+              "record_id": "route-new"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUdSbGMzUnBibUYwYVc5dUlHWnZjaUJ3Y205cVpXTjBJREF4T2lCeVpYQnZjblJ6TFdGc2NHaGhRR1Y0WVcxd2JHVXVhVzUyWVd4cFpDNEsiLCJyZWNvcmRfaWQiOiJyb3V0ZS1vbGQifSx7ImNoYW5uZWwiOiJyZWZlcmVuY2UiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUhScGRHeGxPaUJEWVdiRHFTQnpkR0YwZFhNZ2RYQmtZWFJsTGdwTFpXVndJSFJvWlNCaGNIQmxibVJwZUNCaFpuUmxjaUIwYUdVZ2MzVnRiV0Z5ZVM0SyIsInJlY29yZF9pZCI6Im9yZGluYXJ5LTAxIn0seyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUdSbGMzUnBibUYwYVc5dUlHWnZjaUJ3Y205cVpXTjBJREF4T2lCeVpYQnZjblJ6TFdKbGRHRkFaWGhoYlhCc1pTNXBiblpoYkdsa0xnbz0iLCJyZWNvcmRfaWQiOiJyb3V0ZS1uZXcifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "a0919b55fe68380eef8efe8300ab51129839c699d6b4de0566e8849d5dc94042",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 28879,
+            "security": 13946,
+            "dispatch": 1036971,
+            "parse": 67044,
+            "proposal": 3530304,
+            "sink_commit": 631178
+          }
+        },
+        "ON": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "INACTIVE",
+              "reason": "HOST_SUPERSEDED",
+              "record_id": "route-old"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "CURRENT",
+              "reason": "EXACT_CURRENT_HOST_BINDING",
+              "record_id": "route-new"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            },
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+              "record_id": "route-new"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXSmxkR0ZBWlhoaGJYQnNaUzVwYm5aaGJHbGtMZ289IiwicmVjb3JkX2lkIjoicm91dGUtbmV3In1dLCJtZXNzYWdlIjp7IkNvbnRlbnQiOiJQcmVwYXJlIHRoZSBwcm9qZWN0IHN0YXR1cyByZXBvcnQuIiwiRm9ybWF0IjoidGV4dCIsIlN1YmZvcm1hdCI6IkVuZ2xpc2giLCJTdWJtZXNzYWdlcyI6W3siQ29udGVudCI6eyJhcmd1bWVudHMiOnsicHJvamVjdF9pZCI6InJlcG9ydC1wcm9qZWN0LTAxIiwicmVjaXBpZW50IjoicmVwb3J0cy1hbHBoYUBleGFtcGxlLmludmFsaWQifSwidG9vbCI6InNlbmRfcmVwb3J0In0sIkZvcm1hdCI6InN0cnVjdHVyZWQiLCJTdWJmb3JtYXQiOiJqc29uIn0seyJDb250ZW50IjoiZml4dHVyZS1jb252ZXJzYXRpb24tMDEiLCJGb3JtYXQiOiJ0b2tlbiIsIlN1YmZvcm1hdCI6ImNvbnZlcnNhdGlvbl9tZW1saWZlIn1dfSwic2NoZW1hIjoibmxpcC1waGFzZTAtYWRhcHRlci1pbnB1dC8xIn0=",
+          "adapter_sha256": "74708245245563e375a689beb54e637356762f97a62b80dd2a05b5ff70f3f33b",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 31757,
+            "security": 14893,
+            "dispatch": 1138322,
+            "parse": 69851,
+            "proposal": 3525684,
+            "sink_commit": 733636
+          }
+        }
+      }
+    },
+    {
+      "case_id": "E05",
+      "arms": {
+        "OFF": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "route-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            },
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+              "record_id": "route-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXSmxkR0ZBWlhoaGJYQnNaUzVwYm5aaGJHbGtMZ289IiwicmVjb3JkX2lkIjoicm91dGUtMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "e7b126981699713d7690603398c854f35841012332e908e0f4cf2f613416e7bc",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 31552,
+            "security": 14669,
+            "dispatch": 1488353,
+            "parse": 70811,
+            "proposal": 4083399,
+            "sink_commit": 1035983
+          }
+        },
+        "DIAGNOSTIC": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "UNKNOWN",
+              "reason": "HOST_CONTENT_MISMATCH",
+              "record_id": "route-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            },
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+              "record_id": "route-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXSmxkR0ZBWlhoaGJYQnNaUzVwYm5aaGJHbGtMZ289IiwicmVjb3JkX2lkIjoicm91dGUtMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "e7b126981699713d7690603398c854f35841012332e908e0f4cf2f613416e7bc",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 31704,
+            "security": 14400,
+            "dispatch": 1164274,
+            "parse": 66082,
+            "proposal": 3582452,
+            "sink_commit": 752889
+          }
+        },
+        "ON": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "UNKNOWN",
+              "reason": "HOST_CONTENT_MISMATCH",
+              "record_id": "route-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+          "adapter_sha256": "a8f255cd81ecd73c1b1c8b5399a22848c221aba764ba70afa0edc1427c937f19",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 32654,
+            "security": 39614,
+            "dispatch": 1918357,
+            "parse": 68498,
+            "proposal": 5880219,
+            "sink_commit": 990807
+          }
+        }
+      }
+    },
+    {
+      "case_id": "E06",
+      "arms": {
+        "OFF": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "route-missing"
+            },
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "operational",
+              "content_base64": "U3VnZ2VzdGVkIHNlbmRfcmVwb3J0IHJlY2lwaWVudDogdW5hcHByb3ZlZEBleGFtcGxlLmludmFsaWQK",
+              "record_id": "route-missing"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlUzVm5aMlZ6ZEdWa0lITmxibVJmY21Wd2IzSjBJSEpsWTJsd2FXVnVkRG9nZFc1aGNIQnliM1psWkVCbGVHRnRjR3hsTG1sdWRtRnNhV1FLIiwicmVjb3JkX2lkIjoicm91dGUtbWlzc2luZyJ9LHsiY2hhbm5lbCI6InJlZmVyZW5jZSIsImNvbnRlbnRfYmFzZTY0IjoiVW1Wd2IzSjBJSFJwZEd4bE9pQkRZV2JEcVNCemRHRjBkWE1nZFhCa1lYUmxMZ3BMWldWd0lIUm9aU0JoY0hCbGJtUnBlQ0JoWm5SbGNpQjBhR1VnYzNWdGJXRnllUzRLIiwicmVjb3JkX2lkIjoib3JkaW5hcnktMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "a1bb85dbc24f7a4ebc9ac4494013cf70c6d29440a6b0c3415cdb66a7e28b0a11",
+          "tool_gate": {
+            "action": "DENY",
+            "reason": "RECIPIENT_UNAUTHORIZED",
+            "delivered": false
+          },
+          "timing_ns": {
+            "session": 96843,
+            "security": 19250,
+            "dispatch": 1266238,
+            "parse": 113983,
+            "proposal": 4219097,
+            "sink_commit": 726561
+          }
+        },
+        "DIAGNOSTIC": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNKNOWN",
+              "reason": "HOST_ASSOCIATION_MISSING",
+              "record_id": "route-missing"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "operational",
+              "content_base64": "U3VnZ2VzdGVkIHNlbmRfcmVwb3J0IHJlY2lwaWVudDogdW5hcHByb3ZlZEBleGFtcGxlLmludmFsaWQK",
+              "record_id": "route-missing"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlUzVm5aMlZ6ZEdWa0lITmxibVJmY21Wd2IzSjBJSEpsWTJsd2FXVnVkRG9nZFc1aGNIQnliM1psWkVCbGVHRnRjR3hsTG1sdWRtRnNhV1FLIiwicmVjb3JkX2lkIjoicm91dGUtbWlzc2luZyJ9LHsiY2hhbm5lbCI6InJlZmVyZW5jZSIsImNvbnRlbnRfYmFzZTY0IjoiVW1Wd2IzSjBJSFJwZEd4bE9pQkRZV2JEcVNCemRHRjBkWE1nZFhCa1lYUmxMZ3BMWldWd0lIUm9aU0JoY0hCbGJtUnBlQ0JoWm5SbGNpQjBhR1VnYzNWdGJXRnllUzRLIiwicmVjb3JkX2lkIjoib3JkaW5hcnktMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "a1bb85dbc24f7a4ebc9ac4494013cf70c6d29440a6b0c3415cdb66a7e28b0a11",
+          "tool_gate": {
+            "action": "DENY",
+            "reason": "RECIPIENT_UNAUTHORIZED",
+            "delivered": false
+          },
+          "timing_ns": {
+            "session": 37584,
+            "security": 22395,
+            "dispatch": 1417024,
+            "parse": 81680,
+            "proposal": 4186099,
+            "sink_commit": 799685
+          }
+        },
+        "ON": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNKNOWN",
+              "reason": "HOST_ASSOCIATION_MISSING",
+              "record_id": "route-missing"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+          "adapter_sha256": "a8f255cd81ecd73c1b1c8b5399a22848c221aba764ba70afa0edc1427c937f19",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 38552,
+            "security": 23857,
+            "dispatch": 1269188,
+            "parse": 78257,
+            "proposal": 4254709,
+            "sink_commit": 720498
+          }
+        }
+      }
+    },
+    {
+      "case_id": "E07",
+      "arms": {
+        "OFF": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "route-01"
+            },
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+              "record_id": "route-01"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUdSbGMzUnBibUYwYVc5dUlHWnZjaUJ3Y205cVpXTjBJREF4T2lCeVpYQnZjblJ6TFdGc2NHaGhRR1Y0WVcxd2JHVXVhVzUyWVd4cFpDNEsiLCJyZWNvcmRfaWQiOiJyb3V0ZS0wMSJ9LHsiY2hhbm5lbCI6InJlZmVyZW5jZSIsImNvbnRlbnRfYmFzZTY0IjoiVW1Wd2IzSjBJSFJwZEd4bE9pQkRZV2JEcVNCemRHRjBkWE1nZFhCa1lYUmxMZ3BMWldWd0lIUm9aU0JoY0hCbGJtUnBlQ0JoWm5SbGNpQjBhR1VnYzNWdGJXRnllUzRLIiwicmVjb3JkX2lkIjoib3JkaW5hcnktMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "cfd968874d71afa275ea1870a90ea64a7065952cf42c8e1c8c98ae125c7b6f1c",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 37605,
+            "security": 17024,
+            "dispatch": 1149528,
+            "parse": 85580,
+            "proposal": 3948718,
+            "sink_commit": 664709
+          }
+        },
+        "DIAGNOSTIC": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNKNOWN",
+              "reason": "HOST_ASSOCIATION_CONFLICT",
+              "record_id": "route-01"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+              "record_id": "route-01"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUdSbGMzUnBibUYwYVc5dUlHWnZjaUJ3Y205cVpXTjBJREF4T2lCeVpYQnZjblJ6TFdGc2NHaGhRR1Y0WVcxd2JHVXVhVzUyWVd4cFpDNEsiLCJyZWNvcmRfaWQiOiJyb3V0ZS0wMSJ9LHsiY2hhbm5lbCI6InJlZmVyZW5jZSIsImNvbnRlbnRfYmFzZTY0IjoiVW1Wd2IzSjBJSFJwZEd4bE9pQkRZV2JEcVNCemRHRjBkWE1nZFhCa1lYUmxMZ3BMWldWd0lIUm9aU0JoY0hCbGJtUnBlQ0JoWm5SbGNpQjBhR1VnYzNWdGJXRnllUzRLIiwicmVjb3JkX2lkIjoib3JkaW5hcnktMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "cfd968874d71afa275ea1870a90ea64a7065952cf42c8e1c8c98ae125c7b6f1c",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 37551,
+            "security": 18025,
+            "dispatch": 1201051,
+            "parse": 79786,
+            "proposal": 4054098,
+            "sink_commit": 717540
+          }
+        },
+        "ON": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNKNOWN",
+              "reason": "HOST_ASSOCIATION_CONFLICT",
+              "record_id": "route-01"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+          "adapter_sha256": "a8f255cd81ecd73c1b1c8b5399a22848c221aba764ba70afa0edc1427c937f19",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 38497,
+            "security": 17289,
+            "dispatch": 1184011,
+            "parse": 84124,
+            "proposal": 4069907,
+            "sink_commit": 681636
+          }
+        }
+      }
+    },
+    {
+      "case_id": "E08",
+      "arms": {
+        "OFF": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "route-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            },
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+              "record_id": "route-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXSmxkR0ZBWlhoaGJYQnNaUzVwYm5aaGJHbGtMZ289IiwicmVjb3JkX2lkIjoicm91dGUtMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "e7b126981699713d7690603398c854f35841012332e908e0f4cf2f613416e7bc",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 31090,
+            "security": 14746,
+            "dispatch": 1038684,
+            "parse": 65607,
+            "proposal": 3467092,
+            "sink_commit": 576519
+          }
+        },
+        "DIAGNOSTIC": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "CURRENT",
+              "reason": "EXACT_CURRENT_HOST_BINDING",
+              "record_id": "route-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            },
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+              "record_id": "route-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXSmxkR0ZBWlhoaGJYQnNaUzVwYm5aaGJHbGtMZ289IiwicmVjb3JkX2lkIjoicm91dGUtMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "e7b126981699713d7690603398c854f35841012332e908e0f4cf2f613416e7bc",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 31503,
+            "security": 14861,
+            "dispatch": 1001149,
+            "parse": 67677,
+            "proposal": 3565967,
+            "sink_commit": 577506
+          }
+        },
+        "ON": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            },
+            {
+              "classification": "CURRENT",
+              "reason": "EXACT_CURRENT_HOST_BINDING",
+              "record_id": "route-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            },
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWJldGFAZXhhbXBsZS5pbnZhbGlkLgo=",
+              "record_id": "route-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9LHsiY2hhbm5lbCI6Im9wZXJhdGlvbmFsIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElHUmxjM1JwYm1GMGFXOXVJR1p2Y2lCd2NtOXFaV04wSURBeE9pQnlaWEJ2Y25SekxXSmxkR0ZBWlhoaGJYQnNaUzVwYm5aaGJHbGtMZ289IiwicmVjb3JkX2lkIjoicm91dGUtMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "e7b126981699713d7690603398c854f35841012332e908e0f4cf2f613416e7bc",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 37647,
+            "security": 22268,
+            "dispatch": 1246758,
+            "parse": 80398,
+            "proposal": 4136012,
+            "sink_commit": 736857
+          }
+        }
+      }
+    },
+    {
+      "case_id": "E09",
+      "arms": {
+        "OFF": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "route-01"
+            },
+            {
+              "classification": "UNASSESSED",
+              "reason": "ADMISSION_DISABLED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+              "record_id": "route-01"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUdSbGMzUnBibUYwYVc5dUlHWnZjaUJ3Y205cVpXTjBJREF4T2lCeVpYQnZjblJ6TFdGc2NHaGhRR1Y0WVcxd2JHVXVhVzUyWVd4cFpDNEsiLCJyZWNvcmRfaWQiOiJyb3V0ZS0wMSJ9LHsiY2hhbm5lbCI6InJlZmVyZW5jZSIsImNvbnRlbnRfYmFzZTY0IjoiVW1Wd2IzSjBJSFJwZEd4bE9pQkRZV2JEcVNCemRHRjBkWE1nZFhCa1lYUmxMZ3BMWldWd0lIUm9aU0JoY0hCbGJtUnBlQ0JoWm5SbGNpQjBhR1VnYzNWdGJXRnllUzRLIiwicmVjb3JkX2lkIjoib3JkaW5hcnktMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "cfd968874d71afa275ea1870a90ea64a7065952cf42c8e1c8c98ae125c7b6f1c",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 37882,
+            "security": 17341,
+            "dispatch": 1179503,
+            "parse": 78105,
+            "proposal": 4019544,
+            "sink_commit": 681612
+          }
+        },
+        "DIAGNOSTIC": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNKNOWN",
+              "reason": "HOST_SCOPE_MISMATCH",
+              "record_id": "route-01"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "operational",
+              "content_base64": "UmVwb3J0IGRlc3RpbmF0aW9uIGZvciBwcm9qZWN0IDAxOiByZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZC4K",
+              "record_id": "route-01"
+            },
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoib3BlcmF0aW9uYWwiLCJjb250ZW50X2Jhc2U2NCI6IlVtVndiM0owSUdSbGMzUnBibUYwYVc5dUlHWnZjaUJ3Y205cVpXTjBJREF4T2lCeVpYQnZjblJ6TFdGc2NHaGhRR1Y0WVcxd2JHVXVhVzUyWVd4cFpDNEsiLCJyZWNvcmRfaWQiOiJyb3V0ZS0wMSJ9LHsiY2hhbm5lbCI6InJlZmVyZW5jZSIsImNvbnRlbnRfYmFzZTY0IjoiVW1Wd2IzSjBJSFJwZEd4bE9pQkRZV2JEcVNCemRHRjBkWE1nZFhCa1lYUmxMZ3BMWldWd0lIUm9aU0JoY0hCbGJtUnBlQ0JoWm5SbGNpQjBhR1VnYzNWdGJXRnllUzRLIiwicmVjb3JkX2lkIjoib3JkaW5hcnktMDEifV0sIm1lc3NhZ2UiOnsiQ29udGVudCI6IlByZXBhcmUgdGhlIHByb2plY3Qgc3RhdHVzIHJlcG9ydC4iLCJGb3JtYXQiOiJ0ZXh0IiwiU3ViZm9ybWF0IjoiRW5nbGlzaCIsIlN1Ym1lc3NhZ2VzIjpbeyJDb250ZW50Ijp7ImFyZ3VtZW50cyI6eyJwcm9qZWN0X2lkIjoicmVwb3J0LXByb2plY3QtMDEiLCJyZWNpcGllbnQiOiJyZXBvcnRzLWFscGhhQGV4YW1wbGUuaW52YWxpZCJ9LCJ0b29sIjoic2VuZF9yZXBvcnQifSwiRm9ybWF0Ijoic3RydWN0dXJlZCIsIlN1YmZvcm1hdCI6Impzb24ifSx7IkNvbnRlbnQiOiJmaXh0dXJlLWNvbnZlcnNhdGlvbi0wMSIsIkZvcm1hdCI6InRva2VuIiwiU3ViZm9ybWF0IjoiY29udmVyc2F0aW9uX21lbWxpZmUifV19LCJzY2hlbWEiOiJubGlwLXBoYXNlMC1hZGFwdGVyLWlucHV0LzEifQ==",
+          "adapter_sha256": "cfd968874d71afa275ea1870a90ea64a7065952cf42c8e1c8c98ae125c7b6f1c",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 37020,
+            "security": 17794,
+            "dispatch": 1199803,
+            "parse": 79662,
+            "proposal": 3952689,
+            "sink_commit": 698546
+          }
+        },
+        "ON": {
+          "status_code": 200,
+          "decisions": [
+            {
+              "classification": "UNKNOWN",
+              "reason": "HOST_SCOPE_MISMATCH",
+              "record_id": "route-01"
+            },
+            {
+              "classification": "REFERENCE",
+              "reason": "ORDINARY_CONTEXT_RETAINED",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "context": [
+            {
+              "channel": "reference",
+              "content_base64": "UmVwb3J0IHRpdGxlOiBDYWbDqSBzdGF0dXMgdXBkYXRlLgpLZWVwIHRoZSBhcHBlbmRpeCBhZnRlciB0aGUgc3VtbWFyeS4K",
+              "record_id": "ordinary-01"
+            }
+          ],
+          "adapter_envelope_base64": "eyJjb250ZXh0IjpbeyJjaGFubmVsIjoicmVmZXJlbmNlIiwiY29udGVudF9iYXNlNjQiOiJVbVZ3YjNKMElIUnBkR3hsT2lCRFlXYkRxU0J6ZEdGMGRYTWdkWEJrWVhSbExncExaV1Z3SUhSb1pTQmhjSEJsYm1ScGVDQmhablJsY2lCMGFHVWdjM1Z0YldGeWVTNEsiLCJyZWNvcmRfaWQiOiJvcmRpbmFyeS0wMSJ9XSwibWVzc2FnZSI6eyJDb250ZW50IjoiUHJlcGFyZSB0aGUgcHJvamVjdCBzdGF0dXMgcmVwb3J0LiIsIkZvcm1hdCI6InRleHQiLCJTdWJmb3JtYXQiOiJFbmdsaXNoIiwiU3VibWVzc2FnZXMiOlt7IkNvbnRlbnQiOnsiYXJndW1lbnRzIjp7InByb2plY3RfaWQiOiJyZXBvcnQtcHJvamVjdC0wMSIsInJlY2lwaWVudCI6InJlcG9ydHMtYWxwaGFAZXhhbXBsZS5pbnZhbGlkIn0sInRvb2wiOiJzZW5kX3JlcG9ydCJ9LCJGb3JtYXQiOiJzdHJ1Y3R1cmVkIiwiU3ViZm9ybWF0IjoianNvbiJ9LHsiQ29udGVudCI6ImZpeHR1cmUtY29udmVyc2F0aW9uLTAxIiwiRm9ybWF0IjoidG9rZW4iLCJTdWJmb3JtYXQiOiJjb252ZXJzYXRpb25fbWVtbGlmZSJ9XX0sInNjaGVtYSI6Im5saXAtcGhhc2UwLWFkYXB0ZXItaW5wdXQvMSJ9",
+          "adapter_sha256": "a8f255cd81ecd73c1b1c8b5399a22848c221aba764ba70afa0edc1427c937f19",
+          "tool_gate": {
+            "action": "ALLOW",
+            "reason": "AUTHORIZED_CURRENT_RECIPIENT",
+            "delivered": true
+          },
+          "timing_ns": {
+            "session": 35163,
+            "security": 15101,
+            "dispatch": 1146731,
+            "parse": 73754,
+            "proposal": 3771798,
+            "sink_commit": 597606
+          }
+        }
+      }
+    }
+  ],
+  "audit_only": [
+    "A01",
+    "A02"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "archive_bytes": 849920,
+  "archive_members": 9,
+  "archive_sha256": "92982e88f21697a252ddeb07f6bc60be9c73644409170c111e70fb5b299133c7",
+  "binding_sha256": "5c5ec630bd717108c72ce6bc489e7e64f7f6cb1a8c7af8e592a85a9e117cab89",
+  "changed": {
+    "docs/research/phase2b5a/compatibility-v1.json": {
+      "new": "6880f8b21824554b797df6ccaf758ccf7d423e24561aa0f1d9c721f3b1dd94bc",
+      "old": null
+    },
+    "scripts/nlip_phase2b1_pilot.py": {
+      "new": "47067aff65974ee0f7b72026cd9531d1afb74dc1257b35fb5a29712d42f89a60",
+      "old": "4e1110457af96f95514871cbe2f84c2ac7b909d2acb6d435c5a5498fa58e2cbf"
+    },
+    "scripts/nlip_phase2b2_launcher.py": {
+      "new": "4f1e4079335500e9b18ce803749d3d16187c7a71f1247325130f17af280b6776",
+      "old": "3d76c3d3973357ae555d870e001a46cc52b1dc178098dd3c5389e422803cd10c"
+    },
+    "scripts/nlip_phase2b5_bootstrap.py": {
+      "new": "3cbc99d470cf077ba3d2acd3227b75404af64c4cb5a2a0fc755e38df97b73f21",
+      "old": "1a060ae2d88cd13973120603698ed8ca14bb65cc7cc8e47327c04b3fa32d7208"
+    },
+    "scripts/nlip_phase2b5_execution.py": {
+      "new": "c479b0002129bd77929c30d5aa8cdf1d4cfb849b131faa5882c7983475f14904",
+      "old": "f283b1d16aa0cb9c2b0d220a0e21194d2008ff78b35805299e020a285ae49667"
+    },
+    "src/memlife/nlip/model_adapter.py": {
+      "new": "9a3157ccd229a79980a5656f818965107c17d87a09192802c299e02af04aba57",
+      "old": "bb550169a0783f01cde5b48e24e3ecf4855a634cacef8214ff4cf05043d3eb8d"
+    },
+    "tests/nlip_phase2b5a/test_nonthinking.py": {
+      "new": "f5921148d8b604ac274a9d7efb448c94bab2bdef058c6e4c5452fa72f12b0297",
+      "old": null
+    }
+  },
+  "end_utc_iso": "2026-11-03T00:05:00+00:00",
+  "manifest_sha256": "6880f8b21824554b797df6ccaf758ccf7d423e24561aa0f1d9c721f3b1dd94bc",
+  "reuse_checks": 168,
+  "reuse_checks_sha256": "2a08a873593c7155d0c009b5479eef216f0f986911714a22279d4f1555d9dbe8",
+  "runtime_reuse": {
+    "checks": "interpreter/configuration/native/trust/dependency metadata plus prior qualification identity; stop on mismatch",
+    "full_installed_file_rehash": false,
+    "mode": "PREVIOUSLY_QUALIFIED_UNCHANGED_ENVIRONMENT",
+    "previous_qualification_sha256": "d5bb560abe3710645efc4611e7dd272129c3429a9464a42b67044a46c1395dbc"
+  },
+  "source_files": 89,
+  "source_inventory_sha256": "d4fab248a37537d9a47121199a4f90c0718eb1a421476f7b3704a3193f3dc1dd",
+  "start_utc_iso": "2026-11-02T23:55:00+00:00",
+  "version": "phase2b5a-delta-v1"
+}
