@@ -9,6 +9,12 @@ import sys
 import stat
 import time
 import sqlite3
+import tempfile
+from memlife.nlip import model_adapter as _model_adapter
+
+_SCRIPTED_READ = _model_adapter.ScriptedDirectIO.read
+_DIRECT_SEND = _model_adapter.JetstreamDirectTransport.send
+_DIRECT_INIT = _model_adapter.JetstreamDirectTransport.__init__
 from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
@@ -29,6 +35,23 @@ MANIFEST_V2 = ROOT / 'docs/research/phase2-provider-v2/manifest-v2-final-r1.json
 MANIFEST_V2_SHA = '08a142369630fd8d80b49387d259677d9cf7455337dad726e881bb789a240685'
 
 class GateError(Exception): pass
+
+def require_v4_offline_network_denial():
+    """V4 scripted qualification requires independently observed kernel denial.
+
+    Unsupported platforms fail closed until an equivalent OS-level check is
+    qualified. This is not evidence of hosted execution or authorization.
+    """
+    if sys.platform!='darwin': raise GateError('V4_NETWORK_DENIAL_UNVERIFIED')
+    try:
+        import ctypes
+        check=ctypes.CDLL('/usr/lib/libsandbox.1.dylib').sandbox_check
+        check.restype=ctypes.c_int
+        denied=[check(ctypes.c_int(os.getpid()),ctypes.c_char_p(op.encode()),ctypes.c_int(0))
+                for op in ('network-outbound','network-inbound')]
+    except (OSError,AttributeError): raise GateError('V4_NETWORK_DENIAL_UNVERIFIED') from None
+    if denied != [1,1]: raise GateError('V4_NETWORK_DENIAL_UNVERIFIED')
+
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -207,7 +230,7 @@ class FakeTransport:
         if type(response) is not bytes: raise ModelError('PROVIDER_ERROR')
         return response
 
-def reserve_first_cell(protocol='v1', cell=('authorized','ON')):
+def reserve_first_cell(protocol='v1', cell=('authorized','ON'), *, execution=None, package_digest=None):
     """Consume the single persistent reservation; it is never refunded."""
     parent = PROTOCOL_LEDGER.parent
     if not parent.is_dir() or parent.is_symlink(): raise GateError('LEDGER_PARENT_INVALID')
@@ -215,24 +238,49 @@ def reserve_first_cell(protocol='v1', cell=('authorized','ON')):
     if info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077:
         raise GateError('LEDGER_PARENT_INVALID')
     if PROTOCOL_LEDGER.is_symlink(): raise GateError('LEDGER_INVALID')
-    from scripts.nlip_phase2b1_pilot import MANIFEST_V3,MANIFEST_V3_SHA256,MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256
+    from scripts.nlip_phase2b1_pilot import (MANIFEST_V3,MANIFEST_V3_SHA256,MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256,
+        MANIFEST_V4,MANIFEST_V4_SHA256,MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256)
     choices={'v1':(MANIFEST,MANIFEST_SHA),'v2':(MANIFEST_V2,MANIFEST_V2_SHA),
-             'v3':(MANIFEST_V3,MANIFEST_V3_SHA256),'smoke':(MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256)}
+             'v3':(MANIFEST_V3,MANIFEST_V3_SHA256),'smoke':(MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256),
+             'v4':(MANIFEST_V4,MANIFEST_V4_SHA256),'v4-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256)}
     if protocol not in choices: raise GateError('UNKNOWN_PROTOCOL')
     manifest,manifest_sha=choices[protocol]
     if digest(manifest) != manifest_sha: raise GateError('MANIFEST_MISMATCH')
+    if protocol in ('v4','v4-smoke'):
+        require_v4_offline_network_denial()
+        # This path admits synthetic qualification only; the research ledger is never a test fixture.
+        temporary=Path(tempfile.gettempdir()).resolve()
+        declared=json.loads(manifest.read_bytes()).get('persistent_ledger')
+        if (not PROTOCOL_LEDGER.resolve().is_relative_to(temporary) or
+            (isinstance(declared,str) and PROTOCOL_LEDGER.resolve()==Path(declared).resolve())):
+            raise GateError('SYNTHETIC_LEDGER_REQUIRED')
+        if not PROTOCOL_LEDGER.exists():
+            try:
+                fd=os.open(PROTOCOL_LEDGER,os.O_CREAT|os.O_EXCL|os.O_WRONLY|getattr(os,'O_NOFOLLOW',0),0o600)
+                os.close(fd)
+            except FileExistsError: pass
+        for candidate in (PROTOCOL_LEDGER, *(Path(str(PROTOCOL_LEDGER)+suffix) for suffix in ('-wal','-shm','-journal'))):
+            if not candidate.exists() and not candidate.is_symlink(): continue
+            info=candidate.lstat()
+            if (not stat.S_ISREG(info.st_mode) or info.st_uid!=os.geteuid() or info.st_nlink!=1 or
+                stat.S_IMODE(info.st_mode)&0o077): raise GateError('SYNTHETIC_LEDGER_INVALID')
     if type(cell) is not tuple or len(cell)!=2: raise GateError('CELL_SCOPE_MISMATCH')
-    if protocol=='smoke':
+    if protocol in ('smoke','v4-smoke'):
         if list(cell) not in json.loads(manifest.read_bytes())['live_cells']:raise GateError('CELL_SCOPE_MISMATCH')
     elif cell!=('authorized','ON'):raise GateError('CELL_SCOPE_MISMATCH')
     cell_id='/'.join(cell)
-    reservation=manifest_sha+':'+cell_id if protocol=='smoke' else manifest_sha
+    reservation=(manifest_sha+':first-cell:'+cell_id if protocol=='v4' else
+                 manifest_sha+':'+cell_id if protocol in ('smoke','v4-smoke') else manifest_sha)
+    if protocol=='v4-smoke' and execution is None: raise GateError('V4_COMPATIBILITY_PASS_GATE_UNAVAILABLE')
     # Exclusive lock and unique primary key make all supported invocations share
     # a single non-refundable reservation regardless of evidence path.
     with sqlite3.connect(PROTOCOL_LEDGER, timeout=2) as db:
         db.execute('PRAGMA synchronous=FULL')
         db.execute('CREATE TABLE IF NOT EXISTS reservations (protocol TEXT PRIMARY KEY, cell TEXT NOT NULL)')
         db.execute('BEGIN IMMEDIATE')
+        if protocol=='v4-smoke':
+            from scripts.nlip_phase2b5_execution import verify_v4_smoke_gate
+            verify_v4_smoke_gate(db,execution,package_digest)
         try:
             db.execute('INSERT INTO reservations VALUES (?, ?)', (reservation, cell_id))
         except sqlite3.IntegrityError:
@@ -282,9 +330,32 @@ def _first_cell_orchestration(path, responses, *, authorization_window, package_
     The supplied digest is an integrity comparison only, never an approval.
     The persistent reservation is taken before constructing any transport.
     """
+    # V4 has no reviewed live execution binding yet. Never permit an older
+    # execution object to authorize it, even though scripted direct I/O is safe.
+    if protocol in ('v4', 'v4-smoke'):
+        require_v4_offline_network_denial()
+        if not direct or type(offline_io) is not _model_adapter.ScriptedDirectIO:
+            raise GateError('V4_HOSTED_ADMISSION_UNAVAILABLE')
+        if (set(vars(offline_io)) != {'responses','calls'} or
+            type(offline_io.responses) is not list or any(type(x) is not bytes for x in offline_io.responses) or
+            type(offline_io.calls) is not list or _model_adapter.ScriptedDirectIO.read is not _SCRIPTED_READ or
+            _model_adapter.JetstreamDirectTransport.send is not _DIRECT_SEND or
+            _model_adapter.JetstreamDirectTransport.__init__ is not _DIRECT_INIT or
+            _DIRECT_SEND.__defaults__ != (_SCRIPTED_READ,)):
+            raise GateError('V4_SCRIPTED_IO_MUTATED')
     inventory = verify_package(package_digest)
     from scripts.nlip_phase2b1_pilot import Pilot
     verify_loaded_sources(inventory)
+    if protocol in ('v4','v4-smoke'):
+        for name in ('scripts/nlip_phase2b1_pilot.py','scripts/nlip_phase2b2_launcher.py',
+                     'scripts/nlip_phase2b5_execution.py','src/memlife/nlip/model_adapter.py'):
+            source=ROOT/name
+            if (name not in inventory['files'] or source.is_symlink() or
+                not source.resolve().is_relative_to(ROOT) or digest(source)!=inventory['files'][name]):
+                raise GateError('V4_PACKAGE_SOURCE_MISMATCH')
+        execution_module=sys.modules.get('scripts.nlip_phase2b5_execution')
+        if execution_module is not None and Path(execution_module.__spec__.origin).resolve()!=ROOT/'scripts/nlip_phase2b5_execution.py':
+            raise GateError('V4_PACKAGE_SOURCE_MISMATCH')
     if direct:
         from memlife.nlip.model_adapter import JetstreamDirectTransport, ScriptedDirectIO
         if offline_io is None:
@@ -302,12 +373,20 @@ def _first_cell_orchestration(path, responses, *, authorization_window, package_
     if not authorization_window[0] <= time.time() < authorization_window[1]:
         raise GateError('AUTHORIZATION_EXPIRED')
     validate_destination(path)
-    reserve_first_cell(protocol,cell)
+    if protocol=='v4-smoke':
+        from scripts.nlip_phase2b5_execution import Phase2B5V4SmokeExecution
+        if type(execution) is not Phase2B5V4SmokeExecution: raise GateError('V4_EXECUTION_REQUIRED')
+        execution.check(path,authorization_window,package_digest,cell=cell)
+    reserve_first_cell(protocol,cell,execution=execution,package_digest=package_digest)
     if not authorization_window[0] <= time.time() < authorization_window[1]:
         raise GateError('AUTHORIZATION_EXPIRED')
     try:
-        transport = (JetstreamDirectTransport(provider='jetstream2_direct', model=DEFAULT_MODEL, offline_io=offline_io)
+        transport = (JetstreamDirectTransport(provider='jetstream2_direct', model=DEFAULT_MODEL, offline_io=offline_io,
+                                               fixed_scripted_io=protocol in ('v4','v4-smoke'))
                      if direct else (fake_transport if fake_transport is not None else FakeTransport(responses)))
+        if protocol in ('v4','v4-smoke') and (type(transport) is not JetstreamDirectTransport or
+            transport.offline_io is not offline_io or transport._fixed_scripted_io is not True or
+            transport.model!=DEFAULT_MODEL): raise GateError('V4_SCRIPTED_IO_MUTATED')
         return Pilot(path, transport, authorization_window=authorization_window, protocol=protocol).run(*cell)
     except Exception:
         # This fake-only boundary must not expose injected exception details.

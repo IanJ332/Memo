@@ -32,6 +32,11 @@ MANIFEST_V3 = Path(__file__).resolve().parent.parent / 'docs/research/phase2b5a/
 MANIFEST_V3_SHA256 = '6880f8b21824554b797df6ccaf758ccf7d423e24561aa0f1d9c721f3b1dd94bc'
 MANIFEST_SMOKE = Path(__file__).resolve().parent.parent / 'docs/research/phase2b5a/smoke-v2.json'
 MANIFEST_SMOKE_SHA256 = 'ac94d2a732d604e03d45d0ec5e3ee9932303c26ea235820869aac43834613da7'
+# Exact private candidates remain outside the published source tree.
+MANIFEST_V4 = Path(__file__).resolve().parent.parent / '.local/phase2b5b/compatibility-candidate-v5.json'
+MANIFEST_V4_SHA256 = '9da79903d6dad8f9a470a9679699ee7996994aa0d8902fb981cc65da77f03255'
+MANIFEST_V4_SMOKE = Path(__file__).resolve().parent.parent / '.local/phase2b5b/smoke-candidate-v3.json'
+MANIFEST_V4_SMOKE_SHA256 = '4ef8990d2f54daf77a28ec06b788d8955edd60a31bc2f4ecb257744a300d9505'
 
 class PilotError(Exception): pass
 
@@ -95,15 +100,17 @@ class DeadlineTransport:
 class Pilot:
     def __init__(self, evidence_path, transport, *, request_seconds=30, authorization_window=None, protocol='v2'):
         choices={'v1':(MANIFEST,MANIFEST_SHA256),'v2':(MANIFEST_V2,MANIFEST_V2_SHA256),
-                 'v3':(MANIFEST_V3,MANIFEST_V3_SHA256),'smoke':(MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256)}
+                 'v3':(MANIFEST_V3,MANIFEST_V3_SHA256),'smoke':(MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256),
+                 'v4':(MANIFEST_V4,MANIFEST_V4_SHA256),'v4-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256)}
         if protocol not in choices: raise PilotError('UNKNOWN_PROTOCOL')
         manifest_path,self.manifest_sha=choices[protocol]
         raw = manifest_path.read_bytes()
         if hashlib.sha256(raw).hexdigest() != self.manifest_sha: raise PilotError('MANIFEST_MISMATCH')
+        self._manifest_raw = raw
         self.manifest = json.loads(raw)
         self._manifest_canonical = json.dumps(self.manifest, sort_keys=True, separators=(',', ':'))
         if type(request_seconds) not in (int, float) or not 0 < request_seconds <= 60: raise ValueError('INVALID_DEADLINE')
-        if protocol in ('v2','v3','smoke') and request_seconds > self.manifest['request_deadline_seconds']: raise ValueError('INVALID_DEADLINE')
+        if protocol in ('v2','v3','smoke','v4','v4-smoke') and request_seconds > self.manifest['request_deadline_seconds']: raise ValueError('INVALID_DEADLINE')
         self.request_seconds = request_seconds
         if authorization_window is not None and (type(authorization_window) is not tuple or len(authorization_window) != 2 or
                 any(type(x) not in (int, float) for x in authorization_window) or
@@ -128,7 +135,8 @@ class Pilot:
                                   max_response_bytes=self.manifest['max_response_bytes'],
                                   max_completion_tokens=self.manifest['max_completion_tokens'],
                                   timeout_seconds=self.manifest.get('transport_timeout_seconds', 15.0),
-                                  enable_thinking=self.manifest.get('chat_template_kwargs',{}).get('enable_thinking'))
+                                  enable_thinking=self.manifest.get('chat_template_kwargs',{}).get('enable_thinking'),
+                                  schema_variant='aligned-v1' if hashlib.sha256(self._manifest_raw).hexdigest() in (MANIFEST_V4_SHA256, MANIFEST_V4_SMOKE_SHA256) else 'legacy')
 
     def _db(self): return sqlite3.connect(self.path, timeout=2)
 
@@ -186,9 +194,11 @@ class Pilot:
         # Serialize attempts, which also bounds outstanding provider workers to one.
         with self.lock:
             m = self.manifest
-            if json.dumps(m,sort_keys=True,separators=(',',':')) != self._manifest_canonical:
+            if (hashlib.sha256(self._manifest_raw).hexdigest() != self.manifest_sha or
+                json.dumps(json.loads(self._manifest_raw), sort_keys=True, separators=(',', ':')) != self._manifest_canonical or
+                json.dumps(m,sort_keys=True,separators=(',',':')) != self._manifest_canonical):
                 raise PilotError('MANIFEST_MUTATED')
-            expected = ModelConfig(m['model'], max_request_bytes=m['max_request_bytes'], max_response_bytes=m['max_response_bytes'], max_completion_tokens=m['max_completion_tokens'], timeout_seconds=m.get('transport_timeout_seconds', 15.0),enable_thinking=m.get('chat_template_kwargs',{}).get('enable_thinking'))
+            expected = ModelConfig(m['model'], max_request_bytes=m['max_request_bytes'], max_response_bytes=m['max_response_bytes'], max_completion_tokens=m['max_completion_tokens'], timeout_seconds=m.get('transport_timeout_seconds', 15.0),enable_thinking=m.get('chat_template_kwargs',{}).get('enable_thinking'),schema_variant='aligned-v1' if hashlib.sha256(self._manifest_raw).hexdigest() in (MANIFEST_V4_SHA256, MANIFEST_V4_SMOKE_SHA256) else 'legacy')
             if type(self.config) is not ModelConfig or self.config != expected or self.transport is not self._initial_transport:
                 raise PilotError('CONFIGURATION_MUTATED')
             matches = [s for s in m['scenarios'] if s['id'] == scenario_id]
