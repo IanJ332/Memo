@@ -215,18 +215,23 @@ def reserve_first_cell(protocol='v1', cell=('authorized','ON')):
     if info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077:
         raise GateError('LEDGER_PARENT_INVALID')
     if PROTOCOL_LEDGER.is_symlink(): raise GateError('LEDGER_INVALID')
-    from scripts.nlip_phase2b1_pilot import MANIFEST_V3,MANIFEST_V3_SHA256,MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256
+    from scripts.nlip_phase2b1_pilot import (MANIFEST_V3,MANIFEST_V3_SHA256,MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256,
+        MANIFEST_V4,MANIFEST_V4_SHA256,MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256)
     choices={'v1':(MANIFEST,MANIFEST_SHA),'v2':(MANIFEST_V2,MANIFEST_V2_SHA),
-             'v3':(MANIFEST_V3,MANIFEST_V3_SHA256),'smoke':(MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256)}
+             'v3':(MANIFEST_V3,MANIFEST_V3_SHA256),'smoke':(MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256),
+             'v4':(MANIFEST_V4,MANIFEST_V4_SHA256),'v4-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256)}
     if protocol not in choices: raise GateError('UNKNOWN_PROTOCOL')
     manifest,manifest_sha=choices[protocol]
     if digest(manifest) != manifest_sha: raise GateError('MANIFEST_MISMATCH')
     if type(cell) is not tuple or len(cell)!=2: raise GateError('CELL_SCOPE_MISMATCH')
-    if protocol=='smoke':
+    if protocol in ('smoke','v4-smoke'):
         if list(cell) not in json.loads(manifest.read_bytes())['live_cells']:raise GateError('CELL_SCOPE_MISMATCH')
     elif cell!=('authorized','ON'):raise GateError('CELL_SCOPE_MISMATCH')
     cell_id='/'.join(cell)
-    reservation=manifest_sha+':'+cell_id if protocol=='smoke' else manifest_sha
+    reservation=(manifest_sha+':first-cell:'+cell_id if protocol=='v4' else
+                 manifest_sha+':'+cell_id if protocol in ('smoke','v4-smoke') else manifest_sha)
+    # V4 smoke is deliberately unavailable until the evidence-linked PASS gate is installed.
+    if protocol=='v4-smoke': raise GateError('V4_COMPATIBILITY_PASS_GATE_UNAVAILABLE')
     # Exclusive lock and unique primary key make all supported invocations share
     # a single non-refundable reservation regardless of evidence path.
     with sqlite3.connect(PROTOCOL_LEDGER, timeout=2) as db:
@@ -282,6 +287,10 @@ def _first_cell_orchestration(path, responses, *, authorization_window, package_
     The supplied digest is an integrity comparison only, never an approval.
     The persistent reservation is taken before constructing any transport.
     """
+    # V4 has no reviewed live execution binding yet. Never permit an older
+    # execution object to authorize it, even though scripted direct I/O is safe.
+    if protocol in ('v4', 'v4-smoke') and (not direct or offline_io is None):
+        raise GateError('V4_HOSTED_ADMISSION_UNAVAILABLE')
     inventory = verify_package(package_digest)
     from scripts.nlip_phase2b1_pilot import Pilot
     verify_loaded_sources(inventory)
