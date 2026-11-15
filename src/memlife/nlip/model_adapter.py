@@ -86,26 +86,36 @@ class TransportResponse:
     http_status: int | None = None
     response_headers: dict | None = None
     body_complete: bool = True
+    # Minted by the live branch or by the explicitly separate buffered test
+    # branch. Synthetic/test transports returning raw bytes cannot satisfy
+    # genuine hosted provenance checks.
+    transport_provenance: object | None = None
+
+
+_LIVE_TRANSPORT_PROVENANCE = object()
+_BUFFERED_TRANSPORT_PROVENANCE = object()
 
 def _safe_request_id(value):
     if not isinstance(value,str) or not value.startswith('req_') or len(value)>128 or not value.isascii(): return None
     return value if all(c.isalnum() or c in '-_' for c in value) else None
 
-def _response_envelope(raw, status, headers, limit, *, complete=True):
+def _response_envelope(raw, status, headers, limit, *, complete=True, live=False):
     # No cookies, credentials or arbitrary headers enter evidence metadata.
     headers = headers or {}
     safe = {name: value for name in ('content-type', 'x-request-id', 'request-id')
             if isinstance(value := headers.get(name), str) and len(value) <= 256
             and value.isascii() and not any(ord(c) < 32 or ord(c) == 127 for c in value)}
     return TransportResponse(raw, safe.get('x-request-id') or safe.get('request-id'),
-                             status, safe, complete and len(raw) <= limit)
+                             status, safe, complete and len(raw) <= limit,
+                             _LIVE_TRANSPORT_PROVENANCE if live else None)
 
 def _incomplete_response(response, error, limit):
     if response is None: return None
     partial=getattr(error, 'partial', None)
     body=partial[:limit+1] if type(partial) is bytes else response.body
     return TransportResponse(body, response.http_request_id, response.http_status,
-                             response.response_headers, False)
+                             response.response_headers, False,
+                             response.transport_provenance)
 
 JETSTREAM_MODEL = 'qwen-3.8-27b'
 JETSTREAM_ENDPOINT = 'https://llm.jetstream-cloud.org/qwen-3.8-27b/v1/chat/completions'
@@ -122,12 +132,32 @@ class ScriptedDirectIO:
         if not self.responses: raise ModelError('PROVIDER_ERROR')
         return self.responses.pop(0)
 
+
+class BufferedDirectIO:
+    """Pre-captured HTTP envelopes for offline hosted-path qualification.
+
+    This exercises the production transport's envelope capture but mints a
+    distinct fixture provenance. It is not a live send and never establishes
+    authority or a genuine hosted PASS.
+    """
+    def __init__(self, responses):
+        if type(responses) is not list or any(type(x) is not TransportResponse
+                                              for x in responses):
+            raise ValueError('INVALID_BUFFERED_RESPONSES')
+        self.responses = list(responses)
+        self.calls = []
+    def read(self, request, timeout, max_bytes):
+        self.calls.append((request.full_url, dict(request.header_items()), request.data))
+        if not self.responses: raise ModelError('PROVIDER_ERROR')
+        return self.responses.pop(0)
+
 class JetstreamDirectTransport:
     """Single pinned direct request; network admission and live use are separate gates."""
     def __init__(self, *, provider, model, offline_io=None, fixed_scripted_io=False):
         if type(fixed_scripted_io) is not bool or (fixed_scripted_io and type(offline_io) is not ScriptedDirectIO): raise ValueError('INVALID_OFFLINE_IO')
         if provider != 'jetstream2_direct' or model != JETSTREAM_MODEL: raise ValueError('INVALID_PROVIDER_CONFIGURATION')
-        if offline_io is not None and type(offline_io) is not ScriptedDirectIO: raise ValueError('INVALID_OFFLINE_IO')
+        if offline_io is not None and type(offline_io) not in (ScriptedDirectIO, BufferedDirectIO):
+            raise ValueError('INVALID_OFFLINE_IO')
         self.model = model
         self.offline_io = offline_io
         self._fixed_scripted_io = fixed_scripted_io
@@ -146,30 +176,48 @@ class JetstreamDirectTransport:
         result=None
         try:
             if self.offline_io is not None:
-                raw = (_scripted_read(self.offline_io, request, timeout, max_bytes) if self._fixed_scripted_io
-                       else self.offline_io.read(request, timeout, max_bytes))
+                if self._fixed_scripted_io:
+                    raw = _scripted_read(self.offline_io, request, timeout, max_bytes)
+                elif type(self.offline_io) is BufferedDirectIO:
+                    raw = self.offline_io.read(request, timeout, max_bytes)
+                    # Buffered HTTP envelopes exercise the production transport
+                    # branch but remain distinguishable from a real send.
+                    if type(raw) is not TransportResponse or raw.http_status is None:
+                        raise ModelError('PROVIDER_ERROR')
+                    raw = TransportResponse(raw.body, raw.http_request_id, raw.http_status,
+                                            raw.response_headers, raw.body_complete,
+                                            _BUFFERED_TRANSPORT_PROVENANCE)
+                    result = raw
+                else:
+                    raw = self.offline_io.read(request, timeout, max_bytes)
             else:
                 with urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect()).open(request,timeout=timeout) as response:
-                    result=_response_envelope(b'', response.status, response.headers, max_bytes, complete=False)
+                    result=_response_envelope(b'', response.status, response.headers, max_bytes, complete=False, live=True)
                     raw=response.read(max_bytes+1)
-                    result=_response_envelope(raw, response.status, response.headers, max_bytes)
+                    result=_response_envelope(raw, response.status, response.headers, max_bytes, live=True)
         except (TimeoutError,socket.timeout): raise ModelError('TIMEOUT', response=result) from None
         except urllib.error.HTTPError as exc:
             code='PROVIDER_RATE_LIMIT' if exc.code==429 else ('PROVIDER_AUTH' if exc.code in (401,403) else 'PROVIDER_HTTP_ERROR')
-            result=_response_envelope(b'', exc.code, exc.headers, max_bytes, complete=False)
+            result=_response_envelope(b'', exc.code, exc.headers, max_bytes, complete=False, live=True)
             try:
                 raw=exc.read(max_bytes+1)
-                result=_response_envelope(raw, exc.code, exc.headers, max_bytes)
+                result=_response_envelope(raw, exc.code, exc.headers, max_bytes, live=True)
             except (OSError, TimeoutError, http.client.HTTPException) as error:
                 result=_incomplete_response(result,error,max_bytes)
             finally: exc.close()
             raise ModelError(code, response=result) from None
         except (urllib.error.URLError,OSError,http.client.HTTPException) as error:
             raise ModelError('PROVIDER_CONNECTION_ERROR', response=_incomplete_response(result,error,max_bytes)) from None
-        if len(raw)>max_bytes:
-            result = result if self.offline_io is None else TransportResponse(raw, body_complete=False)
+        oversized = len(raw.body) if type(raw) is TransportResponse else len(raw)
+        if oversized>max_bytes:
+            if type(raw) is TransportResponse:
+                result = TransportResponse(raw.body, raw.http_request_id, raw.http_status,
+                                           raw.response_headers, False,
+                                           raw.transport_provenance)
+            else:
+                result = result if self.offline_io is None else TransportResponse(raw, body_complete=False)
             raise ModelError('RESPONSE_LIMIT', response=result)
-        return raw if self.offline_io is not None else result
+        return raw if type(self.offline_io) is ScriptedDirectIO else result
 
 def _json(value): return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False).encode('utf-8')
 def model_payload(message, context):
@@ -258,8 +306,11 @@ class TypedModelAdapter:
         deadline=time.monotonic()+self.config.timeout_seconds
         body,context_bytes=render_request(self.config,message,context)
         start=time.perf_counter_ns()
+        sender = getattr(self.transport, 'delegate', self.transport)
         metadata={'prompt_sha256':hashlib.sha256(body).hexdigest(),'context_sha256':hashlib.sha256(context_bytes).hexdigest(),
                   'provider_request_id':None,'http_request_id':None,'usage':None,'retries':0,'latency_ns':0,'error':None,
+                  'transport_origin':None,
+                  'sender':('JETSTREAM_DIRECT' if type(sender) is JetstreamDirectTransport else 'CUSTOM'),
                   'endpoint':JETSTREAM_ENDPOINT if isinstance(self.transport, JetstreamDirectTransport) else None,
                   'request_model':self.config.model, 'request_body':body, 'response_body':None,
                   'response_sha256':None, 'response_body_complete':None, 'http_status':None,
@@ -272,7 +323,9 @@ class TypedModelAdapter:
             if type(raw) is TransportResponse:
                 metadata.update(http_request_id=_safe_request_id(raw.http_request_id),
                     http_status=raw.http_status, response_headers=raw.response_headers or {},
-                    response_body_complete=raw.body_complete)
+                    response_body_complete=raw.body_complete,
+                    transport_origin=('JETSTREAM_DIRECT_LIVE' if raw.transport_provenance is _LIVE_TRANSPORT_PROVENANCE else
+                        'JETSTREAM_BUFFERED_FIXTURE' if raw.transport_provenance is _BUFFERED_TRANSPORT_PROVENANCE else 'NON_LIVE'))
                 raw=raw.body
             if type(raw) is bytes:
                 # An unsupported custom transport cannot inflate private evidence.

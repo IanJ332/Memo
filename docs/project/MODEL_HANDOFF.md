@@ -1,16 +1,26 @@
 # Model Handoff — Start Here
 
-## MEMO Phase 2B-5B — offline, incomplete (November 2026)
+## MEMO Phase 2B-5D — V4 hosted path implemented, awaiting exact approval (November 2026)
 
-`OFFLINE_AMENDMENT_BLOCKED`: V2 first-cell compatibility exhausted its reasoning
-budget; V3 nonthinking compatibility passed, then its smoke stopped after two
-cells when an invalid ABSTAIN with populated arguments was rejected. V4 aligns
-the output schema offline but is not integrated into the live launcher; no V4
-real inference occurred. Current-contract full collection remains NO_GO. The next
-bounded work is to integrate and qualify the existing V4 candidates in the
-existing Pilot, launcher, reservation and PASS gate; do not add a second sender.
-All prior attempts and reservations remain frozen. Repository migration grants
-no live experiment authority. V4 candidate hashes: compatibility
+PR #28 merged the V4 compatibility and four-cell smoke integration at
+`4e088f919eed7b4da143ee934ca3ad12840a2ad5`. Phase 2B-5D then added the genuine
+hosted path: distinct live-transport provenance, a genuine hosted-evidence
+verifier, exact V4 hosted admission bound to an independently supplied
+owner/platform verifier, canonical-ledger reservation, a hosted
+compatibility-PASS gate and ordered four-cell hosted smoke orchestration. The
+existing synthetic verifier remains available; offline buffered fixtures are
+classified `SIMULATED_HTTP_FIXTURE` and can never satisfy a genuine hosted PASS.
+
+No V4 real inference has occurred. `HOSTED_EXECUTION_VERIFIER` is `None` by
+default, so hosted admission remains closed until an execution-specific binding
+and fresh owner/platform approval exist. The public deployment path is a
+placeholder, not the previously qualified private Linux package.
+
+V2 first-cell compatibility exhausted its reasoning budget; V3 nonthinking
+compatibility passed, then its smoke stopped after two cells when an invalid
+ABSTAIN with populated arguments was rejected. All prior attempts and
+reservations remain frozen. Current-contract full collection remains NO_GO.
+V4 candidate hashes: compatibility
 `9da79903d6dad8f9a470a9679699ee7996994aa0d8902fb981cc65da77f03255`; smoke
 `4ef8990d2f54daf77a28ec06b788d8955edd60a31bc2f4ecb257744a300d9505`.
 This is a separate track from the Q1/R1 research below.

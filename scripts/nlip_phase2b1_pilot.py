@@ -101,7 +101,9 @@ class Pilot:
     def __init__(self, evidence_path, transport, *, request_seconds=30, authorization_window=None, protocol='v2'):
         choices={'v1':(MANIFEST,MANIFEST_SHA256),'v2':(MANIFEST_V2,MANIFEST_V2_SHA256),
                  'v3':(MANIFEST_V3,MANIFEST_V3_SHA256),'smoke':(MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256),
-                 'v4':(MANIFEST_V4,MANIFEST_V4_SHA256),'v4-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256)}
+                 'v4':(MANIFEST_V4,MANIFEST_V4_SHA256),'v4-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256),
+                 'v4-hosted':(MANIFEST_V4,MANIFEST_V4_SHA256),
+                 'v4-hosted-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256)}
         if protocol not in choices: raise PilotError('UNKNOWN_PROTOCOL')
         manifest_path,self.manifest_sha=choices[protocol]
         raw = manifest_path.read_bytes()
@@ -110,7 +112,7 @@ class Pilot:
         self.manifest = json.loads(raw)
         self._manifest_canonical = json.dumps(self.manifest, sort_keys=True, separators=(',', ':'))
         if type(request_seconds) not in (int, float) or not 0 < request_seconds <= 60: raise ValueError('INVALID_DEADLINE')
-        if protocol in ('v2','v3','smoke','v4','v4-smoke') and request_seconds > self.manifest['request_deadline_seconds']: raise ValueError('INVALID_DEADLINE')
+        if protocol in ('v2','v3','smoke','v4','v4-smoke','v4-hosted','v4-hosted-smoke') and request_seconds > self.manifest['request_deadline_seconds']: raise ValueError('INVALID_DEADLINE')
         self.request_seconds = request_seconds
         if authorization_window is not None and (type(authorization_window) is not tuple or len(authorization_window) != 2 or
                 any(type(x) not in (int, float) for x in authorization_window) or
@@ -166,6 +168,7 @@ class Pilot:
             row['response_evidence'] = self._private_artifact(directory, 'response.body', raw)
         for name in ('http_status', 'response_sha256', 'response_body_complete',
                      'returned_model', 'finish_reason', 'schema_validity',
+                     'transport_origin', 'sender',
                      'application_start_utc', 'application_start_monotonic_ns',
                      'application_end_utc', 'application_end_monotonic_ns'):
             if name in metadata: row[name] = metadata[name]
