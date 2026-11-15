@@ -14,7 +14,8 @@ V3 smoke `ac94d2a732d604e03d45d0ec5e3ee9932303c26ea235820869aac43834613da7`.
 V4 compatibility and smoke offline candidates are respectively
 `9da79903d6dad8f9a470a9679699ee7996994aa0d8902fb981cc65da77f03255` and
 `4ef8990d2f54daf77a28ec06b788d8955edd60a31bc2f4ecb257744a300d9505`.
-V4 has not run and is not live-integrated or authorized.
+V4 offline integration was merged in PR #28; it remains synthetic-only, has not
+run on the hosted provider and is not authorized for live execution.
 
 For public portability, `scripts/nlip_phase1_evaluate.py` now resolves its
 historical freeze relative to the checkout. `scripts/nlip_phase2b5_execution.py`
