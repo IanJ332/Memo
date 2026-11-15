@@ -20,7 +20,12 @@ def need(condition, code):
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def preimport(root, expected_digest):
+INVENTORY_V3 = 'docs/research/phase2b5a/inventory-smoke-v2.json'
+INVENTORY_V4 = 'docs/research/phase2b5e/inventory-v4-linux-v1.json'
+INVENTORY_FORMATS = {'phase2b5a-linux-package-v1', 'phase2b5e-v4-linux-package-v1'}
+
+
+def preimport(root, expected_digest, inventory_name=INVENTORY_V3):
     need(sys.platform=='linux' and sys.flags.isolated and sys.flags.no_site and
          sys.dont_write_bytecode,'ISOLATED_NO_SITE_LINUX_REQUIRED')
     need(set(os.environ)<= {'HOME','PATH','LANG','LC_ALL'},'UNTRUSTED_LAUNCH_ENVIRONMENT')
@@ -36,10 +41,11 @@ def preimport(root, expected_digest):
     need(Path(sys.executable).parent==venv/'bin' and
          'include-system-site-packages = false' in (venv/'pyvenv.cfg').read_text(),
          'VENV_SELECTION')
-    path=root/'docs/research/phase2b5a/inventory-smoke-v2.json'
+    need(inventory_name in (INVENTORY_V3, INVENTORY_V4), 'PACKAGE_INVENTORY_SELECTION')
+    path=root/inventory_name
     need(not path.is_symlink() and sha(path)==expected_digest,'PACKAGE_IDENTITY')
     inventory=json.loads(path.read_bytes())
-    need(inventory['format']=='phase2b5a-linux-package-v1' and inventory['root']==str(root),
+    need(inventory['format'] in INVENTORY_FORMATS and inventory['root']==str(root),
          'PACKAGE_SELECTION')
     need(sha(Path(sys.executable).resolve())==inventory['python']['sha256'] and
          sys.version==inventory['python']['version'],'RUNTIME_SELECTION')
@@ -90,19 +96,76 @@ def preimport(root, expected_digest):
 
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action',choices=('verify','fake-qualify','fake-qualify-v3','fake-qualify-smoke','first-cell','first-cell-v3','smoke'))
+    parser.add_argument('action',choices=('verify','fake-qualify','fake-qualify-v3','fake-qualify-smoke',
+        'fake-qualify-v4-hosted','first-cell','first-cell-v3','smoke'))
     parser.add_argument('--package-digest',required=True)
     parser.add_argument('--binding-sha256')
+    parser.add_argument('--inventory',choices=('v3','v4'),default='v3')
     args=parser.parse_args(argv)
     os.umask(0o077)
     root=Path(__file__).resolve().parents[1]
-    preimport(root,args.package_digest)
+    inventory_name=INVENTORY_V4 if args.inventory=='v4' else INVENTORY_V3
+    preimport(root,args.package_digest,inventory_name)
     from scripts import nlip_phase2b2_launcher as launcher
+    if args.inventory=='v4':launcher.INVENTORY=launcher.V4_INVENTORY
     inventory=launcher.verify_package(args.package_digest)
     from scripts.nlip_phase2b1_pilot import Pilot
     launcher.verify_loaded_sources(inventory)
     if args.action=='verify':
         print(json.dumps({'status':'LINUX_PACKAGE_VERIFIED','model_requests':0}))
+    elif args.action=='fake-qualify-v4-hosted':
+        import socket,tempfile,time
+        from memlife.nlip import model_adapter as m
+        need(args.inventory=='v4','V4_INVENTORY_REQUIRED')
+        # Buffered HTTP fixtures only. Sockets stay denied, so a genuine
+        # transport attempt would fail the qualification rather than send.
+        def denied(*a,**kw):raise RuntimeError('QUALIFICATION_NETWORK_DENIED')
+        socket.socket=denied;socket.getaddrinfo=denied
+        value={'outcome':'PROPOSE_ACTION','tool':'send_report','arguments':{
+            'project_id':'pilot-project','recipient':'authorized@example.invalid'}}
+        raw=json.dumps({'id':None,'model':launcher.DEFAULT_MODEL,'usage':None,
+            'choices':[{'finish_reason':'stop','message':{'content':json.dumps(value)}}]}).encode()
+        with tempfile.TemporaryDirectory(prefix='hosted-fake-only-',dir=root.parent) as directory:
+            parent=Path(directory);launcher.PROTOCOL_LEDGER=parent/'disposable-reservations.sqlite'
+            deployment=parent/'deployment';deployment.mkdir(mode=0o700)
+            for name in ('governance','phase2b5d-hosted-compatibility'):
+                (deployment/name).mkdir(mode=0o700)
+            launcher.PROTOCOL_LEDGER=deployment/'governance/first-cell-reservations.sqlite'
+            import sqlite3
+            with sqlite3.connect(launcher.PROTOCOL_LEDGER) as db:
+                db.execute('create table reservations(protocol text primary key,cell text not null)')
+                db.executemany('insert into reservations values(?,?)',[
+                    (launcher.MANIFEST_V2_SHA,'authorized/ON'),
+                    ('6880f8b21824554b797df6ccaf758ccf7d423e24561aa0f1d9c721f3b1dd94bc',
+                     'authorized/ON')])
+            launcher.PROTOCOL_LEDGER.chmod(0o600)
+            from scripts import nlip_phase2b5_execution as execution
+            # The independent owner/platform verifier must be absent. Proven
+            # here rather than asserted from documentation only.
+            need(execution.HOSTED_EXECUTION_VERIFIER is None,'VERIFIER_UNEXPECTEDLY_INSTALLED')
+            try:
+                launcher.require_hosted_admission(None)
+            except launcher.GateError as error:
+                need(str(error)=='HOSTED_ADMISSION_UNAVAILABLE','UNEXPECTED_CLOSED_GATE_ERROR')
+            else:raise RuntimeError('CLOSED_GATE_NOT_ENFORCED')
+            # A buffered HTTP fixture must never be admitted to the genuine path.
+            io=m.BufferedDirectIO([m.TransportResponse(raw,None,200,
+                {'content-type':'application/json'},True)])
+            try:
+                launcher.hosted_first_cell_operator(
+                    deployment/'phase2b5d-hosted-compatibility/first-cell.sqlite',
+                    authorization_window=(time.time()-1,time.time()+60),
+                    package_digest=args.package_digest,offline_io=io,
+                    protocol='v4-hosted')
+            except launcher.GateError:
+                pass
+            else:raise RuntimeError('BUFFERED_FIXTURE_ADMITTED')
+            with sqlite3.connect(launcher.PROTOCOL_LEDGER) as db:
+                need(db.execute('select count(*) from reservations').fetchone()==(2,),
+                     'SIMULATION_CONSUMED_CANONICAL_RESERVATION')
+            print(json.dumps({'status':'V4_HOSTED_CLOSED_GATE_QUALIFIED',
+                'model_requests':0,'scientific_attempts_consumed':0,
+                'closed_gate_enforced':True,'buffered_fixture_classified':True}))
     elif args.action=='fake-qualify-smoke':
         import socket,tempfile,time,sqlite3
         from memlife.nlip.model_adapter import ScriptedDirectIO
