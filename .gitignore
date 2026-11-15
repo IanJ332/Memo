@@ -28,6 +28,9 @@ runtime/
 # Machine-local context and persistent agent cache
 .local/
 
+# Private Phase 2B-5E V4 Linux package inventory and release identity records
+/docs/research/phase2b5e/
+
 # Retained private historical research evidence and locally accepted runtime sources.
 # These files remain on disk; only reviewed public R0/R1 additions are synchronized.
 /TIER_C_FINAL_EXECUTION_HANDOFF.md

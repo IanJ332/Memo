@@ -70,7 +70,7 @@ def verify_linux_runtime(inventory):
          'GLOBAL_SITE_ENABLED')
     sites=list((root/'.venv/lib').glob('python*/site-packages'))
     need(len(sites)==1,'SITE_SELECTION')
-    reuse=inventory.get('format')=='phase2b5a-linux-package-v1'
+    reuse=inventory.get('format') in ('phase2b5a-linux-package-v1','phase2b5e-v4-linux-package-v1')
     if reuse:
         need(inventory['qualification_sha256']=='d5bb560abe3710645efc4611e7dd272129c3429a9464a42b67044a46c1395dbc' and
              sha(root.parent/'linux-runtime-v3.json')==inventory['qualification_sha256'],

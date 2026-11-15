@@ -24,6 +24,9 @@ ROOT = Path(__file__).resolve().parent.parent
 INVENTORY = ROOT / ('docs/research/phase2b5a/inventory-smoke-v2.json'
                     if sys.platform == 'linux' else
                     'docs/research/phase2-provider-v2/inventory-phase2b5-macos-v1.json')
+# Exact V4 hosted package inventory; selected only by the versioned V4 hosted
+# entrypoints. V1/V2/V3 keep the accepted smoke inventory above.
+V4_INVENTORY = ROOT / 'docs/research/phase2b5e/inventory-v4-linux-v1.json'
 MANIFEST = ROOT / 'docs/research/phase2b1/manifest-v1.json'
 MANIFEST_SHA = '5caad31ae6503986384b9dd19bd36c7422e57e040298adee1461cfb5eff0589b'
 MODEL = 'gpt-4o-mini-2024-07-18'
@@ -99,7 +102,8 @@ def verify_package(expected_digest):
     runtime = inventory['python']
     if sys.version != runtime['version'] or digest(Path(sys.executable).resolve()) != runtime['sha256']:
         raise GateError('RUNTIME_MISMATCH')
-    if inventory.get('format') in ('phase2b5-linux-package-v1','phase2b5a-linux-package-v1'):
+    if inventory.get('format') in ('phase2b5-linux-package-v1','phase2b5a-linux-package-v1',
+                                   'phase2b5e-v4-linux-package-v1'):
         from scripts.nlip_phase2b5_execution import verify_linux_runtime
         verify_linux_runtime(inventory)
     installed = {}
@@ -369,6 +373,12 @@ def _first_cell_orchestration(path, responses, *, authorization_window, package_
     The supplied digest is an integrity comparison only, never an approval.
     The persistent reservation is taken before constructing any transport.
     """
+    if (protocol in ('v4-hosted', 'v4-hosted-smoke') and
+            Path(INVENTORY).resolve() ==
+            (ROOT / 'docs/research/phase2b5a/inventory-smoke-v2.json').resolve()):
+        # The genuine V4 path must never be relabelled from the reused V3
+        # package; older protocols keep their accepted default.
+        raise GateError('V4_PACKAGE_INVENTORY_MISMATCH')
     # V4 has no reviewed live execution binding yet. Never permit an older
     # execution object to authorize it, even though scripted direct I/O is safe.
     if protocol in ('v4', 'v4-smoke'):
