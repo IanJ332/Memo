@@ -14,8 +14,17 @@ V3 smoke `ac94d2a732d604e03d45d0ec5e3ee9932303c26ea235820869aac43834613da7`.
 V4 compatibility and smoke offline candidates are respectively
 `9da79903d6dad8f9a470a9679699ee7996994aa0d8902fb981cc65da77f03255` and
 `4ef8990d2f54daf77a28ec06b788d8955edd60a31bc2f4ecb257744a300d9505`.
-V4 offline integration was merged in PR #28; it remains synthetic-only, has not
-run on the hosted provider and is not authorized for live execution.
+V4 offline integration was merged in PR #28. That sentence originally read that
+V4 "remains synthetic-only, has not run on the hosted provider and is not
+authorized for live execution"; it is retained only as provenance, because it is
+no longer true. V4, V5 and V6 each later sent exactly one real hosted
+compatibility request under a separate exact authorization, all three were
+`MALFORMED_RESPONSE`, and the line is closed `PILOT_CLOSED_NO_GO` /
+`MORE_DATA_REQUIRED` with `ENFORCEMENT_UNCONFIRMED`. See
+[Phase 2B-5I closeout](../research/PHASE2B5I_PILOT_CLOSEOUT_20261116.md) and
+[endpoint capability check](../research/ENDPOINT_STRUCTURED_OUTPUT_CAPABILITY_20261116.md).
+Those three reservations are consumed and must never be replayed. No smoke cell
+ran, so no attack or defence measurement exists.
 
 For public portability, `scripts/nlip_phase1_evaluate.py` now resolves its
 historical freeze relative to the checkout. `scripts/nlip_phase2b5_execution.py`
