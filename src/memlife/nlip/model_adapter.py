@@ -120,6 +120,8 @@ def _incomplete_response(response, error, limit):
 JETSTREAM_MODEL = 'qwen-3.8-27b'
 JETSTREAM_ENDPOINT = 'https://llm.jetstream-cloud.org/qwen-3.8-27b/v1/chat/completions'
 
+USAGE_COUNTERS = ('prompt_tokens', 'completion_tokens', 'total_tokens')
+
 class ScriptedDirectIO:
     """In-memory provider I/O for qualification; has no network capability."""
     def __init__(self, responses):
@@ -308,7 +310,8 @@ class TypedModelAdapter:
         start=time.perf_counter_ns()
         sender = getattr(self.transport, 'delegate', self.transport)
         metadata={'prompt_sha256':hashlib.sha256(body).hexdigest(),'context_sha256':hashlib.sha256(context_bytes).hexdigest(),
-                  'provider_request_id':None,'http_request_id':None,'usage':None,'retries':0,'latency_ns':0,'error':None,
+                  'provider_request_id':None,'http_request_id':None,'usage':None,'provider_usage':None,
+                  'retries':0,'latency_ns':0,'error':None,
                   'transport_origin':None,
                   'sender':('JETSTREAM_DIRECT' if type(sender) is JetstreamDirectTransport else 'CUSTOM'),
                   'endpoint':JETSTREAM_ENDPOINT if isinstance(self.transport, JetstreamDirectTransport) else None,
@@ -361,9 +364,15 @@ class TypedModelAdapter:
                 if rid is not None and (not isinstance(rid,str) or len(rid)>128 or not rid.isascii() or not all(c.isalnum() or c in '-_' for c in rid)): raise ValueError()
                 if usage is not None:
                     if not isinstance(usage,dict): raise ValueError()
-                    usage={k:usage[k] for k in ('prompt_tokens','completion_tokens','total_tokens') if k in usage}
-                    if any(type(v) is not int or v<0 for v in usage.values()): raise ValueError()
-                metadata.update(provider_request_id=rid,usage=usage)
+                    counters={k:usage[k] for k in USAGE_COUNTERS if k in usage}
+                    if any(type(v) is not int or v<0 for v in counters.values()): raise ValueError()
+                    # `usage` is the adapter's interpreted counter subset;
+                    # `provider_usage` preserves the provider object verbatim so
+                    # evidence reconciliation never depends on what we dropped.
+                    metadata.update(usage=counters,provider_usage=usage)
+                else:
+                    metadata.update(usage=None,provider_usage=None)
+                metadata['provider_request_id']=rid
                 choices=response['choices']
                 if not isinstance(choices,list) or len(choices)!=1 or choices[0]['finish_reason']!='stop': raise ValueError()
                 content=choices[0]['message']['content']
@@ -379,7 +388,7 @@ class TypedModelAdapter:
             except (KeyError,TypeError,ValueError,IndexError): raise ModelError('MALFORMED_RESPONSE') from None
             metadata['schema_validity']='VALID'
             if time.monotonic() >= deadline: raise ModelError('TIMEOUT')
-            metadata.update(provider_request_id=rid,usage=usage,latency_ns=time.perf_counter_ns()-start)
+            metadata.update(provider_request_id=rid,latency_ns=time.perf_counter_ns()-start)
             return result
         except ModelError as exc:
             if exc.response is not None: capture(exc.response)

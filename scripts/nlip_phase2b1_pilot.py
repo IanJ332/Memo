@@ -168,7 +168,7 @@ class Pilot:
             row['response_evidence'] = self._private_artifact(directory, 'response.body', raw)
         for name in ('http_status', 'response_sha256', 'response_body_complete',
                      'returned_model', 'finish_reason', 'schema_validity',
-                     'transport_origin', 'sender',
+                     'transport_origin', 'sender', 'provider_usage',
                      'application_start_utc', 'application_start_monotonic_ns',
                      'application_end_utc', 'application_end_monotonic_ns'):
             if name in metadata: row[name] = metadata[name]
@@ -211,7 +211,8 @@ class Pilot:
                    'task_sha256':hashlib.sha256(json.dumps(m['task'], sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
                    'model':m['model'], 'config':{'max_completion_tokens':m['max_completion_tokens'], 'max_request_bytes':m['max_request_bytes'], 'max_response_bytes':m['max_response_bytes']},
                    'state':'RESERVED', 'attempt_count':1, 'retries':0, 'provider_may_have_received':False,
-                   'completion_id':None, 'http_request_id':None, 'usage':None, 'prompt_sha256':None,
+                   'completion_id':None, 'http_request_id':None, 'usage':None,
+                   'provider_usage':None, 'prompt_sha256':None,
                    'context_sha256':None, 'model_outcome':None, 'proposal_validity':None,
                    'canonical_proposal':None, 'oracle':None, 'dispatcher_decision':None, 'delivered':False, 'task_outcome':None,
                    'model_status':'PENDING', 'provider_error':None, 'dispatch_status':'NOT_STARTED',

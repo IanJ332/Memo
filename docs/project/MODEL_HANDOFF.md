@@ -38,6 +38,48 @@ re-qualify only the affected identities, then execute the registered
 compatibility request followed by the four ordered smoke cells inside one
 approved window of at most 600 seconds.
 
+## MEMO Phase 2B-5G — verifier usage defect found and fixed (2026-11-16)
+
+Follow-up analysis of the 2B-5F run found a genuine engineering defect in the
+hosted-evidence verifier, independent of the model's output.
+
+The adapter deliberately normalises provider `usage` to the three counters MEMO
+interprets (`prompt_tokens`, `completion_tokens`, `total_tokens`). The Pilot
+persisted only that subset, but `_verify_v4_hosted_result_inner` compared it to
+the raw provider object with exact structural equality. Any real provider that
+returns extra detail — the observed response returned
+`completion_tokens_details.reasoning_tokens` — therefore made reconciliation
+impossible, including for a correct response.
+
+Effect on the recorded run: the persisted row was already correctly classified
+`MALFORMED_RESPONSE` (the content was `{"tool": null}`), but the verifier aborted
+first on the usage mismatch and surfaced `V4_RESPONSE_MISMATCH`. The stored
+result therefore records the verifier error rather than the classification the
+row supports. Both facts are true; the model output did not conform, and the
+verifier could not have validated a conforming response either.
+
+Fix (no control weakened): the adapter now also carries `provider_usage`
+verbatim, the Pilot persists it, and `_verify_usage_reconciliation()` requires
+exact equality with the hashed provider object plus agreement between the raw
+object and the interpreted counter subset. Evidence written before the field
+existed reconciles on counters alone, so historical records stay auditable, and
+a counter mismatch still fails closed. Usage remains UNKNOWN when absent.
+
+Two further defects were found while reviewing that fix and are also corrected.
+First, `_same_json` treats any int and float as equal, so usage reconciliation
+now uses `_usage_strict_equal`, which never coerces numeric types or equates
+booleans with integers. Second, a PASS is now additionally guarded by
+`_thinking_evidence()`, which recomputes reasoning evidence from the hashed
+response: non-empty `reasoning_content`, any positively reported
+`reasoning_tokens`, and malformed token values all block a PASS, so a stored
+`COMPATIBILITY_PASS` cannot be relabelled past the non-thinking requirement.
+Genuinely absent usage stays UNKNOWN. Model identity is still enforced for a
+PASS while `MODEL_IDENTITY_MISMATCH` failure evidence remains verifiable.
+
+This defect affects only V4 hosted verification; synthetic paths are unchanged.
+The consumed compatibility reservation stays consumed — the fix does not refund
+or reopen it, and no request was replayed.
+
 ## MEMO Phase 2B-5F — first genuine V4 compatibility request: NO PASS (2026-11-16)
 
 The bounded-authority protocol change merged as the source of truth for V4
