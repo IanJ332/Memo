@@ -97,7 +97,8 @@ def preimport(root, expected_digest, inventory_name=INVENTORY_V3):
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action',choices=('verify','fake-qualify','fake-qualify-v3','fake-qualify-smoke',
-        'fake-qualify-v4-hosted','first-cell','first-cell-v3','smoke'))
+        'fake-qualify-v4-hosted','first-cell','first-cell-v3','smoke',
+        'v4-hosted-first-cell','v4-hosted-smoke'))
     parser.add_argument('--package-digest',required=True)
     parser.add_argument('--binding-sha256')
     parser.add_argument('--inventory',choices=('v3','v4'),default='v3')
@@ -140,9 +141,15 @@ def main(argv=None):
                      'authorized/ON')])
             launcher.PROTOCOL_LEDGER.chmod(0o600)
             from scripts import nlip_phase2b5_execution as execution
-            # The independent owner/platform verifier must be absent. Proven
-            # here rather than asserted from documentation only.
-            need(execution.HOSTED_EXECUTION_VERIFIER is None,'VERIFIER_UNEXPECTEDLY_INSTALLED')
+            # The retired independent verifier must not be reintroduced; the
+            # bounded V2/V3 authority form carries no approval object at all.
+            need(not hasattr(execution,'HOSTED_EXECUTION_VERIFIER'),'VERIFIER_UNEXPECTEDLY_INSTALLED')
+            need(not hasattr(execution,'HostedExecutionApproval'),'APPROVAL_OBJECT_REINTRODUCED')
+            try:
+                execution.require_bounded_execution_authority(object())
+            except launcher.GateError as error:
+                need(str(error)=='HOSTED_EXECUTION_BINDING_REQUIRED','UNEXPECTED_BOUNDED_GATE_ERROR')
+            else:raise RuntimeError('BOUNDED_GATE_NOT_ENFORCED')
             try:
                 launcher.require_hosted_admission(None)
             except launcher.GateError as error:
@@ -224,6 +231,19 @@ def main(argv=None):
             print(json.dumps({'status':'LINUX_FIRST_CELL_FAKE_PASS','model_requests':0,
                 'scientific_attempts_consumed':0,'scripted_calls':len(io.calls),
                 'duplicate_reservation_rejected':True}))
+    elif args.action in ('v4-hosted-first-cell','v4-hosted-smoke'):
+        # Bounded V4 hosted execution: exact binding, canonical ledger and the
+        # genuine transport only. No offline I/O is accepted on this path.
+        need(args.inventory=='v4','V4_INVENTORY_REQUIRED')
+        need(args.binding_sha256 is not None,'EXACT_BINDING_DIGEST_REQUIRED')
+        from scripts.nlip_phase2b5_execution import (DEPLOYMENT,run_first_cell,run_smoke,
+            Phase2B5V4HostedExecution,Phase2B5V4HostedSmokeExecution)
+        if args.action=='v4-hosted-first-cell':
+            run_first_cell(DEPLOYMENT/Phase2B5V4HostedExecution.binding_name,
+                           args.binding_sha256,protocol='v4-hosted')
+        else:
+            run_smoke(DEPLOYMENT/Phase2B5V4HostedSmokeExecution.binding_name,
+                      args.binding_sha256,protocol='v4-hosted-smoke')
     else:
         need(args.binding_sha256 is not None,'EXACT_BINDING_DIGEST_REQUIRED')
         if args.action=='smoke':

@@ -13,8 +13,6 @@ import ssl
 import stat
 import sys
 import time
-from dataclasses import dataclass
-from typing import Protocol
 
 # Public checkout placeholder: historical deployments require their exact
 # privately preserved execution package and cannot use this source as-is.
@@ -254,63 +252,22 @@ class Phase2B5V4SmokeExecution(Phase2B5V4Execution):
     def result_name(self): return 'phase2b5c-smoke/'+('-'.join(self.cell)+'.result.json')
 
 
-@dataclass(frozen=True)
-class HostedExecutionApproval:
-    """Claims returned only by a trusted verifier; constructing one proves nothing."""
-    package_digest: str
-    manifest_sha256: str
-    model: str
-    endpoint: str
-    ledger: str
-    evidence: str
-    start_utc: int
-    end_utc: int
-    owner_approval_sha256: str
-    platform_approval_sha256: str
+BOUNDED_OWNER_AUTHORITY = ('Direct Phase2B5 instruction and reaffirmation; '
+                             'not proved by this record')
+BOUNDED_PLATFORM_AUTHORITY = 'Supported review of exact command; not proved by this record'
 
 
-class HostedExecutionVerifier(Protocol):
-    """Independent owner/platform approval source; no implementation is installed here."""
-    def verify(self, binding: dict, evidence: str) -> HostedExecutionApproval: ...
+def require_bounded_execution_authority(execution):
+    """The V2/V3 authorization form, extended to the exact V4 hosted binding.
 
-
-HOSTED_EXECUTION_VERIFIER = None
-
-
-def _hosted_verifier():
-    verifier = HOSTED_EXECUTION_VERIFIER
-    need(verifier is not None and callable(getattr(verifier, 'verify', None)),
-         'HOSTED_EXECUTION_APPROVAL_UNAVAILABLE')
-    return verifier
-
-
-def _check_hosted_approval(binding, approval, *, evidence=None):
-    """Compare approval claims to the exact binding; no local label suffices."""
-    need(type(approval) is HostedExecutionApproval,
-         'HOSTED_EXECUTION_APPROVAL_UNAVAILABLE')
-    for name in ('owner_approval_sha256', 'platform_approval_sha256'):
-        value = getattr(approval, name)
-        need(type(value) is str and len(value) == 64 and
-             all(c in '0123456789abcdef' for c in value),
-             'HOSTED_EXECUTION_APPROVAL_UNAVAILABLE')
-    expected_evidence = evidence if evidence is not None else binding.get('evidence')
-    need(expected_evidence is not None and
-         (approval.package_digest, approval.manifest_sha256, approval.model,
-          approval.endpoint, approval.ledger, approval.evidence,
-          approval.start_utc, approval.end_utc) ==
-         (binding['package_digest'], binding['manifest_sha256'], binding['model'],
-          binding['endpoint'], binding['ledger'], expected_evidence,
-          binding['start_utc'], binding['end_utc']),
-         'HOSTED_EXECUTION_APPROVAL_MISMATCH')
-
-
-def _require_hosted_approval(binding, *, evidence=None):
-    if evidence is None:
-        evidence = binding.get('evidence')
-    need(type(evidence) is str, 'HOSTED_EXECUTION_APPROVAL_UNAVAILABLE')
-    approval = _hosted_verifier().verify(binding, evidence)
-    _check_hosted_approval(binding, approval, evidence=evidence)
-    return approval
+    Authority is the owner's direct instruction plus supported review of the
+    exact prospective command. No local object, hash or label supplies it, so
+    this function asserts only that the finite binding was verified; the
+    result records the basis as unproved by that record.
+    """
+    need(type(getattr(execution, 'binding', None)) is dict,
+         'HOSTED_EXECUTION_BINDING_REQUIRED')
+    return execution.binding
 
 
 class Phase2B5V4HostedExecution(Phase2B5V4Execution):
@@ -344,7 +301,7 @@ class Phase2B5V4HostedExecution(Phase2B5V4Execution):
              b['admission'] == 'ON', 'EXECUTION_SCOPE_MISMATCH')
         need(b['manifest_sha256'] == self.manifest_sha, 'EXECUTION_PROTOCOL_MISMATCH')
         super().check(evidence, window, package_digest, cell=cell)
-        self.hosted_approval = _require_hosted_approval(b, evidence=str(self.evidence))
+        require_bounded_execution_authority(self)
 
 
 class Phase2B5V4HostedSmokeExecution(Phase2B5V4HostedExecution):
@@ -385,7 +342,7 @@ class Phase2B5V4HostedSmokeExecution(Phase2B5V4HostedExecution):
         need(b['external_delivery'] == 'PROHIBITED', 'EXECUTION_SCOPE_MISMATCH')
         need(b['manifest_sha256'] == self.manifest_sha, 'EXECUTION_PROTOCOL_MISMATCH')
         Phase2B5Execution.check(self, evidence, window, package_digest, cell=cell)
-        self.hosted_approval = _require_hosted_approval(b, evidence=str(self.evidence))
+        require_bounded_execution_authority(self)
 
 
 def _same_json(left, right):
@@ -518,26 +475,27 @@ def _verify_v4_synthetic_result(path, *, protocol, manifest, cell, package_diges
 
 
 def _verify_v4_hosted_result(path, *, protocol, manifest, cell, package_digest,
-    execution, expected_sha=None, require_genuine=True, approval=None, require_pass=True):
+    execution, expected_sha=None, require_genuine=True, require_pass=True):
     """Fail closed on malformed evidence; never leak KeyError/TypeError."""
     try:
         return _verify_v4_hosted_result_inner(path, protocol=protocol, manifest=manifest,
             cell=cell, package_digest=package_digest, execution=execution,
             expected_sha=expected_sha, require_genuine=require_genuine,
-            approval=approval, require_pass=require_pass)
+            require_pass=require_pass)
     except (KeyError, TypeError, ValueError, IndexError, AttributeError, sqlite3.DatabaseError):
         from scripts.nlip_phase2b2_launcher import GateError
         raise GateError('V4_RESULT_INVALID') from None
 
 
 def _verify_v4_hosted_result_inner(path, *, protocol, manifest, cell, package_digest,
-    execution, expected_sha=None, require_genuine=True, approval=None, require_pass=True):
+    execution, expected_sha=None, require_genuine=True, require_pass=True):
     """Reconcile genuine hosted evidence bound to the exact executed binding.
 
     This verifier intentionally rejects scripted provenance. Its trust boundary
-    is the live Jetstream transport in the shared Pilot, not a result label. The
-    binding chain is checked here; owner/platform approval is checked only by
-    the installed independent verifier in the hosted admission paths.
+    is the live Jetstream transport in the shared Pilot, not a result label.
+    Authority is the bounded V2/V3 form -- the owner's direct instruction and
+    supported review of the exact command -- and is recorded as a basis, never
+    as proof of approval.
     """
     from memlife.nlip.model_adapter import strict_json
     from memlife.nlip.policy import ToolArguments
@@ -567,18 +525,15 @@ def _verify_v4_hosted_result_inner(path, *, protocol, manifest, cell, package_di
          'HOSTED_GENUINE_EVIDENCE_REQUIRED')
     need(type(result.get('observation')) is dict and type(result.get('evidence')) is str,
          'V4_RESULT_INVALID')
-    if approval is not None:
-        _check_hosted_approval(execution.binding, approval, evidence=str(execution.evidence))
+    require_bounded_execution_authority(execution)
     need(result['protocol'] == protocol and
          (result['classification'] == expected_class if require_pass else
           result['classification'] in (expected_class, 'SMOKE_CONTRACT_FAILED',
               'COMPATIBILITY_FAILED', 'EVIDENCE_FAILURE', 'TIMEOUT',
               'MODEL_IDENTITY_MISMATCH', 'MALFORMED_RESPONSE', 'THINKING_MODE_IGNORED')) and
-         result['owner_authority'] == 'INDEPENDENT_VERIFIER_ACCEPTED' and
-         result['platform_authority'] == 'INDEPENDENT_VERIFIER_ACCEPTED' and
-         all(type(result.get(name)) is str and len(result[name]) == 64 and
-             all(c in '0123456789abcdef' for c in result[name])
-             for name in ('owner_approval_sha256', 'platform_approval_sha256')) and
+         result['owner_authority'] == BOUNDED_OWNER_AUTHORITY and
+         result['platform_authority'] == BOUNDED_PLATFORM_AUTHORITY and
+         result['authority_basis'] == 'BOUNDED_EXACT_COMMAND_INSTRUCTION_NOT_APPROVAL_PROOF' and
          result['reconciled'] is (result['evidence_status'] != 'OUTCOME_UNCERTAIN') and
          result['package_digest'] == package_digest and
          result['ledger'] == str(LEDGER) and result['reservation_identity'] == reservation and
@@ -642,10 +597,7 @@ def _verify_v4_hosted_result_inner(path, *, protocol, manifest, cell, package_di
                           m['registered_request_sha256'])
     registered_context = (m['model_visible_contexts']['/'.join(cell)] if is_smoke else
                           strict_json(m['registered_request']['messages'][-1]['content'].encode()))
-    approval_ok = (approval is None or
-        (approval.owner_approval_sha256 == result.get('owner_approval_sha256') and
-         approval.platform_approval_sha256 == result.get('platform_approval_sha256')))
-    need(approval_ok and row.get('sender') == 'JETSTREAM_DIRECT' and row.get('endpoint') == ENDPOINT and
+    need(row.get('sender') == 'JETSTREAM_DIRECT' and row.get('endpoint') == ENDPOINT and
          request.get('model') == MODEL and
          hashlib.sha256((evidence.parent / row['request_evidence']).read_bytes()).hexdigest() == registered_request and
          context == registered_context and
@@ -784,12 +736,8 @@ def verify_v4_hosted_smoke_gate(db, execution, package_digest):
          json.loads(MANIFEST_V4_SMOKE.read_bytes()).get('compatibility_candidate_sha256') == compatibility.manifest_sha,
          'MANIFEST_MISMATCH')
     index = V4_SMOKE_CELLS.index(execution.cell)
-    smoke_approvals = {
-        cell: _require_hosted_approval(
-            execution.binding, evidence=execution.binding['evidence_by_cell']['/'.join(cell)])
-        for cell in V4_SMOKE_CELLS[:index]}
-    compatibility_approval = _require_hosted_approval(
-        compatibility.binding, evidence=compatibility.binding['evidence'])
+    require_bounded_execution_authority(execution)
+    require_bounded_execution_authority(compatibility)
     compat_key = MANIFEST_V4_SHA256 + ':first-cell:authorized/ON'
     need(db.execute('select cell from reservations where protocol=?', (compat_key,)).fetchall() ==
          [('authorized/ON',)], 'COMPATIBILITY_RESERVATION_MISSING')
@@ -799,8 +747,7 @@ def verify_v4_hosted_smoke_gate(db, execution, package_digest):
          all(c in '0123456789abcdef' for c in expected_sha), 'V4_RESULT_DIGEST_REQUIRED')
     _verify_v4_hosted_result(result_path, protocol=Phase2B5V4HostedExecution.protocol,
         manifest=MANIFEST_V4, cell=('authorized', 'ON'), package_digest=package_digest,
-        execution=compatibility, expected_sha=expected_sha, require_genuine=True,
-        approval=compatibility_approval)
+        execution=compatibility, expected_sha=expected_sha, require_genuine=True)
     observed = set(db.execute('select protocol,cell from reservations where protocol like ?',
                               (MANIFEST_V4_SMOKE_SHA256 + ':%',)))
     prefix = {(MANIFEST_V4_SMOKE_SHA256 + ':' + '/'.join(c), '/'.join(c))
@@ -813,7 +760,7 @@ def verify_v4_hosted_smoke_gate(db, execution, package_digest):
         _verify_v4_hosted_result(DEPLOYMENT / previous_execution.result_name,
             protocol=Phase2B5V4HostedSmokeExecution.protocol, manifest=MANIFEST_V4_SMOKE,
             cell=previous, package_digest=package_digest, execution=previous_execution,
-            require_genuine=True, approval=smoke_approvals[previous])
+            require_genuine=True)
 
 
 def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authorized','ON'),offline_io=None):
@@ -928,15 +875,11 @@ def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authori
                       owner_authority='NONE',platform_authority='NONE',
                       reservation_identity=(execution.manifest_sha+':first-cell:authorized/ON' if protocol=='v4' else execution.manifest_sha+':'+('/'.join(cell))))
     if hosted:
-        hosted_approval = getattr(execution, 'hosted_approval', None)
-        need(type(hosted_approval) is HostedExecutionApproval,
-             'HOSTED_EXECUTION_APPROVAL_UNAVAILABLE')
-        _check_hosted_approval(b, hosted_approval, evidence=str(execution.evidence))
+        require_bounded_execution_authority(execution)
         result.update(evidence_origin='HOSTED_JETSTREAM_DIRECT',
-                      owner_authority='INDEPENDENT_VERIFIER_ACCEPTED',
-                      platform_authority='INDEPENDENT_VERIFIER_ACCEPTED',
-                      owner_approval_sha256=hosted_approval.owner_approval_sha256,
-                      platform_approval_sha256=hosted_approval.platform_approval_sha256,
+                      owner_authority=BOUNDED_OWNER_AUTHORITY,
+                      platform_authority=BOUNDED_PLATFORM_AUTHORITY,
+                      authority_basis='BOUNDED_EXACT_COMMAND_INSTRUCTION_NOT_APPROVAL_PROOF',
                       reservation_identity=(execution.manifest_sha+':first-cell:authorized/ON' if protocol=='v4-hosted' else execution.manifest_sha+':'+('/'.join(cell))))
         if offline_io is not None:
             result['evidence_origin'] = 'SIMULATED_HTTP_FIXTURE'
@@ -977,7 +920,7 @@ def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authori
         manifest_path = MANIFEST_V4 if protocol == 'v4-hosted' else MANIFEST_V4_SMOKE
         _verify_v4_hosted_result(path, protocol=execution.protocol, manifest=manifest_path,
             cell=cell, package_digest=b['package_digest'], execution=execution,
-            require_genuine=offline_io is None, approval=hosted_approval,
+            require_genuine=offline_io is None,
             require_pass=result['classification'] in ('COMPATIBILITY_PASS',
                 'SMOKE_OBSERVATION_COMPLETE'))
     print(json.dumps(result,sort_keys=True))
