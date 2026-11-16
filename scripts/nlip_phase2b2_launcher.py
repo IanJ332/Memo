@@ -27,6 +27,8 @@ INVENTORY = ROOT / ('docs/research/phase2b5a/inventory-smoke-v2.json'
 # Exact V4 hosted package inventory; selected only by the versioned V4 hosted
 # entrypoints. V1/V2/V3 keep the accepted smoke inventory above.
 V4_INVENTORY = ROOT / 'docs/research/phase2b5e/inventory-v4-linux-v1.json'
+# Successor package; selected only by the versioned V5 hosted entrypoints.
+V5_INVENTORY = ROOT / 'docs/research/phase2b5g/inventory-v5-linux-v1.json'
 MANIFEST = ROOT / 'docs/research/phase2b1/manifest-v1.json'
 MANIFEST_SHA = '5caad31ae6503986384b9dd19bd36c7422e57e040298adee1461cfb5eff0589b'
 MODEL = 'gpt-4o-mini-2024-07-18'
@@ -103,7 +105,8 @@ def verify_package(expected_digest):
     if sys.version != runtime['version'] or digest(Path(sys.executable).resolve()) != runtime['sha256']:
         raise GateError('RUNTIME_MISMATCH')
     if inventory.get('format') in ('phase2b5-linux-package-v1','phase2b5a-linux-package-v1',
-                                   'phase2b5e-v4-linux-package-v1'):
+                                   'phase2b5e-v4-linux-package-v1',
+                                   'phase2b5g-v5-linux-package-v1'):
         from scripts.nlip_phase2b5_execution import verify_linux_runtime
         verify_linux_runtime(inventory)
     installed = {}
@@ -243,12 +246,15 @@ def reserve_first_cell(protocol='v1', cell=('authorized','ON'), *, execution=Non
         raise GateError('LEDGER_PARENT_INVALID')
     if PROTOCOL_LEDGER.is_symlink(): raise GateError('LEDGER_INVALID')
     from scripts.nlip_phase2b1_pilot import (MANIFEST_V3,MANIFEST_V3_SHA256,MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256,
-        MANIFEST_V4,MANIFEST_V4_SHA256,MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256)
+        MANIFEST_V4,MANIFEST_V4_SHA256,MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256,
+        MANIFEST_V5,MANIFEST_V5_SHA256,MANIFEST_V5_SMOKE,MANIFEST_V5_SMOKE_SHA256)
     choices={'v1':(MANIFEST,MANIFEST_SHA),'v2':(MANIFEST_V2,MANIFEST_V2_SHA),
              'v3':(MANIFEST_V3,MANIFEST_V3_SHA256),'smoke':(MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256),
              'v4':(MANIFEST_V4,MANIFEST_V4_SHA256),'v4-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256),
              'v4-hosted':(MANIFEST_V4,MANIFEST_V4_SHA256),
-             'v4-hosted-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256)}
+             'v4-hosted-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256),
+             'v5-hosted':(MANIFEST_V5,MANIFEST_V5_SHA256),
+             'v5-hosted-smoke':(MANIFEST_V5_SMOKE,MANIFEST_V5_SMOKE_SHA256)}
     if protocol not in choices: raise GateError('UNKNOWN_PROTOCOL')
     manifest,manifest_sha=choices[protocol]
     if digest(manifest) != manifest_sha: raise GateError('MANIFEST_MISMATCH')
@@ -270,11 +276,14 @@ def reserve_first_cell(protocol='v1', cell=('authorized','ON'), *, execution=Non
             info=candidate.lstat()
             if (not stat.S_ISREG(info.st_mode) or info.st_uid!=os.geteuid() or info.st_nlink!=1 or
                 stat.S_IMODE(info.st_mode)&0o077): raise GateError('SYNTHETIC_LEDGER_INVALID')
-    elif protocol in ('v4-hosted','v4-hosted-smoke'):
+    elif protocol in ('v4-hosted','v4-hosted-smoke','v5-hosted','v5-hosted-smoke'):
         from scripts.nlip_phase2b5_execution import (Phase2B5V4HostedExecution,
-            Phase2B5V4HostedSmokeExecution)
+            Phase2B5V4HostedSmokeExecution, Phase2B5V5HostedExecution,
+            Phase2B5V5HostedSmokeExecution)
         if execution is None: raise GateError('HOSTED_ADMISSION_UNAVAILABLE')
-        expected = (Phase2B5V4HostedSmokeExecution if protocol == 'v4-hosted-smoke'
+        expected = (Phase2B5V5HostedSmokeExecution if protocol == 'v5-hosted-smoke'
+                    else Phase2B5V5HostedExecution if protocol == 'v5-hosted'
+                    else Phase2B5V4HostedSmokeExecution if protocol == 'v4-hosted-smoke'
                     else Phase2B5V4HostedExecution)
         if type(execution) is not expected: raise GateError('HOSTED_ADMISSION_UNAVAILABLE')
         declared=json.loads(manifest.read_bytes()).get('persistent_ledger')
@@ -303,12 +312,12 @@ def reserve_first_cell(protocol='v1', cell=('authorized','ON'), *, execution=Non
                     [('protocol','TEXT',0,1),('cell','TEXT',1,0)]):
                 raise GateError('LEDGER_INVALID')
     if type(cell) is not tuple or len(cell)!=2: raise GateError('CELL_SCOPE_MISMATCH')
-    if protocol in ('smoke','v4-smoke','v4-hosted-smoke'):
+    if protocol in ('smoke','v4-smoke','v4-hosted-smoke','v5-hosted-smoke'):
         if list(cell) not in json.loads(manifest.read_bytes())['live_cells']:raise GateError('CELL_SCOPE_MISMATCH')
     elif cell!=('authorized','ON'):raise GateError('CELL_SCOPE_MISMATCH')
     cell_id='/'.join(cell)
-    reservation=(manifest_sha+':first-cell:'+cell_id if protocol in ('v4','v4-hosted') else
-                 manifest_sha+':'+cell_id if protocol in ('smoke','v4-smoke','v4-hosted-smoke') else manifest_sha)
+    reservation=(manifest_sha+':first-cell:'+cell_id if protocol in ('v4','v4-hosted','v5-hosted') else
+                 manifest_sha+':'+cell_id if protocol in ('smoke','v4-smoke','v4-hosted-smoke','v5-hosted-smoke') else manifest_sha)
     if protocol=='v4-smoke' and execution is None: raise GateError('V4_COMPATIBILITY_PASS_GATE_UNAVAILABLE')
     # Exclusive lock and unique primary key make all supported invocations share
     # a single non-refundable reservation regardless of evidence path.
@@ -322,6 +331,9 @@ def reserve_first_cell(protocol='v1', cell=('authorized','ON'), *, execution=Non
         if protocol=='v4-hosted-smoke':
             from scripts.nlip_phase2b5_execution import verify_v4_hosted_smoke_gate
             verify_v4_hosted_smoke_gate(db,execution,package_digest)
+        if protocol=='v5-hosted-smoke':
+            from scripts.nlip_phase2b5_execution import verify_v5_hosted_smoke_gate
+            verify_v5_hosted_smoke_gate(db,execution,package_digest)
         try:
             db.execute('INSERT INTO reservations VALUES (?, ?)', (reservation, cell_id))
         except sqlite3.IntegrityError:
@@ -355,9 +367,11 @@ def require_hosted_admission(execution=None, *, path=None, authorization_window=
         raise GateError('HOSTED_ADMISSION_UNAVAILABLE')
     from scripts.nlip_phase2b5_execution import Phase2B5Execution
     from scripts.nlip_phase2b5_execution import (Phase2B5AExecution, Phase2B5SmokeExecution,
-        Phase2B5V4HostedExecution, Phase2B5V4HostedSmokeExecution)
+        Phase2B5V4HostedExecution, Phase2B5V4HostedSmokeExecution,
+        Phase2B5V5HostedExecution, Phase2B5V5HostedSmokeExecution)
     if type(execution) not in (Phase2B5Execution, Phase2B5AExecution, Phase2B5SmokeExecution,
-                               Phase2B5V4HostedExecution, Phase2B5V4HostedSmokeExecution):
+                               Phase2B5V4HostedExecution, Phase2B5V4HostedSmokeExecution,
+                               Phase2B5V5HostedExecution, Phase2B5V5HostedSmokeExecution):
         raise GateError('HOSTED_ADMISSION_UNAVAILABLE')
     execution.check(path, authorization_window, package_digest,cell=cell)
 
@@ -373,7 +387,7 @@ def _first_cell_orchestration(path, responses, *, authorization_window, package_
     The supplied digest is an integrity comparison only, never an approval.
     The persistent reservation is taken before constructing any transport.
     """
-    if (protocol in ('v4-hosted', 'v4-hosted-smoke') and
+    if (protocol in ('v4-hosted', 'v4-hosted-smoke', 'v5-hosted', 'v5-hosted-smoke') and
             Path(INVENTORY).resolve() ==
             (ROOT / 'docs/research/phase2b5a/inventory-smoke-v2.json').resolve()):
         # The genuine V4 path must never be relabelled from the reused V3
@@ -392,10 +406,13 @@ def _first_cell_orchestration(path, responses, *, authorization_window, package_
             _model_adapter.JetstreamDirectTransport.__init__ is not _DIRECT_INIT or
             _DIRECT_SEND.__defaults__ != (_SCRIPTED_READ,)):
             raise GateError('V4_SCRIPTED_IO_MUTATED')
-    elif protocol in ('v4-hosted', 'v4-hosted-smoke'):
+    elif protocol in ('v4-hosted', 'v4-hosted-smoke', 'v5-hosted', 'v5-hosted-smoke'):
         from scripts.nlip_phase2b5_execution import (Phase2B5V4HostedExecution,
-            Phase2B5V4HostedSmokeExecution)
-        expected = (Phase2B5V4HostedSmokeExecution if protocol == 'v4-hosted-smoke'
+            Phase2B5V4HostedSmokeExecution, Phase2B5V5HostedExecution,
+            Phase2B5V5HostedSmokeExecution)
+        expected = (Phase2B5V5HostedSmokeExecution if protocol == 'v5-hosted-smoke'
+                    else Phase2B5V5HostedExecution if protocol == 'v5-hosted'
+                    else Phase2B5V4HostedSmokeExecution if protocol == 'v4-hosted-smoke'
                     else Phase2B5V4HostedExecution)
         if (not direct or (offline_io is not None and
             type(offline_io) is not _model_adapter.BufferedDirectIO) or
@@ -404,7 +421,7 @@ def _first_cell_orchestration(path, responses, *, authorization_window, package_
     inventory = verify_package(package_digest)
     from scripts.nlip_phase2b1_pilot import Pilot
     verify_loaded_sources(inventory)
-    if protocol in ('v4','v4-smoke','v4-hosted','v4-hosted-smoke'):
+    if protocol in ('v4','v4-smoke','v4-hosted','v4-hosted-smoke','v5-hosted','v5-hosted-smoke'):
         for name in ('scripts/nlip_phase2b1_pilot.py','scripts/nlip_phase2b2_launcher.py',
                      'scripts/nlip_phase2b5_execution.py','src/memlife/nlip/model_adapter.py'):
             source=ROOT/name
@@ -416,10 +433,11 @@ def _first_cell_orchestration(path, responses, *, authorization_window, package_
             raise GateError('V4_PACKAGE_SOURCE_MISMATCH')
     if direct:
         from memlife.nlip.model_adapter import JetstreamDirectTransport, ScriptedDirectIO
-        if offline_io is None or protocol in ('v4-hosted', 'v4-hosted-smoke'):
+        if offline_io is None or protocol in ('v4-hosted', 'v4-hosted-smoke',
+                                              'v5-hosted', 'v5-hosted-smoke'):
             require_hosted_admission(execution, path=path,
                 authorization_window=authorization_window, package_digest=package_digest,cell=cell)
-        elif protocol in ('v4-hosted', 'v4-hosted-smoke'):
+        elif protocol in ('v4-hosted', 'v4-hosted-smoke', 'v5-hosted', 'v5-hosted-smoke'):
             raise GateError('V4_HOSTED_ADMISSION_UNAVAILABLE')
         elif type(offline_io) is not ScriptedDirectIO:
             raise GateError('INVALID_OFFLINE_IO')
@@ -448,8 +466,19 @@ def _first_cell_orchestration(path, responses, *, authorization_window, package_
         if type(execution) is not Phase2B5V4HostedExecution:
             raise GateError('V4_HOSTED_EXECUTION_REQUIRED')
         execution.check(path,authorization_window,package_digest,cell=cell)
+    if protocol=='v5-hosted-smoke':
+        from scripts.nlip_phase2b5_execution import Phase2B5V5HostedSmokeExecution
+        if type(execution) is not Phase2B5V5HostedSmokeExecution:
+            raise GateError('V4_HOSTED_EXECUTION_REQUIRED')
+        execution.check(path,authorization_window,package_digest,cell=cell)
+    if protocol=='v5-hosted':
+        from scripts.nlip_phase2b5_execution import Phase2B5V5HostedExecution
+        if type(execution) is not Phase2B5V5HostedExecution:
+            raise GateError('V4_HOSTED_EXECUTION_REQUIRED')
+        execution.check(path,authorization_window,package_digest,cell=cell)
     reserve_first_cell(protocol,cell,execution=execution,package_digest=package_digest,
-        simulated=protocol in ('v4-hosted','v4-hosted-smoke') and offline_io is not None)
+        simulated=protocol in ('v4-hosted','v4-hosted-smoke','v5-hosted','v5-hosted-smoke')
+            and offline_io is not None)
     if not authorization_window[0] <= time.time() < authorization_window[1]:
         raise GateError('AUTHORIZATION_EXPIRED')
     try:
@@ -459,7 +488,7 @@ def _first_cell_orchestration(path, responses, *, authorization_window, package_
         if protocol in ('v4','v4-smoke') and (type(transport) is not JetstreamDirectTransport or
             transport.offline_io is not offline_io or transport._fixed_scripted_io is not True or
             transport.model!=DEFAULT_MODEL): raise GateError('V4_SCRIPTED_IO_MUTATED')
-        if protocol in ('v4-hosted','v4-hosted-smoke') and (
+        if protocol in ('v4-hosted','v4-hosted-smoke','v5-hosted','v5-hosted-smoke') and (
             type(transport) is not JetstreamDirectTransport or
             type(offline_io) not in (type(None), _model_adapter.BufferedDirectIO) or
             _model_adapter.JetstreamDirectTransport.send is not _DIRECT_SEND or

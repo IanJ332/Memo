@@ -37,6 +37,12 @@ MANIFEST_V4 = Path(__file__).resolve().parent.parent / '.local/phase2b5b/compati
 MANIFEST_V4_SHA256 = '9da79903d6dad8f9a470a9679699ee7996994aa0d8902fb981cc65da77f03255'
 MANIFEST_V4_SMOKE = Path(__file__).resolve().parent.parent / '.local/phase2b5b/smoke-candidate-v3.json'
 MANIFEST_V4_SMOKE_SHA256 = '4ef8990d2f54daf77a28ec06b788d8955edd60a31bc2f4ecb257744a300d9505'
+# Successor freezes a new system instruction (explicit output key naming); the
+# task, memory admission, oracle, dispatcher and request contract are unchanged.
+MANIFEST_V5 = Path(__file__).resolve().parent.parent / '.local/phase2b5b/compatibility-v5-key-naming.json'
+MANIFEST_V5_SHA256 = '5f490ce7cea02b0835fc1826d5380a5100fa8e1bd4df118fd650fc0d111029ab'
+MANIFEST_V5_SMOKE = Path(__file__).resolve().parent.parent / '.local/phase2b5b/smoke-v5-key-naming.json'
+MANIFEST_V5_SMOKE_SHA256 = '0531eaf84a5a26e3ee4415df172738e80946f052635fa684f29e38c85c8e4883'
 
 class PilotError(Exception): pass
 
@@ -103,7 +109,9 @@ class Pilot:
                  'v3':(MANIFEST_V3,MANIFEST_V3_SHA256),'smoke':(MANIFEST_SMOKE,MANIFEST_SMOKE_SHA256),
                  'v4':(MANIFEST_V4,MANIFEST_V4_SHA256),'v4-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256),
                  'v4-hosted':(MANIFEST_V4,MANIFEST_V4_SHA256),
-                 'v4-hosted-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256)}
+                 'v4-hosted-smoke':(MANIFEST_V4_SMOKE,MANIFEST_V4_SMOKE_SHA256),
+                 'v5-hosted':(MANIFEST_V5,MANIFEST_V5_SHA256),
+                 'v5-hosted-smoke':(MANIFEST_V5_SMOKE,MANIFEST_V5_SMOKE_SHA256)}
         if protocol not in choices: raise PilotError('UNKNOWN_PROTOCOL')
         manifest_path,self.manifest_sha=choices[protocol]
         raw = manifest_path.read_bytes()
@@ -112,7 +120,8 @@ class Pilot:
         self.manifest = json.loads(raw)
         self._manifest_canonical = json.dumps(self.manifest, sort_keys=True, separators=(',', ':'))
         if type(request_seconds) not in (int, float) or not 0 < request_seconds <= 60: raise ValueError('INVALID_DEADLINE')
-        if protocol in ('v2','v3','smoke','v4','v4-smoke','v4-hosted','v4-hosted-smoke') and request_seconds > self.manifest['request_deadline_seconds']: raise ValueError('INVALID_DEADLINE')
+        if protocol in ('v2','v3','smoke','v4','v4-smoke','v4-hosted','v4-hosted-smoke',
+                        'v5-hosted','v5-hosted-smoke') and request_seconds > self.manifest['request_deadline_seconds']: raise ValueError('INVALID_DEADLINE')
         self.request_seconds = request_seconds
         if authorization_window is not None and (type(authorization_window) is not tuple or len(authorization_window) != 2 or
                 any(type(x) not in (int, float) for x in authorization_window) or
@@ -138,7 +147,21 @@ class Pilot:
                                   max_completion_tokens=self.manifest['max_completion_tokens'],
                                   timeout_seconds=self.manifest.get('transport_timeout_seconds', 15.0),
                                   enable_thinking=self.manifest.get('chat_template_kwargs',{}).get('enable_thinking'),
-                                  schema_variant='aligned-v1' if hashlib.sha256(self._manifest_raw).hexdigest() in (MANIFEST_V4_SHA256, MANIFEST_V4_SMOKE_SHA256) else 'legacy')
+                                  schema_variant='aligned-v1' if self._schema_variant()=='aligned-v1' else 'legacy',
+                                  instruction=self._instruction())
+
+    def _schema_variant(self):
+        # The successor registers its own variant; predecessors stay as-is.
+        if self.manifest.get('successor_schema_variant') == 'aligned-v1':
+            return 'aligned-v1'
+        if hashlib.sha256(self._manifest_raw).hexdigest() in (MANIFEST_V4_SHA256, MANIFEST_V4_SMOKE_SHA256,
+                                                              MANIFEST_V5_SHA256, MANIFEST_V5_SMOKE_SHA256):
+            return 'aligned-v1'
+        return 'legacy'
+
+    def _instruction(self):
+        from memlife.nlip.model_adapter import manifest_instruction
+        return manifest_instruction(self.manifest)
 
     def _db(self): return sqlite3.connect(self.path, timeout=2)
 
@@ -201,7 +224,7 @@ class Pilot:
                 json.dumps(json.loads(self._manifest_raw), sort_keys=True, separators=(',', ':')) != self._manifest_canonical or
                 json.dumps(m,sort_keys=True,separators=(',',':')) != self._manifest_canonical):
                 raise PilotError('MANIFEST_MUTATED')
-            expected = ModelConfig(m['model'], max_request_bytes=m['max_request_bytes'], max_response_bytes=m['max_response_bytes'], max_completion_tokens=m['max_completion_tokens'], timeout_seconds=m.get('transport_timeout_seconds', 15.0),enable_thinking=m.get('chat_template_kwargs',{}).get('enable_thinking'),schema_variant='aligned-v1' if hashlib.sha256(self._manifest_raw).hexdigest() in (MANIFEST_V4_SHA256, MANIFEST_V4_SMOKE_SHA256) else 'legacy')
+            expected = ModelConfig(m['model'], max_request_bytes=m['max_request_bytes'], max_response_bytes=m['max_response_bytes'], max_completion_tokens=m['max_completion_tokens'], timeout_seconds=m.get('transport_timeout_seconds', 15.0),enable_thinking=m.get('chat_template_kwargs',{}).get('enable_thinking'),schema_variant='aligned-v1' if self._schema_variant()=='aligned-v1' else 'legacy',instruction=self._instruction())
             if type(self.config) is not ModelConfig or self.config != expected or self.transport is not self._initial_transport:
                 raise PilotError('CONFIGURATION_MUTATED')
             matches = [s for s in m['scenarios'] if s['id'] == scenario_id]
