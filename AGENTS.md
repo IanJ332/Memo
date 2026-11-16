@@ -141,8 +141,11 @@ Binding distinction, recorded deliberately: the executed request used manifest
 corrected and re-qualified package registers
 `42ff8f09094a657e4b9b8e576225b607385210621bf9c215d3a6e77276fbe85c` (request
 `abfd3349914ae9fb7e0bd6969766b825edba3c6f9ca11bfec267527fb3c4ff8c`). The
-corrected two-key schema was never sent; that request is spent and must not be
-replayed.
+corrected two-key schema was **never sent** and holds **no reservation**:
+the single `V6_COMPAT` key belongs to the executed manifest `30e70e04...`.
+Nothing is spent under the corrected protocol, and it authorizes no replay
+under the old protocol. The consumed `authorized/ON` cell opposes a further
+live attempt on that same cell regardless of manifest identity.
 
 Three registered compatibility attempts (V4, V5, V6) are now consumed with
 distinct genuine schema violations: missing object, missing abstention key,

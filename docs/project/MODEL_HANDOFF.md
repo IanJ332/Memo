@@ -1,5 +1,32 @@
 # Model Handoff — Start Here
 
+## Endpoint structured-output check — `ENFORCEMENT_UNCONFIRMED` (2026-11-16)
+
+[Capability record](../research/ENDPOINT_STRUCTURED_OUTPUT_CAPABILITY_20261116.md).
+No model request, no reservation, no VM action; V4–V6 results untouched.
+
+`qwen-3.8-27b` is served by vLLM behind Caddy (direct route; LiteLLM is only on
+the `/api/` UI-proxy path). The official Jetstream2 inference docs name the
+engine but publish no engine version and never mention `response_format`,
+`json_schema`, guided decoding or grammars across all 146 sitemap URLs. So
+parameter support is undocumented, and no version-gated capability claim is
+available.
+
+Evidence separates three things: documented configuration is partial; observed
+compliance failed three times with `strict: true`; verified decoding enforcement
+is absent. A constrained decoder cannot emit a schema-violating object, so three
+incomplete outputs are positive evidence enforcement was not active for those
+requests. They do not show the deployment cannot enforce it — `UNCONFIRMED`, not
+`UNAVAILABLE`.
+
+No diagnostic probe was registered: the task conditioned one on enforcement
+first being established, and a fourth pass through the same path would repeat
+the iteration the closeout forbids. Closing the gap needs either an operator
+statement of engine version plus guided-decoding status, or a negative-control
+schema whose success is only possible under enforcement — and that is a live
+request needing its own authorization. Meanwhile treat `response_format` here as
+advisory. Do not register V7 on this basis.
+
 ## MEMO Phase 2B-5I — V4–V6 pilot closed: NO GO (2026-11-16)
 
 **Decision `PILOT_CLOSED_NO_GO` / `MORE_DATA_REQUIRED`.** Full record:
