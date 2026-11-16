@@ -443,6 +443,161 @@ def test_hosted_response_metadata_is_persisted(hosted):
     assert row['sender'] == 'JETSTREAM_DIRECT'
 
 
+def test_hosted_provider_usage_extra_fields_do_not_break_reconciliation(hosted):
+    """A real provider adds usage detail we do not interpret; PASS must survive.
+
+    Regression: the verifier previously demanded `response.usage` equal the
+    adapter's 3-key subset exactly, so any provider metadata (for example
+    completion_tokens_details) made a correct response unreconcilable.
+    """
+    raw = json.loads(response())
+    provider_usage = {'prompt_tokens': 87, 'completion_tokens': 10, 'total_tokens': 97,
+                      'completion_tokens_details': {'reasoning_tokens': 0}}
+    raw.update(id='chatcmpl_fixture', usage=provider_usage)
+    result = run_hosted_result(hosted, raw=json.dumps(raw).encode())
+    row = result['observation']
+    assert result['classification'] == 'COMPATIBILITY_PASS'
+    assert row['usage'] == {'prompt_tokens': 87, 'completion_tokens': 10, 'total_tokens': 97}
+    assert row['provider_usage'] == provider_usage
+    e._verify_v4_hosted_result(
+        Path(e.DEPLOYMENT) / e.Phase2B5V4HostedExecution.result_name,
+        protocol=e.Phase2B5V4HostedExecution.protocol, manifest=p.MANIFEST_V4,
+        cell=('authorized', 'ON'), package_digest=result['package_digest'],
+        execution=e.Phase2B5V4HostedExecution(
+            Path(e.DEPLOYMENT) / e.Phase2B5V4HostedExecution.binding_name,
+            e.sha(Path(e.DEPLOYMENT) / e.Phase2B5V4HostedExecution.binding_name)),
+        require_genuine=False)
+
+
+def test_hosted_usage_tampering_is_rejected(hosted):
+    """Persisted provider usage must match the raw response object exactly."""
+    raw = json.loads(response())
+    provider_usage = {'prompt_tokens': 87, 'completion_tokens': 10, 'total_tokens': 97,
+                      'completion_tokens_details': {'reasoning_tokens': 0}}
+    raw.update(id='chatcmpl_fixture', usage=provider_usage)
+    result = run_hosted_result(hosted, raw=json.dumps(raw).encode())
+    path = Path(e.DEPLOYMENT) / e.Phase2B5V4HostedExecution.result_name
+    content = json.loads(path.read_bytes())
+    content['observation']['provider_usage']['completion_tokens_details']['reasoning_tokens'] = 5
+    path.write_text(json.dumps(content)); path.chmod(0o600)
+    with pytest.raises(l.GateError, match='V4_OBSERVATION_MISMATCH'):
+        e._verify_v4_hosted_result(path, protocol=e.Phase2B5V4HostedExecution.protocol,
+            manifest=p.MANIFEST_V4, cell=('authorized', 'ON'),
+            package_digest=result['package_digest'],
+            execution=e.Phase2B5V4HostedExecution(
+                Path(e.DEPLOYMENT) / e.Phase2B5V4HostedExecution.binding_name,
+                e.sha(Path(e.DEPLOYMENT) / e.Phase2B5V4HostedExecution.binding_name)),
+            require_genuine=False)
+
+
+def test_hosted_pre_fix_evidence_reconciles_only_on_matching_counters(hosted):
+    """Evidence written before provider_usage existed stays auditable.
+
+    The fallback must not weaken the check: counters still have to agree with
+    the hashed response artifact, and a counter mismatch still fails closed.
+    """
+    raw = json.loads(response())
+    raw.update(id='chatcmpl_fixture', usage={'prompt_tokens': 5, 'completion_tokens': 5,
+                                             'total_tokens': 10})
+    result = run_hosted_result(hosted, raw=json.dumps(raw).encode())
+    legacy = dict(result['observation'])
+    legacy.pop('provider_usage')          # simulates evidence written before the field
+    e._verify_usage_reconciliation(raw['usage'], legacy)
+    with pytest.raises(l.GateError, match='V4_USAGE_RECONCILIATION_FAILED'):
+        e._verify_usage_reconciliation(raw['usage'], dict(legacy, usage={'total_tokens': 11}))
+    with pytest.raises(l.GateError, match='V4_USAGE_RECONCILIATION_FAILED'):
+        e._verify_usage_reconciliation(None, dict(legacy, usage={'total_tokens': 10}))
+
+
+def test_hosted_explicit_null_provider_usage_cannot_bypass_reconcile(hosted):
+    """A recorded null is a value; it must not skip the exact comparison."""
+    raw = json.loads(response())
+    raw.update(id='chatcmpl_fixture', usage={'prompt_tokens': 5, 'completion_tokens': 5,
+                                             'total_tokens': 10})
+    result = run_hosted_result(hosted, raw=json.dumps(raw).encode())
+    row = dict(result['observation'], provider_usage=None)
+    with pytest.raises(l.GateError, match='V4_USAGE_RECONCILIATION_FAILED'):
+        e._verify_usage_reconciliation(raw['usage'], row)
+
+
+def test_hosted_usage_numeric_coercion_is_rejected(hosted):
+    """int/float must never be treated as equal by the usage check."""
+    assert e._usage_strict_equal(1, 1)
+    assert not e._usage_strict_equal(1, 1.0)
+    assert not e._usage_strict_equal(1.0, 2.0)
+    assert not e._usage_strict_equal(True, 1)
+    with pytest.raises(l.GateError, match='V4_USAGE_RECONCILIATION_FAILED'):
+        e._verify_usage_reconciliation({'total_tokens': 10},
+            {'provider_usage': {'total_tokens': 10}, 'usage': {'total_tokens': 10.0}})
+
+
+def test_thinking_evidence_cannot_be_hidden_by_missing_usage():
+    """reasoning_content must be detected even when usage is absent or null."""
+    assert e._thinking_evidence({'usage': None,
+        'choices': [{'message': {'reasoning_content': 'thinking'}}]}) is True
+    assert e._thinking_evidence({'choices': [{'message': {'reasoning_content': 'x'}}]}) is True
+    assert e._thinking_evidence({'usage': {'completion_tokens_details':
+        {'reasoning_tokens': 1.0}}}) is True
+    # Malformed token evidence fails closed rather than reading as absence.
+    assert e._thinking_evidence({'usage': {'completion_tokens_details':
+        {'reasoning_tokens': True}}}) is True
+    assert e._thinking_evidence({'usage': {'completion_tokens_details':
+        {'reasoning_tokens': -1}}}) is True
+    assert e._thinking_evidence({'usage': {'completion_tokens_details':
+        {'reasoning_tokens': '0'}}}) is True
+    assert e._thinking_evidence({'usage': {'completion_tokens_details':
+        {'reasoning_tokens': 0.0}}}) is True
+    assert e._thinking_evidence({'usage': {'completion_tokens_details':
+        {'reasoning_tokens': 0}}}) is False
+
+
+def test_hosted_reasoning_evidence_blocks_relabelled_pass(hosted):
+    """A fully consistent PASS-shaped evidence set with reasoning is rejected.
+
+    Relabelling cannot help: the guard recomputes reasoning evidence from the
+    hashed response artifact rather than trusting the stored classification.
+    """
+    assert e._thinking_evidence(
+        {'usage': {'completion_tokens_details': {'reasoning_tokens': 7}}}) is True
+    assert e._thinking_evidence(
+        {'usage': {'completion_tokens_details': {'reasoning_tokens': 0}}}) is False
+    assert e._thinking_evidence({'usage': None}) is None
+    result = run_hosted_result(hosted)
+    assert result['classification'] == 'COMPATIBILITY_PASS'
+    path = Path(e.DEPLOYMENT) / e.Phase2B5V4HostedExecution.result_name
+    content = json.loads(path.read_bytes())
+    row = content['observation']
+    evidence = Path(content['evidence'])
+    body = json.loads((evidence.parent / row['response_evidence']).read_bytes())
+    body['usage'] = dict(body.get('usage') or {},
+                         prompt_tokens=5, completion_tokens=5, total_tokens=10,
+                         completion_tokens_details={'reasoning_tokens': 7})
+    encoded = json.dumps(body).encode()
+    (evidence.parent / row['response_evidence']).write_bytes(encoded)
+    row['provider_usage'] = body['usage']
+    row['usage'] = {k: body['usage'][k] for k in
+                    ('prompt_tokens', 'completion_tokens', 'total_tokens')}
+    row['response_sha256'] = hashlib.sha256(encoded).hexdigest()
+    with sqlite3.connect(evidence) as db:
+        db.execute('update attempts set observation=?', (json.dumps(row, sort_keys=True),))
+    path.write_text(json.dumps(content)); path.chmod(0o600)
+    with pytest.raises(l.GateError, match='THINKING_MODE_IGNORED'):
+        e._verify_v4_hosted_result(path, protocol=e.Phase2B5V4HostedExecution.protocol,
+            manifest=p.MANIFEST_V4, cell=('authorized', 'ON'),
+            package_digest=result['package_digest'],
+            execution=e.Phase2B5V4HostedExecution(
+                Path(e.DEPLOYMENT) / e.Phase2B5V4HostedExecution.binding_name,
+                e.sha(Path(e.DEPLOYMENT) / e.Phase2B5V4HostedExecution.binding_name)),
+            require_genuine=False)
+
+
+def test_hosted_absolute_usage_bool_is_not_an_int(hosted):
+    """JSON true must never satisfy an integer counter inside provider_usage."""
+    row = {'provider_usage': {'total_tokens': 10}, 'usage': {'total_tokens': True}}
+    with pytest.raises(l.GateError, match='V4_USAGE_RECONCILIATION_FAILED'):
+        e._verify_usage_reconciliation({'total_tokens': 10}, row)
+
+
 def test_hosted_simulated_result_is_not_genuine(hosted):
     result = run_hosted_result(hosted)
     path = Path(result['evidence'])

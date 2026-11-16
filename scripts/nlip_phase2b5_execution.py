@@ -611,15 +611,21 @@ def _verify_v4_hosted_result_inner(path, *, protocol, manifest, cell, package_di
             need(result['cell'] == list(cell), 'SMOKE_CONTEXT_RECONCILIATION_FAILED')
         return result
     response = strict_json((evidence.parent / row['response_evidence']).read_bytes())
+    # `usage` is the adapter's interpreted counter subset; `provider_usage` is
+    # the provider object verbatim. Reconcile against both so a correct PASS is
+    # never rejected solely because the provider added metadata we do not use.
+    _verify_usage_reconciliation(response.get('usage'), row)
     need(_same_json(response.get('id'), row.get('completion_id')) and
-         _same_json(response.get('usage'), row.get('usage')) and
-         (response.get('model') == row.get('returned_model') if 'returned_model' in row else True) and
-         (response['model'] == MODEL and len(response['choices']) == 1 and
+         _same_json(response.get('model') or None, row.get('returned_model')) and
+         (len(response['choices']) == 1 and
           response['choices'][0]['finish_reason'] == 'stop'
           and isinstance(response['choices'][0].get('message', {}).get('content'), str)
           if passed else True),
          'V4_RESPONSE_MISMATCH')
     if passed:
+        need(response.get('model') == MODEL and row.get('returned_model') == MODEL,
+             'MODEL_IDENTITY_MISMATCH')
+        need(_thinking_evidence(response) is not True, 'THINKING_MODE_IGNORED')
         value = strict_json(response['choices'][0]['message']['content'])
         need(type(value) is dict and set(value) == {'outcome', 'tool', 'arguments'} and
              value['outcome'] == row['model_outcome'], 'V4_RESPONSE_MISMATCH')
@@ -646,6 +652,80 @@ def _verify_v4_hosted_result_inner(path, *, protocol, manifest, cell, package_di
              row['available_memory'] == m['available_memory'][cell[0]],
              'SMOKE_CONTEXT_RECONCILIATION_FAILED')
     return result
+
+
+def _thinking_evidence(response):
+    """True when the provider reports reasoning despite non-thinking config.
+
+    Returns False only when the provider positively reports no reasoning, and
+    None when that cannot be established. A PASS must never be established while
+    reasoning evidence is positive or ambiguous.
+
+    The content check is independent of usage so a response that omits or nulls
+    `usage` cannot hide `reasoning_content`. Any positive numeric token count
+    counts as reasoning, whatever numeric type the provider used.
+    """
+    if type(response) is not dict:
+        return None
+    message = ((response.get('choices') or [{}])[0] or {}).get('message') or {}
+    reasoning = message.get('reasoning_content')
+    if isinstance(reasoning, str) and reasoning.strip():
+        return True
+    usage = response.get('usage')
+    if type(usage) is not dict:
+        # Genuinely absent usage stays UNKNOWN; the registered protocol accepts
+        # that and it is never fabricated into a value.
+        return None
+    details = usage.get('completion_tokens_details')
+    if type(details) is not dict or 'reasoning_tokens' not in details:
+        return None
+    tokens = details['reasoning_tokens']
+    if type(tokens) is not int or tokens < 0:
+        # Malformed evidence is not an absence; fail closed. A float zero is
+        # not a certification that the provider reasoned nothing.
+        return True
+    return tokens > 0
+
+
+def _usage_strict_equal(left, right):
+    """Exact structural equality that never coerces numbers or equates booleans."""
+    if type(left) is not type(right):
+        return False
+    if isinstance(left, dict):
+        return left.keys() == right.keys() and all(
+            _usage_strict_equal(left[key], right[key]) for key in left)
+    if isinstance(left, list):
+        return len(left) == len(right) and all(
+            _usage_strict_equal(a, b) for a, b in zip(left, right))
+    return left == right
+
+
+def _verify_usage_reconciliation(provider_usage, row):
+    """Reconcile provider usage against the persisted observation.
+
+    Both values are tied to the response artifact, whose digest the caller has
+    already matched, so neither branch can forge a PASS.
+
+    A recorded `provider_usage` must equal the provider object exactly,
+    including fields MEMO does not interpret. Rows written before that field
+    existed (the key is absent) fall back to the counter subset. An explicit
+    null is a recorded value, not an absence, so it cannot bypass the check.
+    Absent usage stays UNKNOWN rather than being fabricated.
+    """
+    recorded_present = 'provider_usage' in row
+    recorded = row.get('provider_usage')
+    interpreted = row.get('usage')
+    if recorded_present:
+        need(_usage_strict_equal(recorded, provider_usage), 'V4_USAGE_RECONCILIATION_FAILED')
+    if provider_usage is None:
+        need(interpreted is None, 'V4_USAGE_RECONCILIATION_FAILED')
+        return
+    need(type(provider_usage) is dict, 'V4_USAGE_RECONCILIATION_FAILED')
+    expected = {k: provider_usage[k] for k in ('prompt_tokens', 'completion_tokens',
+                                               'total_tokens') if k in provider_usage}
+    need(all(type(value) is int and value >= 0 for value in expected.values()),
+         'V4_USAGE_RECONCILIATION_FAILED')
+    need(_usage_strict_equal(interpreted, expected), 'V4_USAGE_RECONCILIATION_FAILED')
 
 
 def _verify_policy_reconciliation(evidence, row, manifest):
