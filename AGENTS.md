@@ -43,6 +43,36 @@ as a substitute. Browser access retains its separate explicit approval boundary.
 Older dated phase directions below retain their historical scope; they do not
 withdraw this ordinary engineering consent or reopen a sealed campaign.
 
+## Owner authorization update — data collection priority (2026-11-15)
+
+This entry extends, and does not replace, the standing authorization above and
+every historical section below. It records a distinct owner decision and is not
+external platform permission.
+
+- The owner has approved continued MEMO research experiments and testing,
+  including bounded long-term evaluation inside separately registered and
+  authorized experimental scopes.
+- Ordinary authorized operations no longer need repeated owner confirmation.
+  This covers local work, tests, read-only checks, bounded existing-instance
+  administration and reviewed Git workflows already in scope.
+- Real data collection is the immediate priority. Completed architecture,
+  runtime, package and test qualification must be reused rather than repeated.
+  Avoid new engineering phases, redundant audits, re-qualification of unchanged
+  artifacts and additional planning documents.
+- Notify the owner as soon as sufficient valid observations exist for a
+  registered experiment's predefined objectives; do not substitute another
+  readiness report for results.
+- Preserve all scientific records, frozen manifests, consumed reservations and
+  historical evidence. Never replay a consumed attempt.
+
+**Scope limit.** This owner approval does not supply, and cannot substitute for,
+external platform permission or any independently authenticated execution
+approval. `HOSTED_EXECUTION_VERIFIER` remains `None`; hosted admission stays
+closed until a genuine independent verifier exists. Where a platform or trusted
+binding requirement is unmet, report the exact missing action instead of
+building an unsupported approval system. Denials must never be bypassed, and no
+local flag, hash or object may stand in for external authorization.
+
 ## Current research status — 2026-10-26
 
 R1 execution `R1EX-20261026-02` is **COMPLETE and sealed**: 32/32 requests,

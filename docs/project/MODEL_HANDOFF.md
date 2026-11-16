@@ -1,5 +1,38 @@
 # Model Handoff — Start Here
 
+## MEMO Phase 2B-5E — package qualified, platform execution blocked (2026-11-15)
+
+The owner authorized continued experiments, testing and bounded long-term
+evaluation, and made real data collection the immediate priority (see the
+2026-11-15 entry in `AGENTS.md`). That owner decision is separate from external
+platform permission and does not create it.
+
+PR #30 (`12d2938c`) added the versioned V4 package boundary. The exact Linux
+package was built from that source and qualified on the existing `jisheng3`
+instance without any model request: pre-import checks 120/120,
+`LINUX_PACKAGE_VERIFIED`, `V4_HOSTED_CLOSED_GATE_QUALIFIED`, canonical ledger
+integrity `ok` with all four historical reservations intact and `V4_LIVE=0`,
+all V4 evidence destinations free, lifecycle restored
+`SHELVED_OFFLOADED -> ACTIVE -> SHELVED`. Qualified identities: archive
+`0a12cbad677ab4ca53b31f7e2ff8854c244cc52073871e9570effe020e92c9e2`,
+inventory `04621dfe04d4d68254e50f34f7f217ec8601ddc82c7c847214a798e4246d7ae7`,
+compatibility manifest
+`9da79903d6dad8f9a470a9679699ee7996994aa0d8902fb981cc65da77f03255`,
+smoke manifest
+`4ef8990d2f54daf77a28ec06b788d8955edd60a31bc2f4ecb257744a300d9505`,
+runtime observation `d5bb560abe3710645efc4611e7dd272129c3429a9464a42b67044a46c1395dbc`.
+
+V4 real collection is blocked by one internal prerequisite, not by a platform
+denial: `HOSTED_EXECUTION_VERIFIER` remains `None`, and no genuine independent
+owner/platform attestation mechanism exists in this environment. The recorded
+2026-11-02 platform rejections concern remote instance-management
+authentication only; hosted inference uses `NETWORK_SCOPED_NO_SECRET` and was
+never reviewed, so they neither authorize nor prohibit it. Do not rebuild the
+package, re-run qualification, or add a local approval substitute. Resolve the
+independent verifier source, then execute the registered compatibility request
+followed by the four ordered smoke cells inside one approved window of at most
+600 seconds.
+
 ## MEMO Phase 2B-5D — V4 hosted path implemented, awaiting exact approval (November 2026)
 
 PR #28 merged the V4 compatibility and four-cell smoke integration at
