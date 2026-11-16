@@ -1,5 +1,48 @@
 # Model Handoff — Start Here
 
+## MEMO Phase 2B-5I — V4–V6 pilot closed: NO GO (2026-11-16)
+
+**Decision `PILOT_CLOSED_NO_GO` / `MORE_DATA_REQUIRED`.** Full record:
+[Phase 2B-5I closeout](../research/PHASE2B5I_PILOT_CLOSEOUT_20261116.md).
+
+Three registered contracts each got exactly one real compatibility request.
+All three returned HTTP 200 with correct transport, `qwen-3.8-27b` and
+`finish_reason=stop`, and all three were `MALFORMED_RESPONSE` with
+`schema_validity=INVALID` because the output omitted a schema-required key:
+V4 `{"tool": null}`, V5 `{"outcome": "ABSTAIN", "tool": null}`, V6
+`{"outcome": "PROPOSE_ACTION", "tool": "send_report"}` (an incomplete proposal,
+not an abstention). Dispatcher `NOT_STARTED`, nothing delivered, no memory
+exposure, no task utility. Zero compatibility PASS, zero smoke cells.
+
+Consumed and non-refundable: `9da79903d6dad8f9a470a9679699ee7996994aa0d8902fb981cc65da77f03255` (V4),
+`5f490ce7cea02b0835fc1826d5380a5100fa8e1bd4df118fd650fc0d111029ab` (V5),
+`30e70e048a88638f075055e67da89307fa8481e885ff02d141e6c0aca9bc0ac0` (V6) at `first-cell:authorized/ON`. Canonical ledger unchanged: integrity `ok`,
+seven rows, historic V2/V3 rows intact, all `*_SMOKE=0`.
+
+V6 distinction that must not be lost: executed manifest
+`30e70e048a88638f075055e67da89307fa8481e885ff02d141e6c0aca9bc0ac0` was
+defect-bearing (its rendered schema still root-required `arguments`, so two-key
+abstention was never legal). Corrected manifest
+`42ff8f09094a657e4b9b8e576225b607385210621bf9c215d3a6e77276fbe85c`,
+request `abfd3349914ae9fb7e0bd6969766b825edba3c6f9ca11bfec267527fb3c4ff8c`, archive
+`51bfe9ccf2a3054c32b91c66a40da6263446303ec5c9ac6810dd25bbfcd59cec`,
+inventory `135757c7467d21a4f35da7289d8248e62871efa4344f13f0d61cd355c51218fb`,
+smoke `449e71d2df5b6437196b91b590e0539d78e06f34e6f5ff47fab7175ab4529019`
+was qualified and **never sent**; its reservation key does not exist. The
+executed V6 result is therefore a model-behaviour negative, not a test of the
+two-key contract.
+
+Reading: prompt and schema text did not constrain decoding across three
+variants. This does **not** establish that the endpoint lacks structured-output
+support — enforced decoding was never probed. Do not register a successor on
+wording alone. Next is one scientific decision: probe whether enforced
+structured output exists, or record `NO_GO` for this provider/model/contract.
+No V7 is registered. VM `SHELVED_OFFLOADED → ACTIVE → SHELVED`, owned IP
+deleted, `/dev/sdb` and all evidence preserved.
+
+Workflow exception: `e373ab81` was pushed directly to `main` rather than through
+a feature branch and PR. Recorded, not rewritten or reverted.
+
 ## MEMO Phase 2B-5E — package qualified, platform execution blocked (2026-11-15)
 
 The owner authorized continued experiments, testing and bounded long-term
@@ -117,7 +160,7 @@ with `schema_validity=INVALID`, `model_status=INVALID_OUTPUT` and dispatcher
 compatibility PASS, no smoke binding, zero smoke requests.
 
 Consequences: the V5 compatibility reservation
-(`5f490ce7…:first-cell:authorized/ON`) is permanently consumed and joins the
+(`5f490ce7cea02b0835fc1826d5380a5100fa8e1bd4df118fd650fc0d111029ab:first-cell:authorized/ON`) is permanently consumed and joins the
 consumed V4 reservation. No retry, refund, reclassification or replay occurred.
 Both registered attempts are now spent with distinct genuine schema violations
 (missing object vs. missing abstention key).

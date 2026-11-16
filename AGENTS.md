@@ -84,6 +84,19 @@ durable non-refundable reservations, fixed UTC window, request budget, zero
 retries and fallbacks, ProtectedDispatcher, synthetic-only delivery, genuine
 hosted-evidence verification and fail-closed behavior.
 
+## V4–V6 pilot closed — NO GO (2026-11-16)
+
+`PILOT_CLOSED_NO_GO` / `MORE_DATA_REQUIRED`. Three registered compatibility
+contracts each ran exactly one real request; all three omitted a
+schema-required key and were `MALFORMED_RESPONSE` with no dispatcher start, no
+delivery and no memory exposure. Zero smoke cells therefore exist for V4–V6.
+The three compatibility reservations are consumed and must never be replayed.
+Do not register V7 or another prompt/schema wording revision: three variants
+already failed the same way. The open question is scientific, not engineering —
+whether enforced structured output (guided decoding or strict `response_format`)
+exists on this endpoint, or this provider/model/contract line is `NO_GO`. Full
+record: [Phase 2B-5I closeout](docs/research/PHASE2B5I_PILOT_CLOSEOUT_20261116.md).
+
 ## V4 pilot status — 2026-11-16
 
 The registered V4 compatibility request was executed once under the bounded
@@ -125,9 +138,11 @@ sent.
 Binding distinction, recorded deliberately: the executed request used manifest
 `30e70e048a88638f075055e67da89307fa8481e885ff02d141e6c0aca9bc0ac0` (request
 `6f113c16f7329947108187bd51fdeb66d6d4a04a59d76fba00b2e950fbf2fd79`). The
-corrected and re-qualified package registers `42ff8f09...` (request
-`abfd3349...`). The corrected two-key schema was never sent; that request is
-spent and must not be replayed.
+corrected and re-qualified package registers
+`42ff8f09094a657e4b9b8e576225b607385210621bf9c215d3a6e77276fbe85c` (request
+`abfd3349914ae9fb7e0bd6969766b825edba3c6f9ca11bfec267527fb3c4ff8c`). The
+corrected two-key schema was never sent; that request is spent and must not be
+replayed.
 
 Three registered compatibility attempts (V4, V5, V6) are now consumed with
 distinct genuine schema violations: missing object, missing abstention key,

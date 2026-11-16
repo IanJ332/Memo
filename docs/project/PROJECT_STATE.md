@@ -1,5 +1,28 @@
 # Project State
 
+## Current: Phase 2B-5I V4–V6 pilot closed — November 16, 2026
+
+[Closeout](../research/PHASE2B5I_PILOT_CLOSEOUT_20261116.md): **PILOT_CLOSED_NO_GO /
+MORE_DATA_REQUIRED.** Three registered compatibility contracts (V4, V5, V6) each
+received exactly one real `qwen-3.8-27b` request. All three had correct transport
+(HTTP 200, live provenance, `finish_reason=stop`, correct model, one attempt,
+zero retries) and all three were `MALFORMED_RESPONSE` because the output omitted
+a schema-required key. Dispatcher `NOT_STARTED`, zero deliveries, zero memory
+exposures. Zero compatibility PASS, so zero smoke cells: no misleading-memory
+condition and no defence measurement exist for V4–V6.
+
+Consumed, non-refundable, never replayed: `9da79903d6dad8f9a470a9679699ee7996994aa0d8902fb981cc65da77f03255` (V4), `5f490ce7cea02b0835fc1826d5380a5100fa8e1bd4df118fd650fc0d111029ab` (V5),
+`30e70e048a88638f075055e67da89307fa8481e885ff02d141e6c0aca9bc0ac0` (V6) at `first-cell:authorized/ON`. Canonical ledger unchanged,
+integrity `ok`, seven rows, historic V2/V3 rows intact, all `*_SMOKE=0`.
+
+The executed V6 manifest `30e70e048a88638f075055e67da89307fa8481e885ff02d141e6c0aca9bc0ac0` was defect-bearing; the corrected
+`42ff8f09094a657e4b9b8e576225b607385210621bf9c215d3a6e77276fbe85c` contract was qualified and never sent, so it has no observation. The
+three failures are model-behaviour evidence under three contract variants, not
+proof that the endpoint lacks structured-output support: enforced decoding was
+never probed. No V7 registered. VM `SHELVED_OFFLOADED → ACTIVE → SHELVED`,
+owned IP deleted, volume, ledger and raw evidence preserved. `e373ab81` was
+pushed directly to `main`; recorded as a workflow exception, not rewritten.
+
 ## Current: Phase 2B-5A stage closed — November 2 Central / November 3 UTC, 2026
 
 [Closeout](PHASE2_PUBLICATION.md): new nonthinking compatibility PASS;
