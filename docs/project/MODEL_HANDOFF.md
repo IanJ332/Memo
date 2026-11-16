@@ -38,6 +38,47 @@ re-qualify only the affected identities, then execute the registered
 compatibility request followed by the four ordered smoke cells inside one
 approved window of at most 600 seconds.
 
+## MEMO Phase 2B-5I — V6 successor real compatibility: NO PASS (2026-11-16)
+
+V6 was registered to make the observed two-key abstention a valid, interpretable
+outcome and, for this protocol only, to refuse abstention as a compatibility
+PASS. Protocols: `phase2-provider-v6-minimal-abstain-compatibility-1` and
+`phase2-provider-v6-minimal-abstain-memory-smoke-1`.
+
+Independent review of the first V6 wiring found six real defects: the rendered
+schema still root-required `arguments`; the V6 package format skipped
+`verify_linux_runtime`; synthetic V4 and V3 executions lost behaviour through a
+missing `hosted_family` attribute; the V6 smoke verifier rejected V6's own
+abstention shape; and a malformed response could be relabelled
+`COMPATIBILITY_ABSTAINED`. All six are fixed and pinned by regression tests.
+
+The fix changed the manifest bytes. Executed identities:
+manifest `30e70e048a88638f075055e67da89307fa8481e885ff02d141e6c0aca9bc0ac0`,
+request `6f113c16f7329947108187bd51fdeb66d6d4a04a59d76fba00b2e950fbf2fd79`,
+binding `e965ee21241ba010fca51e10c2f1ba740e65252247a2e35f33555f190ebdebb2`,
+response `07d59eb84dbe38b7fdea1c4db0174af20f04747a48b0f789da7b69e954f92a4a`,
+usage 164/24/188, completion `chatcmpl-99a2956ee26665a5`.
+
+Exactly one real request was sent. Transport reconciled correctly, but the
+content was `{"outcome": "PROPOSE_ACTION", "tool": "send_report"}` with
+`arguments` omitted — an incomplete proposal, not an abstention. It was
+classified `MALFORMED_RESPONSE` with `schema_validity=INVALID`, and the smoke
+gate refused. Zero smoke requests. The V6 compatibility reservation is consumed
+and joins the consumed V4 and V5 reservations.
+
+Qualification of the corrected package (no requests): `LINUX_PACKAGE_VERIFIED`
+and `V6_HOSTED_CLOSED_GATE_QUALIFIED`, archive
+`51bfe9ccf2a3054c32b91c66a40da6263446303ec5c9ac6810dd25bbfcd59cec`, source
+inventory `135757c7467d21a4f35da7289d8248e62871efa4344f13f0d61cd355c51218fb`,
+manifests `42ff8f09...` / `449e71d2...`. The corrected contract was never sent.
+
+Scientific reading: three successive registered contracts each failed by
+omitting a key that strict JSON Schema already required. Prompt and schema text
+are not enforcing decoding on this endpoint. Further prompt/schema iterations
+are not justified; the remaining limitation is structured-output enforcement
+combined with model behaviour. No dataset exists yet for attack/defence
+measurement.
+
 ## MEMO Phase 2B-5H — V5 successor real compatibility: NO PASS (2026-11-16)
 
 V4 could not be replayed: its compatibility reservation is spent on a

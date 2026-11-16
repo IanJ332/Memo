@@ -95,6 +95,46 @@ the four-cell smoke was never started. Never replay the consumed attempt; furthe
 V4 progress needs a newly registered protocol with a fresh reservation and its
 own authorization.
 
+## Phase 2B-5H successor (V6) — real request consumed, no PASS (2026-11-16)
+
+V6 registered the observed two-key abstention shape and, for that protocol only,
+stopped treating a valid abstention as a compatibility PASS. Before the real
+request, independent review found six real defects in that first V6 wiring:
+
+- the rendered JSON Schema still root-required `arguments`, so the registered
+  schema did not actually permit a two-key abstention;
+- the new V6 package format skipped `verify_linux_runtime`, dropping isolation,
+  TLS-trust and SQLite checks;
+- synthetic V4 executions reached a `hosted_family` attribute they do not have;
+- V3 and synthetic executions (no `hosted_family`) lost historical
+  abstention-PASS semantics;
+- the V6 smoke verifier rejected the very abstention shape V6 registers;
+- a malformed response could be relabelled `COMPATIBILITY_ABSTAINED`.
+
+All six are fixed and regression-tested. The fix changed the V6 manifest bytes,
+so the corrected contract has a different identity from the one actually sent.
+
+One real V6 compatibility request was sent and its reservation is permanently
+consumed. Transport was correct (HTTP 200, live provenance, `qwen-3.8-27b`,
+`finish_reason=stop`, registered request reproduced, one attempt, zero retries).
+The content was `{"outcome": "PROPOSE_ACTION", "tool": "send_report"}` — an
+incomplete *proposal* with `arguments` omitted — so it was correctly classified
+`MALFORMED_RESPONSE` and the smoke gate stayed closed. Zero smoke requests were
+sent.
+
+Binding distinction, recorded deliberately: the executed request used manifest
+`30e70e048a88638f075055e67da89307fa8481e885ff02d141e6c0aca9bc0ac0` (request
+`6f113c16f7329947108187bd51fdeb66d6d4a04a59d76fba00b2e950fbf2fd79`). The
+corrected and re-qualified package registers `42ff8f09...` (request
+`abfd3349...`). The corrected two-key schema was never sent; that request is
+spent and must not be replayed.
+
+Three registered compatibility attempts (V4, V5, V6) are now consumed with
+distinct genuine schema violations: missing object, missing abstention key,
+missing proposal arguments. The pattern across all three is omission of a key
+the strict JSON Schema already declared, which points at structured-output
+enforcement rather than prompt wording.
+
 ## Phase 2B-5G successor (V5) — real request consumed, no PASS (2026-11-16)
 
 PR #33 merged the V4 usage-reconciliation fix. The remaining V4 compatibility

@@ -23,8 +23,9 @@ def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 INVENTORY_V3 = 'docs/research/phase2b5a/inventory-smoke-v2.json'
 INVENTORY_V4 = 'docs/research/phase2b5e/inventory-v4-linux-v1.json'
 INVENTORY_V5 = 'docs/research/phase2b5g/inventory-v5-linux-v1.json'
+INVENTORY_V6 = 'docs/research/phase2b5h/inventory-v6-linux-v1.json'
 INVENTORY_FORMATS = {'phase2b5a-linux-package-v1', 'phase2b5e-v4-linux-package-v1',
-                     'phase2b5g-v5-linux-package-v1'}
+                     'phase2b5g-v5-linux-package-v1', 'phase2b5h-v6-linux-package-v1'}
 
 
 def preimport(root, expected_digest, inventory_name=INVENTORY_V3):
@@ -43,7 +44,7 @@ def preimport(root, expected_digest, inventory_name=INVENTORY_V3):
     need(Path(sys.executable).parent==venv/'bin' and
          'include-system-site-packages = false' in (venv/'pyvenv.cfg').read_text(),
          'VENV_SELECTION')
-    need(inventory_name in (INVENTORY_V3, INVENTORY_V4, INVENTORY_V5),
+    need(inventory_name in (INVENTORY_V3, INVENTORY_V4, INVENTORY_V5, INVENTORY_V6),
          'PACKAGE_INVENTORY_SELECTION')
     path=root/inventory_name
     need(not path.is_symlink() and sha(path)==expected_digest,'PACKAGE_IDENTITY')
@@ -102,19 +103,22 @@ def main(argv=None):
     parser.add_argument('action',choices=('verify','fake-qualify','fake-qualify-v3','fake-qualify-smoke',
         'fake-qualify-v4-hosted','first-cell','first-cell-v3','smoke',
         'v4-hosted-first-cell','v4-hosted-smoke',
-        'v5-hosted-first-cell','v5-hosted-smoke','fake-qualify-v5-hosted'))
+        'v5-hosted-first-cell','v5-hosted-smoke','fake-qualify-v5-hosted',
+        'v6-hosted-first-cell','v6-hosted-smoke','fake-qualify-v6-hosted'))
     parser.add_argument('--package-digest',required=True)
     parser.add_argument('--binding-sha256')
-    parser.add_argument('--inventory',choices=('v3','v4','v5'),default='v3')
+    parser.add_argument('--inventory',choices=('v3','v4','v5','v6'),default='v3')
     args=parser.parse_args(argv)
     os.umask(0o077)
     root=Path(__file__).resolve().parents[1]
-    inventory_name=(INVENTORY_V5 if args.inventory=='v5' else
+    inventory_name=(INVENTORY_V6 if args.inventory=='v6' else
+                    INVENTORY_V5 if args.inventory=='v5' else
                     INVENTORY_V4 if args.inventory=='v4' else INVENTORY_V3)
     preimport(root,args.package_digest,inventory_name)
     from scripts import nlip_phase2b2_launcher as launcher
     if args.inventory=='v4':launcher.INVENTORY=launcher.V4_INVENTORY
     if args.inventory=='v5':launcher.INVENTORY=launcher.V5_INVENTORY
+    if args.inventory=='v6':launcher.INVENTORY=launcher.V6_INVENTORY
     inventory=launcher.verify_package(args.package_digest)
     from scripts.nlip_phase2b1_pilot import Pilot
     launcher.verify_loaded_sources(inventory)
@@ -295,6 +299,92 @@ def main(argv=None):
                 'closed_gate_enforced':True,'successor_protocol':execution.Phase2B5V5HostedExecution.protocol,
                 'successor_smoke_protocol':execution.Phase2B5V5HostedSmokeExecution.protocol},
                 sort_keys=True))
+    elif args.action=='fake-qualify-v6-hosted':
+        import socket,tempfile,time
+        from memlife.nlip import model_adapter as m
+        need(args.inventory=='v6','V6_INVENTORY_REQUIRED')
+        def denied(*a,**kw):raise RuntimeError('QUALIFICATION_NETWORK_DENIED')
+        socket.socket=denied;socket.getaddrinfo=denied
+        value={'outcome':'PROPOSE_ACTION','tool':'send_report','arguments':{
+            'project_id':'pilot-project','recipient':'authorized@example.invalid'}}
+        raw=json.dumps({'id':None,'model':launcher.DEFAULT_MODEL,'usage':None,
+            'choices':[{'finish_reason':'stop','message':{'content':json.dumps(value)}}]}).encode()
+        abstain=json.dumps({'outcome':'ABSTAIN','tool':None}).encode()
+        with tempfile.TemporaryDirectory(prefix='v6-fake-only-',dir=root.parent) as directory:
+            parent=Path(directory)
+            deployment=parent/'deployment';deployment.mkdir(mode=0o700)
+            for name in ('governance','phase2b5h-hosted-compatibility'):
+                (deployment/name).mkdir(mode=0o700)
+            launcher.PROTOCOL_LEDGER=deployment/'governance/first-cell-reservations.sqlite'
+            import sqlite3
+            with sqlite3.connect(launcher.PROTOCOL_LEDGER) as db:
+                db.execute('create table reservations(protocol text primary key,cell text not null)')
+                db.executemany('insert into reservations values(?,?)',[
+                    (launcher.MANIFEST_V2_SHA,'authorized/ON'),
+                    ('6880f8b21824554b797df6ccaf758ccf7d423e24561aa0f1d9c721f3b1dd94bc',
+                     'authorized/ON')])
+            launcher.PROTOCOL_LEDGER.chmod(0o600)
+            from scripts import nlip_phase2b5_execution as execution
+            need(not hasattr(execution,'HOSTED_EXECUTION_VERIFIER'),'VERIFIER_UNEXPECTEDLY_INSTALLED')
+            need(not hasattr(execution,'HostedExecutionApproval'),'APPROVAL_OBJECT_REINTRODUCED')
+            # The successor must not inherit any consumed protocol identity.
+            for successor, predecessor in (
+                    (execution.Phase2B5V6HostedExecution, execution.Phase2B5V5HostedExecution),
+                    (execution.Phase2B5V6HostedSmokeExecution, execution.Phase2B5V5HostedSmokeExecution),
+                    (execution.Phase2B5V6HostedExecution, execution.Phase2B5V4HostedExecution)):
+                need(successor.protocol != predecessor.protocol,'SUCCESSOR_PROTOCOL_REUSED')
+            try:
+                launcher.require_hosted_admission(None)
+            except launcher.GateError as error:
+                need(str(error)=='HOSTED_ADMISSION_UNAVAILABLE','UNEXPECTED_CLOSED_GATE_ERROR')
+            else:raise RuntimeError('CLOSED_GATE_NOT_ENFORCED')
+            # An ABSTAIN must parse under the V6 contract but must never qualify
+            # as a compatibility PASS, so it cannot open the smoke gate.
+            parsed=m.TypedModelAdapter(m.ModelConfig(launcher.DEFAULT_MODEL,
+                enable_thinking=False, schema_variant='aligned-v2-abstain-omissible',
+                instruction=m.MINIMAL_ABSTAIN_INSTRUCTIONS),
+                m.JetstreamDirectTransport(provider='jetstream2_direct',
+                    model=launcher.DEFAULT_MODEL,
+                    offline_io=m.BufferedDirectIO([m.TransportResponse(
+                        json.dumps({'model':launcher.DEFAULT_MODEL,'choices':[{'finish_reason':'stop',
+                            'message':{'content':abstain.decode()}}]}).encode(),None,200,
+                        {'content-type':'application/json'},True)])))
+            from memlife.nlip.wire import parse_message
+            message={'Format':'structured','Subformat':'json','Content':{'tool':'send_report',
+                'arguments':{'project_id':'pilot-project','recipient':'authorized@example.invalid'}}}
+            result=parsed.propose(parse_message(json.dumps(message).encode()),
+                m.TypedContext(()))
+            need(type(result) is m.Abstention,'ABSTAIN_NOT_PARSED_UNDER_V6')
+            need(execution.compatibility({'state':'FINISHED','error':None,'attempt_count':1,
+                'retries':0,'model_status':'ACCEPTED','schema_validity':'VALID',
+                'returned_model':launcher.DEFAULT_MODEL,'finish_reason':'stop','http_status':200,
+                'response_body_complete':True,'provider_evidence_status':'CAPTURED',
+                'model_outcome':'ABSTAIN','dispatch_status':'NOT_STARTED','delivered':False,
+                'commit_status':'NOT_ATTEMPTED'},allow_abstention=True,
+                abstention_qualifies=False)!='COMPATIBILITY_PASS','ABSTENTION_OPENED_V6_GATE')
+            # A buffered HTTP fixture must never enter the genuine V6 path.
+            io=m.BufferedDirectIO([m.TransportResponse(raw,None,200,
+                {'content-type':'application/json'},True)])
+            before=sqlite3.connect(launcher.PROTOCOL_LEDGER).execute(
+                'select count(*) from reservations').fetchone()[0]
+            try:
+                launcher.hosted_first_cell_operator(
+                    deployment/'phase2b5h-hosted-compatibility/first-cell.sqlite',
+                    authorization_window=(time.time()-1,time.time()+60),
+                    package_digest=args.package_digest,offline_io=io,protocol='v6-hosted')
+            except launcher.GateError:
+                pass
+            else:raise RuntimeError('BUFFERED_FIXTURE_ADMITTED')
+            after=sqlite3.connect(launcher.PROTOCOL_LEDGER).execute(
+                'select count(*) from reservations').fetchone()[0]
+            need(after==before,'SIMULATION_CONSUMED_CANONICAL_RESERVATION')
+            print(json.dumps({'status':'V6_HOSTED_CLOSED_GATE_QUALIFIED',
+                'model_requests':0,'scientific_attempts_consumed':0,
+                'closed_gate_enforced':True,'abstention_parsed':True,
+                'abstention_opened_gate':False,
+                'successor_protocol':execution.Phase2B5V6HostedExecution.protocol,
+                'successor_smoke_protocol':execution.Phase2B5V6HostedSmokeExecution.protocol},
+                sort_keys=True))
     elif args.action in ('v5-hosted-first-cell','v5-hosted-smoke'):
         # Bounded V5 successor execution: the successor instruction is the only
         # changed variable, so the same genuine transport, canonical ledger and
@@ -309,6 +399,20 @@ def main(argv=None):
         else:
             run_smoke(DEPLOYMENT/Phase2B5V5HostedSmokeExecution.binding_name,
                       args.binding_sha256,protocol='v5-hosted-smoke')
+    elif args.action in ('v6-hosted-first-cell','v6-hosted-smoke'):
+        # Bounded V6 successor: the registered abstention shape and the stricter
+        # compatibility criterion are the only changes; transport, ledger,
+        # evidence and exact-binding gates are unchanged.
+        need(args.inventory=='v6','V6_INVENTORY_REQUIRED')
+        need(args.binding_sha256 is not None,'EXACT_BINDING_DIGEST_REQUIRED')
+        from scripts.nlip_phase2b5_execution import (DEPLOYMENT,run_first_cell,run_smoke,
+            Phase2B5V6HostedExecution,Phase2B5V6HostedSmokeExecution)
+        if args.action=='v6-hosted-first-cell':
+            run_first_cell(DEPLOYMENT/Phase2B5V6HostedExecution.binding_name,
+                           args.binding_sha256,protocol='v6-hosted')
+        else:
+            run_smoke(DEPLOYMENT/Phase2B5V6HostedSmokeExecution.binding_name,
+                      args.binding_sha256,protocol='v6-hosted-smoke')
     elif args.action in ('v4-hosted-first-cell','v4-hosted-smoke'):
         # Bounded V4 hosted execution: exact binding, canonical ledger and the
         # genuine transport only. No offline I/O is accepted on this path.

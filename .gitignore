@@ -32,6 +32,8 @@ runtime/
 /docs/research/phase2b5e/
 # Private Phase 2B-5G V5 Linux package inventory and release identity records
 /docs/research/phase2b5g/
+# Private Phase 2B-5H V6 Linux package inventory and release identity records
+/docs/research/phase2b5h/
 
 # Retained private historical research evidence and locally accepted runtime sources.
 # These files remain on disk; only reviewed public R0/R1 additions are synchronized.
