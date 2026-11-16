@@ -95,6 +95,39 @@ the four-cell smoke was never started. Never replay the consumed attempt; furthe
 V4 progress needs a newly registered protocol with a fresh reservation and its
 own authorization.
 
+## Phase 2B-5G successor (V5) — real request consumed, no PASS (2026-11-16)
+
+PR #33 merged the V4 usage-reconciliation fix. The remaining V4 compatibility
+reservation was consumed by a genuine schema-invalid response
+(`{"tool": null}`), so V4 must not be replayed.
+
+A separately registered successor (V5) changed exactly one variable: the frozen
+system instruction now names every required JSON key (`outcome`, `tool`,
+`arguments`), while task, memory admission, Host oracle, dispatcher, endpoint,
+model, schema and cells are unchanged. New manifest identities and new
+reservation keys were registered; the V4 manifests and reservations are
+untouched. Historical request rendering is byte-preserved (`manifest_instruction`
+returns the original text when no successor selector is present).
+
+Qualification: `LINUX_PACKAGE_VERIFIED` and `V5_HOSTED_CLOSED_GATE_QUALIFIED`
+(closed gate enforced, buffered fixture denied, zero reservations consumed), on
+the existing `jisheng3` volume with the canonical ledger at integrity `ok`. No
+new empty ledger, no synthetic path substitution.
+
+Exactly one real compatibility request was then sent and its reservation is
+permanently consumed. Transport was correct (HTTP 200, live provenance, model
+`qwen-3.8-27b`, `finish_reason=stop`, registered request digest reproduced,
+one attempt, zero retries). The content was `{"outcome": "ABSTAIN", "tool":
+null}` — the required `arguments` key was omitted — so the run ended
+`MALFORMED_RESPONSE` / `schema_validity=INVALID`, and the smoke gate correctly
+refused to create a binding. Zero smoke requests were sent.
+
+Both registered compatibility attempts (V4, V5) are now consumed with distinct
+genuine schema violations. Neither may be replayed, refunded or reclassified.
+Any further progress requires a further versioned successor with fresh
+manifests, package identity, reservations and its own exact authorization — and
+it must address abstention-key omission, not only key naming.
+
 ## Current research status — 2026-10-26
 
 R1 execution `R1EX-20261026-02` is **COMPLETE and sealed**: 32/32 requests,

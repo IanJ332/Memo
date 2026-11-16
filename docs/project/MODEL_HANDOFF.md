@@ -38,6 +38,57 @@ re-qualify only the affected identities, then execute the registered
 compatibility request followed by the four ordered smoke cells inside one
 approved window of at most 600 seconds.
 
+## MEMO Phase 2B-5H — V5 successor real compatibility: NO PASS (2026-11-16)
+
+V4 could not be replayed: its compatibility reservation is spent on a
+schema-invalid response. A separately versioned successor (V5) was registered
+that changes exactly one experimental variable — the frozen system instruction
+names all required output keys. Everything else (task, memory admission, Host
+oracle, ProtectedDispatcher, synthetic-only delivery, endpoint, model,
+`qwen-3.8-27b`, aligned schema, four smoke cells) is unchanged.
+
+Registration: compatibility protocol
+`phase2-provider-v5-key-naming-compatibility-1`, smoke protocol
+`phase2-provider-v5-key-naming-memory-smoke-1`, manifest identities
+`5f490ce7cea02b0835fc1826d5380a5100fa8e1bd4df118fd650fc0d111029ab` and
+`0531eaf84a5a26e3ee4415df172738e80946f052635fa684f29e38c85c8e4883`.
+Predecessor rendering is byte-preserved; `manifest_instruction()` returns the
+original text unless a manifest carries a known successor selector, so
+manifests cannot inject arbitrary prompt text.
+
+Qualification on the existing `jisheng3` environment: `LINUX_PACKAGE_VERIFIED`
+and `V5_HOSTED_CLOSED_GATE_QUALIFIED` with zero model requests and zero
+consumed reservations; canonical ledger integrity `ok` before execution, both
+V5 evidence destinations free, lifecycle opened for the run and restored after.
+
+Exactly one real compatibility request (`authorized / ON`) was sent. Transport
+reconciled correctly: HTTP 200, `transport_origin=JETSTREAM_DIRECT_LIVE`,
+returned model `qwen-3.8-27b`, `finish_reason=stop`, request digest
+`509add8fd15a2a7bed3df5154c2886b81a7a168a126b4dbb24dd99fcfc5ee8f2` matching the
+registered request, response digest
+`4bae63e06c7efd238c077abd46804535dc401099c4794ed504cac08771a27bc6`, usage
+152/20/172, one attempt, zero retries, zero fallbacks.
+
+The content was `{"outcome": "ABSTAIN", "tool": null}` and omitted the required
+`arguments` key. Classification therefore terminated at `MALFORMED_RESPONSE`
+with `schema_validity=INVALID`, `model_status=INVALID_OUTPUT` and dispatcher
+`NOT_STARTED`. The hosted verifier and the smoke gate both refused: no
+compatibility PASS, no smoke binding, zero smoke requests.
+
+Consequences: the V5 compatibility reservation
+(`5f490ce7…:first-cell:authorized/ON`) is permanently consumed and joins the
+consumed V4 reservation. No retry, refund, reclassification or replay occurred.
+Both registered attempts are now spent with distinct genuine schema violations
+(missing object vs. missing abstention key).
+
+Interpretation: naming the keys was necessary but not sufficient; this model
+still abbreviates its abstention object. A further versioned successor would
+need to constrain abstention output itself (for example a registered
+two-key-or-explicit-null schema, or structured-output enforcement on the
+abstention branch) with fresh manifests, package identity, reservations and its
+own exact authorization. Five requests remain insufficient for statistical
+claims regardless of outcome.
+
 ## MEMO Phase 2B-5G — verifier usage defect found and fixed (2026-11-16)
 
 Follow-up analysis of the 2B-5F run found a genuine engineering defect in the

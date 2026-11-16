@@ -28,6 +28,13 @@ SMOKE_CELLS=(('authorized','DIAGNOSTIC'),('authorized','ON'),('misleading','DIAG
 V4_SMOKE_CELLS=(('misleading','DIAGNOSTIC'),('misleading','ON'),('authorized','ON'),('authorized','DIAGNOSTIC'))
 V4_HOSTED_COMPATIBILITY_PROTOCOL='phase2-provider-v4-semantic-schema-compatibility-1'
 V4_HOSTED_SMOKE_PROTOCOL='phase2-provider-v4-semantic-schema-memory-smoke-1'
+# Successor protocol: identical cells and semantics, distinct identities because
+# the registered system instruction changed (explicit output key naming).
+V5_HOSTED_COMPATIBILITY_PROTOCOL='phase2-provider-v5-key-naming-compatibility-1'
+V5_HOSTED_SMOKE_PROTOCOL='phase2-provider-v5-key-naming-memory-smoke-1'
+HOSTED_FAMILIES=('v4','v5')
+SYNTHETIC_PROTOCOLS=('v4','v4-smoke')
+HOSTED_PROTOCOLS=('v4-hosted','v4-hosted-smoke','v5-hosted','v5-hosted-smoke')
 
 
 def need(condition, code):
@@ -68,7 +75,8 @@ def verify_linux_runtime(inventory):
          'GLOBAL_SITE_ENABLED')
     sites=list((root/'.venv/lib').glob('python*/site-packages'))
     need(len(sites)==1,'SITE_SELECTION')
-    reuse=inventory.get('format') in ('phase2b5a-linux-package-v1','phase2b5e-v4-linux-package-v1')
+    reuse=inventory.get('format') in ('phase2b5a-linux-package-v1','phase2b5e-v4-linux-package-v1',
+                                      'phase2b5g-v5-linux-package-v1')
     if reuse:
         need(inventory['qualification_sha256']=='d5bb560abe3710645efc4611e7dd272129c3429a9464a42b67044a46c1395dbc' and
              sha(root.parent/'linux-runtime-v3.json')==inventory['qualification_sha256'],
@@ -136,13 +144,13 @@ class Phase2B5Execution:
         need(b['provider']=='jetstream2_direct' and b['model']==MODEL and b['endpoint']==ENDPOINT,
              'EXECUTION_PROVIDER_MISMATCH')
         need(cell is None or cell==self.cell,'CELL_SCOPE_MISMATCH')
-        scope=(b.get('cells')==[list(c) for c in (V4_SMOKE_CELLS if self.protocol_key in ('v4-smoke','v4-hosted-smoke') else SMOKE_CELLS)] if self.protocol_key in ('smoke','v4-smoke','v4-hosted-smoke')
+        scope=(b.get('cells')==[list(c) for c in (V4_SMOKE_CELLS if self.protocol_key in ('v4-smoke','v4-hosted-smoke','v5-hosted-smoke') else SMOKE_CELLS)] if self.protocol_key in ('smoke','v4-smoke','v4-hosted-smoke','v5-hosted-smoke')
                else b['scenario']=='authorized' and b['admission']=='ON')
         need(b['max_attempts']==self.max_attempts and b['retries']==0 and b['fallbacks']==0 and scope and
              b['external_delivery']=='PROHIBITED','EXECUTION_SCOPE_MISMATCH')
         need(Path(__file__).resolve().parents[1]==SOURCE and launcher.ROOT==SOURCE,
              'EXECUTION_ROOT_MISMATCH')
-        declared=b['evidence_by_cell']['/'.join(self.cell)] if self.protocol_key in ('smoke','v4-smoke','v4-hosted-smoke') else b['evidence']
+        declared=b['evidence_by_cell']['/'.join(self.cell)] if self.protocol_key in ('smoke','v4-smoke','v4-hosted-smoke','v5-hosted-smoke') else b['evidence']
         need(Path(evidence)==self.evidence and declared==str(self.evidence) and
              b['ledger']==str(LEDGER) and launcher.PROTOCOL_LEDGER==LEDGER,
              'EXECUTION_STORAGE_MISMATCH')
@@ -176,8 +184,8 @@ class Phase2B5Execution:
                     for previous in SMOKE_CELLS[:index]:
                         saved=DEPLOYMENT/'phase2b5a-smoke'/('-'.join(previous)+'.result.json')
                         need(json.loads(saved.read_bytes())['classification']=='SMOKE_OBSERVATION_COMPLETE','PREVIOUS_SMOKE_NOT_COMPLETE')
-                reservation=(self.manifest_sha+':first-cell:authorized/ON' if self.protocol_key in ('v4','v4-hosted') else
-                             self.manifest_sha+':'+('/'.join(self.cell)) if self.protocol_key in ('smoke','v4-smoke','v4-hosted-smoke') else self.manifest_sha)
+                reservation=(self.manifest_sha+':first-cell:authorized/ON' if self.protocol_key in ('v4','v4-hosted','v5-hosted') else
+                             self.manifest_sha+':'+('/'.join(self.cell)) if self.protocol_key in ('smoke','v4-smoke','v4-hosted-smoke','v5-hosted-smoke') else self.manifest_sha)
                 need(db.execute('select count(*) from reservations where protocol=?',(reservation,)).fetchone()==(0,),
                      'FIRST_CELL_ALREADY_RESERVED')
         elif self.protocol_key in ('v3','smoke'):
@@ -270,38 +278,52 @@ def require_bounded_execution_authority(execution):
     return execution.binding
 
 
-class Phase2B5V4HostedExecution(Phase2B5V4Execution):
+class _Phase2B5HostedMixin:
+    """Shared hosted checks; the concrete family binds its own protocol identity."""
+    hosted_family: str = ''
+    # Absolute host paths for the family's compatibility evidence/result.
+    compatibility_manifest_name: str = ''
+    compatibility_manifest_sha256: str = ''
+
+    def __init__(self, path, digest):
+        from scripts.nlip_phase2b1_pilot import MANIFEST_V4_SHA256, MANIFEST_V5_SHA256
+        self.manifest_sha = {'v4': MANIFEST_V4_SHA256,
+                             'v5': MANIFEST_V5_SHA256}[self.hosted_family]
+        Phase2B5Execution.__init__(self, path, digest)
+
+    def check(self, evidence, window, package_digest, *, cell=None):
+        b = self.binding
+        need(self.protocol_key in ('v4-hosted','v4-hosted-smoke','v5-hosted','v5-hosted-smoke'),
+             'HOSTED_ADMISSION_UNAVAILABLE')
+        need(set(b) == self.required_binding_keys, 'EXECUTION_SCOPE_MISMATCH')
+        need(b['max_attempts'] == self.max_attempts and b['retries'] == 0 and b['fallbacks'] == 0 and
+             b['external_delivery'] == 'PROHIBITED', 'EXECUTION_SCOPE_MISMATCH')
+        need(b['manifest_sha256'] == self.manifest_sha, 'EXECUTION_PROTOCOL_MISMATCH')
+        if self.protocol_key.endswith('-smoke'):
+            need(b['cells'] == [list(c) for c in V4_SMOKE_CELLS], 'EXECUTION_SCOPE_MISMATCH')
+        else:
+            need(b['scenario'] == 'authorized' and b['admission'] == 'ON',
+                 'EXECUTION_SCOPE_MISMATCH')
+        Phase2B5Execution.check(self, evidence, window, package_digest, cell=cell)
+        require_bounded_execution_authority(self)
+
+
+class Phase2B5V4HostedExecution(_Phase2B5HostedMixin, Phase2B5V4Execution):
     """Reviewed, exact V4 hosted compatibility binding; authority is external."""
     version = 'phase2b5d-v4-hosted-compatibility-v1'
     binding_name = 'phase2b5d-v4-hosted-compatibility-v1.json'
     protocol = V4_HOSTED_COMPATIBILITY_PROTOCOL
     protocol_key = 'v4-hosted'
     result_name = 'phase2b5d-v4-hosted-compatibility-result.json'
+    hosted_family = 'v4'
     required_binding_keys = frozenset({
         'version', 'protocol', 'manifest_sha256', 'provider', 'model', 'endpoint',
         'max_attempts', 'retries', 'fallbacks', 'scenario', 'admission',
         'external_delivery', 'evidence', 'ledger', 'package_digest',
         'start_utc', 'end_utc'})
 
-    def __init__(self, path, digest):
-        from scripts.nlip_phase2b1_pilot import MANIFEST_V4_SHA256
-        self.manifest_sha = MANIFEST_V4_SHA256
-        Phase2B5Execution.__init__(self, path, digest)
-
     @property
     def evidence(self): return DEPLOYMENT / 'phase2b5d-hosted-compatibility/first-cell.sqlite'
-
-    def check(self, evidence, window, package_digest, *, cell=None):
-        b = self.binding
-        need(self.protocol_key not in ('v1','v2','v3','smoke','v4','v4-smoke'),
-             'HOSTED_ADMISSION_UNAVAILABLE')
-        need(set(b) == self.required_binding_keys, 'EXECUTION_SCOPE_MISMATCH')
-        need(b['max_attempts'] == 1 and b['retries'] == 0 and b['fallbacks'] == 0 and
-             b['external_delivery'] == 'PROHIBITED' and b['scenario'] == 'authorized' and
-             b['admission'] == 'ON', 'EXECUTION_SCOPE_MISMATCH')
-        need(b['manifest_sha256'] == self.manifest_sha, 'EXECUTION_PROTOCOL_MISMATCH')
-        super().check(evidence, window, package_digest, cell=cell)
-        require_bounded_execution_authority(self)
 
 
 class Phase2B5V4HostedSmokeExecution(Phase2B5V4HostedExecution):
@@ -331,18 +353,81 @@ class Phase2B5V4HostedSmokeExecution(Phase2B5V4HostedExecution):
     def result_name(self):
         return 'phase2b5d-hosted-smoke/' + ('-'.join(self.cell) + '.result.json')
 
-    def check(self, evidence, window, package_digest, *, cell=None):
-        b = self.binding
-        need(self.protocol_key in ('v4-hosted', 'v4-hosted-smoke'),
-             'HOSTED_ADMISSION_UNAVAILABLE')
-        need(set(b) == self.required_binding_keys, 'EXECUTION_SCOPE_MISMATCH')
-        need(b['cells'] == [list(c) for c in V4_SMOKE_CELLS], 'EXECUTION_SCOPE_MISMATCH')
-        need(b['max_attempts'] == 4 and b['retries'] == 0 and b['fallbacks'] == 0,
-             'EXECUTION_SCOPE_MISMATCH')
-        need(b['external_delivery'] == 'PROHIBITED', 'EXECUTION_SCOPE_MISMATCH')
-        need(b['manifest_sha256'] == self.manifest_sha, 'EXECUTION_PROTOCOL_MISMATCH')
-        Phase2B5Execution.check(self, evidence, window, package_digest, cell=cell)
-        require_bounded_execution_authority(self)
+    @property
+    def family_compatibility_class(self):
+        return Phase2B5V4HostedExecution
+
+    @property
+    def family_smoke_class(self):
+        return Phase2B5V4HostedSmokeExecution
+
+
+class Phase2B5V5HostedExecution(_Phase2B5HostedMixin, Phase2B5V4Execution):
+    """Successor hosted compatibility binding: new instruction, same semantics."""
+    version = 'phase2b5g-v5-hosted-compatibility-v1'
+    binding_name = 'phase2b5g-v5-hosted-compatibility-v1.json'
+    protocol = V5_HOSTED_COMPATIBILITY_PROTOCOL
+    protocol_key = 'v5-hosted'
+    result_name = 'phase2b5g-v5-hosted-compatibility-result.json'
+    hosted_family = 'v5'
+    required_binding_keys = Phase2B5V4HostedExecution.required_binding_keys
+
+    @property
+    def evidence(self): return DEPLOYMENT / 'phase2b5g-hosted-compatibility/first-cell.sqlite'
+
+
+class Phase2B5V5HostedSmokeExecution(Phase2B5V5HostedExecution):
+    version = 'phase2b5g-v5-hosted-smoke-v1'
+    binding_name = 'phase2b5g-v5-hosted-smoke-v1.json'
+    protocol = V5_HOSTED_SMOKE_PROTOCOL
+    protocol_key = 'v5-hosted-smoke'
+    max_attempts = 4
+    required_binding_keys = Phase2B5V4HostedSmokeExecution.required_binding_keys
+
+    def __init__(self, path, digest, cell):
+        from scripts.nlip_phase2b1_pilot import MANIFEST_V5_SMOKE_SHA256
+        need(type(cell) is tuple and cell in V4_SMOKE_CELLS, 'CELL_SCOPE_MISMATCH')
+        self.cell = cell
+        self.manifest_sha = MANIFEST_V5_SMOKE_SHA256
+        Phase2B5Execution.__init__(self, path, digest)
+
+    @property
+    def evidence(self):
+        return DEPLOYMENT / 'phase2b5g-hosted-smoke' / ('-'.join(self.cell) + '.sqlite')
+
+    @property
+    def result_name(self):
+        return 'phase2b5g-hosted-smoke/' + ('-'.join(self.cell) + '.result.json')
+
+    @property
+    def family_compatibility_class(self):
+        return Phase2B5V5HostedExecution
+
+    @property
+    def family_smoke_class(self):
+        return Phase2B5V5HostedSmokeExecution
+
+
+def compatibility_manifest_for(execution):
+    """Select the frozen compatibility manifest for the execution's family."""
+    from scripts.nlip_phase2b1_pilot import MANIFEST_V4, MANIFEST_V5
+    return MANIFEST_V4 if execution.hosted_family == 'v4' else MANIFEST_V5
+
+
+def smoke_manifest_for(execution):
+    """Select the frozen smoke manifest for the execution's family."""
+    from scripts.nlip_phase2b1_pilot import MANIFEST_V4_SMOKE, MANIFEST_V5_SMOKE
+    return MANIFEST_V4_SMOKE if execution.hosted_family == 'v4' else MANIFEST_V5_SMOKE
+
+
+def compatibility_protocol_for(execution):
+    return (V4_HOSTED_COMPATIBILITY_PROTOCOL if execution.hosted_family == 'v4'
+            else V5_HOSTED_COMPATIBILITY_PROTOCOL)
+
+
+def smoke_protocol_for(execution):
+    return (V4_HOSTED_SMOKE_PROTOCOL if execution.hosted_family == 'v4'
+            else V5_HOSTED_SMOKE_PROTOCOL)
 
 
 def _same_json(left, right):
@@ -505,7 +590,10 @@ def _verify_v4_hosted_result_inner(path, *, protocol, manifest, cell, package_di
     if expected_sha is not None: need(sha(path) == expected_sha, 'V4_RESULT_DIGEST_MISMATCH')
     result = strict_json(path.read_bytes())
     need(type(result) is dict, 'V4_RESULT_INVALID')
-    is_smoke = protocol == V4_HOSTED_SMOKE_PROTOCOL
+    need(protocol in (V4_HOSTED_COMPATIBILITY_PROTOCOL, V4_HOSTED_SMOKE_PROTOCOL,
+                      V5_HOSTED_COMPATIBILITY_PROTOCOL, V5_HOSTED_SMOKE_PROTOCOL),
+         'V4_RESULT_BINDING_MISMATCH')
+    is_smoke = protocol in (V4_HOSTED_SMOKE_PROTOCOL, V5_HOSTED_SMOKE_PROTOCOL)
     expected_class = 'SMOKE_OBSERVATION_COMPLETE' if is_smoke else 'COMPATIBILITY_PASS'
     raw_manifest = manifest.read_bytes(); manifest_sha = hashlib.sha256(raw_manifest).hexdigest()
     m = json.loads(raw_manifest)
@@ -777,13 +865,18 @@ def verify_v4_smoke_gate(db, execution, package_digest):
             protocol=Phase2B5V4SmokeExecution.protocol,manifest=MANIFEST_V4_SMOKE,cell=previous,package_digest=package_digest)
 
 
-def verify_v4_hosted_smoke_gate(db, execution, package_digest):
+def _verify_hosted_smoke_gate(db, execution, package_digest, *, smoke_class,
+                              compatibility_class, expected_type):
     """Require genuine hosted compatibility PASS and exact ordered smoke prefix."""
-    from scripts.nlip_phase2b1_pilot import (MANIFEST_V4, MANIFEST_V4_SHA256,
-        MANIFEST_V4_SMOKE, MANIFEST_V4_SMOKE_SHA256)
-    need(type(execution) is Phase2B5V4HostedSmokeExecution, 'V4_HOSTED_EXECUTION_REQUIRED')
-    need(Phase2B5V4HostedSmokeExecution.required_binding_keys <= set(execution.binding),
+    need(type(execution) is expected_type, 'V4_HOSTED_EXECUTION_REQUIRED')
+    need(expected_type.required_binding_keys <= set(execution.binding),
          'EXECUTION_SCOPE_MISMATCH')
+    compatibility_manifest = compatibility_manifest_for(execution)
+    smoke_manifest = smoke_manifest_for(execution)
+    compatibility_sha = sha(compatibility_manifest)
+    smoke_sha = sha(smoke_manifest)
+    compatibility_protocol = compatibility_protocol_for(execution)
+    smoke_protocol = smoke_protocol_for(execution)
     b = execution.binding
     need(b['manifest_sha256'] == execution.manifest_sha and
          b['version'] == execution.version and b['protocol'] == execution.protocol and
@@ -796,67 +889,82 @@ def verify_v4_hosted_smoke_gate(db, execution, package_digest):
          b['external_delivery'] == 'PROHIBITED' and
          set(b['evidence_by_cell']) == {'/'.join(c) for c in V4_SMOKE_CELLS} and
          all(b['evidence_by_cell']['/'.join(c)] == str(
-                 Phase2B5V4HostedSmokeExecution(
-                     DEPLOYMENT / Phase2B5V4HostedSmokeExecution.binding_name,
-                     execution.digest, c).evidence)
+                 smoke_class(DEPLOYMENT / smoke_class.binding_name,
+                             execution.digest, c).evidence)
              for c in V4_SMOKE_CELLS),
          'EXECUTION_SCOPE_MISMATCH')
-    need(execution.manifest_sha == sha(MANIFEST_V4_SMOKE) ==
-         hashlib.sha256(MANIFEST_V4_SMOKE.read_bytes()).hexdigest(), 'MANIFEST_MISMATCH')
-    compatibility_binding = DEPLOYMENT / Phase2B5V4HostedExecution.binding_name
+    need(execution.manifest_sha == smoke_sha, 'MANIFEST_MISMATCH')
+    compatibility_binding = DEPLOYMENT / compatibility_class.binding_name
     need(compatibility_binding.is_file() and not compatibility_binding.is_symlink() and
          sha(compatibility_binding) == execution.binding.get('compatibility_binding_sha256'),
          'COMPATIBILITY_BINDING_MISMATCH')
-    compatibility = Phase2B5V4HostedExecution(compatibility_binding, sha(compatibility_binding))
-    need(Phase2B5V4HostedExecution.required_binding_keys <= set(compatibility.binding) and
-         compatibility.binding['manifest_sha256'] == sha(MANIFEST_V4) and
-         compatibility.manifest_sha == sha(MANIFEST_V4) and
-         json.loads(MANIFEST_V4.read_bytes()).get('version') == Phase2B5V4Execution.protocol and
-         json.loads(MANIFEST_V4_SMOKE.read_bytes()).get('version') == Phase2B5V4SmokeExecution.protocol and
-         json.loads(MANIFEST_V4_SMOKE.read_bytes()).get('compatibility_candidate_sha256') == compatibility.manifest_sha,
+    compatibility = compatibility_class(compatibility_binding, sha(compatibility_binding))
+    need(compatibility_class.required_binding_keys <= set(compatibility.binding) and
+         compatibility.binding['manifest_sha256'] == compatibility_sha and
+         compatibility.manifest_sha == compatibility_sha and
+         json.loads(compatibility_manifest.read_bytes()).get('version') == compatibility_protocol and
+         json.loads(smoke_manifest.read_bytes()).get('version') == smoke_protocol and
+         json.loads(smoke_manifest.read_bytes()).get('compatibility_candidate_sha256') == compatibility_sha,
          'MANIFEST_MISMATCH')
     index = V4_SMOKE_CELLS.index(execution.cell)
     require_bounded_execution_authority(execution)
     require_bounded_execution_authority(compatibility)
-    compat_key = MANIFEST_V4_SHA256 + ':first-cell:authorized/ON'
+    compat_key = compatibility_sha + ':first-cell:authorized/ON'
     need(db.execute('select cell from reservations where protocol=?', (compat_key,)).fetchall() ==
          [('authorized/ON',)], 'COMPATIBILITY_RESERVATION_MISSING')
-    result_path = DEPLOYMENT / Phase2B5V4HostedExecution.result_name
+    result_path = DEPLOYMENT / compatibility_class.result_name
     expected_sha = execution.binding.get('compatibility_result_sha256')
     need(type(expected_sha) is str and len(expected_sha) == 64 and
          all(c in '0123456789abcdef' for c in expected_sha), 'V4_RESULT_DIGEST_REQUIRED')
-    _verify_v4_hosted_result(result_path, protocol=Phase2B5V4HostedExecution.protocol,
-        manifest=MANIFEST_V4, cell=('authorized', 'ON'), package_digest=package_digest,
+    _verify_v4_hosted_result(result_path, protocol=compatibility_protocol,
+        manifest=compatibility_manifest, cell=('authorized', 'ON'), package_digest=package_digest,
         execution=compatibility, expected_sha=expected_sha, require_genuine=True)
     observed = set(db.execute('select protocol,cell from reservations where protocol like ?',
-                              (MANIFEST_V4_SMOKE_SHA256 + ':%',)))
-    prefix = {(MANIFEST_V4_SMOKE_SHA256 + ':' + '/'.join(c), '/'.join(c))
+                              (smoke_sha + ':%',)))
+    prefix = {(smoke_sha + ':' + '/'.join(c), '/'.join(c))
               for c in V4_SMOKE_CELLS[:index]}
     need(observed == prefix, 'SMOKE_ORDER_OR_RESERVATION_MISMATCH')
     for previous in V4_SMOKE_CELLS[:index]:
-        previous_execution = Phase2B5V4HostedSmokeExecution(
-            DEPLOYMENT / Phase2B5V4HostedSmokeExecution.binding_name,
-            sha(DEPLOYMENT / Phase2B5V4HostedSmokeExecution.binding_name), previous)
+        previous_execution = smoke_class(
+            DEPLOYMENT / smoke_class.binding_name,
+            sha(DEPLOYMENT / smoke_class.binding_name), previous)
         _verify_v4_hosted_result(DEPLOYMENT / previous_execution.result_name,
-            protocol=Phase2B5V4HostedSmokeExecution.protocol, manifest=MANIFEST_V4_SMOKE,
+            protocol=smoke_protocol, manifest=smoke_manifest,
             cell=previous, package_digest=package_digest, execution=previous_execution,
             require_genuine=True)
+
+
+def verify_v4_hosted_smoke_gate(db, execution, package_digest):
+    return _verify_hosted_smoke_gate(db, execution, package_digest,
+        smoke_class=Phase2B5V4HostedSmokeExecution,
+        compatibility_class=Phase2B5V4HostedExecution,
+        expected_type=Phase2B5V4HostedSmokeExecution)
+
+
+def verify_v5_hosted_smoke_gate(db, execution, package_digest):
+    return _verify_hosted_smoke_gate(db, execution, package_digest,
+        smoke_class=Phase2B5V5HostedSmokeExecution,
+        compatibility_class=Phase2B5V5HostedExecution,
+        expected_type=Phase2B5V5HostedSmokeExecution)
 
 
 def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authorized','ON'),offline_io=None):
     """Called only by the byte-reviewed bootstrap under supported action review."""
     from scripts import nlip_phase2b2_launcher as launcher
-    need(protocol in ('v2','v3','smoke','v4','v4-smoke','v4-hosted','v4-hosted-smoke'),'UNKNOWN_PROTOCOL')
-    if protocol in ('v4','v4-smoke'):
+    need(protocol in ('v2','v3','smoke','v4','v4-smoke','v4-hosted','v4-hosted-smoke',
+                      'v5-hosted','v5-hosted-smoke'),'UNKNOWN_PROTOCOL')
+    if protocol in SYNTHETIC_PROTOCOLS:
         from memlife.nlip.model_adapter import ScriptedDirectIO
         need(type(offline_io) is ScriptedDirectIO,'V4_HOSTED_ADMISSION_UNAVAILABLE')
-    elif protocol in ('v4-hosted','v4-hosted-smoke'):
+    elif protocol in HOSTED_PROTOCOLS:
         from memlife.nlip.model_adapter import BufferedDirectIO
-        need(offline_io is None or (protocol=='v4-hosted' and type(offline_io) is BufferedDirectIO),
-             'V4_HOSTED_OFFLINE_IO_PROHIBITED')
+        need(offline_io is None or (protocol in ('v4-hosted','v5-hosted') and
+             type(offline_io) is BufferedDirectIO), 'V4_HOSTED_OFFLINE_IO_PROHIBITED')
     else:
         need(offline_io is None,'UNSUPPORTED_OFFLINE_IO')
-    execution=(Phase2B5V4HostedSmokeExecution(binding_path,binding_sha256,cell) if protocol=='v4-hosted-smoke' else
+    execution=(Phase2B5V5HostedSmokeExecution(binding_path,binding_sha256,cell) if protocol=='v5-hosted-smoke' else
+               Phase2B5V5HostedExecution(binding_path,binding_sha256) if protocol=='v5-hosted' else
+               Phase2B5V4HostedSmokeExecution(binding_path,binding_sha256,cell) if protocol=='v4-hosted-smoke' else
                Phase2B5V4HostedExecution(binding_path,binding_sha256) if protocol=='v4-hosted' else
                Phase2B5V4SmokeExecution(binding_path,binding_sha256,cell) if protocol=='v4-smoke' else
                Phase2B5SmokeExecution(binding_path,binding_sha256,cell) if protocol=='smoke' else
@@ -865,7 +973,7 @@ def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authori
     b=execution.binding
     launcher.PROTOCOL_LEDGER=LEDGER
     window=(b['start_utc'],b['end_utc'])
-    if protocol in ('v4','v4-smoke','v4-hosted','v4-hosted-smoke'):
+    if protocol in SYNTHETIC_PROTOCOLS + HOSTED_PROTOCOLS:
         execution.check(evidence,window,b['package_digest'],cell=cell)
     row=launcher.hosted_first_cell_operator(evidence,authorization_window=window,
         package_digest=b['package_digest'],execution=execution,protocol=protocol,cell=cell,offline_io=offline_io)
@@ -882,11 +990,11 @@ def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authori
             expected={(execution.manifest_sha+':first-cell:authorized/ON','authorized/ON')}
         if protocol=='v4-smoke':
             expected={(execution.manifest_sha+':'+('/'.join(cell)),'/'.join(cell))}
-        if protocol in ('v4-hosted','v4-hosted-smoke'):
-            expected={(execution.manifest_sha+(':first-cell:authorized/ON' if protocol=='v4-hosted' else ':'+('/'.join(cell))),'/'.join(cell))}
+        if protocol in HOSTED_PROTOCOLS:
+            expected={(execution.manifest_sha+(':first-cell:authorized/ON' if protocol in ('v4-hosted','v5-hosted') else ':'+('/'.join(cell))),'/'.join(cell))}
         observed=set(db.execute('select protocol,cell from reservations').fetchall())
         need(db.execute('pragma integrity_check').fetchone()==('ok',) and
-             (expected <= observed if protocol in ('v4','v4-smoke','v4-hosted','v4-hosted-smoke') else observed==expected),
+             (expected <= observed if protocol in SYNTHETIC_PROTOCOLS + HOSTED_PROTOCOLS else observed==expected),
              'RESERVATION_RECONCILIATION_FAILED')
     for key,digest_key,required in (('request_evidence','prompt_sha256',True),
             ('context_evidence','context_sha256',True),('response_evidence','response_sha256',False)):
@@ -897,11 +1005,15 @@ def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authori
                  artifact.is_file() and artifact.stat().st_uid==os.geteuid() and
                  not stat.S_IMODE(artifact.stat().st_mode)&0o077 and sha(artifact)==row[digest_key],
                  'EVIDENCE_DIGEST_MISMATCH')
-    hosted = protocol in ('v4-hosted','v4-hosted-smoke')
-    if protocol in ('v4','v4-smoke','v4-hosted','v4-hosted-smoke'):
-        from scripts.nlip_phase2b1_pilot import MANIFEST_V4,MANIFEST_V4_SMOKE
-        manifest=json.loads((MANIFEST_V4 if protocol in ('v4','v4-hosted') else MANIFEST_V4_SMOKE).read_bytes())
-        registered=(manifest['registered_request_sha256'] if protocol in ('v4','v4-hosted') else manifest['registered_requests']['/'.join(cell)])
+    hosted = protocol in HOSTED_PROTOCOLS
+    if protocol in SYNTHETIC_PROTOCOLS + HOSTED_PROTOCOLS:
+        from scripts.nlip_phase2b1_pilot import MANIFEST_V4,MANIFEST_V4_SMOKE,MANIFEST_V5,MANIFEST_V5_SMOKE
+        compatibility_family=protocol in ('v4','v4-hosted','v5-hosted')
+        manifest=json.loads((MANIFEST_V4 if protocol in ('v4','v4-hosted')
+                             else MANIFEST_V5 if protocol=='v5-hosted'
+                             else MANIFEST_V5_SMOKE if protocol=='v5-hosted-smoke'
+                             else MANIFEST_V4_SMOKE).read_bytes())
+        registered=(manifest['registered_request_sha256'] if compatibility_family else manifest['registered_requests']['/'.join(cell)])
         need(manifest.get('version')==execution.protocol and row['manifest_sha256']==execution.manifest_sha and
              row['prompt_sha256']==registered,'V4_REQUEST_RECONCILIATION_FAILED')
         policy=evidence.parent/row['policy_evidence']
@@ -925,12 +1037,12 @@ def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authori
                      'POLICY_RECONCILIATION_FAILED')
     # ScriptedDirectIO produces raw bytes without HTTP metadata. This adjustment
     # is used only for synthetic qualification and is marked in the result.
-    classified_row=dict(row,http_status=200) if protocol in ('v4','v4-smoke') else row
-    classification=compatibility(classified_row,allow_abstention=protocol in ('v3','smoke','v4','v4-smoke','v4-hosted','v4-hosted-smoke'))
-    if protocol in ('smoke','v4-smoke','v4-hosted-smoke'):
+    classified_row=dict(row,http_status=200) if protocol in SYNTHETIC_PROTOCOLS else row
+    classification=compatibility(classified_row,allow_abstention=protocol in ('v3','smoke') + SYNTHETIC_PROTOCOLS + HOSTED_PROTOCOLS)
+    if protocol in ('smoke','v4-smoke','v4-hosted-smoke','v5-hosted-smoke'):
         classification='SMOKE_OBSERVATION_COMPLETE' if smoke_observation_complete(classified_row) else 'SMOKE_CONTRACT_FAILED'
     reasoning_tokens=None
-    if protocol in ('v3','smoke','v4','v4-smoke','v4-hosted','v4-hosted-smoke') and row.get('response_evidence'):
+    if protocol in ('v3','smoke') + SYNTHETIC_PROTOCOLS + HOSTED_PROTOCOLS and row.get('response_evidence'):
         try:
             response=json.loads((evidence.parent/row['response_evidence']).read_bytes())
             reasoning_tokens=response.get('usage',{}).get('completion_tokens_details',{}).get('reasoning_tokens')
@@ -941,16 +1053,16 @@ def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authori
     need(classification not in ('COMPATIBILITY_PASS','SMOKE_OBSERVATION_COMPLETE') or row.get('response_evidence') is not None,
          'REQUIRED_EVIDENCE_MISSING')
     result=dict(protocol=b['protocol'],manifest_sha256=execution.manifest_sha,
-        reservation_identity=(execution.manifest_sha+':first-cell:authorized/ON' if protocol=='v4' else execution.manifest_sha+':'+('/'.join(cell))),
+        reservation_identity=(execution.manifest_sha+':first-cell:authorized/ON' if protocol in ('v4','v5-hosted') else execution.manifest_sha+':'+('/'.join(cell))),
         classification=classification,observation=row,ledger=str(LEDGER),evidence=str(evidence),reasoning_tokens=reasoning_tokens,
         package_digest=b['package_digest'],binding_sha256=binding_sha256,
         owner_authority='Direct Phase2B5 instruction and reaffirmation; not proved by this record',
         platform_authority='Supported review of exact command; not proved by this record',
         reconciled=True,evidence_status='COMPLETE_RECONCILED' if row.get('response_evidence')
             and row.get('response_body_complete') else 'RECONCILED_WITH_MISSING_OR_PARTIAL_RESPONSE')
-    if protocol in ('v4','v4-smoke') and row['commit_status']=='UNKNOWN':
+    if protocol in SYNTHETIC_PROTOCOLS and row['commit_status']=='UNKNOWN':
         result.update(classification='EVIDENCE_FAILURE',reconciled=False,evidence_status='OUTCOME_UNCERTAIN')
-    if protocol in ('v4','v4-smoke'):
+    if protocol in SYNTHETIC_PROTOCOLS:
         result.update(evidence_origin='SYNTHETIC_SCRIPTED_IO',
                       owner_authority='NONE',platform_authority='NONE',
                       reservation_identity=(execution.manifest_sha+':first-cell:authorized/ON' if protocol=='v4' else execution.manifest_sha+':'+('/'.join(cell))))
@@ -960,13 +1072,13 @@ def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authori
                       owner_authority=BOUNDED_OWNER_AUTHORITY,
                       platform_authority=BOUNDED_PLATFORM_AUTHORITY,
                       authority_basis='BOUNDED_EXACT_COMMAND_INSTRUCTION_NOT_APPROVAL_PROOF',
-                      reservation_identity=(execution.manifest_sha+':first-cell:authorized/ON' if protocol=='v4-hosted' else execution.manifest_sha+':'+('/'.join(cell))))
+                      reservation_identity=(execution.manifest_sha+':first-cell:authorized/ON' if protocol in ('v4-hosted','v5-hosted') else execution.manifest_sha+':'+('/'.join(cell))))
         if offline_io is not None:
             result['evidence_origin'] = 'SIMULATED_HTTP_FIXTURE'
         need(row.get('transport_origin') == ('JETSTREAM_DIRECT_LIVE' if offline_io is None
                  else 'JETSTREAM_BUFFERED_FIXTURE'),
              'V4_HOSTED_PROVENANCE_REQUIRED')
-    if protocol in ('v4-smoke','v4-hosted-smoke'):
+    if protocol in ('v4-smoke','v4-hosted-smoke','v5-hosted-smoke'):
         context=json.loads((evidence.parent/row['context_evidence']).read_bytes())
         need(context==manifest['model_visible_contexts']['/'.join(cell)] and
              row['admission']==manifest['expected_admission']['/'.join(cell)] and
@@ -991,13 +1103,13 @@ def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authori
     fd=os.open(path,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
     with os.fdopen(fd,'w') as stream:
         json.dump(result,stream,sort_keys=True,indent=2);stream.flush();os.fsync(stream.fileno())
-    if protocol in ('v4','v4-smoke','v4-hosted','v4-hosted-smoke'):
+    if protocol in SYNTHETIC_PROTOCOLS + HOSTED_PROTOCOLS:
         parent_fd=os.open(path.parent,os.O_RDONLY)
         try: os.fsync(parent_fd)
         finally: os.close(parent_fd)
     if hosted:
-        from scripts.nlip_phase2b1_pilot import MANIFEST_V4, MANIFEST_V4_SMOKE
-        manifest_path = MANIFEST_V4 if protocol == 'v4-hosted' else MANIFEST_V4_SMOKE
+        manifest_path = compatibility_manifest_for(execution) if protocol in (
+            'v4-hosted','v5-hosted') else smoke_manifest_for(execution)
         _verify_v4_hosted_result(path, protocol=execution.protocol, manifest=manifest_path,
             cell=cell, package_digest=b['package_digest'], execution=execution,
             require_genuine=offline_io is None,
@@ -1009,16 +1121,16 @@ def run_first_cell(binding_path, binding_sha256, *, protocol='v2',cell=('authori
 
 def run_smoke(binding_path,binding_sha256, *, protocol='smoke', offline_ios=None):
     """Only the four frozen cells, serially; any failed observation closes the loop."""
-    need(protocol in ('smoke','v4-smoke','v4-hosted-smoke'),'UNKNOWN_PROTOCOL')
+    need(protocol in ('smoke','v4-smoke','v4-hosted-smoke','v5-hosted-smoke'),'UNKNOWN_PROTOCOL')
     if protocol=='v4-smoke':
         from memlife.nlip.model_adapter import ScriptedDirectIO
         need(type(offline_ios) is list and len(offline_ios)==4 and
              all(type(io) is ScriptedDirectIO for io in offline_ios),'V4_HOSTED_ADMISSION_UNAVAILABLE')
-    elif protocol=='v4-hosted-smoke':
+    elif protocol in ('v4-hosted-smoke','v5-hosted-smoke'):
         need(offline_ios is None,'V4_HOSTED_OFFLINE_IO_PROHIBITED')
     else:
         need(offline_ios is None,'UNSUPPORTED_OFFLINE_IO')
-    cells=V4_SMOKE_CELLS if protocol in ('v4-smoke','v4-hosted-smoke') else SMOKE_CELLS
+    cells=V4_SMOKE_CELLS if protocol in ('v4-smoke','v4-hosted-smoke','v5-hosted-smoke') else SMOKE_CELLS
     results=[]
     for index,cell in enumerate(cells):
         result=run_first_cell(binding_path,binding_sha256,protocol=protocol,cell=cell,
@@ -1026,8 +1138,8 @@ def run_smoke(binding_path,binding_sha256, *, protocol='smoke', offline_ios=None
         results.append(result)
         if result['classification']!='SMOKE_OBSERVATION_COMPLETE':break
     summary={'status':'SMOKE_COMPLETE' if len(results)==4 and all(r['classification']=='SMOKE_OBSERVATION_COMPLETE' for r in results) else 'SMOKE_STOPPED',
-             'protocol':(Phase2B5V4HostedSmokeExecution.protocol if protocol=='v4-hosted-smoke' else Phase2B5V4SmokeExecution.protocol if protocol=='v4-smoke' else Phase2B5SmokeExecution.protocol),'observations':results,'attempts':len(results),'retries':0,'fallbacks':0}
-    path=DEPLOYMENT/('phase2b5d-v4-hosted-smoke-result.json' if protocol=='v4-hosted-smoke' else 'phase2b5c-smoke-result.json' if protocol=='v4-smoke' else 'phase2b5a-smoke-result.json')
+             'protocol':(Phase2B5V5HostedSmokeExecution.protocol if protocol=='v5-hosted-smoke' else Phase2B5V4HostedSmokeExecution.protocol if protocol=='v4-hosted-smoke' else Phase2B5V4SmokeExecution.protocol if protocol=='v4-smoke' else Phase2B5SmokeExecution.protocol),'observations':results,'attempts':len(results),'retries':0,'fallbacks':0}
+    path=DEPLOYMENT/('phase2b5g-v5-hosted-smoke-result.json' if protocol=='v5-hosted-smoke' else 'phase2b5d-v4-hosted-smoke-result.json' if protocol=='v4-hosted-smoke' else 'phase2b5c-smoke-result.json' if protocol=='v4-smoke' else 'phase2b5a-smoke-result.json')
     fd=os.open(path,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
     with os.fdopen(fd,'w') as stream:
         json.dump(summary,stream,sort_keys=True,indent=2);stream.flush();os.fsync(stream.fileno())
