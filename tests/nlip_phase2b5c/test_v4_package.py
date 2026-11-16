@@ -59,6 +59,17 @@ def test_bootstrap_v3_inventory_name_is_unchanged():
     assert b.INVENTORY_V4 == 'docs/research/phase2b5e/inventory-v4-linux-v1.json'
 
 
+def test_bootstrap_exposes_only_bounded_hosted_actions():
+    """Hosted execution must be reachable only through the genuine-transport actions."""
+    source = Path(b.__file__).read_text()
+    assert "'v4-hosted-first-cell','v4-hosted-smoke'" in source
+    assert "protocol='v4-hosted')" in source and "protocol='v4-hosted-smoke')" in source
+    # Those actions must never accept offline I/O.
+    branch = source.split("args.action in ('v4-hosted-first-cell','v4-hosted-smoke')")[1]
+    branch = branch.split('    else:')[0]
+    assert 'offline_io' not in branch
+
+
 def test_v4_hosted_rejects_v3_default_inventory(monkeypatch):
     monkeypatch.setattr(l, 'INVENTORY', l.ROOT / 'docs/research/phase2b5a/inventory-smoke-v2.json')
     with pytest.raises(l.GateError, match='V4_PACKAGE_INVENTORY_MISMATCH'):

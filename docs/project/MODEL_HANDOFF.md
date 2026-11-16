@@ -22,16 +22,61 @@ smoke manifest
 `4ef8990d2f54daf77a28ec06b788d8955edd60a31bc2f4ecb257744a300d9505`,
 runtime observation `d5bb560abe3710645efc4611e7dd272129c3429a9464a42b67044a46c1395dbc`.
 
-V4 real collection is blocked by one internal prerequisite, not by a platform
-denial: `HOSTED_EXECUTION_VERIFIER` remains `None`, and no genuine independent
-owner/platform attestation mechanism exists in this environment. The recorded
-2026-11-02 platform rejections concern remote instance-management
-authentication only; hosted inference uses `NETWORK_SCOPED_NO_SECRET` and was
-never reviewed, so they neither authorize nor prohibit it. Do not rebuild the
-package, re-run qualification, or add a local approval substitute. Resolve the
-independent verifier source, then execute the registered compatibility request
-followed by the four ordered smoke cells inside one approved window of at most
-600 seconds.
+**Superseded in part (2026-11-15).** The owner approved replacing the
+unavailable `HOSTED_EXECUTION_VERIFIER` with the bounded V2/V3 authority form:
+direct owner instruction plus supported review of the exact prospective command.
+`HostedExecutionApproval`, `HostedExecutionVerifier` and
+`HOSTED_EXECUTION_VERIFIER` were removed; `require_bounded_execution_authority()`
+replaces them, and hosted results record `authority_basis =
+BOUNDED_EXACT_COMMAND_INSTRUCTION_NOT_APPROVAL_PROOF` plus the long-standing
+"not proved by this record" owner/platform strings. Every other V4 control is
+unchanged. The recorded 2026-11-02 platform rejections concern remote
+instance-management authentication only; hosted inference uses
+`NETWORK_SCOPED_NO_SECRET` and was never reviewed, so they neither authorize nor
+prohibit it. Source change invalidated the earlier package digests; rebuild and
+re-qualify only the affected identities, then execute the registered
+compatibility request followed by the four ordered smoke cells inside one
+approved window of at most 600 seconds.
+
+## MEMO Phase 2B-5F — first genuine V4 compatibility request: NO PASS (2026-11-16)
+
+The bounded-authority protocol change merged as the source of truth for V4
+hosted execution (see the 2026-11-15 entry). The rebuilt package was deployed
+and re-qualified on the existing `jisheng3` instance: `LINUX_PACKAGE_VERIFIED`,
+`V4_HOSTED_CLOSED_GATE_QUALIFIED`, canonical ledger integrity `ok`, four
+historical reservations intact, `V4_LIVE=0` before execution, both V4 evidence
+destinations free, lifecycle `SHELVED_OFFLOADED -> ACTIVE -> SHELVED`.
+
+Rebuilt identities (supersede the 2026-11-15 package numbers):
+archive `e15533a5750310330dcb87bd6f82c6743abd2cf4529ed95328202c61f61cb404`,
+source inventory `e4cdbd62ef6d67897314e8d658e58eaf75b158894569a3651fd77b4759ea82c0`.
+Scientific manifests are unchanged: compatibility
+`9da79903d6dad8f9a470a9679699ee7996994aa0d8902fb981cc65da77f03255`, smoke
+`4ef8990d2f54daf77a28ec06b788d8955edd60a31bc2f4ecb257744a300d9505`.
+
+Exactly one real provider request was sent. Transport and harness behaved
+correctly: HTTP 200, `sender=JETSTREAM_DIRECT`, `transport_origin=
+JETSTREAM_DIRECT_LIVE`, returned model `qwen-3.8-27b`, `finish_reason=stop`,
+usage `97` total tokens, request artifact digest `af0ce5110be84b88342a11ff13
+7df5b20d139e94034eabe4005266c9359d424f` matching the registered request
+exactly, non-thinking template, empty untrusted memory, one attempt, zero
+retries. The model's semantic content was `{"tool": null}` instead of an aligned
+`{outcome, tool, arguments}` object, so the run terminated
+`MALFORMED_RESPONSE` / `schema_validity=INVALID` and the strict hosted verifier
+rejected the result (`V4_RESPONSE_MISMATCH`). That rejection is correct: the
+result is not a COMPATIBILITY_PASS.
+
+Consequences: one V4 compatibility reservation is permanently consumed
+(`V4_LIVE=1`, non-refundable). The four-cell smoke was **not** started, since a
+genuine compatibility PASS is a prerequisite. Zero smoke requests were sent. The
+raw observation, request/response bytes, policy audit and result are preserved
+in the private deployment evidence; the ledger was not reset.
+
+Interpretation: this is genuine model behaviour under the frozen V4 aligned
+schema, not a harness defect. Re-running is prohibited — the attempt is spent.
+Any further V4 progress requires a newly registered protocol/manifest (for
+example an amended schema or decoding constraint) with its own package identity,
+fresh reservation and separate owner authorization.
 
 ## MEMO Phase 2B-5D — V4 hosted path implemented, awaiting exact approval (November 2026)
 

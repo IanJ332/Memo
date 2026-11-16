@@ -48,22 +48,6 @@ class LiveEnvelopeTransport:
                                    a._LIVE_TRANSPORT_PROVENANCE)
 
 
-class Approval:
-    def __init__(self, overrides=None):
-        self.overrides = overrides or {}
-
-    def verify(self, binding, evidence):
-        fields = dict(package_digest=binding['package_digest'],
-                      manifest_sha256=binding['manifest_sha256'], model=binding['model'],
-                      endpoint=binding['endpoint'], ledger=binding['ledger'],
-                      evidence=evidence,
-                      start_utc=binding['start_utc'],
-                      end_utc=binding['end_utc'], owner_approval_sha256='a' * 64,
-                      platform_approval_sha256='b' * 64)
-        fields.update(self.overrides)
-        return e.HostedExecutionApproval(**fields)
-
-
 def response(value=None):
     value = value or {'outcome': 'PROPOSE_ACTION', 'tool': 'send_report',
                       'arguments': {'project_id': 'pilot-project',
@@ -164,8 +148,6 @@ def hosted(tmp_path, monkeypatch):
     monkeypatch.setattr(e, 'DEPLOYMENT', deployment)
     monkeypatch.setattr(e, 'SOURCE', l.ROOT)
     monkeypatch.setattr(e, 'LEDGER', ledger)
-    verifier = Approval()
-    monkeypatch.setattr(e, 'HOSTED_EXECUTION_VERIFIER', verifier)
     now = time.time()
     binding = {'version': e.Phase2B5V4HostedExecution.version,
         'protocol': e.Phase2B5V4HostedExecution.protocol, 'manifest_sha256': manifest_sha,
@@ -178,11 +160,11 @@ def hosted(tmp_path, monkeypatch):
     path = deployment / e.Phase2B5V4HostedExecution.binding_name
     path.write_text(json.dumps(binding))
     path.chmod(0o600)
-    return tmp_path, deployment, ledger, path, manifest_sha, verifier
+    return tmp_path, deployment, ledger, path, manifest_sha
 
 
 def run_hosted(hosted, raw=None, monkeypatch=None):
-    _, deployment, ledger, path, _, _ = hosted
+    _, deployment, ledger, path, _ = hosted
     binding = json.loads(path.read_bytes())
     transport = LiveEnvelopeTransport([raw or response()])
     import scripts.nlip_phase2b5_execution as e
@@ -197,25 +179,30 @@ def run_hosted(hosted, raw=None, monkeypatch=None):
 
 
 def run_hosted_result(hosted, raw=None):
-    _, deployment, _, path, _, _ = hosted
+    _, deployment, _, path, _ = hosted
     binding = json.loads(path.read_bytes())
     io = a.BufferedDirectIO([a.TransportResponse(raw or response(), 'req_fixture', 200,
         {'content-type': 'application/json'}, True)])
     return e.run_first_cell(path, e.sha(path), protocol='v4-hosted', offline_io=io)
 
 
-def test_hosted_path_requires_independent_verifier(hosted, monkeypatch):
-    _, deployment, ledger, path, _, _ = hosted
-    monkeypatch.setattr(e, 'HOSTED_EXECUTION_VERIFIER', None)
-    now = time.time()
-    with pytest.raises(l.GateError, match='HOSTED_EXECUTION_APPROVAL_UNAVAILABLE'):
-        execution = e.Phase2B5V4HostedExecution(path, e.sha(path))
-        binding = execution.binding
-        execution.check(deployment / 'phase2b5d-hosted-compatibility/first-cell.sqlite',
-                        (binding['start_utc'], binding['end_utc']),
-                        l.digest(deployment.parent / 'inventory.json'))
-    with sqlite3.connect(ledger) as db:
-        assert db.execute('select count(*) from reservations').fetchone() == (2,)
+def test_hosted_path_has_no_independent_approval_object():
+    """The retired verifier must stay retired: no approval object, no verifier hook."""
+    assert not hasattr(e, 'HOSTED_EXECUTION_VERIFIER')
+    assert not hasattr(e, 'HostedExecutionApproval')
+    assert set(e.Phase2B5V4HostedExecution.required_binding_keys) == {
+        'version', 'protocol', 'manifest_sha256', 'provider', 'model', 'endpoint',
+        'max_attempts', 'retries', 'fallbacks', 'scenario', 'admission',
+        'external_delivery', 'evidence', 'ledger', 'package_digest',
+        'start_utc', 'end_utc'}
+    assert not hasattr(e.Phase2B5V4HostedExecution, 'hosted_approval')
+
+
+def test_bounded_authority_rejects_non_binding(hosted):
+    with pytest.raises(l.GateError, match='HOSTED_EXECUTION_BINDING_REQUIRED'):
+        e.require_bounded_execution_authority(object())
+    with pytest.raises(l.GateError, match='HOSTED_EXECUTION_BINDING_REQUIRED'):
+        e.require_bounded_execution_authority(type('X', (), {'binding': 'not-a-dict'})())
 
 
 def test_hosted_path_accepts_one_live_transport_send(hosted, monkeypatch):
@@ -225,7 +212,7 @@ def test_hosted_path_accepts_one_live_transport_send(hosted, monkeypatch):
 
 
 def test_hosted_path_rejects_synthetic_transport_provenance(hosted):
-    _, deployment, _, path, _, _ = hosted
+    _, deployment, _, path, _ = hosted
     now = time.time()
     io = a.ScriptedDirectIO([response()])
     with pytest.raises(l.GateError, match='V4_HOSTED_ADMISSION_UNAVAILABLE'):
@@ -263,7 +250,7 @@ def test_hosted_rejects_wrong_model():
 
 
 def test_hosted_rejects_synthetic_result_as_genuine(hosted):
-    _, deployment, _, path, _, _ = hosted
+    _, deployment, _, path, _ = hosted
     result = deployment / e.Phase2B5V4HostedExecution.result_name
     result.write_text(json.dumps({'protocol': e.Phase2B5V4HostedExecution.protocol,
         'classification': 'COMPATIBILITY_PASS', 'evidence_origin': 'SYNTHETIC_SCRIPTED_IO',
@@ -279,7 +266,7 @@ def test_hosted_rejects_synthetic_result_as_genuine(hosted):
 
 
 def test_hosted_requires_canonical_ledger(hosted, monkeypatch):
-    _, deployment, ledger, path, _, _ = hosted
+    _, deployment, ledger, path, _ = hosted
     other = deployment.parent / 'other-ledger.sqlite'
     with sqlite3.connect(other) as db:
         db.execute('create table reservations(protocol text primary key,cell text not null)')
@@ -292,7 +279,7 @@ def test_hosted_requires_canonical_ledger(hosted, monkeypatch):
 
 
 def test_hosted_reservation_is_not_refunded(hosted, monkeypatch):
-    _, deployment, ledger, path, _, _ = hosted
+    _, deployment, ledger, path, _ = hosted
     row, _ = run_hosted(hosted)
     assert row['state'] == 'FINISHED'
     with sqlite3.connect(ledger) as db:
@@ -304,7 +291,7 @@ def test_hosted_reservation_is_not_refunded(hosted, monkeypatch):
 
 
 def test_hosted_smoke_gate_rejects_simulated_fixture(hosted, monkeypatch):
-    _, deployment, ledger, path, manifest_sha, _ = hosted
+    _, deployment, ledger, path, manifest_sha = hosted
     compatibility = deployment / e.Phase2B5V4HostedExecution.result_name
     compatibility.write_text(json.dumps({
         'binding_sha256': e.sha(path), 'manifest_sha256': manifest_sha,
@@ -341,7 +328,7 @@ def test_v1_v2_v3_still_reject_v4_hosted_execution():
 
 def test_hosted_and_synthetic_ledgers_are_isolated(hosted, monkeypatch, tmp_path):
     """Production hosted admission never reuses the disposable synthetic ledger."""
-    _, deployment, ledger, path, _, _ = hosted
+    _, deployment, ledger, path, _ = hosted
     synthetic = tmp_path / 'synthetic-ledger.sqlite'
     with sqlite3.connect(synthetic) as db:
         db.execute('create table reservations(protocol text primary key,cell text not null)')
@@ -507,22 +494,22 @@ def test_hosted_result_tampering_rejected(hosted):
             require_genuine=False)
 
 
-def test_hosted_approval_requires_owner_and_platform(hosted, monkeypatch):
-    _, deployment, _, path, _, _ = hosted
+def test_hosted_binding_rejects_extra_approval_fields(hosted):
+    """An injected approval record cannot widen the reviewed binding scope."""
+    _, deployment, _, path, _ = hosted
     binding = json.loads(path.read_bytes())
-    execution = e.Phase2B5V4HostedExecution(path, e.sha(path))
-    monkeypatch.setattr(e, 'HOSTED_EXECUTION_VERIFIER', Approval({'owner_approval_sha256': ''}))
-    with pytest.raises(l.GateError, match='HOSTED_EXECUTION_APPROVAL_UNAVAILABLE'):
-        execution.check(deployment / 'phase2b5d-hosted-compatibility/first-cell.sqlite',
-            (binding['start_utc'], binding['end_utc']), binding['package_digest'])
-    monkeypatch.setattr(e, 'HOSTED_EXECUTION_VERIFIER', Approval({'package_digest': '0' * 64}))
-    with pytest.raises(l.GateError, match='HOSTED_EXECUTION_APPROVAL_MISMATCH'):
-        execution.check(deployment / 'phase2b5d-hosted-compatibility/first-cell.sqlite',
-            (binding['start_utc'], binding['end_utc']), binding['package_digest'])
+    for name in ('owner_approval_sha256', 'platform_approval_sha256'):
+        clone = deployment / e.Phase2B5V4HostedExecution.binding_name
+        clone.write_text(json.dumps(dict(binding, **{name: 'a' * 64})))
+        clone.chmod(0o600)
+        execution = e.Phase2B5V4HostedExecution(clone, e.sha(clone))
+        with pytest.raises(l.GateError, match='EXECUTION_SCOPE_MISMATCH'):
+            execution.check(deployment / 'phase2b5d-hosted-compatibility/first-cell.sqlite',
+                (binding['start_utc'], binding['end_utc']), binding['package_digest'])
 
 
 def test_hosted_incorrect_protocol_rejected(hosted):
-    _, deployment, _, path, _, _ = hosted
+    _, deployment, _, path, _ = hosted
     binding = json.loads(path.read_bytes())
     binding['protocol'] = e.Phase2B5AExecution.protocol
     clone = deployment / e.Phase2B5V4HostedExecution.binding_name
@@ -542,7 +529,7 @@ def hosted_reserve_then_exit(execution, package_digest):
 @pytest.mark.skipif('fork' not in multiprocessing.get_all_start_methods(),
                     reason='fork-based process isolation unavailable')
 def test_hosted_interrupted_reservation_is_not_refunded(hosted):
-    _, deployment, ledger, path, _, _ = hosted
+    _, deployment, ledger, path, _ = hosted
     execution = e.Phase2B5V4HostedExecution(path, e.sha(path))
     package_digest = json.loads(path.read_bytes())['package_digest']
     process = multiprocessing.get_context('fork').Process(
@@ -557,7 +544,7 @@ def test_hosted_interrupted_reservation_is_not_refunded(hosted):
 
 
 def test_hosted_smoke_uses_registered_order_and_stops(hosted, monkeypatch):
-    _, deployment, _, path, _, _ = hosted
+    _, deployment, _, path, _ = hosted
     seen = []
     def fail_second(binding_path, binding_sha256, *, protocol='v2', cell=('authorized', 'ON'),
                     offline_io=None):
@@ -574,7 +561,7 @@ def test_hosted_smoke_uses_registered_order_and_stops(hosted, monkeypatch):
 
 def test_hosted_smoke_refuses_offline_io(hosted):
     """Hosted smoke cannot be satisfied by buffered fixtures."""
-    _, deployment, _, path, _, _ = hosted
+    _, deployment, _, path, _ = hosted
     io = a.BufferedDirectIO([a.TransportResponse(response(), None, 200, {}, True)])
     with pytest.raises(l.GateError, match='V4_HOSTED_OFFLINE_IO_PROHIBITED'):
         e.run_first_cell(path, e.sha(path), protocol='v4-hosted-smoke',
@@ -582,7 +569,7 @@ def test_hosted_smoke_refuses_offline_io(hosted):
 
 
 def test_hosted_smoke_rejects_invalid_prior_result(hosted, monkeypatch):
-    _, deployment, _, path, _, _ = hosted
+    _, deployment, _, path, _ = hosted
     now = time.time()
     smoke_binding = {
         'version': e.Phase2B5V4HostedSmokeExecution.version,
@@ -614,9 +601,9 @@ def test_hosted_smoke_rejects_invalid_prior_result(hosted, monkeypatch):
             e.verify_v4_hosted_smoke_gate(db, execution, smoke_binding['package_digest'])
 
 
-def test_hosted_smoke_prior_cells_bind_their_own_evidence(hosted, monkeypatch):
-    """Continuation must verify each prior cell against its own evidence path."""
-    _, deployment, ledger, path, manifest_sha, _ = hosted
+def test_hosted_smoke_prior_cells_bind_their_own_evidence(hosted):
+    """Continuation must bind each cell to its own canonical evidence path."""
+    _, deployment, ledger, path, manifest_sha = hosted
     now = time.time()
     compatibility = deployment / e.Phase2B5V4HostedExecution.result_name
     compatibility.write_text(json.dumps({'placeholder': True}))
@@ -624,34 +611,35 @@ def test_hosted_smoke_prior_cells_bind_their_own_evidence(hosted, monkeypatch):
     evidence_by_cell = {'/'.join(c): str(deployment / 'phase2b5d-hosted-smoke' /
         ('-'.join(c) + '.sqlite')) for c in e.V4_SMOKE_CELLS}
     compatibility_binding = json.loads(path.read_bytes())
-    smoke_binding = {key: compatibility_binding[key] for key in (
-        'provider', 'model', 'endpoint', 'retries', 'fallbacks',
-        'external_delivery', 'ledger', 'package_digest', 'start_utc', 'end_utc')}
-    smoke_binding.update(version=e.Phase2B5V4HostedSmokeExecution.version,
-        manifest_sha256=p.MANIFEST_V4_SMOKE_SHA256,
-        protocol=e.Phase2B5V4HostedSmokeExecution.protocol,
-        cells=[list(c) for c in e.V4_SMOKE_CELLS], evidence_by_cell=evidence_by_cell,
-        max_attempts=4, compatibility_binding_sha256=e.sha(path),
-        compatibility_result_sha256=e.sha(compatibility))
-    smoke_path = deployment / e.Phase2B5V4HostedSmokeExecution.binding_name
-    smoke_path.write_text(json.dumps(smoke_binding))
-    smoke_path.chmod(0o600)
-    seen = []
-    class Recording:
-        def verify(self, binding, evidence):
-            seen.append(evidence)
-            return Approval().verify(binding, evidence)
-    monkeypatch.setattr(e, 'HOSTED_EXECUTION_VERIFIER', Recording())
-    execution = e.Phase2B5V4HostedSmokeExecution(
-        smoke_path, e.sha(smoke_path), e.V4_SMOKE_CELLS[2])
+    def binding_for(evidence):
+        smoke_binding = {key: compatibility_binding[key] for key in (
+            'provider', 'model', 'endpoint', 'retries', 'fallbacks',
+            'external_delivery', 'ledger', 'package_digest', 'start_utc', 'end_utc')}
+        smoke_binding.update(version=e.Phase2B5V4HostedSmokeExecution.version,
+            manifest_sha256=p.MANIFEST_V4_SMOKE_SHA256,
+            protocol=e.Phase2B5V4HostedSmokeExecution.protocol,
+            cells=[list(c) for c in e.V4_SMOKE_CELLS], evidence_by_cell=evidence,
+            max_attempts=4, compatibility_binding_sha256=e.sha(path),
+            compatibility_result_sha256=e.sha(compatibility))
+        smoke_path = deployment / e.Phase2B5V4HostedSmokeExecution.binding_name
+        smoke_path.write_text(json.dumps(smoke_binding))
+        smoke_path.chmod(0o600)
+        return smoke_path
     with sqlite3.connect(ledger) as db:
         db.execute('insert into reservations values(?,?)',
                    (manifest_sha + ':first-cell:authorized/ON', 'authorized/ON'))
         for cell in e.V4_SMOKE_CELLS[:2]:
             db.execute('insert into reservations values(?,?)',
                        (p.MANIFEST_V4_SMOKE_SHA256 + ':' + '/'.join(cell), '/'.join(cell)))
+        canonical = binding_for(evidence_by_cell)
+        execution = e.Phase2B5V4HostedSmokeExecution(
+            canonical, e.sha(canonical), e.V4_SMOKE_CELLS[2])
         with pytest.raises(l.GateError):
-            e.verify_v4_hosted_smoke_gate(db, execution, smoke_binding['package_digest'])
-    assert seen == [evidence_by_cell['/'.join(e.V4_SMOKE_CELLS[0])],
-                    evidence_by_cell['/'.join(e.V4_SMOKE_CELLS[1])],
-                    compatibility_binding['evidence']]
+            e.verify_v4_hosted_smoke_gate(db, execution, json.loads(canonical.read_bytes())['package_digest'])
+        redirected = dict(evidence_by_cell)
+        redirected['/'.join(e.V4_SMOKE_CELLS[0])] = str(deployment / 'other-cell.sqlite')
+        tampered = binding_for(redirected)
+        execution = e.Phase2B5V4HostedSmokeExecution(
+            tampered, e.sha(tampered), e.V4_SMOKE_CELLS[2])
+        with pytest.raises(l.GateError, match='EXECUTION_SCOPE_MISMATCH'):
+            e.verify_v4_hosted_smoke_gate(db, execution, json.loads(tampered.read_bytes())['package_digest'])

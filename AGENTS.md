@@ -66,12 +66,34 @@ external platform permission.
   historical evidence. Never replay a consumed attempt.
 
 **Scope limit.** This owner approval does not supply, and cannot substitute for,
-external platform permission or any independently authenticated execution
-approval. `HOSTED_EXECUTION_VERIFIER` remains `None`; hosted admission stays
-closed until a genuine independent verifier exists. Where a platform or trusted
-binding requirement is unmet, report the exact missing action instead of
-building an unsupported approval system. Denials must never be bypassed, and no
-local flag, hash or object may stand in for external authorization.
+external platform permission. Where a platform requirement is unmet, report the
+exact missing action instead of building an unsupported approval system. Denials
+must never be bypassed, and no local flag, hash or object may stand in for
+external authorization.
+
+## V4 bounded-authorization protocol decision — 2026-11-15
+
+The owner explicitly approves replacing V4's additional, unavailable
+`HOSTED_EXECUTION_VERIFIER` requirement with the bounded execution-authorization
+approach already used by V2/V3: the owner's direct instruction plus supported
+review of the exact prospective command. Applies only to the registered V4
+experiment. It does not authorize bypassing an applicable external platform
+denial or disabling unrelated safety controls. Retained unchanged: exact package
+and protocol identity, fixed model and endpoint, canonical SQLite ledger,
+durable non-refundable reservations, fixed UTC window, request budget, zero
+retries and fallbacks, ProtectedDispatcher, synthetic-only delivery, genuine
+hosted-evidence verification and fail-closed behavior.
+
+## V4 pilot status — 2026-11-16
+
+The registered V4 compatibility request was executed once under the bounded
+authority above: one real request, zero retries, zero fallbacks. Transport and
+evidence reconciliation were correct, but the model returned a semantic schema
+violation (`{"tool": null}`), so the run was `MALFORMED_RESPONSE`, not
+`COMPATIBILITY_PASS`. That compatibility reservation is permanently consumed and
+the four-cell smoke was never started. Never replay the consumed attempt; further
+V4 progress needs a newly registered protocol with a fresh reservation and its
+own authorization.
 
 ## Current research status — 2026-10-26
 
